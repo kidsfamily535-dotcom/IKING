@@ -1,0 +1,16 @@
+export type AgentState='WATCHING'|'DISCOVERING'|'VERIFYING'|'THINKING'|'MATCHING'|'DECIDING'|'ACTING'|'MONITORING'|'ANTICIPATING'|'ESCALATED';
+export type DataStatus='LIVE'|'SIM'|'ESTIMATED'|'UNKNOWN'|'CONFIRMED'|'INFERRED';
+export type EventPriority='SILENT'|'WATCH'|'INVESTIGATE'|'RECOMMEND'|'ACT_INTERNAL'|'APPROVAL_REQUIRED'|'ESCALATE';
+export type AircraftStage='SIGHTED'|'POTENTIAL'|'CONFIRMED';
+export type Role='admin'|'operator'|'customer';
+export interface Airport{iata:string;nameAr:string;nameEn:string;country:string;lat:number;lon:number}
+export interface Signal{id:string;kind:'AIRCRAFT_MOVEMENT'|'DEMAND'|'EVENT'|'WEATHER'|'OPERATOR';title:string;area:string;stage?:AircraftStage;dataStatus:DataStatus;confidence:'high'|'medium'|'low';grade?:'A'|'B'|'C'|'D'|'E';source:string;minutesAgo:number;priority:EventPriority}
+export interface ScoreParts{freshness:number;sourceStrength:number;urgency:number;confidence:number}
+export interface Opportunity{id:string;origin:string;destination:string;aircraftCategory:string;seats:number;trigger:'LAST_MINUTE'|'TIME'|'AVAILABILITY';status:'DETECTED'|'VALIDATED'|'MATCHED'|'ACTIVATION_PENDING'|'ACTIVATED'|'REJECTED';availability:'CONFIRMED'|'PENDING_VERIFICATION';source:string;verifiedMinAgo:number|null;expiresInMin:number;scoreParts:ScoreParts;reasons:string[];matched?:{segment:'HOT'|'WARM'|'LATENT'|'DORMANT';relevance:number;gate:'ALLOWED'|'BLOCKED';gateReason?:string};isDemo:true;note?:string}
+export interface EmptyLegInput{aircraft:string;origin:string;from:string;destination:string;seats:number;targetUsd?:number}
+export interface EmptyLegResult{id:string;steps:string[];reasons:string[];confidence:'medium'|'low';score:ScoreParts;recommendation:'OUTREACH'|'WATCH';draft:string}
+export interface MarketLeg{aircraftCategory:string;origin:string;destination:string;status:'in_flight'|'landed'|'signal_lost';confidence:'HIGH'|'MEDIUM';inferred:true}
+export interface MemoryItem{key:string;labelAr:string;value:string;source:'CUSTOMER_PROVIDED'|'FROM_PAST_TRIPS';editable:true}
+export interface TripOption{id:string;title:string;category:string;departure:string;durationMin:number;priceLo:number;priceHi:number;usesMemory:boolean}
+export interface ParsedRequest{origin?:string;destination?:string;passengers?:number;when?:string;missing:string[];options:TripOption[]}
+export interface DecisionPolicyRow{situation:string;decision:string;externalEffect:boolean;requiresHuman:boolean;descriptionAr:string}
