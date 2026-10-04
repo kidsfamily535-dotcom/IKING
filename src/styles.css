@@ -55,4 +55,6 @@ footer{text-align:center;color:var(--dim);font-size:13px;padding:30px 20px 50px;
 .lang{position:fixed;top:8px;right:8px;z-index:99;display:flex;gap:4px;direction:ltr}
 .lang button{padding:3px 12px;font:11px 'JetBrains Mono',Tajawal,sans-serif;letter-spacing:.08em;background:#060b16d9;color:var(--gold);border:1px solid #c9a96166;border-radius:99px}
 .lang button.on{background:var(--gold);color:var(--bg)}
-@media(max-width:560px){.lang button{padding:3px 9px}}
+@media(max-width:560px){.lang{left:8px;right:8px;justify-content:flex-end;flex-wrap:wrap}.lang button{padding:3px 8px}}
+/* Instrument Serif لا تدعم السيريلية، فنستخدم خطًا بديلاً للروسية */
+html[lang=ru] h2,html[lang=ru] .sub,html[lang=ru] .card h3{font-family:'Cormorant Garamond',Georgia,serif}

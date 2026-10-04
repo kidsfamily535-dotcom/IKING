@@ -1,7 +1,7 @@
 import {useState} from 'react';
 import {sb} from './lib/supabase';
 import type {Role} from './data/types';
-import {useI18n,type Lang} from './i18n';
+import {useI18n,isLang,type Lang} from './i18n';
 export default function SignIn({onDone}:{onDone:(r:Role,pl?:Lang)=>void}){
  const {t}=useI18n();const [em,setEm]=useState(''),[pw,setPw]=useState(''),[msg,setMsg]=useState(''),[busy,setBusy]=useState(false);
  const go=async(up:boolean)=>{setBusy(true);setMsg('');
@@ -11,7 +11,7 @@ export default function SignIn({onDone}:{onDone:(r:Role,pl?:Lang)=>void}){
   const {data}=await sb.from('profiles').select('role,status,preferred_language').eq('id',r.data.user!.id).single();
   setBusy(false);
   if(!data||data.status!=='active'){setMsg(t('si.pending'));return}
-  onDone(data.role==='admin'||data.role==='broker'?'admin':data.role==='operator'?'operator':'customer',data.preferred_language==='ar'||data.preferred_language==='en'?data.preferred_language:undefined)};
+  onDone(data.role==='admin'||data.role==='broker'?'admin':data.role==='operator'?'operator':'customer',isLang(data.preferred_language)?data.preferred_language:undefined)};
  return <div style={{width:'100%',maxWidth:340,margin:'18px auto 0',textAlign:'start'}}>
   <div className="f2" style={{gridTemplateColumns:'1fr'}}><label>{t('si.email')}<input type="email" value={em} onChange={e=>setEm(e.target.value)} autoComplete="email"/></label>
   <label>{t('si.password')}<input type="password" value={pw} onChange={e=>setPw(e.target.value)} autoComplete="current-password"/></label></div>

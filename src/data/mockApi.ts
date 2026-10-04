@@ -1,5 +1,6 @@
 import type {EyeApi} from './api';import type {Airport,Opportunity,Signal,EmptyLegInput,MarketLeg,MemoryItem,ParsedRequest,TripOption,DecisionPolicyRow} from './types';
 import {tr,trIn} from '../i18n';
+import {AIRPORT_L} from '../i18n/airports';
 const A=(iata:string,nameAr:string,nameEn:string,country:string,lat:number,lon:number):Airport=>({iata,nameAr,nameEn,country,lat,lon});
 const airports:Airport[]=[A('RUH','الرياض','Riyadh','SA',24.957,46.699),A('JED','جدة','Jeddah','SA',21.679,39.157),A('MED','المدينة','Madinah','SA',24.553,39.705),A('TUU','تبوك','Tabuk','SA',28.365,36.619),A('DMM','الدمام','Dammam','SA',26.471,49.798),A('AHB','أبها','Abha','SA',18.24,42.656),A('GIZ','جازان','Jazan','SA',16.901,42.586),A('YNB','ينبع','Yanbu','SA',24.144,38.063),A('DXB','دبي','Dubai','AE',25.253,55.366),A('AUH','أبوظبي','Abu Dhabi','AE',24.433,54.651),A('DOH','الدوحة','Doha','QA',25.273,51.608),A('CAI','القاهرة','Cairo','EG',30.122,31.406),A('AMM','عمّان','Amman','JO',31.722,35.993)];
 // كل النصوص تُبنى وقت الطلب بلغة الواجهة الحالية، فتتغير عند إعادة الجلب بعد تبديل اللغة.
@@ -35,13 +36,15 @@ export const mockApi:EyeApi={
   draft:tr('an.draft',{o:i.origin,d:i.destination==='ANY'?tr('an.flex'):i.destination,from:i.from,n:seats})}},
  async listMemory(){await wait(80);return mem.map(m=>({...m}))},
  async saveMemory(k,v){await wait(150);mem=mem.map(m=>m.key===k?{...m,value:v}:m)},
- // الفهم ثنائي اللغة: يقبل الطلب بالعربي أو بالإنجليزي
+ // فهم الطلب رباعي اللغة: عربي / إنجليزي / تركي / روسي (بغض النظر عن لغة الواجهة)
  async parseRequest(t){await wait(500);
   const by=(mk:(a:Airport)=>RegExp[])=>airports.find(a=>mk(a).some(r=>r.test(t)));
-  const o=by(a=>[new RegExp('من\\s*'+esc(a.nameAr)),new RegExp('\\bfrom\\s+'+esc(a.nameEn)+'\\b','i')]);
-  const d=by(a=>[new RegExp('(إلى|الى|لـ?)\\s*'+esc(a.nameAr)),new RegExp('\\bto\\s+'+esc(a.nameEn)+'\\b','i')]);
-  const pm=t.match(/(\d+)\s*(أشخاص|اشخاص|شخص|ركاب|people|persons?|passengers?|pax|guests?)/i);
-  const when=/بكرة|غدا|غدًا|tomorrow/i.test(t)?'tomorrow':/اليوم|today/i.test(t)?'today':undefined;
+  // تركية: -dan/-den للمغادرة و -a/-e/-ya/-ye للوجهة. روسية: из/от للمغادرة و в/на/до للوجهة مع جذر الاسم لقبول التصريف.
+  const trN=(a:Airport)=>esc(AIRPORT_L[a.iata]?.tr??a.nameEn).replace(/ü/g,'[üu]'),ruN=(a:Airport)=>(AIRPORT_L[a.iata]?.ruStem??'').split('-').map(esc).join('[-\\s]?');
+  const o=by(a=>[new RegExp('من\\s*'+esc(a.nameAr)),new RegExp('\\bfrom\\s+'+esc(a.nameEn)+'\\b','i'),new RegExp(trN(a)+'[\u2019\']?(?:dan|den|tan|ten)(?![a-zçğıöşü])','i'),new RegExp('(?:^|[\\s,.])(?:из|от|с)\\s+'+ruN(a),'i')]);
+  const d=by(a=>[new RegExp('(إلى|الى|لـ?)\\s*'+esc(a.nameAr)),new RegExp('\\bto\\s+'+esc(a.nameEn)+'\\b','i'),new RegExp(trN(a)+'[\u2019\']?(?:ya|ye|a|e)(?![a-zçğıöşü])','i'),new RegExp('(?:^|[\\s,.])(?:в|на|до)\\s+'+ruN(a),'i')]);
+  const pm=t.match(/(\d+)\s*(أشخاص|اشخاص|شخص|ركاب|people|persons?|passengers?|pax|guests?|kişi|kisi|yolcu|misafir|человек|чел|пассажир\S*|гост\S*)/i);
+  const when=/بكرة|غدا|غدًا|tomorrow|yarın|yarin|завтра/i.test(t)?'tomorrow':/اليوم|today|bugün|bugun|сегодня/i.test(t)?'today':undefined;
   const missing:string[]=[];if(!o)missing.push('origin');if(!d)missing.push('destination');if(!pm)missing.push('passengers');if(!when)missing.push('date');
   const pax=pm?Number(pm[1]):undefined;let options:TripOption[]=[];
   if(o&&d&&pax&&when){const dist=km(o,d),dur=Math.round(dist/780*60+20),mk=(id:string,category:string,departure:string,rate:number,ok:boolean):TripOption[]=>ok?[{id,title:tr('opt.'+id),category,departure,durationMin:dur,priceLo:Math.round(dist*rate*.85/100)*100,priceHi:Math.round(dist*rate*1.15/100)*100,usesMemory:category==='MID'}]:[];

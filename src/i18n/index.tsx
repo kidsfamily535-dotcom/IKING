@@ -1,10 +1,12 @@
 import {createContext,useCallback,useContext,useEffect,useMemo,useState,type ReactNode} from 'react';
-import {ar} from './ar';import {en} from './en';
+import {ar} from './ar';import {en} from './en';import {tur} from './tr';import {rus} from './ru';import {AIRPORT_L} from './airports';
 import type {Airport} from '../data/types';
-export type Lang='ar'|'en';
-const D:Record<Lang,Record<string,string>>={ar,en};
+export type Lang='ar'|'en'|'tr'|'ru';
+export const LANGS:Lang[]=['ar','en','tr','ru'];
+const D:Record<Lang,Record<string,string>>={ar,en,tr:tur,ru:rus};
 const KEY='iking_lang';
-const valid=(v:unknown):v is Lang=>v==='ar'||v==='en';
+export const isLang=(v:unknown):v is Lang=>typeof v==='string'&&(LANGS as string[]).includes(v);
+const valid=isLang;
 const stored=():Lang|null=>{try{const v=localStorage.getItem(KEY);return valid(v)?v:null}catch{return null}};
 let cur:Lang=stored()??'ar';
 export const getLang=()=>cur;
@@ -14,7 +16,7 @@ const fill=(s:string,v?:Record<string,string|number>)=>{if(v)for(const x in v)s=
 // ترجمة بدون hook: تُستخدم في طبقة البيانات (mockApi/supabaseApi) وتقرأ اللغة الحالية
 export const tr=(k:string,v?:Record<string,string|number>)=>fill(D[cur][k]??D.ar[k]??k,v);
 export const trIn=(l:Lang,k:string,v?:Record<string,string|number>)=>fill(D[l][k]??D.ar[k]??k,v);
-export const airportName=(a:Airport)=>cur==='ar'?a.nameAr:a.nameEn;
+export const airportName=(a:Airport)=>cur==='ar'?a.nameAr:cur==='en'?a.nameEn:(AIRPORT_L[a.iata]?.[cur]??a.nameEn);
 export const catL=(c:string)=>hasKey('cat.'+c)?tr('cat.'+c):c;
 type Ctx={lang:Lang;dir:'rtl'|'ltr';setLang:(l:Lang,persist?:boolean)=>void;t:typeof tr};
 const C=createContext<Ctx|null>(null);
