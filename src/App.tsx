@@ -3,12 +3,10 @@ import {api,useRealApi} from './data/api';
 import SignIn from './SignIn';
 import OperatorRoom from './Operator';
 import JourneyRoom from './Journey';
-import DemoStory from './Demo';
 import HoldRing from './Hold';
 import OperatorValue from './OperatorValue';
-import KingsEyeHome from './eye/KingsEyeHome';
-import DayInLife from './eye/DayInLife';
-import {Layer,EyeMark} from './eye/parts';
+import Scene from './eye/Scene';
+import {Layer} from './eye/parts';
 import BrokerRoom from './eye/Broker';
 import {useCopy} from './eye/copy';
 import LangSwitch from './LangSwitch';
@@ -91,10 +89,9 @@ export default function App(){
    {login&&!real&&<SignIn onDone={(r,pl?:Lang)=>{useRealApi();setReal(true);setRole(r);setLogin(false);if(pl&&!hasStoredLang())setLang(pl,false)}}/>}
   </section>
   {role&&<><div id="bar"><b>{st}</b>{FLOW.map(f=><span key={f} className={`fc${f===st?' on':''}`}>{f}</span>)}<span className="ed">{role.toUpperCase()}</span></div>
-  <main id="room">
-   {role==='customer'?<><DemoStory onState={setSt}/><div style={{textAlign:'center'}}><EyeMark tone="calm"/></div><JourneyRoom airports={ap}/></>:<>
-    <KingsEyeHome real={real}/>
-    <DayInLife onState={setSt}/>
+  <Scene mode={role==='customer'?'customer':'operator'} real={real} airports={ap} onState={setSt}/>
+  <main id="under">
+   {role==='customer'?<JourneyRoom airports={ap}/>:<>
     <section className="layers"><div className="mono">LAYERS</div><h2>{cp('layers')}</h2>
      <Layer title={cp('l.opp')} status={real?'live':'sim'} desc={cp('l.opp.d')}>
       <section className="sec"><div className="mono">DISCOVERY</div><h2>{t('disc.title')}</h2><p className="lead" style={{margin:'0 0 8px'}}>{t('disc.lead')}</p>
