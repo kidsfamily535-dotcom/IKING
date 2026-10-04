@@ -38,10 +38,12 @@ function Radar({airports,arc,poster}:{airports:Airport[];arc?:[string,string];po
 }
 
 function Story({o,staff,onChange}:{o:Opportunity;staff:boolean;onChange:()=>void}){
- const [rej,setRej]=useState(false),[why,setWhy]=useState(''),[msg,setMsg]=useState('');
+ const [rej,setRej]=useState(false),[why,setWhy]=useState(''),[msg,setMsg]=useState(''),[err,setErr]=useState(''),[busy,setBusy]=useState(false);
+ const guard=async(f:()=>Promise<void>)=>{setErr('');setBusy(true);try{await f();onChange()}catch(e:any){setErr(e?.message??'حدث خطأ، حاول مرة أخرى')}finally{setBusy(false)}};
  const sp=o.scoreParts,total=sp.freshness+sp.sourceStrength+sp.urgency+sp.confidence,ok=o.availability==='CONFIRMED';
- return <div className="card"><div className="mono">OPPORTUNITY<span className="badge b">SIM</span></div>
+ return <div className="card"><div className="mono">OPPORTUNITY<span className="badge b">{o.real?(o.isDemo?'DEMO DATA':'LIVE'):'SIM'}</span></div>
   <h3>{L(`${o.origin} → ${o.destination}`)} · {o.aircraftCategory} · {o.seats} مقاعد</h3>
+  <div className="row"><span>مرحلة الفرصة</span><span className="mono">{o.status}</span></div>
   <div className="row"><span>الحالة</span><span>{ok?<>نافذة متاحة <Badge s="CONFIRMED"/></>:<>التوافر غير معروف <Badge s="UNKNOWN"/></>}</span></div>
   <div className="row"><span>المصدر</span><span>{o.source}</span></div>
   <div className="row"><span>آخر تحقق</span><span>{o.verifiedMinAgo===null?'لم يتم':hm(o.verifiedMinAgo)}</span></div>
@@ -51,9 +53,10 @@ function Story({o,staff,onChange}:{o:Opportunity;staff:boolean;onChange:()=>void
    <ul>{o.reasons.map(r=><li key={r}>{r}</li>)}</ul></div>
   {o.matched&&<div className="nt e">العميل المطابق: {L(o.matched.segment)} · الصلة {o.matched.relevance} · البوابة: {o.matched.gate==='ALLOWED'?'مسموح':'محجوب'}{o.matched.gateReason&&` — ${o.matched.gateReason}`}</div>}
   {staff&&o.status==='ACTIVATION_PENDING'&&!msg&&<>
-   <div className="nt">عند الموافقة تُسجَّل الموافقة فقط. لا يُرسل شيء لأي عميل في هذه النسخة التجريبية.</div>
-   <div className="act"><HoldRing onDone={async()=>{await api.approveOpportunity(o.id);setMsg('تمت الموافقة — اتسجّلت');onChange()}}/><span className="mono">APPROVAL REQUIRED · HOLD</span><button className="g" onClick={()=>setRej(!rej)}>رفض</button></div>
-   {rej&&<div className="act"><input aria-label="سبب الرفض" placeholder="اكتب سبب الرفض (مطلوب)" value={why} onChange={e=>setWhy(e.target.value)}/><button className="g" disabled={!why.trim()} onClick={async()=>{await api.rejectOpportunity(o.id,why);setMsg('تم الرفض — اتسجّل السبب');onChange()}}>أكّد الرفض</button></div>}</>}
+   <div className="nt">{o.real?'عند الموافقة تظهر الفرصة داخل التطبيق للعميل المطابق فقط (لا واتساب ولا إيميل)، ويُسجَّل قرارك باسمك.':'عند الموافقة تُسجَّل الموافقة فقط. لا يُرسل شيء لأي عميل في هذه النسخة التجريبية.'}</div>
+   <div className="act"><HoldRing onDone={()=>guard(async()=>{await api.approveOpportunity(o.id);setMsg('تمت الموافقة — اتسجّلت')})}/><span className="mono">APPROVAL REQUIRED · HOLD</span><button className="g" onClick={()=>setRej(!rej)}>رفض</button></div>
+   {rej&&<div className="act"><input aria-label="سبب الرفض" placeholder="اكتب سبب الرفض (مطلوب)" value={why} onChange={e=>setWhy(e.target.value)}/><button className="g" disabled={!why.trim()||busy} onClick={()=>guard(async()=>{await api.rejectOpportunity(o.id,why.trim());setMsg('تم الرفض — اتسجّل السبب')})}>أكّد الرفض</button></div>}</>}
+  {err&&<div className="nt" role="alert">{err}</div>}
   {msg&&<div className="nt e">{msg}</div>}</div>;
 }
 
@@ -71,7 +74,7 @@ export default function App(){
  const staff=role==='admin',table=op.filter(o=>o.status==='ACTIVATION_PENDING');
  const live=op.find(o=>o.availability==='CONFIRMED');
  return <>
-  <div className="pill">{real?'LIVE · PARTIAL — الإشارات حقيقية والباقي محاكاة':'DEMO MODE · SIMULATION'}</div>
+  <div className="pill">{real?'LIVE · PARTIAL — الإشارات والفرص والموافقات حقيقية، والباقي محاكاة':'DEMO MODE · SIMULATION'}</div>
   <section className="hero"><div className="poster" style={{position:'absolute',inset:0}}><Radar airports={ap} arc={['RUH','JED']} poster/></div>
    <div className="mono">ALWAYS WATCHING · 24 / 7</div><h1>THE KING'S EYE</h1><div className="sub">Always watching. <b>Always ahead.</b></div>
    <Eye an={st!=='WATCHING'}/><div className="mono">{st}</div>
