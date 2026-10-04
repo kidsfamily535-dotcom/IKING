@@ -59,6 +59,15 @@ const X:D={
  who:['اسم المشغّل (اختياري)','Operator name (optional)','Operatör adı (isteğe bağlı)','Название оператора (необязательно)'],
  save:['احفظ الرحلة','Save trip','Seyahati kaydet','Сохранить поездку'],
  errSave:['تعذّر حفظ الرحلة. حاول مرة أخرى.','Could not save the trip. Try again.','Seyahat kaydedilemedi. Tekrar deneyin.','Не удалось сохранить поездку. Повторите.'],
+ demo:['محاكاة: بيانات تجريبية ولا تُحفظ في القاعدة.','Simulation: sample data, nothing is saved to the database.','Simülasyon: örnek veriler, veritabanına kaydedilmez.','Симуляция: тестовые данные, в базе ничего не сохраняется.'],
+ lang:['اللغة','Language','Dil','Язык'],
+ path:['مسار رحلتك','Your trip path','Seyahat yolunuz','Маршрут поездки'],
+ pathL:['من المغادرة إلى الوصول. الأوقات التي لا أعرفها أكتبها غير معروفة.','From departure to arrival. Times I do not know are marked unknown.','Kalkıştan varışa. Bilmediğim zamanlar bilinmiyor olarak işaretlenir.','От вылета до прилёта. Неизвестное время помечено как неизвестное.'],
+ stopDep:['المغادرة','Departure','Kalkış','Вылет'],stopArr:['الوصول','Arrival','Varış','Прилёт'],
+ cov:['الطقس: {n} من {m} مطار عليه رصد رسمي حالي.','Weather: {n} of {m} airports have a current official observation.','Hava durumu: {m} havalimanından {n} tanesinde güncel resmi gözlem var.','Погода: по {n} из {m} аэропортов есть свежее официальное наблюдение.'],
+ explore:['استكشف الطقس','Explore the weather','Hava durumunu keşfedin','Изучить погоду'],
+ yourTrips:['رحلاتك','Your trips','Seyahatleriniz','Ваши поездки'],yourTripsL:['اضغط على رحلة لتفتحها.','Tap a trip to open it.','Açmak için bir seyahate dokunun.','Нажмите на поездку, чтобы открыть.'],
+ lastNote:['ما يظهر هنا يأتي من رصد رسمي أو مما كتبتَه أنت.','What appears here comes from official observations or from what you entered.','Burada görünenler resmi gözlemlerden veya sizin girdiklerinizden gelir.','Здесь только официальные наблюдения и то, что ввели вы.'],
  foot:['الطقس من رصد رسمي. لا أؤكد توافر طائرة ولا موعدًا. القرار النهائي للمشغّل والطاقم.','Weather is from official observations. I do not confirm aircraft availability or timing. The final decision rests with the operator and crew.','Hava durumu resmi gözlemlerden alınır. Uçak müsaitliğini veya zamanlamayı onaylamam. Son karar operatör ve ekibe aittir.','Погода по официальным наблюдениям. Я не подтверждаю наличие самолёта и время. Окончательное решение за оператором и экипажем.']
 };
 const I:Record<Lang,number>={ar:0,en:1,tr:2,ru:3};

@@ -12,6 +12,7 @@ import {useCopy} from './eye/copy';
 import LangSwitch from './LangSwitch';
 import {useI18n,hasStoredLang,hasKey,catL,type Lang} from './i18n';
 import type {Airport,AgentState,DataStatus,EventPriority,Opportunity,Role,Signal,DecisionPolicyRow} from './data/types';
+const CX:Record<Lang,{a:string;b:string}>={ar:{a:'دخول العميل · رحلاتي',b:'معاينة تجريبية'},en:{a:'CLIENT SIGN-IN · MY TRIPS',b:'PREVIEW (DEMO)'},tr:{a:'MÜŞTERİ GİRİŞİ · SEYAHATLERİM',b:'ÖNİZLEME (DEMO)'},ru:{a:'ВХОД КЛИЕНТА · МОИ ПОЕЗДКИ',b:'ПРЕДПРОСМОТР (ДЕМО)'}};
 const FLOW:AgentState[]=['WATCHING','DISCOVERING','THINKING','MATCHING','DECIDING','MONITORING','ANTICIPATING'];
 const hm=(m:number)=>{const d=new Date(Date.now()-m*60000);return d.toTimeString().slice(0,5)};
 const L=(s:string)=><span dir="ltr">{s}</span>;
@@ -86,6 +87,7 @@ export default function App(){
    {!pick?<button onClick={()=>setPick(true)}>{t('hero.enter')}</button>:<div className="roles" role="group" aria-label={t('hero.pick.aria')}>{(['admin','operator','customer'] as Role[]).map(r=><button key={r} className={role===r?'':'g'} onClick={()=>{setRole(r);setTimeout(()=>document.getElementById('room')?.scrollIntoView({behavior:'smooth'}),50)}}>{t('role.'+r)}</button>)}</div>}
    {pick&&<div className="mono" style={{marginTop:14,opacity:.6}}>{t('hero.demoaccess')}</div>}
    {pick&&!login&&!real&&<button className="g" style={{marginTop:14}} onClick={()=>setLogin(true)}>{t('hero.realLogin')}</button>}
+   <div className="mono" style={{marginTop:22,display:'flex',gap:22,justifyContent:'center',flexWrap:'wrap'}}><a href="#my" style={{color:'var(--gold)'}}>{CX[lang].a}</a><a href="#my-demo" style={{color:'var(--dim)'}}>{CX[lang].b}</a></div>
    {login&&!real&&<SignIn onDone={(r,pl?:Lang)=>{useRealApi();setReal(true);setRole(r);setLogin(false);if(pl&&!hasStoredLang())setLang(pl,false)}}/>}
   </section>
   {role&&<><div id="bar"><b>{st}</b>{FLOW.map(f=><span key={f} className={`fc${f===st?' on':''}`}>{f}</span>)}<span className="ed">{role.toUpperCase()}</span></div>

@@ -2,3 +2,5 @@ import {createRoot} from 'react-dom/client';import './styles.css';import './eye/
 // ?house=royaljet أو ?house=jetex يفتح نسخة العميل. بدونها يفتح التطبيق الأصلي.
 const H=new URLSearchParams(location.search).get('house');
 createRoot(document.getElementById('root')!).render(<I18nProvider>{location.hash.startsWith('#my')?<CustomerApp/>:H==='royaljet'?<RoyalCut/>:H==='jetex'?<JetexCut/>:<App/>}</I18nProvider>);
+
+addEventListener('hashchange',()=>location.reload());
