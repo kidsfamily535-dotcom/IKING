@@ -11,6 +11,13 @@ type Wx={airport_code:string;airport_name_ar:string;leg_ar:string;obs_status:str
 type Pulse='calm'|'watch'|'act';
 const COL:Record<Pulse,string>={calm:'#7fc8a0',watch:'#e6c36a',act:'#e0907f'};
 const LN:Record<Lang,string>={ar:'العربية',en:'English',tr:'Türkçe',ru:'Русский'};
+const DEMO=location.hash==='#my-demo';
+const H=3600e3,dAt=(h:number)=>new Date(Date.now()+h*H).toISOString();
+const D_AP:Ap[]=[['RUH','الرياض','Riyadh'],['JED','جدة','Jeddah'],['CAI','القاهرة','Cairo'],['DXB','دبي','Dubai'],['DMM','الدمام','Dammam'],['AMM','عمّان','Amman']].map(a=>({iata_code:a[0],name_ar:a[1],name_en:a[2]}));
+let D_TR:Trip[]=[{id:'d1',from:'RUH',to:'JED',at:dAt(20),who:'Demo Operator',ours:false},{id:'d2',from:'CAI',to:'DXB',at:dAt(70),who:null,ours:false},{id:'d3',from:'DMM',to:'DXB',at:dAt(120),who:null,ours:false},{id:'d4',from:'AMM',to:'RUH',at:dAt(-200),who:null,ours:false}];
+const wk=(c:string,ok:boolean,wind=8):Wx=>ok?{airport_code:c,airport_name_ar:c,leg_ar:'',obs_status:'CURRENT',age_minutes:18,condition_ar:'رؤية جيدة',wind_dir:'280',wind_speed_kt:wind,visibility:'9999',temp_c:31}:{airport_code:c,airport_name_ar:c,leg_ar:'',obs_status:'UNKNOWN',age_minutes:null,condition_ar:null,wind_dir:null,wind_speed_kt:null,visibility:null,temp_c:null};
+const wxFor=async(a:string,b:string):Promise<Wx[]>=>{if(DEMO)return [wk(a,a!=='CAI',a==='DMM'?28:8),wk(b,b!=='CAI')];
+ const r=await sb.rpc('get_route_weather',{p_origin:a,p_destination:b});return r.error?[]:(r.data??[]) as Wx[]};
 const L=(s:string)=><span dir="ltr">{s}</span>;
 // الحالة تُحسب من رصد الطقس الرسمي فقط. لا نقول "كل شيء جاهز" لأننا لا نعرف حال الطائرة أو السائق عند مشغّل آخر.
 const pulseOf=(w:Wx[]):Pulse=>{if(!w.length||w.some(x=>x.obs_status!=='CURRENT'))return 'watch';
@@ -46,7 +53,7 @@ function Hero({trip,p,label}:{trip:Trip;p:Pulse;label:string}){const {t,loc}=use
 
 function Detail({trip,ap,onBack,onDel}:{trip:Trip;ap:Record<string,Ap>;onBack:()=>void;onDel:()=>void}){const {t,lang,dir}=useCx();
  const [w,setW]=useState<Wx[]|null>(null),[err,setErr]=useState(false);
- useEffect(()=>{sb.rpc('get_route_weather',{p_origin:trip.from,p_destination:trip.to}).then(r=>{if(r.error)setErr(true);else setW((r.data??[]) as Wx[])})},[trip.from,trip.to]);
+ useEffect(()=>{wxFor(trip.from,trip.to).then(setW).catch(()=>setErr(true))},[trip.from,trip.to]);
  const p=w?pulseOf(w):'watch';
  return <><button className="g" onClick={onBack}>{dir==='rtl'?'→':'←'} {t('trips')}</button><div style={{marginTop:6}}><Hero trip={trip} p={p} label="trip"/></div>
   <section className="sec"><h2>{t('wx')}</h2><p className="dim">{t('wxL')}</p>
@@ -66,6 +73,7 @@ function Detail({trip,ap,onBack,onDel}:{trip:Trip;ap:Record<string,Ap>;onBack:()
 function Add({ap,onDone}:{ap:Ap[];onDone:()=>void}){const {t,lang}=useCx();
  const [f,setF]=useState(''),[to,setTo]=useState(''),[at,setAt]=useState(''),[who,setWho]=useState(''),[busy,setBusy]=useState(false),[err,setErr]=useState('');
  const save=async()=>{setBusy(true);setErr('');
+  if(DEMO){D_TR=[...D_TR,{id:'d'+Date.now(),from:f,to:to,at:at?new Date(at).toISOString():null,who:who.trim()||null,ours:false}];setBusy(false);onDone();return}
   const {error}=await sb.from('customer_trips').insert({origin_code:f,destination_code:to,departure_at:at?new Date(at).toISOString():null,operator_name:who.trim()||null});
   setBusy(false);if(error)setErr(t('errSave'));else onDone()};
  const opts=<><option value="">{t('pick')}</option>{ap.map(a=><option key={a.iata_code} value={a.iata_code}>{apName(a,a.iata_code,lang)} · {a.iata_code}</option>)}</>;
@@ -79,8 +87,9 @@ function Add({ap,onDone}:{ap:Ap[];onDone:()=>void}){const {t,lang}=useCx();
 export default function CustomerApp(){const {t,dir,loc}=useCx();
  const [ses,setSes]=useState<Session|null|undefined>(undefined),[tab,setTab]=useState<'home'|'trips'|'add'|'mem'>('home'),[name,setName]=useState('');
  const [ap,setAp]=useState<Ap[]>([]),[trips,setTrips]=useState<Trip[]>([]),[open,setOpen]=useState<Trip|null>(null),[hw,setHw]=useState<Wx[]|null>(null);
- useEffect(()=>{sb.auth.getSession().then(r=>setSes(r.data.session));const {data}=sb.auth.onAuthStateChange((_e,s)=>setSes(s));return()=>data.subscription.unsubscribe()},[]);
+ useEffect(()=>{if(DEMO){setSes({} as Session);return}sb.auth.getSession().then(r=>setSes(r.data.session));const {data}=sb.auth.onAuthStateChange((_e,s)=>setSes(s));return()=>data.subscription.unsubscribe()},[]);
  const load=useCallback(async()=>{
+  if(DEMO){setAp(D_AP);setTrips([...D_TR].sort((x,y)=>Date.parse(x.at!)-Date.parse(y.at!)));return}
   const [a,mine,ours,pr]=await Promise.all([sb.from('airports').select('iata_code,name_ar,name_en').order('iata_code'),
    sb.from('customer_trips').select('id,origin_code,destination_code,departure_at,operator_name').order('departure_at',{ascending:true,nullsFirst:false}),
    sb.rpc('get_my_journey_briefs'),sb.from('profiles').select('full_name').maybeSingle()]);
@@ -90,9 +99,9 @@ export default function CustomerApp(){const {t,dir,loc}=useCx();
   T.sort((x,y)=>(x.at?Date.parse(x.at):9e15)-(y.at?Date.parse(y.at):9e15));setTrips(T)},[]);
  useEffect(()=>{if(ses)load()},[ses,load]);
  const upcoming=trips.filter(x=>!x.at||Date.parse(x.at)>Date.now()-6*3600e3),next=upcoming[0],past=trips.filter(x=>!upcoming.includes(x));
- useEffect(()=>{setHw(null);if(next)sb.rpc('get_route_weather',{p_origin:next.from,p_destination:next.to}).then(r=>setHw(r.error?[]:(r.data??[]) as Wx[]))},[next?.id]);
+ useEffect(()=>{setHw(null);if(next)wxFor(next.from,next.to).then(setHw)},[next?.id]);
  const apm=Object.fromEntries(ap.map(a=>[a.iata_code,a]));
- const del=async(x:Trip)=>{await sb.from('customer_trips').delete().eq('id',x.id);setOpen(null);load()};
+ const del=async(x:Trip)=>{if(DEMO){D_TR=D_TR.filter(y=>y.id!==x.id);setOpen(null);load();return}await sb.from('customer_trips').delete().eq('id',x.id);setOpen(null);load()};
  const go=(x:typeof tab)=>{setTab(x);setOpen(null);scrollTo({top:0})};
  const when=(x:Trip)=>x.at?new Date(x.at).toLocaleString(loc,{day:'numeric',month:'long',hour:'2-digit',minute:'2-digit'}):t('dateNone');
  const item=(x:Trip)=><button key={x.id} className="trip" onClick={()=>setOpen(x)}><b>{x.from} → {x.to}</b><br/><small>{when(x)}{x.ours?` · ${t('ours')}`:''}</small></button>;
@@ -101,7 +110,7 @@ export default function CustomerApp(){const {t,dir,loc}=useCx();
  const T=[['home','home'],['trips','trips'],['mem','mem']] as const;
  return <div className="cx" style={{direction:dir}}><div className="app"><div className="nav"><span className="mark">THE KING’S EYE</span><Lang_/>
   <nav aria-label={t('navAria')}>{T.map(x=><button key={x[0]} aria-current={tab===x[0]&&!open?'page':undefined} onClick={()=>go(x[0])}>{t(x[1])}</button>)}</nav>
-  <button className="g" onClick={()=>sb.auth.signOut()}>{t('out')}</button></div>
+  {DEMO?<span className="mono">DEMO · SIMULATION</span>:<button className="g" onClick={()=>sb.auth.signOut()}>{t('out')}</button>}</div>
   <main>{open?<Detail trip={open} ap={apm} onBack={()=>setOpen(null)} onDel={()=>del(open)}/>
   :tab==='add'?<Add ap={ap} onDone={()=>{load();go('trips')}}/>
   :tab==='trips'?<><h1 style={{marginTop:14}}>{t('trips')}</h1><p className="dim">{t('tripsLead')}</p>
@@ -113,4 +122,4 @@ export default function CustomerApp(){const {t,dir,loc}=useCx();
    {next?<button style={{display:'block',width:'100%'}} onClick={()=>setOpen(next)}><Hero trip={next} p={hw?pulseOf(hw):'watch'} label="next"/></button>
    :<section className="scene"><p className="mono">YOUR NEXT JOURNEY</p><p className="say">{t('noNext')}</p><p className="dim">{t('noNextL')}</p></section>}
    <button className="cta f" onClick={()=>go('add')}>{t('add')}</button></>}</main>
-  <p className="foot">{t('foot')}</p></div></div>}
+  <p className="foot">{DEMO&&<>{t('demo')} </>}{t('foot')}</p></div></div>}

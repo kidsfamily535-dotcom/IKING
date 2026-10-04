@@ -59,6 +59,7 @@ const X:D={
  who:['اسم المشغّل (اختياري)','Operator name (optional)','Operatör adı (isteğe bağlı)','Название оператора (необязательно)'],
  save:['احفظ الرحلة','Save trip','Seyahati kaydet','Сохранить поездку'],
  errSave:['تعذّر حفظ الرحلة. حاول مرة أخرى.','Could not save the trip. Try again.','Seyahat kaydedilemedi. Tekrar deneyin.','Не удалось сохранить поездку. Повторите.'],
+ demo:['محاكاة: بيانات تجريبية ولا تُحفظ في القاعدة.','Simulation: sample data, nothing is saved to the database.','Simülasyon: örnek veriler, veritabanına kaydedilmez.','Симуляция: тестовые данные, в базе ничего не сохраняется.'],
  foot:['الطقس من رصد رسمي. لا أؤكد توافر طائرة ولا موعدًا. القرار النهائي للمشغّل والطاقم.','Weather is from official observations. I do not confirm aircraft availability or timing. The final decision rests with the operator and crew.','Hava durumu resmi gözlemlerden alınır. Uçak müsaitliğini veya zamanlamayı onaylamam. Son karar operatör ve ekibe aittir.','Погода по официальным наблюдениям. Я не подтверждаю наличие самолёта и время. Окончательное решение за оператором и экипажем.']
 };
 const I:Record<Lang,number>={ar:0,en:1,tr:2,ru:3};
