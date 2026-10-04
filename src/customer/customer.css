@@ -1,0 +1,29 @@
+.cx{--n1:#060b16;--glow:#c9a961;--ink:#f4ecdc;--dim:#f4ecdc99;--ln:#f4ecdc1f;--calm:#7fc8a0;--watch:#e6c36a;--act:#e0907f;background:var(--n1);color:var(--ink);font:300 17px/1.85 Tajawal,system-ui,sans-serif;min-height:100svh;direction:rtl}
+.cx *{box-sizing:border-box;margin:0}
+.cx .app{max-width:860px;margin:0 auto;padding:0 clamp(18px,5vw,40px) 40px;display:flex;flex-direction:column;min-height:100svh;padding-top:env(safe-area-inset-top,0)}
+.cx button,.cx input,.cx select{font:inherit;color:inherit;background:none;border:0}.cx button{cursor:pointer}
+.cx :focus-visible{outline:2px solid var(--glow);outline-offset:4px;border-radius:4px}
+.cx .nav{display:flex;justify-content:space-between;align-items:center;gap:12px;padding:16px 0;flex-wrap:wrap}
+.cx .mark{font:400 20px 'Instrument Serif',Georgia,serif;letter-spacing:.16em;direction:ltr}
+.cx nav{display:flex;gap:22px}.cx nav button{font-size:15px;color:var(--dim);padding:10px 0;min-height:44px;border-bottom:1px solid transparent}.cx nav button[aria-current=page]{color:var(--ink);border-color:var(--glow)}
+.cx h1{font-weight:300;font-size:clamp(30px,6vw,52px);line-height:1.25}.cx h2{font-weight:300;font-size:22px;margin-bottom:6px}
+.cx .dim,.cx small{color:var(--dim);font-size:14px}.cx .mono{font:11px/1.4 'JetBrains Mono',monospace;letter-spacing:.25em;color:var(--glow);direction:ltr}
+.cx .sec{margin-top:44px}
+.cx .scene{position:relative;border:1px solid var(--ln);border-radius:4px;padding:clamp(24px,5vw,48px);min-height:340px;display:flex;flex-direction:column;justify-content:flex-end;background:linear-gradient(185deg,#0d1a2e,#0a1322 55%,#060b16);text-align:start;width:100%}
+.cx .city{direction:ltr;display:flex;align-items:baseline;gap:16px;font:400 clamp(38px,9vw,80px)/1.05 'Instrument Serif',Georgia,serif;letter-spacing:.14em;flex-wrap:wrap}.cx .city i{font-style:normal;font-size:.4em;color:var(--glow)}
+.cx .eye{display:flex;align-items:center;gap:16px;margin-top:22px}
+.cx .dot{width:14px;height:14px;border-radius:50%;background:var(--pc);flex:none;animation:cxb 3.2s ease-in-out infinite}
+@keyframes cxb{50%{opacity:.35;transform:scale(.7)}}@media(prefers-reduced-motion:reduce){.cx .dot{animation:none}}
+.cx .say{font-size:clamp(18px,2.6vw,24px);line-height:1.5}.cx .pulse{font-size:13px;color:var(--pc)}
+.cx .trip{display:block;width:100%;text-align:start;border-top:1px solid var(--ln);padding:18px 0;min-height:56px}
+.cx .trip b{font:400 26px 'Instrument Serif',Georgia,serif;letter-spacing:.1em;direction:ltr;display:inline-block}
+.cx .row{display:flex;justify-content:space-between;gap:16px;border-top:1px dashed var(--ln);padding:10px 0}
+.cx .cta{border:1px solid var(--glow);color:var(--glow);border-radius:2px;padding:10px 28px;min-height:48px;margin-top:22px}.cx .cta.f{background:var(--glow);color:var(--n1)}.cx .cta:disabled{opacity:.4}
+.cx .g{color:var(--dim);font-size:14px;padding:12px 4px;min-height:44px}
+.cx label{display:block;margin-top:18px;color:var(--dim);font-size:14px}
+.cx input,.cx select{display:block;width:100%;min-height:48px;border-bottom:1px solid var(--glow);padding:6px 2px;font-size:17px;color:var(--ink)}.cx select option{background:#0d1a2e}
+.cx .ltr{direction:ltr;text-align:start}.cx .err{color:var(--act);margin-top:14px}
+.cx .box{max-width:380px;margin:12vh auto 0;width:100%;text-align:start}
+.cx .foot{margin-top:auto;padding-top:36px;font-size:13px;color:var(--dim)}
+.cx .lg{display:flex;gap:4px;flex-wrap:wrap}.cx .lg button{font-size:13px;color:var(--dim);padding:10px 8px;min-height:44px}.cx .lg button[aria-pressed=true]{color:var(--glow)}
+.cx .city i{transform:scaleX(1)}
