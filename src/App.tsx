@@ -6,7 +6,11 @@ import JourneyRoom from './Journey';
 import DemoStory from './Demo';
 import HoldRing from './Hold';
 import OperatorValue from './OperatorValue';
-import MorningBrief from './MorningBrief';
+import KingsEyeHome from './eye/KingsEyeHome';
+import DayInLife from './eye/DayInLife';
+import {Layer,EyeMark} from './eye/parts';
+import BrokerRoom from './eye/Broker';
+import {useCopy} from './eye/copy';
 import LangSwitch from './LangSwitch';
 import {useI18n,hasStoredLang,hasKey,catL,type Lang} from './i18n';
 import type {Airport,AgentState,DataStatus,EventPriority,Opportunity,Role,Signal,DecisionPolicyRow} from './data/types';
@@ -43,14 +47,14 @@ function Radar({airports,arc,poster}:{airports:Airport[];arc?:[string,string];po
 function Story({o,staff,onChange}:{o:Opportunity;staff:boolean;onChange:()=>void}){
  const {t}=useI18n();const [rej,setRej]=useState(false),[why,setWhy]=useState(''),[msg,setMsg]=useState(''),[err,setErr]=useState(''),[busy,setBusy]=useState(false);
  const guard=async(f:()=>Promise<void>)=>{setErr('');setBusy(true);try{await f();onChange()}catch(e:any){setErr(e?.message??t('err.generic'))}finally{setBusy(false)}};
- const sp=o.scoreParts,total=sp.freshness+sp.sourceStrength+sp.urgency+sp.confidence,ok=o.availability==='CONFIRMED';
+ const cp=useCopy(),sp=o.scoreParts,ok=o.availability==='CONFIRMED';
  return <div className="card"><div className="mono">OPPORTUNITY<span className="badge b">{o.real?(o.isDemo?'DEMO DATA':'LIVE'):'SIM'}</span></div>
   <h3>{L(`${o.origin} → ${o.destination}`)} · {catL(o.aircraftCategory)} · {t('seats',{n:o.seats})}</h3>
   <div className="row"><span>{t('st.label')}</span><span>{ok?<>{t('st.window')} <Badge s="CONFIRMED"/></>:<>{t('st.unknown')} <Badge s="UNKNOWN"/></>}</span></div>
   <div className="row"><span>{t('src')}</span><span>{o.source}</span></div>
   <div className="row"><span>{t('lastVerified')}</span><span>{o.verifiedMinAgo===null?t('notYet'):hm(o.verifiedMinAgo)}</span></div>
   <div className="row"><span>{t('expiresIn')}</span><span>{t('minutes',{n:o.expiresInMin})}</span></div>
-  <div className="brief"><div className="mono">SCORE</div><span className="big">{total}</span><span className="mono"> / 100</span>
+  <div className="brief"><div className="mono">{cp('why.title')}</div>
    <div className="parts"><div><small>{t('sp.freshness')}</small><b>{sp.freshness}/30</b></div><div><small>{t('sp.source')}</small><b>{sp.sourceStrength}/20</b></div><div><small>{t('sp.urgency')}</small><b>{sp.urgency}/30</b></div><div><small>{t('sp.confidence')}</small><b>{sp.confidence}/20</b></div></div>
    <ul>{o.reasons.map(r=><li key={r}>{r}</li>)}</ul></div>
   {o.matched&&<div className="nt e">{t('match',{seg:o.matched.segment,rel:o.matched.relevance,gate:o.matched.gate==='ALLOWED'?t('gate.allowed'):t('gate.blocked')})}{o.matched.gateReason&&` — ${o.matched.gateReason}`}</div>}
@@ -67,7 +71,7 @@ function PolicyView(){
  return <details style={{marginBottom:48}}><summary className="mono" style={{cursor:'pointer'}}>DECISION POLICY · 8</summary>{r.map(x=><div className="row" key={x.decision}><span>{lang==='ar'||!hasKey('policy.'+x.decision)?x.descriptionAr:t('policy.'+x.decision)}</span><span className="pr">{x.decision}{x.requiresHuman?' · HUMAN':''}</span></div>)}</details>;
 }
 export default function App(){
- const {t,lang,setLang}=useI18n();const [role,setRole]=useState<Role|null>(null),[pick,setPick]=useState(false),[real,setReal]=useState(false),[login,setLogin]=useState(false);
+ const {t,lang,setLang}=useI18n();const cp=useCopy();const [role,setRole]=useState<Role|null>(null),[pick,setPick]=useState(false),[real,setReal]=useState(false),[login,setLogin]=useState(false);
  const [st,setSt]=useState<AgentState>('WATCHING'),[say,setSay]=useState('');
  const [ap,setAp]=useState<Airport[]>([]),[sg,setSg]=useState<Signal[]>([]),[op,setOp]=useState<Opportunity[]>([]);
  const load=()=>{api.listOpportunities().then(setOp)};
@@ -88,18 +92,27 @@ export default function App(){
   </section>
   {role&&<><div id="bar"><b>{st}</b>{FLOW.map(f=><span key={f} className={`fc${f===st?' on':''}`}>{f}</span>)}<span className="ed">{role.toUpperCase()}</span></div>
   <main id="room">
-   <DemoStory onState={setSt}/>
-   {role==='customer'?<JourneyRoom airports={ap}/>:<>
-    {staff&&real&&<MorningBrief/>}
-   <section className="sec"><div className="mono">DISCOVERY</div><h2>{t('disc.title')}</h2><p className="lead" style={{margin:'0 0 8px'}}>{t('disc.lead')}</p>
-    <div className="radar"><Radar airports={ap} arc={live?[live.origin,live.destination]:undefined}/></div><div className="cap">RUH-CENTRED · 2,200 KM</div>
-    <div className="act"><button className="g" onClick={run} disabled={st!=='WATCHING'}>{t('disc.run')}</button>{say&&<span>{say}</span>}</div>
-    <div className="fd">{sg.filter(s=>s.priority!=='SILENT'||true).map(s=><div className="sg" key={s.id}><span><b style={{fontWeight:500}}>{s.title}</b>{s.stage&&<span className="badge u">{s.stage}</span>}<Badge s={s.dataStatus}/>{s.grade&&<span className="badge u">GRADE {s.grade}</span>}</span><span className={`pr${s.priority==='APPROVAL_REQUIRED'?' a':''}`}>{PR[s.priority]}</span><small>{s.area} · {s.source} · {hm(s.minutesAgo)}</small></div>)}</div></section>
-   <section className="sec"><div className="mono">OPPORTUNITIES</div><h2>{t('opp.title')}</h2>{op.map(o=><Story key={o.id} o={o} staff={staff} onChange={load}/>)}</section>
-   {staff&&real&&<OperatorValue/>}
-   <OperatorRoom airports={ap}/>
-   {staff&&<PolicyView/>}
-   {staff&&<section className="sec"><div className="mono">ON THE TABLE</div><h2>{t('table.title')}</h2>{table.length?table.map(o=><div className="row" key={o.id}><span>{L(`${o.origin} → ${o.destination}`)}</span><span className="pr a">APPROVAL REQUIRED</span></div>):<div className="empty">{t('table.empty')}</div>}</section>}</>}
+   {role==='customer'?<><DemoStory onState={setSt}/><div style={{textAlign:'center'}}><EyeMark tone="calm"/></div><JourneyRoom airports={ap}/></>:<>
+    <KingsEyeHome real={real}/>
+    <DayInLife onState={setSt}/>
+    <section className="layers"><div className="mono">LAYERS</div><h2>{cp('layers')}</h2>
+     <Layer title={cp('l.opp')} status={real?'live':'sim'} desc={cp('l.opp.d')}>
+      <section className="sec"><div className="mono">DISCOVERY</div><h2>{t('disc.title')}</h2><p className="lead" style={{margin:'0 0 8px'}}>{t('disc.lead')}</p>
+       <div className="radar"><Radar airports={ap} arc={live?[live.origin,live.destination]:undefined}/></div><div className="cap">RUH-CENTRED · 2,200 KM</div>
+       <div className="act"><button className="g" onClick={run} disabled={st!=='WATCHING'}>{t('disc.run')}</button>{say&&<span>{say}</span>}</div>
+       <div className="fd">{sg.map(s=><div className="sg" key={s.id}><span><b style={{fontWeight:500}}>{s.title}</b>{s.stage&&<span className="badge u">{s.stage}</span>}<Badge s={s.dataStatus}/>{s.grade&&<span className="badge u">GRADE {s.grade}</span>}</span><span className={`pr${s.priority==='APPROVAL_REQUIRED'?' a':''}`}>{PR[s.priority]}</span><small>{s.area} · {s.source} · {hm(s.minutesAgo)}</small></div>)}</div></section>
+      <section className="sec"><div className="mono">OPPORTUNITIES</div><h2>{t('opp.title')}</h2>{op.map(o=><Story key={o.id} o={o} staff={staff} onChange={load}/>)}</section>
+      {staff&&<section className="sec"><div className="mono">ON THE TABLE</div><h2>{t('table.title')}</h2>{table.length?table.map(o=><div className="row" key={o.id}><span>{L(`${o.origin} → ${o.destination}`)}</span><span className="pr a">APPROVAL REQUIRED</span></div>):<div className="empty">{t('table.empty')}</div>}</section>}
+     </Layer>
+     <Layer title={cp('l.rev')} status={real?'live':'sim'} desc={cp('l.rev.d')}>
+      {staff&&real&&<OperatorValue/>}
+      <OperatorRoom airports={ap}/>
+     </Layer>
+     <Layer title={cp('l.guard')} status="wait" desc={cp('l.guard.d')}/>
+     <Layer title={cp('l.file')} status="wait" desc={cp('l.file.d')}/>
+     {staff&&<Layer title={cp('l.broker')} status="sim" desc={cp('l.broker.d')}><BrokerRoom/></Layer>}
+     {staff&&<PolicyView/>}
+    </section></>}
   </main></>}
   <footer>{t('footer')}</footer></>;
 }
