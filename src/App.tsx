@@ -6,6 +6,7 @@ import JourneyRoom from './Journey';
 import DemoStory from './Demo';
 import HoldRing from './Hold';
 import OperatorValue from './OperatorValue';
+import MorningBrief from './MorningBrief';
 import type {Airport,AgentState,DataStatus,EventPriority,Opportunity,Role,Signal,DecisionPolicyRow} from './data/types';
 const FLOW:AgentState[]=['WATCHING','DISCOVERING','THINKING','MATCHING','DECIDING','MONITORING','ANTICIPATING'];
 const R_AR:Record<Role,string>={admin:'مدير',operator:'مشغّل',customer:'عميل'};
@@ -89,7 +90,8 @@ export default function App(){
   <main id="room">
    <DemoStory onState={setSt}/>
    {role==='customer'?<JourneyRoom airports={ap}/>:<>
-   <section className="sec"><div className="mono">DISCOVERY</div><h2>العين تراقب</h2><p className="lead" style={{margin:'0 0 8px'}}>لا شيء يُعتبر «متاحًا» حتى يؤكده مشغّل.</p>
+    {staff&&real&&<MorningBrief/>}
+    <section className="sec"><div className="mono">DISCOVERY</div><h2>العين تراقب</h2><p className="lead" style={{margin:'0 0 8px'}}>لا شيء يُعتبر «متاحًا» حتى يؤكده مشغّل.</p>
     <div className="radar"><Radar airports={ap} arc={live?[live.origin,live.destination]:undefined}/></div><div className="cap">RUH-CENTRED · 2,200 KM</div>
     <div className="act"><button className="g" onClick={run} disabled={st!=='WATCHING'}>شغّل العين</button>{say&&<span>{say}</span>}</div>
     <div className="fd">{sg.filter(s=>s.priority!=='SILENT'||true).map(s=><div className="sg" key={s.id}><span><b style={{fontWeight:500}}>{s.title}</b>{s.stage&&<span className="badge u">{s.stage}</span>}<Badge s={s.dataStatus}/>{s.grade&&<span className="badge u">GRADE {s.grade}</span>}</span><span className={`pr${s.priority==='APPROVAL_REQUIRED'?' a':''}`}>{PR[s.priority]}</span><small>{s.area} · {s.source} · {hm(s.minutesAgo)}</small></div>)}</div></section>
