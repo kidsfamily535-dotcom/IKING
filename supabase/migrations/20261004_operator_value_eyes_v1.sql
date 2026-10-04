@@ -1,0 +1,4 @@
+-- Operator value eyes v1 (already applied on Supabase "I KING"). Reference copy.
+-- Functions: _eye_city_airports, eye_fleet_report(text[],boolean), eye_parked_aircraft(text[]), eye_demand_calendar(int)
+-- All staff-only (is_staff), read-only except an audit entry on fleet reports. Output is INFERRED from public ADS-B / public event signals; never "available".
+-- Full SQL: see the migration named operator_value_eyes_v1 in Supabase (list_migrations).

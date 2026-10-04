@@ -52,3 +52,5 @@ footer{text-align:center;color:var(--dim);font-size:13px;padding:30px 20px 50px;
 @media(max-width:560px){.f2{grid-template-columns:1fr}}
 .ask{display:flex;gap:10px;margin:14px 0 8px}.ask input{flex:1;min-width:0;background:none;border:0;border-bottom:1px solid var(--gold);color:var(--ink);font:inherit;font-size:19px;padding:10px 2px;outline:0}
 .jc{display:flex;gap:10px;flex-wrap:wrap;margin:10px 0}.jc span{font-size:13px;color:var(--dim);border:1px solid var(--line);padding:1px 10px;border-radius:20px}
+textarea{width:100%;background:none;border:1px solid #c9a96166;color:var(--ink);font:15px/1.7 'JetBrains Mono',monospace;padding:10px;outline:0;resize:vertical}
+.ck{display:flex;gap:10px;align-items:center;margin:12px 0;font-size:15px;color:var(--dim)}.ck input{width:18px;height:18px;accent-color:#c9a961}

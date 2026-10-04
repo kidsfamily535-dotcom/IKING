@@ -5,6 +5,7 @@ import OperatorRoom from './Operator';
 import JourneyRoom from './Journey';
 import DemoStory from './Demo';
 import HoldRing from './Hold';
+import OperatorValue from './OperatorValue';
 import type {Airport,AgentState,DataStatus,EventPriority,Opportunity,Role,Signal,DecisionPolicyRow} from './data/types';
 const FLOW:AgentState[]=['WATCHING','DISCOVERING','THINKING','MATCHING','DECIDING','MONITORING','ANTICIPATING'];
 const R_AR:Record<Role,string>={admin:'مدير',operator:'مشغّل',customer:'عميل'};
@@ -93,6 +94,7 @@ export default function App(){
     <div className="act"><button className="g" onClick={run} disabled={st!=='WATCHING'}>شغّل العين</button>{say&&<span>{say}</span>}</div>
     <div className="fd">{sg.filter(s=>s.priority!=='SILENT'||true).map(s=><div className="sg" key={s.id}><span><b style={{fontWeight:500}}>{s.title}</b>{s.stage&&<span className="badge u">{s.stage}</span>}<Badge s={s.dataStatus}/>{s.grade&&<span className="badge u">GRADE {s.grade}</span>}</span><span className={`pr${s.priority==='APPROVAL_REQUIRED'?' a':''}`}>{PR[s.priority]}</span><small>{s.area} · {s.source} · {hm(s.minutesAgo)}</small></div>)}</div></section>
    <section className="sec"><div className="mono">OPPORTUNITIES</div><h2>الفرص</h2>{op.map(o=><Story key={o.id} o={o} staff={staff} onChange={load}/>)}</section>
+   {staff&&real&&<OperatorValue/>}
    <OperatorRoom airports={ap}/>
    {staff&&<PolicyView/>}
    {staff&&<section className="sec"><div className="mono">ON THE TABLE</div><h2>على الطاولة</h2>{table.length?table.map(o=><div className="row" key={o.id}><span>{L(`${o.origin} → ${o.destination}`)}</span><span className="pr a">APPROVAL REQUIRED</span></div>):<div className="empty">لا شيء يحتاج انتباهك الآن</div>}</section>}</>}

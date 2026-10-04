@@ -1,7 +1,7 @@
 import {sb} from '../lib/supabase';
 import {mockApi} from './mockApi';
 import type {EyeApi} from './api';
-import type {Airport,Signal,DecisionPolicyRow,Opportunity} from './types';
+import type {Airport,Signal,DecisionPolicyRow,Opportunity,FleetAircraft,ParkedAircraft,CalendarEvent} from './types';
 const CODES=['RUH','JED','MED','TUU','DMM','AHB','GIZ','YNB','DXB','AUH','DOH','CAI','AMM'];
 const trusted=(s:string)=>s==='OFFICIAL_OPERATOR'||s==='VERIFIED_PARTNER';
 // ما لم يُوصَّل بعد (الرحلة الفاضية، الذاكرة، فهم الطلب) يبقى محاكاة ومعلَّمًا SIM في الواجهة.
@@ -28,5 +28,8 @@ export const realApi:EyeApi={...mockApi,
   if(error)throw new Error(error.message);
   if(data?.status!=='ACTIVATED')throw new Error(data?.status==='NO_ELIGIBLE_CUSTOMERS'?'لا يوجد عميل مؤهل الآن (البوابة حجبت الكل)':'الفرصة لم تعد في انتظار الموافقة')},
  async rejectOpportunity(id,reason){const {error}=await sb.rpc('reject_opportunity',{p_id:id,p_reason:reason});if(error)throw new Error(error.message)},
+ async fleetReport(regs,consent){const {data,error}=await sb.rpc('eye_fleet_report',{p_regs:regs,p_consent:consent});if(error)throw new Error(error.message);return (data?.aircraft??[]) as FleetAircraft[]},
+ async parkedAircraft(regs){const {data,error}=await sb.rpc('eye_parked_aircraft',{p_regs:regs&&regs.length?regs:null});if(error)throw new Error(error.message);return (data?.aircraft??[]) as ParkedAircraft[]},
+ async demandCalendar(days){const {data,error}=await sb.rpc('eye_demand_calendar',{p_days:days});if(error)throw new Error(error.message);return (data?.events??[]) as CalendarEvent[]},
  async listPolicy(){const {data}=await sb.from('eye_decision_policy').select('*').order('sort_order');
   return (data??[]).map(r=>({situation:r.situation,decision:r.decision,externalEffect:r.external_effect,requiresHuman:r.requires_human,descriptionAr:r.description_ar}) as DecisionPolicyRow)}};
