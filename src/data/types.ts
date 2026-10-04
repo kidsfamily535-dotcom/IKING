@@ -10,7 +10,7 @@ export interface Opportunity{id:string;origin:string;destination:string;aircraft
 export interface EmptyLegInput{aircraft:string;origin:string;from:string;destination:string;seats:number;targetUsd?:number}
 export interface EmptyLegResult{id:string;steps:string[];reasons:string[];confidence:'medium'|'low';score:ScoreParts;recommendation:'OUTREACH'|'WATCH';draft:string}
 export interface MarketLeg{aircraftCategory:string;origin:string;destination:string;status:'in_flight'|'landed'|'signal_lost';confidence:'HIGH'|'MEDIUM';inferred:true}
-export interface MemoryItem{key:string;labelAr:string;value:string;source:'CUSTOMER_PROVIDED'|'FROM_PAST_TRIPS';editable:true}
+export interface MemoryItem{key:string;value?:string;source:'CUSTOMER_PROVIDED'|'FROM_PAST_TRIPS';editable:true}
 export interface TripOption{id:string;title:string;category:string;departure:string;durationMin:number;priceLo:number;priceHi:number;usesMemory:boolean}
 export interface ParsedRequest{origin?:string;destination?:string;passengers?:number;when?:string;missing:string[];options:TripOption[]}
 export interface DecisionPolicyRow{situation:string;decision:string;externalEffect:boolean;requiresHuman:boolean;descriptionAr:string}

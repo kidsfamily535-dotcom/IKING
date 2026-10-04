@@ -52,3 +52,7 @@ footer{text-align:center;color:var(--dim);font-size:13px;padding:30px 20px 50px;
 @media(max-width:560px){.f2{grid-template-columns:1fr}}
 .ask{display:flex;gap:10px;margin:14px 0 8px}.ask input{flex:1;min-width:0;background:none;border:0;border-bottom:1px solid var(--gold);color:var(--ink);font:inherit;font-size:19px;padding:10px 2px;outline:0}
 .jc{display:flex;gap:10px;flex-wrap:wrap;margin:10px 0}.jc span{font-size:13px;color:var(--dim);border:1px solid var(--line);padding:1px 10px;border-radius:20px}
+.lang{position:fixed;top:8px;right:8px;z-index:99;display:flex;gap:4px;direction:ltr}
+.lang button{padding:3px 12px;font:11px 'JetBrains Mono',Tajawal,sans-serif;letter-spacing:.08em;background:#060b16d9;color:var(--gold);border:1px solid #c9a96166;border-radius:99px}
+.lang button.on{background:var(--gold);color:var(--bg)}
+@media(max-width:560px){.lang button{padding:3px 9px}}
