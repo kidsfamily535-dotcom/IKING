@@ -4,12 +4,13 @@ import type {Airport,MemoryItem,ParsedRequest} from './data/types';
 import {useI18n,airportName,catL} from './i18n';
 import {useCopy} from './eye/copy';
 import MyTrips from './MyTrips';
+import {sb} from './lib/supabase';
 const EX=['j.ex1','j.ex2'];
 const LT=(s:string|number)=><span dir="ltr">{s}</span>;
 const bz=(t:number,a:number,b:number)=>(1-t)*(1-t)*a+2*(1-t)*t*((a+b)/2)+t*t*b;
 // شاشة العميل. الترتيب: حالة العين (المشهد فوقها) ثم الطلب ثم رحلاتي (الرحلة والطقس) ثم الذاكرة.
 // أدوات المحاكاة (تشغيل ×1 ×3 ×10 والتأخير المحاكى) تظهر فقط في وضع العرض (demo)، لا للعميل.
-export default function JourneyRoom({airports,demo=false,real=false}:{airports:Airport[];demo?:boolean;real?:boolean}){
+export default function JourneyRoom({airports,demo=false,real=false,ask}:{airports:Airport[];demo?:boolean;real?:boolean;ask?:string}){
  const {t,lang,dir}=useI18n();const cp=useCopy();const dur=(m:number)=>`${Math.floor(m/60)}${t('unit.h')} ${m%60}${t('unit.m')}`;
  const [txt,setTxt]=useState(''),[p,setP]=useState<ParsedRequest|null>(null),[th,setTh]=useState(false);
  const [mem,setMem]=useState<MemoryItem[]>([]),[ed,setEd]=useState<string|null>(null),[val,setVal]=useState('');
@@ -18,6 +19,14 @@ export default function JourneyRoom({airports,demo=false,real=false}:{airports:A
  useEffect(()=>{api.listMemory().then(setMem)},[lang]);
  useEffect(()=>{if(!play)return;const i=setInterval(()=>setProg(x=>{const n=Math.min(1,x+.002*spd);if(n>=1)setPlay(false);return n}),200);return()=>clearInterval(i)},[play,spd]);
  const send=async(t:string)=>{setTxt(t);setP(null);setTh(true);setP(await api.parseRequest(t));setTh(false)};
+ useEffect(()=>{if(ask)send(ask)},[]);
+ const [want,setWant]=useState<string|null>(null),[em,setEm]=useState(''),[gm,setGm]=useState(''),[gb,setGb]=useState(false),[won,setWon]=useState<string|null>(null);
+ const wantIt=async(id:string)=>{if(!p?.origin||!p.destination)return;setGm('');
+  if(real){try{await api.addMyTrip(p.origin,p.destination,null);setWon(id)}catch{setGm(t('mt.err'))}}else setWant(id)};
+ const sendLink=async()=>{if(!p?.origin||!p.destination)return;setGb(true);setGm('');
+  try{localStorage.setItem('iking_want',JSON.stringify({o:p.origin,d:p.destination}))}catch{/* التخزين غير متاح */}
+  const r=await sb.auth.signInWithOtp({email:em.trim(),options:{emailRedirectTo:location.origin}});
+  setGm(r.error?t('gate.err'):t('gate.sent'));setGb(false)};
  const submit=()=>{if(txt.trim())send(txt);else inp.current?.focus()};
  const nm=(c?:string)=>{const a=airports.find(x=>x.iata===c);return a?airportName(a):c};
  const memV=(m:MemoryItem)=>m.value??t('memv.'+m.key);
@@ -41,11 +50,16 @@ export default function JourneyRoom({airports,demo=false,real=false}:{airports:A
     {p.options.map(o=><div className="card" key={o.id}><h3>{t('opt.'+o.id)}</h3>
      <div className="row"><span>{t('j.category')}</span><span style={{direction:dir}}>{catL(o.category)}</span></div>
      <div className="row"><span>{t('j.departure')}</span><span>{LT(o.departure)}</span></div>
-     <div className="row"><span>{t('j.duration')}</span><span>{dur(o.durationMin)} <span className="badge b">ESTIMATED</span></span></div>
-     <div className="row"><span>{t('j.availability')}</span><span>{t('st.unknown')} <span className="badge u">UNKNOWN</span></span></div>
-     <div className="row"><span>{t('j.refPrice')}</span><span>{LT(`$${o.priceLo.toLocaleString()}–${o.priceHi.toLocaleString()}`)} <span className="badge b">{cp('badge.sim')}</span></span></div>
+     <div className="row"><span>{t('j.duration')}</span><span>{dur(o.durationMin)} <span className="badge b">{t('b.estimate')}</span></span></div>
+     <div className="row"><span>{t('j.availability')}</span><span>{t('b.waiting')}</span></div>
+     <div className="row"><span>{t('j.refPrice')}</span><span>{LT(`$${o.priceLo.toLocaleString()}–${o.priceHi.toLocaleString()}`)} <span className="badge b">{t('b.example')}</span></span></div>
      <small style={{color:'var(--dim)'}}>{t('j.priceNote')}</small>
-     {o.usesMemory&&<div className="nt">{t('j.usesMemory')}</div>}</div>)}</>}
+     {o.usesMemory&&<div className="nt">{t('j.usesMemory')}</div>}
+     {p.origin&&p.destination&&won!==o.id&&<div className="act"><button onClick={()=>wantIt(o.id)}>{t('opt.want')}</button></div>}
+     {won===o.id&&<div className="nt e" role="status">{t('want.done')}</div>}
+     {want===o.id&&!real&&<div className="gate"><div className="mono">{t('gate.title')}</div>
+      <div className="ask"><input type="email" aria-label={t('gate.email')} placeholder={t('gate.email')} autoComplete="email" value={em} onChange={e=>setEm(e.target.value)}/><button className="send" disabled={gb||!em.includes('@')} onClick={sendLink}>{t('gate.send')}</button></div></div>}
+     {gm&&(want===o.id||won===null)&&<div className="nt" role="status">{gm}</div>}</div>)}</>}
   </section>
   <section className="sec" id="trips"><div className="mono">{t('j.cap.trips')}{!real&&<span className="badge b">{cp('badge.sim')}</span>}</div><h2>{t('j.trips.title')}</h2>
    {real?<MyTrips airports={airports}/>:<>

@@ -27,7 +27,7 @@ export default function MyTrips({airports}:{airports:Airport[]}){
  const leg=(r:RouteWx)=>{const ok=r.status==='CURRENT';
   const det=ok?[r.windKt!=null?t('wx.wind',{d:dirTxt(r.windDir)??'',k:r.windKt}):'',r.vis?t('wx.vis',{v:r.vis+' SM'}):'',r.ageMin!=null?t('wx.age',{n:r.ageMin}):''].filter(Boolean).join(' · '):'';
   return <div key={r.leg}><div className="row"><span>{t('wx.'+r.leg)} · {nm(r.code)}</span>
-   <span style={{direction:dir}}>{ok?t(r.cat?'wx.cat.'+r.cat:'wx.cat.none'):t('wx.unknown')}<span className={`badge${ok?'':' u'}`}>{ok?'LIVE':'UNKNOWN'}</span></span></div>
+   <span style={{direction:dir}}>{ok?t(r.cat?'wx.cat.'+r.cat:'wx.cat.none'):t('wx.unknown')}<span className={`badge${ok?'':' u'}`}>{ok?t('b.live'):t('b.waiting')}</span></span></div>
    {det&&<small style={{color:'var(--dim)',display:'block',padding:'4px 0 8px'}}>{det}</small>}</div>};
  return <>
   {trips===null?null:!trips.length&&<div className="nt">{loadErr?t('mt.loadfail'):t('mt.none')}</div>}
