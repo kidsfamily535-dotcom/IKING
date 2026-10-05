@@ -73,33 +73,33 @@ Deno.serve(async (req) => {
   const f = d.flight ?? {}, w = d.journey ?? {}, dm = d.demand ?? {}, op = d.opportunities ?? {}, sy = d.system ?? {}
 
   const warns: string[] = []
-  if (f.minutes_since_last_sighting == null || n(f.minutes_since_last_sighting) > 30) warns.push(`عين الطيران: آخر رصد من ${f.minutes_since_last_sighting ?? '؟'} دقيقة (المفروض كل بضع دقايق)`)
-  if (w.minutes_since_weather == null || n(w.minutes_since_weather) > 60) warns.push(`عين الرحلة: آخر تحديث للطقس من ${w.minutes_since_weather ?? '؟'} دقيقة`)
-  if (n(sy.cron_failed_24h) > 0) warns.push(`فيه ${n(sy.cron_failed_24h)} مهمة مجدولة فشلت في آخر 24 ساعة`)
-  if (n(f.fetch_failed_24h) > 0) warns.push(`رصد الطيارات فشل ${n(f.fetch_failed_24h)} مرة في آخر 24 ساعة`)
+  if (f.minutes_since_last_sighting == null || n(f.minutes_since_last_sighting) > 30) warns.push(`عين الطيران: آخر رصد منذ ${f.minutes_since_last_sighting ?? '؟'} دقيقة (والمفترض كل بضع دقائق)`)
+  if (w.minutes_since_weather == null || n(w.minutes_since_weather) > 60) warns.push(`عين الرحلة: آخر تحديث للطقس منذ ${w.minutes_since_weather ?? '؟'} دقيقة`)
+  if (n(sy.cron_failed_24h) > 0) warns.push(`ثمّة ${n(sy.cron_failed_24h)} مهمة مجدولة أخفقت خلال آخر 24 ساعة`)
+  if (n(f.fetch_failed_24h) > 0) warns.push(`أخفق رصد الطائرات ${n(f.fetch_failed_24h)} مرة خلال آخر 24 ساعة`)
 
   const list = (a: unknown) => (Array.isArray(a) && a.length ? a.slice(0, 12).map(esc).join(' ، ') : 'لا يوجد')
   const grades = Object.entries(dm.by_grade ?? {}).map(([g, c]) => `${esc(g)}: ${esc(c)}`).join(' ، ') || '—'
   const pending = (opps ?? []) as any[]
   const html = `<div dir="rtl" style="font-family:system-ui,Tahoma,sans-serif;color:#111;line-height:1.8;max-width:640px">
 <h2 style="margin:0">THE KING'S EYE — تقرير العيون</h2>
-<p style="color:#555;margin-top:4px">آخر 24 ساعة. الأرقام دي من بيانات حقيقية، لكن الفرص الحالية تجريبية.</p>
-${warns.length ? `<div style="background:#fff4e5;border:1px solid #e6a23c;padding:10px"><b>تنبيهات النظام:</b><ul>${warns.map((x) => `<li>${esc(x)}</li>`).join('')}</ul></div>` : '<p>✅ كل المهام شغالة بشكل طبيعي.</p>'}
+<p style="color:#555;margin-top:4px">آخر 24 ساعة. الأرقام مستمدّة من بيانات حقيقية، أما الفرص الحالية فتجريبية.</p>
+${warns.length ? `<div style="background:#fff4e5;border:1px solid #e6a23c;padding:10px"><b>تنبيهات النظام:</b><ul>${warns.map((x) => `<li>${esc(x)}</li>`).join('')}</ul></div>` : '<p>✅ جميع المهام تعمل على نحو طبيعي.</p>'}
 <h3>1) عين الطيران</h3>
-<ul><li>${esc(n(f.sightings_24h))} رصد لـ ${esc(n(f.distinct_aircraft_24h))} طيارة مختلفة</li>
-<li>رحلات اتستنتجت: ${esc(n(f.legs_24h))} اليوم (الإجمالي ${esc(n(f.legs_total))})</li>
-<li>الرصد: ${esc(n(f.fetch_ok_24h))} نجح، ${esc(n(f.fetch_failed_24h))} فشل</li>
-<li style="color:#555">الطيارة اللي اتشافت مش معناها متاحة. التوافر بيتأكد من المشغّل بس.</li></ul>
+<ul><li>${esc(n(f.sightings_24h))} رصد لـ ${esc(n(f.distinct_aircraft_24h))} طائرة مختلفة</li>
+<li>رحلات مستنتجة: ${esc(n(f.legs_24h))} اليوم (الإجمالي ${esc(n(f.legs_total))})</li>
+<li>الرصد: ${esc(n(f.fetch_ok_24h))} نجح، ${esc(n(f.fetch_failed_24h))} أخفق</li>
+<li style="color:#555">الطائرة المرصودة لا تعني أنها متاحة، والتوافر يؤكده المشغّل وحده.</li></ul>
 <h3>2) عين الرحلة (الطقس)</h3>
 <ul><li>مطارات طقسها IFR أو أسوأ: ${list(w.ifr_or_worse)}</li>
-<li>مطارات رياحها 25 عقدة أو أكتر: ${list(w.strong_wind_25kt)}</li></ul>
+<li>مطارات تبلغ رياحها 25 عقدة أو أكثر: ${list(w.strong_wind_25kt)}</li></ul>
 <h3>3) عين الطلب</h3>
-<ul><li>إشارات طلب نشطة: ${esc(n(dm.active))} (الدرجة: ${grades}). D معناها إشارة ضعيفة.</li>
+<ul><li>إشارات طلب نشطة: ${esc(n(dm.active))} (الدرجة: ${grades}). الدرجة D تعني إشارة ضعيفة.</li>
 ${(dm.latest_titles ?? []).map((t: string) => `<li dir="ltr" style="text-align:left">${esc(t)}</li>`).join('')}</ul>
 <h3>الفرص</h3>
-<p>منتظرة موافقتك: <b>${esc(n(op.awaiting_approval))}</b> — محققة: ${esc(n(op.validated))} — منتهية: ${esc(n(op.expired))}</p>
+<p>بانتظار موافقتك: <b>${esc(n(op.awaiting_approval))}</b> — محققة: ${esc(n(op.validated))} — منتهية: ${esc(n(op.expired))}</p>
 ${pending.length ? `<table cellpadding="6" dir="ltr" style="border-collapse:collapse">${pending.map(oppRow).join('')}</table>` : ''}
-<p style="color:#555">مفيش حاجة اتبعتت لأي عميل. أي إرسال بيستنى موافقتك.</p></div>`
+<p style="color:#555">لم يُرسَل شيء إلى أي عميل، وكل إرسال بانتظار موافقتك.</p></div>`
 
   const r = await send(`THE KING'S EYE — تقرير العيون${warns.length ? ' ⚠️' : ''}`, html)
   if (!r.ok) return json({ error: 'email_failed', status: r.status }, 502)
