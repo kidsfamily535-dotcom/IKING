@@ -28,5 +28,12 @@ Source: Supabase project "I KING" (eu-west-1). 32 tables, 13 enums, 98 functions
 Replayed `full_schema.sql` then `seed_reference_data.sql` on a clean local Postgres 16 with stubs for `auth`, `cron`, `vault`, `anon/authenticated/service_role` and the `http` type: 0 errors; 32 tables, 16 triggers, 98 functions, 43 policies, 4 views; seed counts 164 / 36 / 41 / 35 / 8 / 5. In a rolled-back transaction, `PENDING_VERIFICATION → BOOKED` was rejected by `guard_availability`.
 Not verified: real Supabase (pg_cron, vault, http, auth) and RLS behaviour per role.
 
+## Live-DB comparison (2026-10-05, read-only unless noted)
+- All 98 public functions: aggregate hash of whitespace-normalised definitions is **identical** between the live DB and the replayed copy.
+- 16 triggers: taken from the live DB.
+- Role test on live (inside a rolled-back transaction): `anon` is denied (42501) on 13 core tables; `authenticated` without a user sees 0 rows on them.
+- Applied on live (owner-approved): `authenticated` lost TRUNCATE/REFERENCES/TRIGGER on all public tables (migration `20261005_revoke_truncate_references_trigger_authenticated.sql`). It keeps SELECT/INSERT/UPDATE/DELETE, limited by RLS.
+
 ## Known gaps
-- Table grants (migration `revoke_anon_table_privileges`) are not in the export; re-apply or add `grant/revoke` statements.
+- Section 11 (grants) now matches live for `anon` and `authenticated`. `service_role` keeps Supabase defaults.
+- Not verified on a real Supabase project (pg_cron, vault, http, auth behaviour).

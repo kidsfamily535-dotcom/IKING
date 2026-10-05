@@ -3062,3 +3062,14 @@ select cron.schedule('eye-tick', '2-59/10 * * * *', $cron$select public.eye_tick
 select cron.schedule('infer-aircraft-legs', '1-59/3 * * * *', $cron$select public.infer_aircraft_legs()$cron$);
 select cron.schedule('supply-expire', '*/5 * * * *', $cron$select public.expire_stale_availability(); select public.expire_stale_opportunities(); select public.expire_stale_quotes();$cron$);
 select cron.schedule('weather-refresh', '*/20 * * * *', $cron$select public._fetch_weather()$cron$);
+
+
+-- 11. Grants (added 2026-10-05; matches live: anon has NO table privileges, access is via RPC + RLS)
+-- A new Supabase project grants anon/authenticated broad default privileges, so tighten them here.
+revoke all on all tables in schema public from anon;
+revoke all on all sequences in schema public from anon;
+alter default privileges in schema public revoke all on tables from anon;
+alter default privileges in schema public revoke all on sequences from anon;
+-- authenticated: keep SELECT/INSERT/UPDATE/DELETE (RLS limits rows); remove privileges RLS cannot cover (applied on live 2026-10-05).
+revoke truncate, references, trigger on all tables in schema public from authenticated;
+alter default privileges in schema public revoke truncate, references, trigger on tables from authenticated;
