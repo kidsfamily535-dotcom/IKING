@@ -60,5 +60,6 @@ export const tur:Record<Key,string>={
 'opp.demoNote':'Demo verisi','o1.r1':'Operatör uçuşu 12 dakika önce onayladı','o1.r2':'Kalkışa yaklaşık iki saat var (gerçek verilerden)','o1.r3':'Bu rota genellikle Riyad’daki müşteriler tarafından talep edilir',
 'o2.r1':'Kapasite kaydedildi ancak operatör henüz onaylamadı','o2.gate':'Müsaitlik onaylı değil ve doğrulanmadan hiçbir müşteriye gösterilmez',
 'run.result':'Göz 6 sinyali inceledi: bir fırsat onayınıza hazır, bir diğeri ekip doğrulamasını bekliyor.',
-'policy.SILENT':'Rahatsız etmeye değecek bir şey yok','policy.MONITOR':'Sessizce izle','policy.INVESTIGATE':'Daha derin incele','policy.RECOMMEND':'Ekibe öner','policy.ACT_INTERNAL':'Düşük riskli iç işlem','policy.ASK_APPROVAL':'İnsan onayı iste','policy.ESCALATE':'Bir insana yönlendir','policy.VERIFY_CONTINUE':'Doğrula, sonra devam et'
+'policy.SILENT':'Rahatsız etmeye değecek bir şey yok','policy.MONITOR':'Sessizce izle','policy.INVESTIGATE':'Daha derin incele','policy.RECOMMEND':'Ekibe öner','policy.ACT_INTERNAL':'Düşük riskli iç işlem','policy.ASK_APPROVAL':'İnsan onayı iste','policy.ESCALATE':'Bir insana yönlendir','policy.VERIFY_CONTINUE':'Doğrula, sonra devam et',
+'j.cap.tell':'TALEBİNİZ','j.cap.trips':'SONRAKİ YOLCULUĞUNUZ','j.cap.wx':'HAVA','j.cap.d2d':'KAPIDAN KAPIYA','j.cap.mem':'HAFIZA','j.thinking':'GÖZ DÜŞÜNÜYOR','j.noticed':'GÖZ FARK ETTİ','j.trips.title':'Yolculuklarım','j.trips.open':'Tüm yolculuklarımı aç','j.wx.row':'Koşullar uygun görünüyor','j.wx.note':'Koşullar plana uygun görünüyor. Nihai karar operatöre ve ekibe aittir.'
 };

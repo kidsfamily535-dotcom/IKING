@@ -32,7 +32,7 @@ function World({airports:all,arc,focus,k}:{airports:Airport[];arc?:[string,strin
   {airports.map(a=>{const p=P[a.iata],h=hot.has(a.iata);return <g key={a.iata}>
    {h&&<circle className="sc-ping" cx={p.x} cy={p.y} r="7" fill="none" stroke="#c9a961" style={{transformOrigin:`${p.x}px ${p.y}px`}}/>}
    <circle cx={p.x} cy={p.y} r={h?3.6:1.8} fill={h?'#c9a961':'#f4ecdc'} fillOpacity={h?1:.45}/>
-   <text x={p.x+7} y={p.y-6} fill="#f4ecdc" fillOpacity={h?.85:.28} fontSize="8.5" fontFamily="JetBrains Mono" letterSpacing="1.5">{a.iata}</text></g>})}
+   <text x={p.x>500?p.x-7:p.x+7} textAnchor={p.x>500?'end':'start'} y={p.y-6} fill="#f4ecdc" fillOpacity={h?.85:.28} fontSize="8.5" fontFamily="JetBrains Mono" letterSpacing="1.5">{a.iata}</text></g>})}
   {e&&<g key={k}><path className="sc-arc" d={d} pathLength={1} fill="none" stroke="#c9a961" strokeWidth="1.4"/>
    <circle r="3.2" fill="#f4ecdc"><animateMotion dur="5s" repeatCount="indefinite" path={d}/></circle></g>}
  </svg>;
@@ -70,11 +70,11 @@ export default function Scene({mode,real,airports,onState}:{mode:'operator'|'cus
  const tgt=m.arc?m.arc[1]:m.focus,c=airports.find(a=>a.iata==='RUH'),a=airports.find(x=>x.iata===tgt);
  const q=c&&a?pt(a,c):{x:300,y:300},ix=Math.max(-14,Math.min(14,(q.x-300)/270*22)),iy=Math.max(-14,Math.min(14,(q.y-300)/270*22));
  const ok=done.includes(m.key),pending=!!m.approve&&!ok;
- return <section id="room" className={`sc-stage t-${m.tone}`} aria-live="polite">
+ return <section id="room" className={`sc-stage t-${m.tone}${op?'':' cust'}`} aria-live="polite">
   <World airports={airports} arc={m.arc} focus={m.focus} k={m.key}/><div className="sc-vig"/>
   <div className="sc-eye-wrap" style={{['--ix' as string]:`${ix}px`,['--iy' as string]:`${iy}px`}}>
    <div className={`sc-eye${play?' live':''}`} role="img" aria-label={cp('tone.'+m.tone)}><span className="rg"/><span className="rg r2"/><span className="ir"><i/></span></div>
-   {SAT.map((s,i)=><span key={s} className={`sat${m.sat.includes(i)?' on':''}`} style={{['--a' as string]:`${ANG[i]}deg`}}>{s}</span>)}
+   {op&&SAT.map((s,i)=><span key={s} className={`sat${m.sat.includes(i)?' on':''}`} style={{['--a' as string]:`${ANG[i]}deg`}}>{s}</span>)}
   </div>
   <span className="sc-pill">{m.sim?cp('badge.sim'):cp('badge.live')}</span>
   <div className="sc-copy" key={m.key}>

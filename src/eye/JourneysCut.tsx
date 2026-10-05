@@ -15,7 +15,7 @@ const answer=(q:string)=>q.includes('الطقس')?'الظروف في باريس 
 const pct=()=>Math.round(CHK.filter(x=>x[2]).length/CHK.length*100);
 function Ring({p}:{p:P}){const c=2*Math.PI*34;return <div className="ring" style={{['--pc' as string]:PC[p][0]}}><svg viewBox="0 0 80 80"><circle cx="40" cy="40" r="34" fill="none" stroke="#f4ecdc2e" strokeWidth="2"/><circle cx="40" cy="40" r="34" fill="none" stroke={PC[p][0]} strokeWidth="2.5" strokeLinecap="round" strokeDasharray={c} strokeDashoffset={c*(1-pct()/100)}/></svg><div className="c"><i/></div></div>}
 function Hero({p}:{p:P}){return <section className="scene" aria-label="رحلتك القادمة"><svg className="sky" viewBox="0 0 800 420" preserveAspectRatio="xMidYMid slice" aria-hidden="true"><g fill="none" stroke="#f4ecdc" strokeOpacity=".1"><circle cx="400" cy="400" r="140"/><circle cx="400" cy="400" r="260"/><circle cx="400" cy="400" r="380"/></g><path d="M-20,340 Q260,120 560,200 T840,90" fill="none" stroke="#f4ecdc" strokeOpacity=".5" strokeDasharray="2 9"/></svg>
- <p className="jy-mono">YOUR NEXT JOURNEY</p><p className="jy-sub">رحلتك القادمة</p><div className="city"><span>CAIRO</span><i>←</i><span>PARIS</span></div><p className="when">18 أكتوبر · 09:40</p>
+ <p className="jy-sub">رحلتك القادمة<span className="jy-simtag">محاكاة</span></p><div className="city"><span>CAIRO</span><i>→</i><span>PARIS</span></div><p className="when">18 أكتوبر · 09:40</p>
  <div className="jy-eye"><Ring p={p}/><div><p className="pulse" style={{['--pc' as string]:PC[p][0]}}>{PC[p][1]}</p><p className="say">{PC[p][2]}</p><p className="jy-sub">{PC[p][3]}</p></div></div></section>}
 export default function JourneysCut(){
  const [tab,setTab]=useState<Tab>('home'),[t,setT]=useState(2),[p,setP]=useState<P>('calm'),[ex,setEx]=useState<string|null>(null),[wi,setWi]=useState<number|null>(null);
@@ -29,7 +29,7 @@ export default function JourneysCut(){
   <div className="nav"><span className="mark">THE KING’S EYE</span><nav aria-label="التنقل">{NAV.map(([k,l])=><button key={k} aria-current={tab===k?'page':undefined} onClick={()=>go(k)}>{l}</button>)}</nav></div>
   <main>
   {tab==='home'&&<><p className="jy-sub" style={{margin:'10px 0 18px'}}>مساء الخير، محمد</p><Hero p={p}/>
-   <section className="jy-sec"><h2>رحلاتك</h2><p className="jy-sub">كل رحلة تُفتح كذكرى.</p><div className="mem">{MEM.map(m=><button key={m[0]} className="m" style={{background:`linear-gradient(170deg,${m[2]})`}} onClick={()=>go('trips')}><b>{m[0]}</b><span>{m[1]}</span></button>)}</div></section>
+   <section className="jy-sec" id="my-trips"><h2>رحلاتي</h2><p className="jy-sub">رحلتك القادمة وذكريات رحلاتك. كل رحلة تُفتح كذكرى.</p><div className="chips"><button className="jy-chip" onClick={()=>go('trips')}>افتح رحلاتي</button></div><div className="mem">{MEM.map(m=><button key={m[0]} className="m" style={{background:`linear-gradient(170deg,${m[2]})`}} onClick={()=>go('trips')}><b>{m[0]}</b><span>{m[1]}</span></button>)}</div></section>
    <button className="cta f" onClick={()=>go('plan')}>خطط لرحلتك القادمة</button></>}
   {tab==='trips'&&<><div style={{marginTop:10}}><Hero p={p}/></div>
    <section className="jy-sec"><h2>مسار رحلتك</h2><p className="jy-sub">يتحرك مع الوقت. حرّك المؤشر لترى كيف يتقدم.</p><ol className="stops path">{STOPS.map((x,i)=><li key={x[0]} className={i<t?'d':i===t?'n':''}>{x[0]}<small>{x[1]}</small></li>)}</ol><input className="range" type="range" min={0} max={6} value={t} onChange={e=>setT(+e.target.value)} aria-label="الوقت في الرحلة"/></section>

@@ -59,6 +59,7 @@ export const ar={
 'opp.demoNote':'بيانات تجريبية','o1.r1':'المشغّل أكّد الرحلة قبل 12 دقيقة','o1.r2':'موعد المغادرة خلال ساعتين تقريبًا (من بيانات حقيقية)','o1.r3':'المسار مطلوب عادةً من عملاء الرياض',
 'o2.r1':'سعة مسجّلة لكن لم يؤكدها المشغّل بعد','o2.gate':'التوافر غير مؤكد، ولا يُعرض على أي عميل قبل التحقق',
 'run.result':'العين راجعت 6 إشارات: فرصة واحدة جاهزة لموافقتك، وأخرى تنتظر تحقق الفريق.',
-'policy.SILENT':'لا شيء يستحق الإزعاج','policy.MONITOR':'تابع بصمت','policy.INVESTIGATE':'افحص أكثر','policy.RECOMMEND':'اقترح على الفريق','policy.ACT_INTERNAL':'إجراء داخلي منخفض المخاطر','policy.ASK_APPROVAL':'اطلب موافقة بشرية','policy.ESCALATE':'صعّد لإنسان','policy.VERIFY_CONTINUE':'تحقق ثم أكمل'
+'policy.SILENT':'لا شيء يستحق الإزعاج','policy.MONITOR':'تابع بصمت','policy.INVESTIGATE':'افحص أكثر','policy.RECOMMEND':'اقترح على الفريق','policy.ACT_INTERNAL':'إجراء داخلي منخفض المخاطر','policy.ASK_APPROVAL':'اطلب موافقة بشرية','policy.ESCALATE':'صعّد لإنسان','policy.VERIFY_CONTINUE':'تحقق ثم أكمل',
+'j.cap.tell':'طلبك','j.cap.trips':'رحلتك القادمة','j.cap.wx':'الطقس','j.cap.d2d':'من الباب إلى الباب','j.cap.mem':'الذاكرة','j.thinking':'العين تفكر','j.noticed':'العين لاحظت','j.trips.title':'رحلاتي','j.trips.open':'افتح رحلاتي كاملة','j.wx.row':'الظروف تبدو متوافقة','j.wx.note':'الظروف تبدو متوافقة مع الموعد، والقرار النهائي للمشغّل والطاقم.'
 } as const;
 export type Key=keyof typeof ar;

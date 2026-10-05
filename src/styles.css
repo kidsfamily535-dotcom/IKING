@@ -60,3 +60,7 @@ textarea{width:100%;background:none;border:1px solid #c9a96166;color:var(--ink);
 @media(max-width:560px){.lang{left:8px;right:8px;justify-content:flex-end;flex-wrap:wrap}.lang button{padding:3px 8px}}
 /* Instrument Serif لا تدعم السيريلية، فنستخدم خطًا بديلاً للروسية */
 html[lang=ru] h2,html[lang=ru] .sub,html[lang=ru] .card h3{font-family:'Cormorant Garamond',Georgia,serif}
+
+.jnav{display:flex;gap:10px;flex-wrap:wrap;justify-content:center;padding:14px 14px 0;max-width:980px;margin:0 auto}.jnav button{padding:6px 16px;font-size:14px}
+.ask .send:disabled{opacity:.55}
+@media(max-width:560px){.lang{flex-wrap:nowrap}.lang button{padding:3px 7px;font-size:10.5px}.pill{top:42px;max-width:calc(100vw - 16px)}#bar{padding-top:64px}}

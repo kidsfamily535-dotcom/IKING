@@ -74,3 +74,6 @@
 
 .jy main{max-width:none;margin:0;padding:0}
 .jy h1,.jy h2{letter-spacing:0;font-family:Tajawal,system-ui,sans-serif}
+
+.jy .jy-simtag{margin-inline-start:10px;font:11px/1 'JetBrains Mono',Tajawal,sans-serif;letter-spacing:.08em;color:var(--glow);border:1px solid #c9a96166;border-radius:99px;padding:2px 10px}
+.jy .nav nav button{white-space:nowrap}

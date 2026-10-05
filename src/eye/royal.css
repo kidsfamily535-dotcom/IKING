@@ -38,3 +38,6 @@ html[lang=ar] .rj-g li{font:400 17px Tajawal,sans-serif}
 @keyframes rjP{from{transform:scale(.8);opacity:.45}to{transform:scale(1.8);opacity:0}}
 @media(max-width:560px){.rj-n:not(.on) span{display:none}.rj-th{margin-inline:14px}}
 @media(prefers-reduced-motion:reduce){.rj-eye::after{animation:none}.rj-st{animation:none}.rj-fill,.rj-eye{transition:none}}
+
+.rj-tg button{white-space:nowrap}
+@media(max-width:560px){.rj-tg{gap:4px}.rj-tg button{padding-inline:12px}}

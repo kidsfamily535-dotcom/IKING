@@ -45,3 +45,7 @@ html[lang=ru] .sc-copy h2{font-family:'Cormorant Garamond',Georgia,serif}
 @keyframes scRg{from{transform:scale(.85);opacity:.55}to{transform:scale(1.7);opacity:0}}
 @media(max-width:560px){.sat{transform:translate(-50%,-50%) rotate(var(--a)) translateY(-100px) rotate(calc(var(--a) * -1));font-size:9px;letter-spacing:.14em}.sc-eye{width:92px;height:92px;margin:-46px 0 0 -46px}.sc-eye-wrap{top:min(21%,150px)}.sc-stage{padding:0 16px 14px}}
 @media(prefers-reduced-motion:reduce){.sc-sweep,.sc-ping,.sc-eye .rg{animation:none!important}.rv{animation:none;opacity:1;transform:none}.sc-arc{animation:none;stroke-dashoffset:0}.sc-eye .ir{transition:none}}
+.sc-pill{top:14px}@media(max-width:560px){.sc-pill{top:84px}}
+
+.sc-stage.cust{min-height:min(66svh,580px)}
+@media(max-width:560px){.sc-pill{top:74px;left:auto;right:14px;transform:none}}
