@@ -1,3 +1,4 @@
+import {radarAirports} from '../data/hubs';
 import {useEffect,useMemo,useState} from 'react';
 import './scene.css';
 import {api} from '../data/api';
@@ -18,8 +19,9 @@ function pt(a:Airport,c:Airport){const r=Math.PI/180,dl=(a.lon-c.lon)*r,p1=c.lat
  const d=6371*Math.acos(Math.min(1,Math.sin(p1)*Math.sin(p2)+Math.cos(p1)*Math.cos(p2)*Math.cos(dl)));
  const th=Math.atan2(Math.sin(dl)*Math.cos(p2),Math.cos(p1)*Math.sin(p2)-Math.sin(p1)*Math.cos(p2)*Math.cos(dl));
  const k=Math.min(d,2200)/2200*270;return{x:300+k*Math.sin(th),y:300-k*Math.cos(th)}}
-function World({airports,arc,focus,k}:{airports:Airport[];arc?:[string,string];focus?:string;k:string}){
- const c=airports.find(a=>a.iata==='RUH');if(!c)return null;
+function World({airports:all,arc,focus,k}:{airports:Airport[];arc?:[string,string];focus?:string;k:string}){
+ const c=all.find(a=>a.iata==='RUH');if(!c)return null;
+ const airports=radarAirports(all,[...(arc??[]),focus]);
  const P:Record<string,{x:number;y:number}>=Object.fromEntries(airports.map(a=>[a.iata,pt(a,c)]));
  const e=arc&&P[arc[0]]&&P[arc[1]]?[P[arc[0]],P[arc[1]]]:null;
  const d=e?`M${e[0].x},${e[0].y} Q${(e[0].x+e[1].x)/2},${Math.min(e[0].y,e[1].y)-70} ${e[1].x},${e[1].y}`:'';
