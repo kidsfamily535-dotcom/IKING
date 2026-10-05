@@ -67,3 +67,11 @@ html[lang=ru] h2,html[lang=ru] .sub,html[lang=ru] .card h3{font-family:'Cormoran
 
 .hero-ask{width:100%;max-width:520px;margin:6px 0 0}.hero-ask input{flex:1;min-width:0}.gate{margin:12px 0}
 .doors{min-height:80svh;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:56px 24px;gap:14px}.dr{display:grid;gap:12px;width:100%;max-width:420px;margin-top:10px}.dr button{display:block;width:100%;text-align:start;padding:16px 20px}.dr small{display:block;opacity:.65;margin-top:4px;font-size:13px}
+.show{min-height:100svh;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:56px 24px;gap:20px;max-width:640px;margin:0 auto}
+.show .chip{font-size:12px;color:var(--warn);border:1px solid #e6c36a55;border-radius:99px;padding:4px 12px}
+.show .big{font-family:'Instrument Serif','Tajawal',serif;font-size:clamp(26px,5vw,38px);line-height:1.35;margin:0;animation:p2 .8s ease both}
+.show .rt{font-size:18px;color:var(--gold);margin:0}.show .dim{color:var(--dim);margin:0;max-width:46ch}
+.show .scan{list-style:none;padding:0;margin:0;display:grid;gap:10px;text-align:start}.show .scan li{opacity:.18;transition:opacity .5s}.show .scan li.on{opacity:1}.show .scan b{color:var(--ok);margin-inline-end:10px}
+.show .opts{display:grid;gap:18px}.show .opts div{display:grid;gap:2px}.show .opts b{font-family:'Instrument Serif','Tajawal',serif;font-size:24px;font-weight:400}.show .opts small{color:var(--dim)}
+.show .plan{list-style:none;padding:0;margin:0;border-inline-start:1px solid var(--gold);text-align:start;display:grid;gap:12px}.show .plan li{padding-inline-start:18px}.show .plan span{color:var(--gold);margin-inline-end:12px}.show .plan small{color:var(--dim);margin-inline-start:10px}
+@keyframes p2{from{opacity:0}to{opacity:1}}@media (prefers-reduced-motion:reduce){.show .big{animation:none}.show .scan li{transition:none}}
