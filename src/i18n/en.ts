@@ -1,14 +1,6 @@
 import type {Key} from './ar';
 export const en:Record<Key,string>={
 'lang.label':'Language',
-'tour.1':"Tell me where in one sentence, and I understand. No forms, no lists.",
-'tour.2':"I look at everything available, choose only three for you, and tell you why.",
-'tour.3':"I never say an aircraft is available until that is confirmed. What I do not know, I say I do not know.",
-'tour.4':"I watch the weather at your airports until you land.",
-'tour.5':"If something changes, I tell you before you ask, with an alternative ready.",
-'tour.soon':"Soon",
-'tour.go':"Try me",
-'tour.next':"Next",
 'd.q':"Of course. What would you like to see?",
 'd.explore':"What the Eye can do",
 'd.explore.s':"A short tour through one of its days",

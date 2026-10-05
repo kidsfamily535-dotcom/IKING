@@ -1,14 +1,6 @@
 import type {Key} from './ar';
 export const tur:Record<Key,string>={
 'lang.label':'Dil',
-'tour.1':"Nereye olduğunu tek cümleyle söyle, ben anlarım. Form yok, liste yok.",
-'tour.2':"Mevcut her şeye bakarım, senin için yalnızca üçünü seçerim ve nedenini söylerim.",
-'tour.3':"Onaylanmadan hiçbir uçağın müsait olduğunu söylemem. Bilmediğimi bilmediğimi söylerim.",
-'tour.4':"Sen inene kadar havalimanlarının havasını izlerim.",
-'tour.5':"Bir şey değişirse sormadan önce haber veririm, yanımda hazır bir alternatif var.",
-'tour.soon':"Yakında",
-'tour.go':"Beni dene",
-'tour.next':"İleri",
 'd.q':"Buyurun. Ne görmek istersiniz?",
 'd.explore':"Gözün neler yapabildiği",
 'd.explore.s':"Günlerinden birine kısa bir gezi",
