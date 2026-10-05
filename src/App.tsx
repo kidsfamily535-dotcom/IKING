@@ -1,3 +1,4 @@
+import {radarAirports} from './data/hubs';
 import {useEffect,useRef,useState} from 'react';
 import {api,useRealApi} from './data/api';
 import SignIn from './SignIn';
@@ -26,8 +27,9 @@ function proj(a:Airport,c:Airport,R:number,max:number){
  const th=Math.atan2(Math.sin(dl)*Math.cos(p2),Math.cos(p1)*Math.sin(p2)-Math.sin(p1)*Math.cos(p2)*Math.cos(dl));
  const k=Math.min(d,max)/max*R;return{x:300+k*Math.sin(th),y:300-k*Math.cos(th)};
 }
-function Radar({airports,arc,poster}:{airports:Airport[];arc?:[string,string];poster?:boolean}){
- const {t}=useI18n();const c=airports.find(a=>a.iata==='RUH');if(!c)return null;
+function Radar({airports:all,arc,poster}:{airports:Airport[];arc?:[string,string];poster?:boolean}){
+ const {t}=useI18n();const c=all.find(a=>a.iata==='RUH');if(!c)return null;
+ const airports=radarAirports(all,arc??[]);
  const P=Object.fromEntries(airports.map(a=>[a.iata,proj(a,c,270,2200)]));
  const ticks=Array.from({length:36},(_,i)=>i*10);
  const e=arc&&P[arc[0]]&&P[arc[1]]?arc.map(k=>P[k]):null;
