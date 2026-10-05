@@ -33,7 +33,7 @@ export const realApi:EyeApi={...mockApi,
    isDemo:!!r.is_demo,real:true,note:r.status_reason??undefined}) as Opportunity)},
  async approveOpportunity(id){const {data,error}=await sb.rpc('activate_opportunity',{p_id:id});
   if(error)throw new Error(error.message);
-  if(data?.status!=='ACTIVATED')throw new Error(data?.status==='NO_ELIGIBLE_CUSTOMERS'?'لا يوجد عميل مؤهل الآن (البوابة حجبت الكل)':'الفرصة لم تعد في انتظار الموافقة')},
+  if(data?.status!=='ACTIVATED')throw new Error(data?.status==='NO_ELIGIBLE_CUSTOMERS'?'لا يوجد عميل مؤهَّل في الوقت الراهن (حجبت البوابة الجميع)':'لم تعد الفرصة بانتظار الموافقة')},
  async rejectOpportunity(id,reason){const {error}=await sb.rpc('reject_opportunity',{p_id:id,p_reason:reason});if(error)throw new Error(error.message)},
  async fleetReport(regs,consent){const {data,error}=await sb.rpc('eye_fleet_report',{p_regs:regs,p_consent:consent});if(error)throw new Error(error.message);return (data?.aircraft??[]) as FleetAircraft[]},
  async parkedAircraft(regs){const {data,error}=await sb.rpc('eye_parked_aircraft',{p_regs:regs&&regs.length?regs:null});if(error)throw new Error(error.message);return (data?.aircraft??[]) as ParkedAircraft[]},
