@@ -11,12 +11,14 @@
 -- =====================================================================
 
 -- 1. Extensions
-create extension if not exists http;
-create extension if not exists pg_cron;
-create extension if not exists pg_stat_statements;
 create extension if not exists pgcrypto;
+create extension if not exists "uuid-ossp";
+create extension if not exists pg_stat_statements;
+create extension if not exists pg_cron;
 create extension if not exists supabase_vault;
-create extension if not exists uuid-ossp;
+-- http lives in an isolated schema (functions reference private_ext.http_response / private_ext.http_*)
+create schema if not exists private_ext;
+create extension if not exists http schema private_ext;
 
 -- 2. Enums
 create type public.app_role as enum ('customer', 'operator', 'broker', 'partner', 'admin');
@@ -670,70 +672,7 @@ CREATE INDEX travel_requests_origin_code_destination_code_idx ON public.travel_r
 CREATE INDEX travel_requests_customer_id_created_at_idx ON public.travel_requests USING btree (customer_id, created_at DESC);
 CREATE INDEX weather_latest_idx ON public.weather_snapshots USING btree (airport_code, report_type, issued_at DESC);
 
--- 6. Views
-create or replace view public.customer_demand_state as  SELECT id AS customer_id,
-        CASE
-            WHEN (EXISTS ( SELECT 1
-               FROM travel_requests r
-              WHERE ((r.customer_id = p.id) AND (r.status = 'READY'::request_status) AND (r.created_at > (now() - '3 days'::interval))))) THEN 'HOT'::text
-            WHEN (EXISTS ( SELECT 1
-               FROM travel_requests r
-              WHERE ((r.customer_id = p.id) AND (r.status <> 'CANCELLED'::request_status) AND (r.created_at > (now() - '30 days'::interval))))) THEN 'WARM'::text
-            WHEN (EXISTS ( SELECT 1
-               FROM travel_requests r
-              WHERE (r.customer_id = p.id))) THEN 'DORMANT'::text
-            ELSE 'NONE'::text
-        END AS demand_state
-   FROM profiles p
-  WHERE (role = 'customer'::app_role);
-create or replace view public.operator_market_legs as  SELECT l.id,
-    l.icao_type,
-    r.category,
-    l.origin_airport,
-    l.dest_airport,
-    l.departed_at,
-    l.arrived_at,
-    l.status,
-    l.confidence
-   FROM (aircraft_legs l
-     LEFT JOIN ref_icao_types r ON ((r.icao_type = l.icao_type)))
-  WHERE (( SELECT is_staff() AS is_staff) OR ( SELECT is_active_operator() AS is_active_operator));
-create or replace view public.operator_market_sightings as  SELECT icao_type,
-    category,
-    round((lat)::numeric, 2) AS lat,
-    round((lon)::numeric, 2) AS lon,
-    alt_ft,
-    gs_kt,
-    observed_at,
-    source_name,
-    nearest_airport,
-    nearest_km
-   FROM aircraft_sightings s
-  WHERE (( SELECT is_staff() AS is_staff) OR ( SELECT is_active_operator() AS is_active_operator));
-create or replace view public.opportunity_funnel as  SELECT o.id AS opportunity_id,
-    o.origin_code,
-    o.destination_code,
-    o.status,
-    o.trigger_type,
-    o.score,
-    count(m.id) AS matches,
-    count(m.id) FILTER (WHERE (m.gate_decision = 'ALLOWED'::text)) AS gate_allowed,
-    count(m.id) FILTER (WHERE (m.activated_at IS NOT NULL)) AS activated,
-    count(m.id) FILTER (WHERE ((m.activated_at IS NOT NULL) AND (NOT m.explicit_before))) AS activated_non_explicit,
-    count(m.id) FILTER (WHERE (m.status = 'ENGAGED'::text)) AS engaged,
-    count(m.id) FILTER (WHERE (m.status = 'INQUIRY'::text)) AS inquiry,
-    count(m.id) FILTER (WHERE (m.status = 'QUOTE'::text)) AS quoted,
-    count(m.id) FILTER (WHERE (m.status = 'BOOKING_INTENT'::text)) AS booking_intent,
-    count(m.id) FILTER (WHERE (m.status = ANY (ARRAY['BOOKED'::text, 'FULFILLED'::text]))) AS booked,
-    count(m.id) FILTER (WHERE ((m.status = ANY (ARRAY['BOOKED'::text, 'FULFILLED'::text])) AND (NOT m.explicit_before))) AS booked_non_explicit
-   FROM (opportunities o
-     LEFT JOIN opportunity_matches m ON ((m.opportunity_id = o.id)))
-  GROUP BY o.id;
-
--- 7. Triggers
--- (none found in public schema)
-
--- 8. Functions
+-- 6. Functions
 CREATE OR REPLACE FUNCTION public._airport_tz(p_code text)
  RETURNS text
  LANGUAGE sql
@@ -2953,6 +2892,84 @@ begin
   update public.quotes set status = 'WITHDRAWN' where id = p_quote_id;
   if not found then raise exception 'not found'; end if;
 end $function$;
+
+-- 7. Triggers (added 2026-10-05 from the live database; the first export missed them)
+create trigger trg_audit_availability after insert or update on public.aircraft_availability for each row execute function audit_availability();
+create trigger trg_guard_availability before insert or update on public.aircraft_availability for each row execute function guard_availability();
+create trigger trg_withdraw_opps after update of status on public.aircraft_availability for each row when (((new.status is distinct from old.status) and (new.status <> 'AVAILABLE'::availability_status))) execute function _withdraw_opps_on_supply_change();
+create trigger trg_audit_booking after insert or update on public.booking_intents for each row execute function _audit_pipeline();
+create trigger trg_guard_booking before update on public.booking_intents for each row execute function guard_pipeline_status('booking');
+create trigger trg_guard_demand_signal before insert or update on public.demand_signals for each row execute function guard_demand_signal();
+create trigger journey_briefs_updated_at before update on public.journey_briefs for each row execute function set_updated_at();
+create trigger trg_audit_opportunity after insert or update on public.opportunities for each row execute function _audit_opportunity();
+create trigger trg_guard_opportunity before update on public.opportunities for each row execute function guard_opportunity();
+create trigger profiles_set_updated_at before update on public.profiles for each row execute function set_updated_at();
+create trigger trg_audit_qr after insert or update on public.quote_requests for each row execute function _audit_pipeline();
+create trigger trg_guard_qr before update on public.quote_requests for each row execute function guard_pipeline_status('qr');
+create trigger trg_audit_quote after insert or update on public.quotes for each row execute function _audit_pipeline();
+create trigger trg_guard_quote before update on public.quotes for each row execute function guard_pipeline_status('quote');
+create trigger trg_audit_request after insert or update on public.travel_requests for each row execute function audit_request();
+create trigger trg_request_state before insert or update on public.travel_requests for each row execute function compute_request_state();
+
+-- 8. Views (moved after functions: they call is_staff() / is_active_operator())
+create or replace view public.customer_demand_state as  SELECT id AS customer_id,
+        CASE
+            WHEN (EXISTS ( SELECT 1
+               FROM travel_requests r
+              WHERE ((r.customer_id = p.id) AND (r.status = 'READY'::request_status) AND (r.created_at > (now() - '3 days'::interval))))) THEN 'HOT'::text
+            WHEN (EXISTS ( SELECT 1
+               FROM travel_requests r
+              WHERE ((r.customer_id = p.id) AND (r.status <> 'CANCELLED'::request_status) AND (r.created_at > (now() - '30 days'::interval))))) THEN 'WARM'::text
+            WHEN (EXISTS ( SELECT 1
+               FROM travel_requests r
+              WHERE (r.customer_id = p.id))) THEN 'DORMANT'::text
+            ELSE 'NONE'::text
+        END AS demand_state
+   FROM profiles p
+  WHERE (role = 'customer'::app_role);
+create or replace view public.operator_market_legs as  SELECT l.id,
+    l.icao_type,
+    r.category,
+    l.origin_airport,
+    l.dest_airport,
+    l.departed_at,
+    l.arrived_at,
+    l.status,
+    l.confidence
+   FROM (aircraft_legs l
+     LEFT JOIN ref_icao_types r ON ((r.icao_type = l.icao_type)))
+  WHERE (( SELECT is_staff() AS is_staff) OR ( SELECT is_active_operator() AS is_active_operator));
+create or replace view public.operator_market_sightings as  SELECT icao_type,
+    category,
+    round((lat)::numeric, 2) AS lat,
+    round((lon)::numeric, 2) AS lon,
+    alt_ft,
+    gs_kt,
+    observed_at,
+    source_name,
+    nearest_airport,
+    nearest_km
+   FROM aircraft_sightings s
+  WHERE (( SELECT is_staff() AS is_staff) OR ( SELECT is_active_operator() AS is_active_operator));
+create or replace view public.opportunity_funnel as  SELECT o.id AS opportunity_id,
+    o.origin_code,
+    o.destination_code,
+    o.status,
+    o.trigger_type,
+    o.score,
+    count(m.id) AS matches,
+    count(m.id) FILTER (WHERE (m.gate_decision = 'ALLOWED'::text)) AS gate_allowed,
+    count(m.id) FILTER (WHERE (m.activated_at IS NOT NULL)) AS activated,
+    count(m.id) FILTER (WHERE ((m.activated_at IS NOT NULL) AND (NOT m.explicit_before))) AS activated_non_explicit,
+    count(m.id) FILTER (WHERE (m.status = 'ENGAGED'::text)) AS engaged,
+    count(m.id) FILTER (WHERE (m.status = 'INQUIRY'::text)) AS inquiry,
+    count(m.id) FILTER (WHERE (m.status = 'QUOTE'::text)) AS quoted,
+    count(m.id) FILTER (WHERE (m.status = 'BOOKING_INTENT'::text)) AS booking_intent,
+    count(m.id) FILTER (WHERE (m.status = ANY (ARRAY['BOOKED'::text, 'FULFILLED'::text]))) AS booked,
+    count(m.id) FILTER (WHERE ((m.status = ANY (ARRAY['BOOKED'::text, 'FULFILLED'::text])) AND (NOT m.explicit_before))) AS booked_non_explicit
+   FROM (opportunities o
+     LEFT JOIN opportunity_matches m ON ((m.opportunity_id = o.id)))
+  GROUP BY o.id;
 
 -- 9. Row Level Security
 alter table public.activation_channels enable row level security;
