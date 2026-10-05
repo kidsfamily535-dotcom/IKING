@@ -10,7 +10,7 @@ const LT=(s:string|number)=><span dir="ltr">{s}</span>;
 const bz=(t:number,a:number,b:number)=>(1-t)*(1-t)*a+2*(1-t)*t*((a+b)/2)+t*t*b;
 // شاشة العميل. الترتيب: حالة العين (المشهد فوقها) ثم الطلب ثم رحلاتي (الرحلة والطقس) ثم الذاكرة.
 // أدوات المحاكاة (تشغيل ×1 ×3 ×10 والتأخير المحاكى) تظهر فقط في وضع العرض (demo)، لا للعميل.
-export default function JourneyRoom({airports,demo=false,real=false,ask}:{airports:Airport[];demo?:boolean;real?:boolean;ask?:string}){
+export default function JourneyRoom({airports,demo=false,real=false,ask,guest=false}:{airports:Airport[];demo?:boolean;real?:boolean;ask?:string;guest?:boolean}){
  const {t,lang,dir}=useI18n();const cp=useCopy();const dur=(m:number)=>`${Math.floor(m/60)}${t('unit.h')} ${m%60}${t('unit.m')}`;
  const [txt,setTxt]=useState(''),[p,setP]=useState<ParsedRequest|null>(null),[th,setTh]=useState(false);
  const [mem,setMem]=useState<MemoryItem[]>([]),[ed,setEd]=useState<string|null>(null),[val,setVal]=useState('');
@@ -35,11 +35,11 @@ export default function JourneyRoom({airports,demo=false,real=false,ask}:{airpor
  const x=bz(prog,80,520),y=bz(prog,170,110)-Math.sin(prog*Math.PI)*60;
  const tl=[['j.tl.1','06:15'],['j.tl.2','06:30'],['j.tl.3','07:00'],['j.tl.4','07:30'],['j.tl.5','09:05'],['j.tl.6','09:30']];
  return <>
-  <nav className="jnav" aria-label={t('j.trips.title')}>
+  {!guest&&<nav className="jnav" aria-label={t('j.trips.title')}>
    <button className="g" onClick={()=>jump('tell')}>{t('j.tell.title')}</button>
    <button className="g" onClick={()=>jump('trips')}>{t('j.trips.title')}</button>
    <button className="g" onClick={()=>jump('mem')}>{t('j.mem.title')}</button>
-  </nav>
+  </nav>}
   <section className="sec" id="tell"><div className="mono">{t('j.cap.tell')}</div><h2>{t('j.tell.title')}</h2>
    <div className="ask"><input ref={inp} aria-label={t('j.req.aria')} placeholder={t('j.req.ph')} value={txt} onChange={e=>setTxt(e.target.value)} onKeyDown={e=>e.key==='Enter'&&submit()}/><button className="send" disabled={th} onClick={submit}>{t('j.send')}</button></div>
    <div className="act">{EX.map(k=><button className="g" key={k} onClick={()=>send(t(k))}>{t(k)}</button>)}</div>
@@ -61,7 +61,7 @@ export default function JourneyRoom({airports,demo=false,real=false,ask}:{airpor
       <div className="ask"><input type="email" aria-label={t('gate.email')} placeholder={t('gate.email')} autoComplete="email" value={em} onChange={e=>setEm(e.target.value)}/><button className="send" disabled={gb||!em.includes('@')} onClick={sendLink}>{t('gate.send')}</button></div></div>}
      {gm&&(want===o.id||won===null)&&<div className="nt" role="status">{gm}</div>}</div>)}</>}
   </section>
-  <section className="sec" id="trips"><div className="mono">{t('j.cap.trips')}{!real&&<span className="badge b">{cp('badge.sim')}</span>}</div><h2>{t('j.trips.title')}</h2>
+  {!guest&&<section className="sec" id="trips"><div className="mono">{t('j.cap.trips')}{!real&&<span className="badge b">{cp('badge.sim')}</span>}</div><h2>{t('j.trips.title')}</h2>
    {real?<MyTrips airports={airports}/>:<>
    <div className="card"><div className="mono">{LT('RUH → JED')}<span className="badge b">{cp('badge.sim')}</span></div>
     <h3>{nm('RUH')} · {nm('JED')}</h3>
@@ -82,8 +82,8 @@ export default function JourneyRoom({airports,demo=false,real=false,ask}:{airpor
    <ul className="tl" style={{listStyle:'none',padding:0,borderInlineStart:'1px solid var(--gold)',marginInlineStart:6}}>{tl.map(([a,b])=><li key={a} style={{padding:'2px 18px 10px'}}>{t(a)} · {LT(b)}</li>)}</ul>
    <small style={{color:'var(--dim)'}}>{t('j.tl.note')}</small>
    </>}
-   {lang==='ar'&&<div className="act"><button className="g" onClick={()=>{location.href='?view=journeys'}}>{t('j.trips.open')}</button></div>}</section>
-  <section className="sec" id="mem"><div className="mono">{t('j.cap.mem')}</div><h2>{t('j.mem.title')}</h2>
+   {lang==='ar'&&<div className="act"><button className="g" onClick={()=>{location.href='?view=journeys'}}>{t('j.trips.open')}</button></div>}</section>}
+  {!guest&&<section className="sec" id="mem"><div className="mono">{t('j.cap.mem')}</div><h2>{t('j.mem.title')}</h2>
    {mem.map(m=><div className="row" key={m.key}><span>{t('mem.'+m.key)}</span><span style={{direction:dir}}>{ed===m.key?<><input aria-label={t('mem.'+m.key)} value={val} onChange={e=>setVal(e.target.value)} style={{background:'none',border:0,borderBottom:'1px solid var(--gold)',color:'var(--ink)',font:'inherit',width:130}}/> <button className="g" style={{padding:'2px 12px'}} onClick={async()=>{await api.saveMemory(m.key,val);setMem(await api.listMemory());setEd(null)}}>{t('j.save')}</button></>:<>{memV(m)} <button className="g" style={{padding:'0 10px'}} onClick={()=>{setEd(m.key);setVal(memV(m))}}>{t('j.edit')}</button></>}</span></div>)}
-   <small style={{color:'var(--dim)'}}>{t('j.mem.note')}</small></section></>;
+   <small style={{color:'var(--dim)'}}>{t('j.mem.note')}</small></section>}</>;
 }

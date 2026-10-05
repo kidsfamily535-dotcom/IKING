@@ -73,7 +73,8 @@ function PolicyView(){
 }
 export default function App(){
  const {t,lang,setLang}=useI18n();const cp=useCopy();const [role,setRole]=useState<Role|null>(null),[real,setReal]=useState(false),[login,setLogin]=useState(false);
- const [hq,setHq]=useState(''),[ask,setAsk]=useState<{q:string;k:number}|null>(null);
+ const [stage,setStage]=useState<'home'|'doors'|'explore'|'try'|'mine'>('home'),[who,setWho]=useState<''|'me'|'other'|'group'>(''),[rel,setRel]=useState('');
+ const go=(x:typeof stage)=>{setStage(x);setTimeout(()=>document.getElementById('guest')?.scrollIntoView({behavior:'smooth'}),50)};
  const staffMode=new URLSearchParams(location.search).has('staff');
  const [st,setSt]=useState<AgentState>('WATCHING'),[say,setSay]=useState('');
  const [ap,setAp]=useState<Airport[]>([]),[sg,setSg]=useState<Signal[]>([]),[op,setOp]=useState<Opportunity[]>([]);
@@ -87,7 +88,6 @@ export default function App(){
   if(isLang(data.preferred_language)&&!hasStoredLang())setLang(data.preferred_language,false);
   try{const w=localStorage.getItem('iking_want');if(w){localStorage.removeItem('iking_want');const x=JSON.parse(w);if(x?.o&&x?.d)await api.addMyTrip(x.o,x.d,null)}}catch{/* يبقى الاختيار غير محفوظ */}
  })();return()=>{live=false}},[]);
- const see=()=>{const q=hq.trim();if(!q){document.getElementById('hq')?.focus();return}setAsk({q,k:Date.now()});setRole('customer');setTimeout(()=>document.getElementById('room')?.scrollIntoView({behavior:'smooth'}),50)};
  const run=async()=>{setSay('');setSay(await api.runPass(setSt))};
  const staff=role==='admin',table=op.filter(o=>o.status==='ACTIVATION_PENDING');
  const live=op.find(o=>o.availability==='CONFIRMED');
@@ -96,16 +96,22 @@ export default function App(){
   <section className="hero"><div className="poster" style={{position:'absolute',inset:0}}><Radar airports={ap} arc={['RUH','JED']} poster/></div>
    <div className="mono">ALWAYS WATCHING · 24 / 7</div><h1>THE KING'S EYE</h1><div className="sub">{t('hero.sub1')} <b>{t('hero.sub2')}</b></div>
    <Eye an={st!=='WATCHING'}/><div className="mono">{st}</div>
-   <p className="lead">{t('hero.lead')}</p>
-   <div className="ask hero-ask"><input id="hq" aria-label={t('hero.ph')} placeholder={t('hero.ph')} value={hq} onChange={e=>setHq(e.target.value)} onKeyDown={e=>e.key==='Enter'&&see()}/><button className="send" onClick={see}>{t('hero.see')}</button></div>
+   <button style={{marginTop:30}} onClick={()=>go('doors')}>{t('hero.see')}</button>
    {!real&&!login&&<button className="g" style={{marginTop:14}} onClick={()=>setLogin(true)}>{t('hero.account')}</button>}
    {staffMode&&<><div className="roles" style={{marginTop:22}} role="group" aria-label={t('hero.pick.aria')}>{(['admin','operator','customer'] as Role[]).map(r=><button key={r} className={role===r?'':'g'} onClick={()=>{setRole(r);setTimeout(()=>document.getElementById('room')?.scrollIntoView({behavior:'smooth'}),50)}}>{t('role.'+r)}</button>)}</div><div className="mono" style={{marginTop:14,opacity:.6}}>{t('hero.demoaccess')}</div></>}
    {login&&!real&&<SignIn onDone={(r,pl?:Lang)=>{useRealApi();setReal(true);setRole(r);setLogin(false);if(pl&&!hasStoredLang())setLang(pl,false)}}/>}
   </section>
+  {!role&&stage!=='home'&&<div id="guest">
+   {stage==='doors'&&<section className="doors"><h2>{t('d.q')}</h2><div className="dr">{([['explore','d.explore'],['try','d.try'],['mine','d.mine']] as const).map(([k,l])=><button key={k} className="g" onClick={()=>go(k)}>{t(l)}<small>{t(l+'.s')}</small></button>)}</div></section>}
+   {stage==='explore'&&<><Scene mode="customer" real={false} airports={ap} onState={setSt}/><section className="doors" style={{minHeight:0}}><button onClick={()=>go('try')}>{t('d.tryit')}</button><button className="g" onClick={()=>go('doors')}>{t('d.back')}</button></section></>}
+   {(stage==='try'||(stage==='mine'&&who&&(who!=='other'||rel)))&&<main id="under"><section className="doors" style={{minHeight:0,paddingBottom:0}}><button className="g" onClick={()=>{setWho('');setRel('');go('doors')}}>{t('d.back')}</button></section><JourneyRoom guest airports={ap} real={false}/></main>}
+   {stage==='mine'&&!who&&<section className="doors"><h2>{t('d.who')}</h2><div className="dr">{([['me','d.me'],['other','d.other'],['group','d.group']] as const).map(([k,l])=><button key={k} className="g" onClick={()=>setWho(k)}>{t(l)}</button>)}</div></section>}
+   {stage==='mine'&&who==='other'&&!rel&&<section className="doors" style={{minHeight:0}}><h2>{t('d.rel')}</h2><div className="dr">{[1,2,3,4,5,6].map(i=><button key={i} className="g" onClick={()=>setRel('d.rel'+i)}>{t('d.rel'+i)}</button>)}</div></section>}
+  </div>}
   {role&&<>{role!=='customer'&&<div id="bar"><b>{st}</b>{FLOW.map(f=><span key={f} className={`fc${f===st?' on':''}`}>{f}</span>)}<span className="ed">{role.toUpperCase()}</span></div>}
   <Scene mode={role==='customer'?'customer':'operator'} real={real} airports={ap} onState={setSt}/>
   <main id="under">
-   {role==='customer'?<JourneyRoom key={ask?.k??0} ask={ask?.q} airports={ap} real={real} demo={new URLSearchParams(location.search).has('demo')}/>:<>
+   {role==='customer'?<JourneyRoom airports={ap} real={real} demo={new URLSearchParams(location.search).has('demo')}/>:<>
     <section className="layers"><div className="mono">LAYERS</div><h2>{cp('layers')}</h2>
      <Layer title={cp('l.opp')} status={real?'live':'sim'} desc={cp('l.opp.d')}>
       <section className="sec"><div className="mono">DISCOVERY</div><h2>{t('disc.title')}</h2><p className="lead" style={{margin:'0 0 8px'}}>{t('disc.lead')}</p>
