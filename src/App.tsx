@@ -93,7 +93,7 @@ export default function App(){
   {role&&<>{role!=='customer'&&<div id="bar"><b>{st}</b>{FLOW.map(f=><span key={f} className={`fc${f===st?' on':''}`}>{f}</span>)}<span className="ed">{role.toUpperCase()}</span></div>}
   <Scene mode={role==='customer'?'customer':'operator'} real={real} airports={ap} onState={setSt}/>
   <main id="under">
-   {role==='customer'?<JourneyRoom airports={ap} demo={new URLSearchParams(location.search).has('demo')}/>:<>
+   {role==='customer'?<JourneyRoom airports={ap} real={real} demo={new URLSearchParams(location.search).has('demo')}/>:<>
     <section className="layers"><div className="mono">LAYERS</div><h2>{cp('layers')}</h2>
      <Layer title={cp('l.opp')} status={real?'live':'sim'} desc={cp('l.opp.d')}>
       <section className="sec"><div className="mono">DISCOVERY</div><h2>{t('disc.title')}</h2><p className="lead" style={{margin:'0 0 8px'}}>{t('disc.lead')}</p>

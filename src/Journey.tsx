@@ -3,12 +3,13 @@ import {api} from './data/api';
 import type {Airport,MemoryItem,ParsedRequest} from './data/types';
 import {useI18n,airportName,catL} from './i18n';
 import {useCopy} from './eye/copy';
+import MyTrips from './MyTrips';
 const EX=['j.ex1','j.ex2'];
 const LT=(s:string|number)=><span dir="ltr">{s}</span>;
 const bz=(t:number,a:number,b:number)=>(1-t)*(1-t)*a+2*(1-t)*t*((a+b)/2)+t*t*b;
 // شاشة العميل. الترتيب: حالة العين (المشهد فوقها) ثم الطلب ثم رحلاتي (الرحلة والطقس) ثم الذاكرة.
 // أدوات المحاكاة (تشغيل ×1 ×3 ×10 والتأخير المحاكى) تظهر فقط في وضع العرض (demo)، لا للعميل.
-export default function JourneyRoom({airports,demo=false}:{airports:Airport[];demo?:boolean}){
+export default function JourneyRoom({airports,demo=false,real=false}:{airports:Airport[];demo?:boolean;real?:boolean}){
  const {t,lang,dir}=useI18n();const cp=useCopy();const dur=(m:number)=>`${Math.floor(m/60)}${t('unit.h')} ${m%60}${t('unit.m')}`;
  const [txt,setTxt]=useState(''),[p,setP]=useState<ParsedRequest|null>(null),[th,setTh]=useState(false);
  const [mem,setMem]=useState<MemoryItem[]>([]),[ed,setEd]=useState<string|null>(null),[val,setVal]=useState('');
@@ -46,7 +47,8 @@ export default function JourneyRoom({airports,demo=false}:{airports:Airport[];de
      <small style={{color:'var(--dim)'}}>{t('j.priceNote')}</small>
      {o.usesMemory&&<div className="nt">{t('j.usesMemory')}</div>}</div>)}</>}
   </section>
-  <section className="sec" id="trips"><div className="mono">{t('j.cap.trips')}<span className="badge b">{cp('badge.sim')}</span></div><h2>{t('j.trips.title')}</h2>
+  <section className="sec" id="trips"><div className="mono">{t('j.cap.trips')}{!real&&<span className="badge b">{cp('badge.sim')}</span>}</div><h2>{t('j.trips.title')}</h2>
+   {real?<MyTrips airports={airports}/>:<>
    <div className="card"><div className="mono">{LT('RUH → JED')}<span className="badge b">{cp('badge.sim')}</span></div>
     <h3>{nm('RUH')} · {nm('JED')}</h3>
     <div className="row"><span>{t('st.label')}</span><span>{t('table.empty')}</span></div>
@@ -65,6 +67,7 @@ export default function JourneyRoom({airports,demo=false}:{airports:Airport[];de
    <div className="mono" style={{margin:'20px 0 8px'}}>{t('j.cap.d2d')}<span className="badge b">ESTIMATED</span></div>
    <ul className="tl" style={{listStyle:'none',padding:0,borderInlineStart:'1px solid var(--gold)',marginInlineStart:6}}>{tl.map(([a,b])=><li key={a} style={{padding:'2px 18px 10px'}}>{t(a)} · {LT(b)}</li>)}</ul>
    <small style={{color:'var(--dim)'}}>{t('j.tl.note')}</small>
+   </>}
    {lang==='ar'&&<div className="act"><button className="g" onClick={()=>{location.href='?view=journeys'}}>{t('j.trips.open')}</button></div>}</section>
   <section className="sec" id="mem"><div className="mono">{t('j.cap.mem')}</div><h2>{t('j.mem.title')}</h2>
    {mem.map(m=><div className="row" key={m.key}><span>{t('mem.'+m.key)}</span><span style={{direction:dir}}>{ed===m.key?<><input aria-label={t('mem.'+m.key)} value={val} onChange={e=>setVal(e.target.value)} style={{background:'none',border:0,borderBottom:'1px solid var(--gold)',color:'var(--ink)',font:'inherit',width:130}}/> <button className="g" style={{padding:'2px 12px'}} onClick={async()=>{await api.saveMemory(m.key,val);setMem(await api.listMemory());setEd(null)}}>{t('j.save')}</button></>:<>{memV(m)} <button className="g" style={{padding:'0 10px'}} onClick={()=>{setEd(m.key);setVal(memV(m))}}>{t('j.edit')}</button></>}</span></div>)}
