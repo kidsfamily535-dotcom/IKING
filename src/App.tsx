@@ -71,6 +71,14 @@ function PolicyView(){
  const {t,lang}=useI18n();const [r,setR]=useState<DecisionPolicyRow[]>([]);useEffect(()=>{api.listPolicy().then(setR)},[lang]);
  return <details style={{marginBottom:48}}><summary className="mono" style={{cursor:'pointer'}}>DECISION POLICY · 8</summary>{r.map(x=><div className="row" key={x.decision}><span>{lang==='ar'||!hasKey('policy.'+x.decision)?x.descriptionAr:t('policy.'+x.decision)}</span><span className="pr">{x.decision}{x.requiresHuman?' · HUMAN':''}</span></div>)}</details>;
 }
+function Tour({onTry}:{onTry:()=>void}){
+ const {t}=useI18n();const [i,setI]=useState(0);const N=5;
+ useEffect(()=>{if(i>=N-1)return;const id=setTimeout(()=>setI(x=>x+1),6500);return()=>clearTimeout(id)},[i]);
+ return <section className="tour" aria-live="polite"><Eye an/>
+  <p key={i}>{t('tour.'+(i+1))}</p>{i===N-1&&<small className="mono">{t('tour.soon')}</small>}
+  <div className="tdots" aria-hidden>{Array.from({length:N},(_,k)=><i key={k} className={k===i?'on':''}/>)}</div>
+  {i<N-1?<button className="g" onClick={()=>setI(i+1)}>{t('tour.next')}</button>:<button onClick={onTry}>{t('tour.go')}</button>}
+ </section>}
 export default function App(){
  const {t,lang,setLang}=useI18n();const cp=useCopy();const [role,setRole]=useState<Role|null>(null),[real,setReal]=useState(false),[login,setLogin]=useState(false);
  const [stage,setStage]=useState<'home'|'doors'|'explore'|'try'|'mine'>('home'),[who,setWho]=useState<''|'me'|'other'|'group'>(''),[rel,setRel]=useState('');
@@ -103,7 +111,7 @@ export default function App(){
   </section>
   {!role&&stage!=='home'&&<div id="guest">
    {stage==='doors'&&<section className="doors"><h2>{t('d.q')}</h2><div className="dr">{([['explore','d.explore'],['try','d.try'],['mine','d.mine']] as const).map(([k,l])=><button key={k} className="g" onClick={()=>go(k)}>{t(l)}<small>{t(l+'.s')}</small></button>)}</div></section>}
-   {stage==='explore'&&<><Scene mode="customer" real={false} airports={ap} onState={setSt}/><section className="doors" style={{minHeight:0}}><button onClick={()=>go('try')}>{t('d.tryit')}</button><button className="g" onClick={()=>go('doors')}>{t('d.back')}</button></section></>}
+   {stage==='explore'&&<Tour onTry={()=>go('try')}/>}
    {(stage==='try'||(stage==='mine'&&who&&(who!=='other'||rel)))&&<main id="under"><section className="doors" style={{minHeight:0,paddingBottom:0}}><button className="g" onClick={()=>{setWho('');setRel('');go('doors')}}>{t('d.back')}</button></section><JourneyRoom guest airports={ap} real={false}/></main>}
    {stage==='mine'&&!who&&<section className="doors"><h2>{t('d.who')}</h2><div className="dr">{([['me','d.me'],['other','d.other'],['group','d.group']] as const).map(([k,l])=><button key={k} className="g" onClick={()=>setWho(k)}>{t(l)}</button>)}</div></section>}
    {stage==='mine'&&who==='other'&&!rel&&<section className="doors" style={{minHeight:0}}><h2>{t('d.rel')}</h2><div className="dr">{[1,2,3,4,5,6].map(i=><button key={i} className="g" onClick={()=>setRel('d.rel'+i)}>{t('d.rel'+i)}</button>)}</div></section>}
