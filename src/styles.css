@@ -67,7 +67,7 @@ html[lang=ru] h2,html[lang=ru] .sub,html[lang=ru] .card h3{font-family:'Cormoran
 
 .hero-ask{width:100%;max-width:520px;margin:6px 0 0}.hero-ask input{flex:1;min-width:0}.gate{margin:12px 0}
 .doors{min-height:80svh;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:56px 24px;gap:14px}.dr{display:grid;gap:12px;width:100%;max-width:420px;margin-top:10px}.dr button{display:block;width:100%;text-align:start;padding:16px 20px}.dr small{display:block;opacity:.65;margin-top:4px;font-size:13px}
-.show{min-height:100svh;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:56px 24px;gap:20px;max-width:640px;margin:0 auto}
+.show{min-height:100svh;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:120px 24px 56px;gap:20px;max-width:640px;margin:0 auto}
 .show .chip{font-size:12px;color:var(--warn);border:1px solid #e6c36a55;border-radius:99px;padding:4px 12px}
 .show .big{font-family:'Instrument Serif','Tajawal',serif;font-size:clamp(26px,5vw,38px);line-height:1.35;margin:0;animation:p2 .8s ease both}
 .show .rt{font-size:18px;color:var(--gold);margin:0}.show .dim{color:var(--dim);margin:0;max-width:46ch}
@@ -75,3 +75,28 @@ html[lang=ru] h2,html[lang=ru] .sub,html[lang=ru] .card h3{font-family:'Cormoran
 .show .opts{display:grid;gap:18px}.show .opts div{display:grid;gap:2px}.show .opts b{font-family:'Instrument Serif','Tajawal',serif;font-size:24px;font-weight:400}.show .opts small{color:var(--dim)}
 .show .plan{list-style:none;padding:0;margin:0;border-inline-start:1px solid var(--gold);text-align:start;display:grid;gap:12px}.show .plan li{padding-inline-start:18px}.show .plan span{color:var(--gold);margin-inline-end:12px}.show .plan small{color:var(--dim);margin-inline-start:10px}
 @keyframes p2{from{opacity:0}to{opacity:1}}@media (prefers-reduced-motion:reduce){.show .big{animation:none}.show .scan li{transition:none}}
+
+.gl{color:var(--gold);stroke:currentColor;flex:none;overflow:visible}.gl .b{stroke:var(--blue)}
+.gl .d{stroke-dasharray:1;stroke-dashoffset:1;animation:dw 1.2s ease forwards}@keyframes dw{to{stroke-dashoffset:0}}
+.scan li .gl .d{animation-play-state:paused}.scan li.on .gl .d{animation-play-state:running}
+.scan li{display:flex;align-items:center;gap:16px;font-size:19px}.scan li b{margin-inline-start:auto;padding-inline-start:10px;color:var(--ok);font-weight:400}.scan li:has(.gl-radar) b{color:var(--warn)}
+.gl .fly{fill:var(--gold);stroke:none;transform:translate(2px,16px) scale(.5);animation:fl 3.4s ease-in-out infinite alternate}@keyframes fl{to{transform:translate(22px,5px) scale(.5)}}
+.gl .sweep,.gl .hand{stroke:var(--gold);transform-origin:24px 24px;animation:sw 3s linear infinite}.gl .hand.h{animation-duration:48s}.gl .hand.m{animation-duration:4s}@keyframes sw{to{transform:rotate(360deg)}}
+.gl .blip{animation:bl 3s ease-in-out infinite}@keyframes bl{0%,40%{opacity:0}55%{opacity:1}100%{opacity:.1}}
+.gl .rays{transform-origin:17px 17px;animation:sw 14s linear infinite}.gl .cloud{animation:dr 4s ease-in-out infinite alternate}@keyframes dr{to{transform:translateX(4px)}}
+.gl .ring,.gl .ripple{stroke:var(--gold);transform-box:fill-box;transform-origin:center;animation:rg 2.4s ease-out infinite}.gl .ring.r2{animation-delay:1.2s}.gl .ripple{animation-duration:3.4s;animation-delay:2.4s}@keyframes rg{from{transform:scale(1);opacity:.9}to{transform:scale(3.4);opacity:0}}
+.gl .dash{animation:dh 1.4s linear infinite}@keyframes dh{to{stroke-dashoffset:-16}}
+.gl .car{offset-path:path('M5 40Q24 6 43 40');animation:cr 3.4s ease-in-out infinite}@keyframes cr{from{offset-distance:0}to{offset-distance:100%}}
+.gl .land{fill:var(--gold);stroke:none;transform:translate(14px,6px) scale(.45);animation:ld 3.4s ease-in infinite}@keyframes ld{from{transform:translate(14px,6px) scale(.45);opacity:.3}85%,to{transform:translate(14px,25px) scale(.45);opacity:1}}
+.gl .needle{stroke:var(--gold);transform-origin:24px 36px;animation:nd 2.6s ease-in-out infinite alternate}@keyframes nd{from{transform:rotate(-62deg)}to{transform:rotate(62deg)}}
+.gl .key{animation:ky 2.2s ease-in-out infinite}@keyframes ky{50%{opacity:.25}}
+.gl .breath{stroke:var(--gold);animation:ky 3.6s ease-in-out infinite}
+.gl .sl{animation:sx 2.6s ease-in-out infinite alternate}.gl .sl.r{animation-direction:alternate-reverse}@keyframes sx{to{transform:translateX(-4px)}}
+.gl .spark{fill:#c9a96122;transform-origin:24px 24px;animation:sp 4s ease-in-out infinite}@keyframes sp{50%{transform:rotate(45deg) scale(.82)}}
+.gl .scanl{animation:sc 3s ease-in-out infinite alternate}@keyframes sc{to{transform:translate(4px,4px)}}
+.gl .beam{transform-origin:24px 14px;animation:bm 3.4s ease-in-out infinite alternate}@keyframes bm{from{transform:rotate(-5deg)}to{transform:rotate(5deg)}}
+.show .hd{display:grid;place-items:center;gap:10px}
+.show .opts div.o{display:grid;grid-template-columns:auto 1fr;gap:4px 16px;align-items:center;text-align:start}.show .opts .o .gl{grid-row:span 3}
+.show .pri{display:grid;justify-items:center;gap:8px;min-width:96px;padding:16px 14px}.show .pri:hover .gl,.show .pri:focus-visible .gl{transform:scale(1.18);transition:transform .3s}
+.show .plan li{display:flex;align-items:center;gap:10px}
+@media (prefers-reduced-motion:reduce){.gl *{animation:none!important;transition:none!important}.gl .d{stroke-dashoffset:0!important}.gl .fly,.gl .land{transform:translate(12px,14px) scale(.5)}}
