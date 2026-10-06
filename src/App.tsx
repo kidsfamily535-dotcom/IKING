@@ -11,6 +11,7 @@ import OperatorValue from './OperatorValue';
 import Scene from './eye/Scene';
 import {Layer} from './eye/parts';
 import BrokerRoom from './eye/Broker';
+import OperatorLinks from './OperatorLinks';
 import {useCopy} from './eye/copy';
 import LangSwitch from './LangSwitch';
 import {useI18n,hasStoredLang,hasKey,catL,isLang,type Lang} from './i18n';
@@ -128,7 +129,7 @@ export default function App(){
      </Layer>
      <Layer title={cp('l.guard')} status="wait" desc={cp('l.guard.d')}/>
      <Layer title={cp('l.file')} status="wait" desc={cp('l.file.d')}/>
-     {staff&&<Layer title={cp('l.broker')} status="sim" desc={cp('l.broker.d')}><BrokerRoom/></Layer>}
+     {staff&&<Layer title={cp('l.broker')} status="sim" desc={cp('l.broker.d')}><BrokerRoom/>{real&&<OperatorLinks/>}</Layer>}
      {staff&&<PolicyView/>}
     </section></>}
   </main></>}
