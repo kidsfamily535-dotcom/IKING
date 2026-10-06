@@ -24,6 +24,7 @@ export const en:Record<Key,string>={
 'hero.ph':'Where, when, and how many of you…',
 'hero.see':'Let me see',
 'hero.account':'I have an account',
+'hero.watch':'Watch your trip for free',
 'opt.want':'This is what I want',
 'gate.title':'As you wish. Where shall we write to you?',
 'gate.email':'Your email',

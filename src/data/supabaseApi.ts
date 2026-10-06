@@ -13,6 +13,9 @@ const simulated={
  analyzeEmptyLeg:mockApi.analyzeEmptyLeg,// تحليل الرحلة الفاضية: محاكاة معلَّمة SIM
  parseRequest:mockApi.parseRequest,// فهم الطلب بالـregex: محاكاة، خيارات وأسعار مثال فقط
 };
+const mapWx=(data:any[]|null)=>(data??[]).map((r:any)=>({leg:r.leg_ar==='المغادرة'?'dep':'arr',code:r.airport_code,status:r.obs_status,observedAt:r.observed_at,ageMin:r.age_minutes,cat:WXC[r.condition_ar]??null,windDir:r.wind_dir,windKt:r.wind_speed_kt,vis:r.visibility,tempC:r.temp_c,forecast:!!r.forecast_available}) as RouteWx);
+// نفس الرصد الرسمي لكن مفتوح للزائر (قراءة فقط، بلا بيانات شخصية): صفحة «راقب رحلتك» ترى القيمة قبل أي بريد.
+export const routeWeatherPublic=async(o:string,d:string)=>{const {data,error}=await sb.rpc('get_route_weather_public',{p_origin:o,p_destination:d});if(error)throw new Error(error.message);return mapWx(data)};
 export const realApi:EyeApi={...simulated,
  // لا ذاكرة حقيقية بعد (customer_preferences غير موصولة): لا نعرض عناصر تبان محفوظة وهي ليست كذلك.
  async listMemory(){return []},
@@ -56,8 +59,7 @@ export const realApi:EyeApi={...simulated,
  async demandRadar(days){const {data,error}=await sb.rpc('eye_demand_radar',{p_days:days});if(error)throw new Error(error.message);return (data?.events??[]) as RadarEvent[]},
  async demandCalendar(days){const {data,error}=await sb.rpc('eye_demand_calendar',{p_days:days});if(error)throw new Error(error.message);return (data?.events??[]) as CalendarEvent[]},
  // طقس مطاري الرحلة من آخر رصد رسمي مخزّن (METAR). لو الرصد أقدم من 150 دقيقة يرجع STALE ولا نعرض قيمه.
- async routeWeather(o,d){const {data,error}=await sb.rpc('get_route_weather',{p_origin:o,p_destination:d});if(error)throw new Error(error.message);
-  return (data??[]).map((r:any)=>({leg:r.leg_ar==='المغادرة'?'dep':'arr',code:r.airport_code,status:r.obs_status,observedAt:r.observed_at,ageMin:r.age_minutes,cat:WXC[r.condition_ar]??null,windDir:r.wind_dir,windKt:r.wind_speed_kt,vis:r.visibility,tempC:r.temp_c,forecast:!!r.forecast_available}) as RouteWx)},
+ async routeWeather(o,d){const {data,error}=await sb.rpc('get_route_weather',{p_origin:o,p_destination:d});if(error)throw new Error(error.message);return mapWx(data)},
  // رحلات العميل التي أدخلها بنفسه (RLS: صفوفه فقط). نخفي ما مضى عليه أكثر من يوم.
  async listMyTrips(){const {data,error}=await sb.from('customer_trips').select('id,origin_code,destination_code,departure_at,created_at').eq('kind','TRIP').or(`departure_at.is.null,departure_at.gte.${new Date(Date.now()-864e5).toISOString()}`).order('departure_at',{ascending:true,nullsFirst:false});
   if(error)throw new Error(error.message);

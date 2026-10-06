@@ -89,7 +89,7 @@ export default function App(){
   if(!live||!data||data.status!=='active')return;
   useRealApi();setReal(true);setRole(data.role==='admin'||data.role==='broker'?'admin':data.role==='operator'?'operator':'customer');
   if(isLang(data.preferred_language)&&!hasStoredLang())setLang(data.preferred_language,false);
-  try{const w=localStorage.getItem('iking_want');if(w){localStorage.removeItem('iking_want');const x=JSON.parse(w);if(x?.o&&x?.d)await api.addMyTrip(x.o,x.d,null)}}catch{/* يبقى الاختيار غير محفوظ */}
+  try{const w=localStorage.getItem('iking_want');if(w){localStorage.removeItem('iking_want');const x=JSON.parse(w);if(x?.o&&x?.d)await api.addMyTrip(x.o,x.d,typeof x.at==='string'?x.at:null)}}catch{/* يبقى الاختيار غير محفوظ */}
  })();return()=>{live=false}},[]);
  const run=async()=>{setSay('');setSay(await api.runPass(setSt))};
  const staff=role==='admin',table=op.filter(o=>o.status==='ACTIVATION_PENDING');
@@ -100,6 +100,7 @@ export default function App(){
    <div className="mono">ALWAYS WATCHING · 24 / 7</div><h1>THE KING'S EYE</h1><div className="sub">{t('hero.sub1')} <b>{t('hero.sub2')}</b></div>
    <Eye an={st!=='WATCHING'}/><div className="mono">{st}</div>
    <button style={{marginTop:30}} onClick={()=>go('doors')}>{t('hero.see')}</button>
+   {!real&&<button className="g" style={{marginTop:14}} onClick={()=>{location.href='?view=watch'}}>{t('hero.watch')}</button>}
    {!real&&!login&&<button className="g" style={{marginTop:14}} onClick={()=>setLogin(true)}>{t('hero.account')}</button>}
    {staffMode&&<><div className="roles" style={{marginTop:22}} role="group" aria-label={t('hero.pick.aria')}>{(['admin','operator','customer'] as Role[]).map(r=><button key={r} className={role===r?'':'g'} onClick={()=>{setRole(r);setTimeout(()=>document.getElementById('room')?.scrollIntoView({behavior:'smooth'}),50)}}>{t('role.'+r)}</button>)}</div><div className="mono" style={{marginTop:14,opacity:.6}}>{t('hero.demoaccess')}</div></>}
    {login&&!real&&<SignIn onDone={(r,pl?:Lang)=>{useRealApi();setReal(true);setRole(r);setLogin(false);if(pl&&!hasStoredLang())setLang(pl,false)}}/>}

@@ -23,6 +23,7 @@ export const ar={
 'hero.ph':'إلى أين، ومتى، وكم عددكم؟',
 'hero.see':'دعني أرى',
 'hero.account':'لي حساب',
+'hero.watch':'راقب رحلتك مجانًا',
 'opt.want':'هذا ما أريد',
 'gate.title':'أمرك. أين نكتب إليك؟',
 'gate.email':'بريدك',

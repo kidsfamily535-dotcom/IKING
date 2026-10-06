@@ -24,6 +24,7 @@ export const tur:Record<Key,string>={
 'hero.ph':'Nereye, ne zaman, kaç kişi…',
 'hero.see':'Bırak göreyim',
 'hero.account':'Hesabım var',
+'hero.watch':'Yolculuğunu ücretsiz izle',
 'opt.want':'Bunu istiyorum',
 'gate.title':'Emriniz olur. Size nereye yazalım?',
 'gate.email':'E-postanız',
