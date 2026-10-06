@@ -11,7 +11,7 @@ import OperatorValue from './OperatorValue';
 import Scene from './eye/Scene';
 import {Layer} from './eye/parts';
 import BrokerRoom from './eye/Broker';
-import OperatorLinks from './OperatorLinks';
+import Cockpit from './Cockpit';
 import DeskLinks from './DeskLinks';
 import {useCopy} from './eye/copy';
 import LangSwitch from './LangSwitch';
@@ -115,6 +115,7 @@ export default function App(){
   <Scene mode={role==='customer'?'customer':'operator'} real={real} airports={ap} onState={setSt}/>
   <main id="under">
    {role==='customer'?<Room airports={ap} real={real}/>:<>
+    {staff&&real&&<section className="sec" style={{marginBottom:56}}><Cockpit airports={ap}/></section>}
     <section className="layers"><div className="mono">LAYERS</div><h2>{cp('layers')}</h2>
      <Layer title={cp('l.opp')} status={real?'live':'sim'} desc={cp('l.opp.d')}>
       <section className="sec"><div className="mono">DISCOVERY</div><h2>{t('disc.title')}</h2><p className="lead" style={{margin:'0 0 8px'}}>{t('disc.lead')}</p>
@@ -130,7 +131,7 @@ export default function App(){
      </Layer>
      <Layer title={cp('l.guard')} status="wait" desc={cp('l.guard.d')}/>
      <Layer title={cp('l.file')} status="wait" desc={cp('l.file.d')}/>
-     {staff&&<Layer title={cp('l.broker')} status="sim" desc={cp('l.broker.d')}><BrokerRoom/>{real&&<OperatorLinks/>}{real&&<DeskLinks/>}</Layer>}
+     {staff&&<Layer title={cp('l.broker')} status={real?'live':'sim'} desc={cp('l.broker.d')}>{real?<DeskLinks/>:<BrokerRoom/>}</Layer>}
      {staff&&<PolicyView/>}
     </section></>}
   </main></>}
