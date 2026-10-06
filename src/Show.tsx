@@ -1,3 +1,4 @@
+import Route from './Route';
 import {useEffect,useState} from 'react';
 import {api} from './data/api';
 import type {Airport,ParsedRequest} from './data/types';
@@ -19,7 +20,7 @@ export default function Show({airports,who='',rel=''}:{airports:Airport[];who?:s
  useEffect(()=>{if(step!==2)return;setN(0);const id=setInterval(()=>setN(x=>x<7?x+1:x),650);return()=>clearInterval(id)},[step]);
  const best=p?.options.find(o=>o.id===PICK[pri])??p?.options[0];
  const forTxt=who?t('show.for',{w:who==='me'?t('d.me'):who==='group'?t('d.group'):rel?t(rel):t('d.other')}):'';
- const route=p?<span dir="ltr">{nm(p.origin)} → {nm(p.destination)}</span>:null;
+ const route=p?<Route from={nm(p.origin)} to={nm(p.destination)}/>:null;
  const RT=<><p className="rt">{route}</p>{forTxt&&<p className="dim sm">{forTxt}</p>}</>;
  const back=()=>setStep(step<=3?0:step-1);
  const dep=best?.departure??'09:00';

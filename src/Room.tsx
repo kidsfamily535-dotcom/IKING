@@ -1,3 +1,4 @@
+import Route from './Route';
 import {useCallback,useEffect,useState} from 'react';
 import {api} from './data/api';
 import type {Airport,MemoryItem,MyTrip,RouteWx} from './data/types';
@@ -30,7 +31,7 @@ export default function Room({airports,real}:{airports:Airport[];real:boolean}){
   try{await api.addMyTrip(o,d,at?new Date(at).toISOString():null);setO('');setD('');setAt('');setAdding(false);setSel(0);setPg(0);await load()}catch{setErr(t('mt.err'))}finally{setBusy(false)}};
  const del=async(id:string)=>{try{await api.removeMyTrip(id);setSel(0);await load()}catch{setErr(t('mt.err'))}};
  const dirTxt=(v:string|null)=>v&&/^\d+$/.test(v)?v+'°':v;
- const route=(x:MyTrip)=><span dir="ltr">{nm(x.origin)} → {nm(x.destination)}</span>;
+ const route=(x:MyTrip)=><Route from={nm(x.origin)} to={nm(x.destination)}/>;
  const AddTrip=<div className="add"><div className="f2">
    <div><label>{t('mt.from')}</label><select aria-label={t('mt.from')} value={o} onChange={e=>setO(e.target.value)}><option value="">{t('mt.pick')}</option>{airports.map(a=><option key={a.iata} value={a.iata}>{airportName(a)} · {a.iata}</option>)}</select></div>
    <div><label>{t('mt.to')}</label><select aria-label={t('mt.to')} value={d} onChange={e=>setD(e.target.value)}><option value="">{t('mt.pick')}</option>{airports.map(a=><option key={a.iata} value={a.iata}>{airportName(a)} · {a.iata}</option>)}</select></div>

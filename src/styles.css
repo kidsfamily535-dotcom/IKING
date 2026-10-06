@@ -55,7 +55,7 @@ footer{text-align:center;color:var(--dim);font-size:13px;padding:30px 20px 50px;
 textarea{width:100%;background:none;border:1px solid #c9a96166;color:var(--ink);font:15px/1.7 'JetBrains Mono',monospace;padding:10px;outline:0;resize:vertical}
 .ck{display:flex;gap:10px;align-items:center;margin:12px 0;font-size:15px;color:var(--dim)}.ck input{width:18px;height:18px;accent-color:#c9a961}
 .lang{position:fixed;top:8px;right:8px;z-index:99;display:flex;gap:4px;direction:ltr}
-.lang button{padding:3px 12px;font:11px 'JetBrains Mono',Tajawal,sans-serif;letter-spacing:.08em;background:#060b16d9;color:var(--gold);border:1px solid #c9a96166;border-radius:99px}
+.lang button{min-height:32px;padding:3px 12px;font:11px 'JetBrains Mono',Tajawal,sans-serif;letter-spacing:.08em;background:#060b16d9;color:var(--gold);border:1px solid #c9a96166;border-radius:99px}
 .lang button.on{background:var(--gold);color:var(--bg)}
 @media(max-width:560px){.lang{left:8px;right:8px;justify-content:flex-end;flex-wrap:wrap}.lang button{padding:3px 8px}}
 /* Instrument Serif لا تدعم السيريلية، فنستخدم خطًا بديلاً للروسية */
@@ -63,7 +63,7 @@ html[lang=ru] h2,html[lang=ru] .sub,html[lang=ru] .card h3{font-family:'Cormoran
 
 .jnav{display:flex;gap:10px;flex-wrap:wrap;justify-content:center;padding:14px 14px 0;max-width:980px;margin:0 auto}.jnav button{padding:6px 16px;font-size:14px}
 .ask .send:disabled{opacity:.55}
-@media(max-width:560px){.lang{flex-wrap:nowrap}.lang button{padding:3px 7px;font-size:10.5px}.pill{top:42px;max-width:calc(100vw - 16px)}#bar{padding-top:64px}}
+@media(max-width:560px){.lang{flex-wrap:nowrap}.lang button{padding:3px 7px;font-size:10.5px}.pill{top:50px;max-width:calc(100vw - 16px)}#bar{padding-top:72px}h1{font-size:clamp(30px,8.4vw,88px);letter-spacing:.08em}}
 
 .hero-ask{width:100%;max-width:520px;margin:6px 0 0}.hero-ask input{flex:1;min-width:0}.gate{margin:12px 0}
 .doors{min-height:80svh;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:56px 24px;gap:14px}.dr{display:grid;gap:12px;width:100%;max-width:420px;margin-top:10px}.dr button{display:block;width:100%;text-align:start;padding:16px 20px}.dr small{display:block;opacity:.65;margin-top:4px;font-size:13px}

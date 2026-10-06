@@ -1,3 +1,4 @@
+import Route from './Route';
 import {useCallback,useEffect,useState} from 'react';
 import {api} from './data/api';
 import type {Airport,MyTrip,RouteWx} from './data/types';
@@ -40,7 +41,7 @@ export default function MyTrips({airports}:{airports:Airport[]}){
    {wxErr&&<div className="nt" role="alert">{t('wx.fail')}</div>}
    {wx&&wx.some(r=>r.status==='CURRENT')&&<small style={{color:'var(--dim)',display:'block'}}>{t('wx.src')}</small>}
    <small style={{color:'var(--dim)',display:'block',marginTop:6}}>{t('wx.refresh')}</small></div>}
-  {trips&&trips.slice(1).map(x=><div className="row" key={x.id}><span>{LT(`${nm(x.origin)} → ${nm(x.destination)}`)}</span><span style={{direction:dir}}>{when(x.departureAt)} <button className="g" style={{padding:'0 10px'}} onClick={()=>del(x.id)}>{t('mt.remove')}</button></span></div>)}
+  {trips&&trips.slice(1).map(x=><div className="row" key={x.id}><span><Route from={nm(x.origin)} to={nm(x.destination)}/></span><span style={{direction:dir}}>{when(x.departureAt)} <button className="g" style={{padding:'0 10px'}} onClick={()=>del(x.id)}>{t('mt.remove')}</button></span></div>)}
   <div className="mono" style={{margin:'24px 0 4px'}}>{t('mt.title')}</div>
   <div className="f2">
    <div><label>{t('mt.from')}</label><select aria-label={t('mt.from')} value={o} onChange={e=>setO(e.target.value)}><option value="">{t('mt.pick')}</option>{airports.map(a=><option key={a.iata} value={a.iata}>{airportName(a)} · {a.iata}</option>)}</select></div>
