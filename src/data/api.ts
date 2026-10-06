@@ -1,4 +1,4 @@
-import type {FleetAircraft,ParkedAircraft,CalendarEvent,Airport,Opportunity,Signal,AgentState,EmptyLegInput,EmptyLegResult,MarketLeg,MemoryItem,ParsedRequest,DecisionPolicyRow,MyTrip,MyEmptyLeg,RouteWx} from './types';
+import type {FleetAircraft,ParkedAircraft,CalendarEvent,RadarEvent,Airport,Opportunity,Signal,AgentState,EmptyLegInput,EmptyLegResult,MarketLeg,MemoryItem,ParsedRequest,DecisionPolicyRow,MyTrip,MyEmptyLeg,RouteWx} from './types';
 export interface EyeApi{
  listAirports():Promise<Airport[]>;listSignals():Promise<Signal[]>;listOpportunities():Promise<Opportunity[]>;
  approveOpportunity(id:string):Promise<void>;rejectOpportunity(id:string,reason:string):Promise<void>;
@@ -8,7 +8,7 @@ export interface EyeApi{
  routeWeather(origin:string,destination:string):Promise<RouteWx[]>;listMyTrips():Promise<MyTrip[]>;addMyTrip(origin:string,destination:string,departureAt:string|null):Promise<void>;removeMyTrip(id:string):Promise<void>;
  listMyEmptyLegs():Promise<MyEmptyLeg[]>;addMyEmptyLeg(origin:string,destination:string,departureAt:string|null,seats:number|null,note:string):Promise<void>;
  runPass(onState:(s:AgentState)=>void):Promise<string>;
- fleetReport(regs:string[],consent:boolean):Promise<FleetAircraft[]>;parkedAircraft(regs?:string[]):Promise<ParkedAircraft[]>;demandCalendar(days:number):Promise<CalendarEvent[]>;
+ fleetReport(regs:string[],consent:boolean):Promise<FleetAircraft[]>;parkedAircraft(regs?:string[]):Promise<ParkedAircraft[]>;demandCalendar(days:number):Promise<CalendarEvent[]>;demandRadar(days:number):Promise<RadarEvent[]>;
 }
 import {mockApi} from './mockApi';
 import {realApi} from './supabaseApi';

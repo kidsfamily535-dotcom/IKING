@@ -22,3 +22,5 @@ export interface MyTrip{id:string;origin:string;destination:string;departureAt:s
 export interface MyEmptyLeg{id:string;origin:string;destination:string;departureAt:string|null;seats:number|null;note:string|null;createdAt:string}
 export type WxCat='VFR'|'MVFR'|'IFR'|'LIFR';
 export interface RouteWx{leg:'dep'|'arr';code:string;status:'CURRENT'|'STALE'|'UNKNOWN';observedAt:string|null;ageMin:number|null;cat:WxCat|null;windDir:string|null;windKt:number|null;vis:string|null;tempC:number|null;forecast:boolean}
+export interface RadarSupply{tracked_aircraft_near_24h:number;tracked_basis:'INFERRED';confirmed_availability:number;demo_availability:number;open_requests:number}
+export interface RadarEvent{id:string;title:string;title_ar:string|null;category:'SEASON'|'SPORT'|'ENTERTAINMENT'|'BUSINESS'|'EXHIBITION';city:string;airports:string[]|null;starts_on:string;ends_on:string;end_basis:'ANNOUNCED'|'COMPUTED';days_until:number;live_now:boolean;verification:'CROSS_CHECKED'|'PENDING_VERIFICATION';sources:{name:string;url:string|null}[];verified_at:string|null;note:string|null;supply:RadarSupply}

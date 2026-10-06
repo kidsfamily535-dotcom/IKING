@@ -1,7 +1,7 @@
 import {sb} from '../lib/supabase';
 import {mockApi} from './mockApi';
 import type {EyeApi} from './api';
-import type {Airport,Signal,DecisionPolicyRow,Opportunity,FleetAircraft,ParkedAircraft,CalendarEvent,MyTrip,MyEmptyLeg,RouteWx,WxCat} from './types';
+import type {Airport,Signal,DecisionPolicyRow,Opportunity,FleetAircraft,ParkedAircraft,CalendarEvent,RadarEvent,MyTrip,MyEmptyLeg,RouteWx,WxCat} from './types';
 import {tr} from '../i18n';
 import {HUBS} from './hubs';
 // الدالة ترجع وصف الرؤية بالعربية فقط، فنحوله لفئة ثابتة ونترجمه في الواجهة. (الأفضل لاحقًا: ترجيع الفئة نفسها من الدالة)
@@ -52,6 +52,8 @@ export const realApi:EyeApi={...simulated,
  async rejectOpportunity(id,reason){const {error}=await sb.rpc('reject_opportunity',{p_id:id,p_reason:reason});if(error)throw new Error(error.message)},
  async fleetReport(regs,consent){const {data,error}=await sb.rpc('eye_fleet_report',{p_regs:regs,p_consent:consent});if(error)throw new Error(error.message);return (data?.aircraft??[]) as FleetAircraft[]},
  async parkedAircraft(regs){const {data,error}=await sb.rpc('eye_parked_aircraft',{p_regs:regs&&regs.length?regs:null});if(error)throw new Error(error.message);return (data?.aircraft??[]) as ParkedAircraft[]},
+ // رادار الطلب: أحداث موثّقة بمصدرها مقابل إشارات العرض (موظفون فقط). الحدث حقيقة تقويمية وليس طلبًا مؤكدًا.
+ async demandRadar(days){const {data,error}=await sb.rpc('eye_demand_radar',{p_days:days});if(error)throw new Error(error.message);return (data?.events??[]) as RadarEvent[]},
  async demandCalendar(days){const {data,error}=await sb.rpc('eye_demand_calendar',{p_days:days});if(error)throw new Error(error.message);return (data?.events??[]) as CalendarEvent[]},
  // طقس مطاري الرحلة من آخر رصد رسمي مخزّن (METAR). لو الرصد أقدم من 150 دقيقة يرجع STALE ولا نعرض قيمه.
  async routeWeather(o,d){const {data,error}=await sb.rpc('get_route_weather',{p_origin:o,p_destination:d});if(error)throw new Error(error.message);
