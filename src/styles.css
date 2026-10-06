@@ -115,3 +115,4 @@ html[lang=ru] h2,html[lang=ru] .sub,html[lang=ru] .card h3{font-family:'Cormoran
 .rm .nv{gap:6px}.rm .nv>button{padding:10px 16px;min-width:0;white-space:nowrap}.rm .dots button{width:20px}
 .rm *{min-width:0}
 .rm li.mm>span:first-child{flex-basis:100%;color:var(--dim);font-size:13px}.rm li.mm b{margin-inline-start:0;flex:1;overflow-wrap:anywhere}
+.show .sm{font-size:13px}.show .bk{align-self:flex-start;padding:4px 14px;font-size:13px}.show .scan li.on{opacity:1}.show .scan li small{margin-inline-start:auto;color:var(--dim)}.show .scan li b.w{color:var(--warn)}.show .scan{width:100%}

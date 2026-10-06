@@ -107,5 +107,15 @@ export const en:Record<Key,string>={
 'room.add':"Add a trip",
 'room.n0':"My trip",
 'room.n1':"Weather",
-'room.n2':"My trips"
+'room.n2':"My trips",
+'show.for':"Trip for: {w}",
+'show.wx.t':"Then I look at the weather at both airports.",
+'show.wx.n':"On a real trip I read the official report. Here there is none, and the final call is the operator's and the crew's.",
+'show.after':"And what after {d}?",
+'show.after1':"The way back",
+'show.after2':"A nearby destination",
+'show.after.n':"These come later. I don't do them today.",
+'show.alt':"And if your time changes?",
+'show.alt.now':"Current time",
+'show.alt.n':"Any other time needs the operator's confirmation before it is real."
 };

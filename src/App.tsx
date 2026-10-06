@@ -105,7 +105,7 @@ export default function App(){
   {!role&&stage!=='home'&&<div id="guest">
    {stage==='doors'&&<section className="doors"><h2>{t('d.q')}</h2><div className="dr">{([['explore','d.explore'],['try','d.try'],['mine','d.mine']] as const).map(([k,l])=><button key={k} className="g" onClick={()=>go(k)}>{t(l)}<small>{t(l+'.s')}</small></button>)}</div></section>}
    {stage==='explore'&&<><Scene mode="customer" real={false} airports={ap} onState={setSt}/><section className="doors" style={{minHeight:0}}><button onClick={()=>go('try')}>{t('d.tryit')}</button><button className="g" onClick={()=>go('doors')}>{t('d.back')}</button></section></>}
-   {(stage==='try'||(stage==='mine'&&who&&(who!=='other'||rel)))&&<main id="under"><section className="doors" style={{minHeight:0,paddingBottom:0}}><button className="g" onClick={()=>{setWho('');setRel('');go('doors')}}>{t('d.back')}</button></section><Show airports={ap}/></main>}
+   {(stage==='try'||(stage==='mine'&&who&&(who!=='other'||rel)))&&<main id="under"><section className="doors" style={{minHeight:0,paddingBottom:0}}><button className="g" onClick={()=>{setWho('');setRel('');go('doors')}}>{t('d.back')}</button></section><Show airports={ap} who={who} rel={rel}/></main>}
    {stage==='mine'&&!who&&<section className="doors"><h2>{t('d.who')}</h2><div className="dr">{([['me','d.me'],['other','d.other'],['group','d.group']] as const).map(([k,l])=><button key={k} className="g" onClick={()=>setWho(k)}>{t(l)}</button>)}</div></section>}
    {stage==='mine'&&who==='other'&&!rel&&<section className="doors" style={{minHeight:0}}><h2>{t('d.rel')}</h2><div className="dr">{[1,2,3,4,5,6].map(i=><button key={i} className="g" onClick={()=>setRel('d.rel'+i)}>{t('d.rel'+i)}</button>)}</div></section>}
   </div>}

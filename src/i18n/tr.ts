@@ -107,5 +107,15 @@ export const tur:Record<Key,string>={
 'room.add':"Yolculuk ekle",
 'room.n0':"Yolculuğum",
 'room.n1':"Hava",
-'room.n2':"Yolculuklarım"
+'room.n2':"Yolculuklarım",
+'show.for':"Yolculuk: {w}",
+'show.wx.t':"Sonra iki havalimanının havasına bakarım.",
+'show.wx.n':"Gerçek yolculukta resmi gözlemi okurum. Burada gözlem yok; son karar operatör ve mürettebatındır.",
+'show.after':"Peki {d} sonrası?",
+'show.after1':"Dönüş yolculuğu",
+'show.after2':"Yakın bir varış noktası",
+'show.after.n':"Bunlar daha sonra gelecek; bugün yapmıyorum.",
+'show.alt':"Ya saatiniz değişirse?",
+'show.alt.now':"Mevcut saat",
+'show.alt.n':"Her alternatif saat, gerçek olmadan önce operatörün onayını gerektirir."
 };
