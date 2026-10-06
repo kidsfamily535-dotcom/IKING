@@ -7,11 +7,26 @@ import {HUBS} from './hubs';
 // الدالة ترجع وصف الرؤية بالعربية فقط، فنحوله لفئة ثابتة ونترجمه في الواجهة. (الأفضل لاحقًا: ترجيع الفئة نفسها من الدالة)
 const WXC:Record<string,WxCat>={'رؤية جيدة':'VFR','رؤية حدّية':'MVFR','رؤية منخفضة':'IFR','رؤية منخفضة جدًا':'LIFR'};
 const trusted=(s:string)=>s==='OFFICIAL_OPERATOR'||s==='VERIFIED_PARTNER';
-// ما لم يُوصَّل بعد (الرحلة الفاضية، الذاكرة، فهم الطلب) يبقى محاكاة ومعلَّمًا SIM في الواجهة.
-export const realApi:EyeApi={...mockApi,
+// قاعدة: لا يرث الوضع الحقيقي شيئًا من المحاكاة بالصدفة. اللي لسه محاكاة مكتوب هنا صراحة وبيتعلَّم SIM في الواجهة.
+// أي دالة جديدة في EyeApi لازم تتكتب هنا حقيقية أو تتضاف لهذه القائمة عن قصد، وإلا TypeScript يرفض البناء.
+const simulated={
+ analyzeEmptyLeg:mockApi.analyzeEmptyLeg,// تحليل الرحلة الفاضية: محاكاة معلَّمة SIM
+ parseRequest:mockApi.parseRequest,// فهم الطلب بالـregex: محاكاة، خيارات وأسعار مثال فقط
+};
+export const realApi:EyeApi={...simulated,
+ // لا ذاكرة حقيقية بعد (customer_preferences غير موصولة): لا نعرض عناصر تبان محفوظة وهي ليست كذلك.
+ async listMemory(){return []},
+ async saveMemory(){throw new Error('MEMORY_NOT_WIRED')},
+ // لا مصدر حقيقي لحركة السوق بعد: لا نخترع رحلات.
+ async listMarket(){return []},
+ // ملخص الدورة من أرقام حقيقية فقط (عدد الإشارات والفرص المنتظرة موافقة).
+ async runPass(on){for(const s of ['DISCOVERING','THINKING','MATCHING','MONITORING'] as const){on(s);await new Promise(r=>setTimeout(r,700))}
+  try{const [sg,op]=await Promise.all([realApi.listSignals(),realApi.listOpportunities()]);on('WATCHING');
+   return tr('run.real',{s:sg.length,p:op.filter(o=>o.status==='ACTIVATION_PENDING').length})}
+  catch{on('WATCHING');return tr('run.fail')}},
  async listAirports(){const {data,error}=await sb.from('airports').select('iata_code,name_ar,name_en,country_code,lat,lon').limit(1000);
   // خطأ أو قاعدة فاضية: نرجع للقائمة المرجعية الثابتة بدل شاشة فاضية (بيانات مطارات ثابتة، مش بيانات تشغيل)
-  if(error||!data||!data.length)return mockApi.listAirports();
+  if(error||!data||!data.length){console.warn('airports: fallback to static reference list',error?.message);return mockApi.listAirports()}
   const out=data.filter(a=>a.lat!=null&&a.lon!=null).map(a=>({iata:a.iata_code,nameAr:a.name_ar??a.name_en??a.iata_code,nameEn:a.name_en??a.name_ar??a.iata_code,country:a.country_code,lat:a.lat,lon:a.lon}) as Airport);
   // الأساسية أولًا، وبعدها الباقي بالدولة ثم الاسم
   return out.sort((a,b)=>(+HUBS.has(b.iata))-(+HUBS.has(a.iata))||a.country.localeCompare(b.country)||a.nameEn.localeCompare(b.nameEn))},

@@ -38,7 +38,7 @@ export default function JourneyRoom({airports,demo=false,real=false,ask,guest=fa
   {!guest&&<nav className="jnav" aria-label={t('j.trips.title')}>
    <button className="g" onClick={()=>jump('tell')}>{t('j.tell.title')}</button>
    <button className="g" onClick={()=>jump('trips')}>{t('j.trips.title')}</button>
-   <button className="g" onClick={()=>jump('mem')}>{t('j.mem.title')}</button>
+   {!real&&<button className="g" onClick={()=>jump('mem')}>{t('j.mem.title')}</button>}
   </nav>}
   <section className="sec" id="tell"><div className="mono">{t('j.cap.tell')}</div><h2>{t('j.tell.title')}</h2>
    <div className="ask"><input ref={inp} aria-label={t('j.req.aria')} placeholder={t('j.req.ph')} value={txt} onChange={e=>setTxt(e.target.value)} onKeyDown={e=>e.key==='Enter'&&submit()}/><button className="send" disabled={th} onClick={submit}>{t('j.send')}</button></div>
@@ -83,7 +83,7 @@ export default function JourneyRoom({airports,demo=false,real=false,ask,guest=fa
    <small style={{color:'var(--dim)'}}>{t('j.tl.note')}</small>
    </>}
    {lang==='ar'&&<div className="act"><button className="g" onClick={()=>{location.href='?view=journeys'}}>{t('j.trips.open')}</button></div>}</section>}
-  {!guest&&<section className="sec" id="mem"><div className="mono">{t('j.cap.mem')}</div><h2>{t('j.mem.title')}</h2>
+  {!guest&&!real&&<section className="sec" id="mem"><div className="mono">{t('j.cap.mem')}</div><h2>{t('j.mem.title')}</h2>
    {mem.map(m=><div className="row" key={m.key}><span>{t('mem.'+m.key)}</span><span style={{direction:dir}}>{ed===m.key?<><input aria-label={t('mem.'+m.key)} value={val} onChange={e=>setVal(e.target.value)} style={{background:'none',border:0,borderBottom:'1px solid var(--gold)',color:'var(--ink)',font:'inherit',width:130}}/> <button className="g" style={{padding:'2px 12px'}} onClick={async()=>{await api.saveMemory(m.key,val);setMem(await api.listMemory());setEd(null)}}>{t('j.save')}</button></>:<>{memV(m)} <button className="g" style={{padding:'0 10px'}} onClick={()=>{setEd(m.key);setVal(memV(m))}}>{t('j.edit')}</button></>}</span></div>)}
    <small style={{color:'var(--dim)'}}>{t('j.mem.note')}</small></section>}</>;
 }

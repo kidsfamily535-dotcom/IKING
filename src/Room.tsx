@@ -25,7 +25,7 @@ export default function Room({airports,real}:{airports:Airport[];real:boolean}){
  useEffect(()=>{setWx(null);setWxErr(false);if(!cur||!real)return;let live=true;
   const go=()=>api.routeWeather(cur.origin,cur.destination).then(r=>{if(live){setWx(r);setWxErr(false)}}).catch(()=>{if(live)setWxErr(true)});
   go();const i=setInterval(go,600000);return()=>{live=false;clearInterval(i)}},[key,real]);
- const pages:Page[]=cur?['now','wx','trips','mem']:['now','mem'],pi=Math.min(pg,pages.length-1),page=pages[pi];
+ const pages:Page[]=(cur?['now','wx','trips','mem']:['now','mem']).filter(p=>!(real&&p==='mem')) as Page[],pi=Math.min(pg,pages.length-1),page=pages[pi];
  const save=async()=>{setErr('');if(!o||!d||o===d){setErr(t('mt.same'));return}setBusy(true);
   try{await api.addMyTrip(o,d,at?new Date(at).toISOString():null);setO('');setD('');setAt('');setAdding(false);setSel(0);setPg(0);await load()}catch{setErr(t('mt.err'))}finally{setBusy(false)}};
  const del=async(id:string)=>{try{await api.removeMyTrip(id);setSel(0);await load()}catch{setErr(t('mt.err'))}};
