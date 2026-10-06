@@ -19,5 +19,6 @@ export interface FleetAircraft{registration:string;found:boolean;icao_type:strin
 export interface ParkedAircraft{icao24:string;registration:string|null;icao_type:string|null;category:string|null;airport:string;landed_at:string;parked_hours:number;confidence:string;related_demand_signals:number;open_explicit_requests:number}
 export interface CalendarEvent{signal_id:string;title:string;grade:string;source:string|null;event_date:string;days_until:number;airports:string[]|null;airports_basis:'EXPLICIT'|'INFERRED_FROM_TITLE'|'UNKNOWN';tracked_aircraft_near_24h:number|null}
 export interface MyTrip{id:string;origin:string;destination:string;departureAt:string|null;createdAt:string}
+export interface MyEmptyLeg{id:string;origin:string;destination:string;departureAt:string|null;seats:number|null;note:string|null;createdAt:string}
 export type WxCat='VFR'|'MVFR'|'IFR'|'LIFR';
 export interface RouteWx{leg:'dep'|'arr';code:string;status:'CURRENT'|'STALE'|'UNKNOWN';observedAt:string|null;ageMin:number|null;cat:WxCat|null;windDir:string|null;windKt:number|null;vis:string|null;tempC:number|null;forecast:boolean}

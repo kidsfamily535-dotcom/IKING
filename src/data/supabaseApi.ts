@@ -1,7 +1,7 @@
 import {sb} from '../lib/supabase';
 import {mockApi} from './mockApi';
 import type {EyeApi} from './api';
-import type {Airport,Signal,DecisionPolicyRow,Opportunity,FleetAircraft,ParkedAircraft,CalendarEvent,MyTrip,RouteWx,WxCat} from './types';
+import type {Airport,Signal,DecisionPolicyRow,Opportunity,FleetAircraft,ParkedAircraft,CalendarEvent,MyTrip,MyEmptyLeg,RouteWx,WxCat} from './types';
 import {tr} from '../i18n';
 import {HUBS} from './hubs';
 // الدالة ترجع وصف الرؤية بالعربية فقط، فنحوله لفئة ثابتة ونترجمه في الواجهة. (الأفضل لاحقًا: ترجيع الفئة نفسها من الدالة)
@@ -57,10 +57,15 @@ export const realApi:EyeApi={...simulated,
  async routeWeather(o,d){const {data,error}=await sb.rpc('get_route_weather',{p_origin:o,p_destination:d});if(error)throw new Error(error.message);
   return (data??[]).map((r:any)=>({leg:r.leg_ar==='المغادرة'?'dep':'arr',code:r.airport_code,status:r.obs_status,observedAt:r.observed_at,ageMin:r.age_minutes,cat:WXC[r.condition_ar]??null,windDir:r.wind_dir,windKt:r.wind_speed_kt,vis:r.visibility,tempC:r.temp_c,forecast:!!r.forecast_available}) as RouteWx)},
  // رحلات العميل التي أدخلها بنفسه (RLS: صفوفه فقط). نخفي ما مضى عليه أكثر من يوم.
- async listMyTrips(){const {data,error}=await sb.from('customer_trips').select('id,origin_code,destination_code,departure_at,created_at').or(`departure_at.is.null,departure_at.gte.${new Date(Date.now()-864e5).toISOString()}`).order('departure_at',{ascending:true,nullsFirst:false});
+ async listMyTrips(){const {data,error}=await sb.from('customer_trips').select('id,origin_code,destination_code,departure_at,created_at').eq('kind','TRIP').or(`departure_at.is.null,departure_at.gte.${new Date(Date.now()-864e5).toISOString()}`).order('departure_at',{ascending:true,nullsFirst:false});
   if(error)throw new Error(error.message);
   return (data??[]).map((r:any)=>({id:r.id,origin:r.origin_code,destination:r.destination_code,departureAt:r.departure_at,createdAt:r.created_at}) as MyTrip)},
- async addMyTrip(o,d,at){const {error}=await sb.from('customer_trips').insert({origin_code:o,destination_code:d,departure_at:at});if(error)throw new Error(error.message)},
+ async addMyTrip(o,d,at){const {error}=await sb.from('customer_trips').insert({origin_code:o,destination_code:d,departure_at:at,kind:'TRIP'});if(error)throw new Error(error.message)},
+ // لقطات الرحلات الفاضية التي يدوّنها العميل: CUSTOMER_PROVIDED وخاصة به، ولا تتحول لتوفّر أو فرصة قبل تحقق الوسيط.
+ async listMyEmptyLegs(){const {data,error}=await sb.from('customer_trips').select('id,origin_code,destination_code,departure_at,seats,note,created_at').eq('kind','EMPTY_LEG').or(`departure_at.is.null,departure_at.gte.${new Date(Date.now()-864e5).toISOString()}`).order('departure_at',{ascending:true,nullsFirst:false});
+  if(error)throw new Error(error.message);
+  return (data??[]).map((r:any)=>({id:r.id,origin:r.origin_code,destination:r.destination_code,departureAt:r.departure_at,seats:r.seats,note:r.note,createdAt:r.created_at}) as MyEmptyLeg)},
+ async addMyEmptyLeg(o,d,at,seats,note){const {error}=await sb.from('customer_trips').insert({origin_code:o,destination_code:d,departure_at:at,kind:'EMPTY_LEG',seats,note:note.trim()?note.trim().slice(0,300):null});if(error)throw new Error(error.message)},
  async removeMyTrip(id){const {error}=await sb.from('customer_trips').delete().eq('id',id);if(error)throw new Error(error.message)},
  async listPolicy(){const {data}=await sb.from('eye_decision_policy').select('*').order('sort_order');
   return (data??[]).map(r=>({situation:r.situation,decision:r.decision,externalEffect:r.external_effect,requiresHuman:r.requires_human,descriptionAr:r.description_ar}) as DecisionPolicyRow)}};

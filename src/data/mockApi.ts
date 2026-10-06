@@ -1,4 +1,4 @@
-import type {EyeApi} from './api';import type {Airport,Opportunity,Signal,EmptyLegInput,MarketLeg,MemoryItem,ParsedRequest,TripOption,DecisionPolicyRow,MyTrip,RouteWx} from './types';
+import type {EyeApi} from './api';import type {Airport,Opportunity,Signal,EmptyLegInput,MarketLeg,MemoryItem,ParsedRequest,TripOption,DecisionPolicyRow,MyTrip,MyEmptyLeg,RouteWx} from './types';
 import {tr,trIn} from '../i18n';
 import {AIRPORT_L} from '../i18n/airports';
 const A=(iata:string,nameAr:string,nameEn:string,country:string,lat:number,lon:number):Airport=>({iata,nameAr,nameEn,country,lat,lon});
@@ -54,7 +54,7 @@ export const mockApi:EyeApi={
  async parkedAircraft(){await wait(200);return [{icao24:'sim001',registration:'SIM-01',icao_type:'GLF5',category:'Ultra Long Range',airport:'DXB',landed_at:new Date(Date.now()-3*3600e3).toISOString(),parked_hours:3,confidence:'HIGH',related_demand_signals:1,open_explicit_requests:0}]},
  async demandCalendar(){await wait(200);return [{signal_id:'sim1',title:'فعالية تجريبية',grade:'D',source:'محاكاة',event_date:new Date(Date.now()+25*864e5).toISOString().slice(0,10),days_until:25,airports:['AUH'],airports_basis:'INFERRED_FROM_TITLE' as const,tracked_aircraft_near_24h:5}]},
  // بدون تسجيل دخول لا توجد رحلات ولا طقس حقيقي هنا. الواجهة لا تعرض هذا الجزء إلا في الوضع الحقيقي.
- async routeWeather(){return [] as RouteWx[]},async listMyTrips(){return [] as MyTrip[]},async addMyTrip(){throw new Error('SIGN_IN_REQUIRED')},async removeMyTrip(){},
+ async routeWeather(){return [] as RouteWx[]},async listMyTrips(){return [] as MyTrip[]},async addMyTrip(){throw new Error('SIGN_IN_REQUIRED')},async removeMyTrip(){},async listMyEmptyLegs(){return [] as MyEmptyLeg[]},async addMyEmptyLeg(){throw new Error('SIGN_IN_REQUIRED')},
  async listPolicy(){const P=(decision:string,externalEffect=false,requiresHuman=false):DecisionPolicyRow=>({situation:decision,decision,externalEffect,requiresHuman,descriptionAr:trIn('ar','policy.'+decision)});
   return [P('SILENT'),P('MONITOR'),P('INVESTIGATE'),P('RECOMMEND'),P('ACT_INTERNAL'),P('ASK_APPROVAL',true,true),P('ESCALATE',true,true),P('VERIFY_CONTINUE')]},
  async runPass(on){for(const s of ['DISCOVERING','THINKING','MATCHING','MONITORING'] as const){on(s);await wait(700)}on('WATCHING');return tr('run.result')}};
