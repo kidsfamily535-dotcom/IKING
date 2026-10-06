@@ -1,0 +1,43 @@
+/* غرفة الوسيط: نفس لغة العين (كحلي وعاج وذهب)، لكن مساحة عمل لا لوحة بيانات. اللون الذهبي يعني "ينتظرك". */
+.kc{margin:0 0 56px}
+.kc h3{font:400 24px/1.3 'Instrument Serif','Tajawal',serif;letter-spacing:.03em;margin:0 0 4px}
+.kc h4{font:400 18px 'Instrument Serif','Tajawal',serif;margin:0 0 8px}
+.kc-h{color:var(--dim);font-size:14px;line-height:1.7;margin:2px 0 10px}
+.kc-wait{font:italic 400 22px 'Instrument Serif','Tajawal',serif;color:var(--gold);margin:14px 0 8px}
+.kc-list{display:grid}
+.kc-it{display:grid;grid-template-columns:auto 1fr auto;gap:0 14px;align-items:center;width:100%;text-align:start;background:none;color:var(--ink);border:0;border-bottom:1px dashed var(--line);border-radius:0;padding:14px 4px}
+.kc-it:hover,.kc-it:focus-visible{background:#c9a9610f}
+.kc-it-m{display:grid;min-width:0}.kc-it-r{font-size:18px}.kc-it small{color:var(--dim);font-size:13px}
+.kc-dot{width:10px;height:10px;border-radius:50%;border:1px solid var(--dim)}
+.kc-dot.me{background:var(--gold);border-color:var(--gold)}.kc-dot.done{opacity:.35}
+.kc-tn{font-size:13px;color:var(--dim);white-space:nowrap}.kc-tn.me{color:var(--gold)}
+.kc-back{padding:4px 16px;font-size:13px;margin-bottom:6px}
+.kc-req{padding:14px 0 4px;border-top:1px solid var(--line)}
+.kc-rt{font:400 clamp(30px,6vw,44px)/1.15 'Instrument Serif','Tajawal',serif;letter-spacing:.04em}
+.kc-meta{color:var(--dim);font-size:15px;margin:2px 0}
+/* الخيط: ست محطات، ثلاث منها بوابات. المحطة الحالية مجوّفة ذهبية، والمنتهية ممتلئة */
+.kc-rail{display:flex;list-style:none;padding:0;margin:26px 0 22px}
+.kc-rail li{flex:1;position:relative;display:grid;justify-items:center;gap:6px;text-align:center}
+.kc-rail li::before{content:"";position:absolute;top:10px;inset-inline-start:-50%;width:100%;height:1px;background:var(--line)}
+.kc-rail li:first-child::before{display:none}
+.kc-rail li.done::before,.kc-rail li.cur::before{background:var(--gold)}
+.kc-n{position:relative;width:20px;height:20px;border-radius:50%;border:1px solid var(--dim);background:var(--bg);display:grid;place-items:center;font:11px 'JetBrains Mono',monospace;color:var(--dim)}
+li.done .kc-n{background:var(--gold);border-color:var(--gold);color:var(--bg)}
+li.cur .kc-n{border-color:var(--gold);color:var(--gold);box-shadow:0 0 0 4px #c9a9611f}
+.kc-n.g.ok{background:var(--gold);border-color:var(--gold);color:var(--bg)}
+.kc-l{font-size:12px;color:var(--dim);line-height:1.3}li.cur .kc-l{color:var(--ink)}
+.kc-p{border:1px solid var(--gold);padding:22px;margin:0 0 20px}.kc-p.q{border-color:var(--line)}
+.kc-sub{border-top:1px dashed var(--line);margin-top:12px;padding-top:12px}
+.kc-chips{display:flex;flex-wrap:wrap;gap:8px;margin:8px 0}.kc-chip{padding:2px 12px;font-size:14px}
+.kc-op{text-transform:capitalize}
+.kc-m{font:400 18px 'JetBrains Mono',monospace;direction:ltr}
+.kc-off{padding:14px 0;border-top:1px dashed var(--line)}.kc-off:first-of-type{border-top:0}
+.kc-co{margin-top:10px;padding:12px 14px;border-inline-start:2px solid var(--gold);background:#c9a9610a}
+.kc-mg{font-size:14px;color:var(--dim);margin:6px 0}.kc-mg b{color:var(--ink);font-weight:500}
+.kc-yn{display:flex;gap:10px;margin:8px 0}.kc-yn button{padding:8px 22px}
+.kc-rf{padding:10px 0;border-top:1px dashed var(--line)}.kc-rf:first-of-type{border-top:0}
+.kc-more{margin:22px 0 0}.kc-more summary{cursor:pointer;color:var(--dim)}
+.kc .f2 .wide{grid-column:1/-1}
+.kc textarea{font:inherit;font-size:16px;margin-top:8px}
+.kc .act input{min-width:160px}
+@media(max-width:560px){.kc-p{padding:16px}.kc-l{font-size:11px}.kc-it{grid-template-columns:auto 1fr}.kc-tn{grid-column:2}}
