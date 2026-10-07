@@ -4,7 +4,10 @@ import {useI18n,airportName,type Lang} from './i18n';
 import Route from './Route';
 import Glyph from './Glyph';
 import type {Airport} from './data/types';
+import {Switch} from './cabin/Switch';
+import FlexLegs from './FlexLegs';
 import './requests.css';
+import './profile.css';
 
 // جهة العميل من سلسلة الطلب: يطلب رحلة، يتابع حالتها بلغة بسيطة، ثم يقبل العرض أو يرفضه.
 // العميل لا يرى المشغّل ولا سعره ولا الهامش: الدالة list_my_loop_offers تعيد ما أقرّه الوسيط فقط.
@@ -67,6 +70,33 @@ function RequestForm({airports,t,onSent,onCancel}:{airports:Airport[];t:Record<s
   <div className="act"><button disabled={busy} onClick={send}>{busy?t.sending:t.send}</button>{onCancel&&<button className="g" onClick={onCancel}>{t.back}</button>}</div></div>;
 }
 
+const AP:Record<'ar'|'en',Record<string,string>>={
+ar:{ask:'أرسل العرض لصاحب القرار',askS:'رابط آمن بلمسة موافقة',h:'رابط صاحب القرار',lab:'انسخ الرابط وأرسله بأي وسيلة',copy:'انسخ الرابط',copied:'تم النسخ',
+ note:'الموافقة عبر الرابط تسجّل نية حجز فقط، وتمر على مراجعتنا قبل أي التزام مع المشغّل. لا نرسل بريدًا تلقائيًا، أنت من يرسل الرابط.',
+ exp:'ينتهي الرابط',noAp:'حدّد صاحب القرار وبريده في «ملف الرحلة» أولًا.',err:'تعذّر إصدار الرابط. حاول مرة أخرى.',new:'أصدر رابطًا جديدًا (يلغي القديم)'},
+en:{ask:'Send the offer to the decision-maker',askS:'Secure one-touch approval link',h:'Decision-maker link',lab:'Copy the link and send it any way you like',copy:'Copy link',copied:'Copied',
+ note:'Approving through the link records a booking intent only, and we review it before any commitment with the operator. We do not send email automatically; you send the link.',
+ exp:'Link expires',noAp:'Set the decision-maker and email in the Trip profile first.',err:'Could not issue the link. Try again.',new:'Issue a new link (cancels the old one)'}};
+function ApprovalBox({offerId,lang}:{offerId:string;lang:Lang}){
+ const t=AP[lang==='ar'?'ar':'en'];
+ const [link,setLink]=useState(''),[exp,setExp]=useState(''),[busy,setBusy]=useState(false),[err,setErr]=useState(''),[cp,setCp]=useState(false);
+ const issue=async()=>{setBusy(true);setErr('');setCp(false);
+  const {data,error}=await sb.rpc('request_approval_link',{p_client_offer:offerId,p_ttl_hours:24});
+  setBusy(false);
+  if(error||!data){setErr((error?.message??'').includes('approver')?t.noAp:t.err);return}
+  const d=data as {token:string;expires_at:string};
+  setLink(`${location.origin}/?view=approve#t=${d.token}`);setExp(new Date(d.expires_at).toLocaleString(LOC[lang],{dateStyle:'medium',timeStyle:'short'}))};
+ const copy=async()=>{try{await navigator.clipboard.writeText(link);setCp(true)}catch{const i=document.getElementById('ap-url') as HTMLInputElement|null;i?.select()}};
+ return <div className="ap">
+  {!link?<Switch small busy={busy} disabled={busy} label={t.ask} sub={t.askS} onActivate={issue}/>
+  :<div className="ap-link"><label htmlFor="ap-url">{t.lab}</label><input id="ap-url" readOnly dir="ltr" value={link} onFocus={e=>e.currentTarget.select()}/>
+   <div className="ap-acts"><Switch small label={cp?t.copied:t.copy} onActivate={copy}/><Switch small busy={busy} disabled={busy} label={t.new} onActivate={issue}/></div>
+   <p className="dim sm">{t.exp}: {exp}</p></div>}
+  {err&&<div className="nt" role="alert">{err}</div>}
+  <p className="dim sm">{t.note}</p>
+ </div>;
+}
+
 function OfferCard({offer,route,t,lang,reload}:{offer:MyOffer;route:ReactNode;t:Record<string,string>;lang:Lang;reload:()=>Promise<void>}){
  const [step,setStep]=useState<''|'accept'|'decline'>(''),[why,setWhy]=useState(''),[busy,setBusy]=useState(false),[err,setErr]=useState(''),[res,setRes]=useState('');
  const open=offer.status==='PRESENTED',till=new Date(offer.valid_until).toLocaleString(LOC[lang],{dateStyle:'medium',timeStyle:'short'});
@@ -80,6 +110,7 @@ function OfferCard({offer,route,t,lang,reload}:{offer:MyOffer;route:ReactNode;t:
   {open&&<p className="dim sm">{t.valid} {till}</p>}
   {!open&&<p className="dim">{t.acc}</p>}
   {res&&<div className="nt e" role="status">{res}</div>}{err&&<div className="nt" role="alert">{err}</div>}
+  {open&&!res&&step===''&&<ApprovalBox offerId={offer.client_offer_id} lang={lang}/>}
   {open&&!res&&(step===''?<div className="act" style={{justifyContent:'center'}}><button onClick={()=>setStep('accept')}>{t.accept}</button><button className="g" onClick={()=>setStep('decline')}>{t.decline}</button></div>
    :step==='accept'?<><div className="nt e">{t.accNote}</div><div className="act" style={{justifyContent:'center'}}><button disabled={busy} onClick={()=>decide(true)}>{t.confirm}</button><button className="g" disabled={busy} onClick={()=>setStep('')}>{t.back}</button></div></>
    :<><div className="act"><input aria-label={t.why} placeholder={t.why} maxLength={300} value={why} onChange={e=>setWhy(e.target.value)}/></div><div className="act" style={{justifyContent:'center'}}><button className="g" disabled={busy} onClick={()=>decide(false)}>{t.decGo}</button><button className="g" disabled={busy} onClick={()=>setStep('')}>{t.back}</button></div></>)}
@@ -104,7 +135,8 @@ export default function Requests({airports,my,nm}:{airports:Airport[];my:My;nm:(
    <OfferCard key={off.client_offer_id} offer={off} route={rt(rq(off.request_id))} t={t} lang={lang} reload={reload}/></>}
   {reqs.length>0&&<><p className="dim sm">{t.yours}</p><ul>{reqs.map(r=><li key={r.id}><span>{rt(r)}{r.travel_date?` · ${new Date(r.travel_date).toLocaleDateString(LOC[lang],{dateStyle:'medium'})}`:''}</span>
    <b>{t[GROUP[r.loop_status]??'new']}</b>
-   {!FINAL.has(r.loop_status)&&<button className="g sm" onClick={()=>del(r.id)}>{t.cancel}</button>}</li>)}</ul></>}
+   {!FINAL.has(r.loop_status)&&<button className="g sm" onClick={()=>del(r.id)}>{t.cancel}</button>}
+   {!FINAL.has(r.loop_status)&&r.origin_code&&r.destination_code&&r.travel_date&&<FlexLegs requestId={r.id} nm={nm}/>}</li>)}</ul></>}
   {err&&<div className="nt" role="alert">{err}</div>}
   {(none||adding)?<RequestForm airports={airports} t={t} onSent={async()=>{setAdding(false);setSent(true);await reload()}} onCancel={adding?()=>setAdding(false):undefined}/>
    :<button className="g" onClick={()=>{setSent(false);setAdding(true)}}>{t.newReq}</button>}

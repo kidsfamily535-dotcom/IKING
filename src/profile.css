@@ -1,0 +1,45 @@
+/* ملفي، مرونتي، موافقة صاحب القرار: نفس هوية الكابينة (ذهب على كحلي، أشكال دائرية، مفاتيح بدل المربعات) */
+.rm .pf{gap:22px}
+.rm .pf-blk{display:grid;gap:10px;text-align:start}
+.rm .pf-blk>label,.rm .pf-h{font-size:13px;color:var(--dim);margin:0}
+.rm .pf-h{font-family:'Amiri','Cormorant Garamond',Georgia,serif;font-size:19px;color:var(--gold);display:block}
+.rm .pf select,.rm .pf input{width:100%;background:none;border:0;border-bottom:1px solid #c9a96166;color:var(--ink);font:inherit;font-size:16px;padding:8px 0;min-height:44px;outline:0;border-radius:0}
+.rm .pf select option{background:#0b1322}
+.rm .pf input:focus,.rm .pf select:focus{border-bottom-color:var(--gold)}
+.rm .pf :focus-visible{outline:2px solid var(--blue);outline-offset:3px}
+.rm .pf-names{list-style:none;padding:0;margin:0;display:grid;gap:8px}
+.rm .pf-names li{display:flex;align-items:center;gap:10px;border-bottom:1px dashed var(--line);padding-bottom:8px}
+.rm .pf-names li button{margin-inline-start:auto}
+.rm .pf-add{display:grid;grid-template-columns:1fr auto;gap:12px;align-items:center}
+.rm .pf-add .sw{max-width:none;width:auto}
+.rm .pf-chips{display:flex;flex-wrap:wrap;gap:8px}
+.rm .pf-chip{display:inline-flex;align-items:center;gap:4px;border:1px solid #c9a96166;border-radius:99px;padding:0 4px 0 14px;min-height:40px;background:#c9a9610d}
+[dir=rtl] .rm .pf-chip{padding:0 14px 0 4px}
+.rm .pf-chip button{width:36px;height:36px;border-radius:50%;border:0;background:none;color:var(--gold);font-size:20px;line-height:1;padding:0;cursor:pointer}
+.rm .pf-days button{min-width:52px;min-height:46px;border:1px solid #c9a96166;border-radius:99px;background:none;color:var(--ink);font:inherit;cursor:pointer;padding:0 16px;transition:background .3s,border-color .3s}
+.rm .pf-days button.on{background:#c9a96133;border-color:var(--gold);color:var(--ink)}
+.rm .pf-go{display:grid;justify-items:center;padding-top:6px}
+.rm .pf-go .sw{max-width:420px}
+.rm .pf-hint{display:block;color:var(--dim);font-size:13px}
+.rm .pf-sec{font:400 clamp(20px,3vw,24px)/1.4 'Amiri','Cormorant Garamond',Georgia,serif;color:var(--gold);margin:10px 0 0;width:100%;text-align:start}
+.rm .pf-legs li{display:grid;gap:6px;justify-items:start;border-bottom:1px dashed var(--line);padding-bottom:14px}
+.rm .pf-legs .rt{font-size:18px}
+.rm .pf-tags{display:flex;flex-wrap:wrap;gap:6px}
+.rm .pf .tg{margin-top:2px}
+
+/* صندوق الموافقة تحت العرض */
+.rm .ap{display:grid;gap:12px;width:100%;margin-top:6px;text-align:start;justify-items:center}
+.rm .ap p{text-align:center}
+.rm .ap-link{display:grid;gap:8px;width:100%;justify-items:center}
+.rm .ap-link label{font-size:13px;color:var(--dim)}
+.rm .ap-link input{width:100%;background:#f4ecdc0c;border:1px solid #c9a96166;border-radius:16px;color:var(--ink);font:inherit;font-size:14px;padding:10px 14px;min-height:46px}
+.rm .ap-acts{display:flex;flex-wrap:wrap;gap:10px;justify-content:center;width:100%}
+.rm .ap .sw.small{max-width:100%}
+
+/* صفحة صاحب القرار (فوق operator.css) */
+.ol .ap-hello{padding:18px 0 14px;color:#f4ecdccc;font:400 clamp(20px,5vw,24px)/1.4 'Amiri','Cormorant Garamond',Georgia,serif}
+.ol .ap-price{font-size:1.15em;color:var(--gold)}
+.ol .ap-sw{display:grid;justify-items:center;gap:12px;padding-top:6px}
+.ol .ap-sw .sw{max-width:440px}
+.ol .ap-sw .sw.small{width:auto}
+@media(max-width:560px){.rm .pf-add{grid-template-columns:1fr}.rm .pf-add .sw{width:100%}}
