@@ -1,6 +1,6 @@
 import {useCallback,useEffect,useMemo,useState} from 'react';
 import './eye/watch.css';
-import {realApi,routeWeatherPublic} from './data/supabaseApi';
+import {realApi,routeWeatherPublic,addWatchedTrip} from './data/supabaseApi';
 import {sb} from './lib/supabase';
 import {useI18n,airportName} from './i18n';
 import LangSwitch from './LangSwitch';
@@ -10,7 +10,7 @@ import type {Airport,MyTrip,RouteWx} from './data/types';
 // ما ليس مفعّلًا: تنبيهات الإيميل التلقائية. الصفحة تقول ذلك صراحة ولا توحي بغيره، ولا تعرض خيارًا خاصًا لم يؤكده مشغّل.
 const C={
  ar:{h:'اكتب رحلتك. العين تراقبها.',sub:'أي رحلة، حتى لو على طيران تجاري. بلا مقابل.',from:'من',to:'إلى',pick:'اختر مطارًا',when:'موعد الإقلاع (اختياري)',email:'بريدك الإلكتروني',
-  consent:'أوافق أن تحتفظ العين برحلتي وبريدي لتراقبها لي، وأن يصلني رابط الدخول.',start:'ابدأ المراقبة',starting:'لحظة',same:'اختر مطارين مختلفين.',needEmail:'اكتب بريدًا صحيحًا وأكّد الموافقة.',err:'تعذّر الحفظ. حاول مرة أخرى.',
+  consent:'أوافق أن تحتفظ العين برحلتي وبريدي لتراقبها لي، وأن يصلني رابط الدخول.',alerts:'أبلغني بالإيميل عندما تُفعَّل تنبيهات الطقس (اختياري).',start:'ابدأ المراقبة',starting:'لحظة',same:'اختر مطارين مختلفين.',needEmail:'اكتب بريدًا صحيحًا وأكّد الموافقة.',err:'تعذّر الحفظ. حاول مرة أخرى.',
   dist:'المسافة',time:'زمن الطيران الخاص',est:'تقدير',km:'كم',hm:(h:number,m:number)=>`${h} س ${m} د`,
   sentH:'أرسلتُ لك رابط الدخول.',sentB:(e:string)=>`افتح الرسالة على ${e} وستجد رحلتك محفوظة والعين تقرأ طقس المطارين.`,sentN:'الطقس يتجدد في القاعدة كل عشرين دقيقة تقريبًا.',see:'اعرض طقس رحلتي',keepH:'أبقِ العين على رحلتك',keepB:'أرسل لك رابط دخول فتبقى الرحلة محفوظة، وتجد الطقس محدَّثًا كلما فتحتها.',keepGo:'احفظ رحلتي وأرسل الرابط',change:'غيّر الرحلة',
   ok:'الطقس مناسب في الطرفين.',part:'عندي رصد حديث لمطار واحد فقط حتى الآن.',bad:(a:string)=>`الجو في ${a} يستحق انتباهك.`,none:'لا يوجد رصد حديث للمطارين الآن، وفريقنا سيتحقق.',
@@ -19,7 +19,7 @@ const C={
   privH:'وماذا عن الطيران الخاص؟',privB:'لا أعرض عليك خيارًا خاصًا إلا إذا أكّده مشغّل فعلًا. ولن أخترع واحدًا لأجذبك.',
   mine:'رحلاتك',remove:'احذف الرحلة',another:'راقب رحلة أخرى',nodate:'الموعد غير محدد',loading:'العين تقرأ الرصد',wxfail:'تعذّر جلب الطقس الآن.'},
  en:{h:'Write your trip. The Eye watches it.',sub:'Any flight, even a commercial one. Free.',from:'From',to:'To',pick:'Choose an airport',when:'Departure time (optional)',email:'Your email',
-  consent:'I agree the Eye keeps my trip and email to watch it for me, and that I receive a sign-in link.',start:'Start watching',starting:'One moment',same:'Choose two different airports.',needEmail:'Enter a valid email and confirm consent.',err:'Could not save. Please try again.',
+  consent:'I agree the Eye keeps my trip and email to watch it for me, and that I receive a sign-in link.',alerts:'Email me when weather alerts are switched on (optional).',start:'Start watching',starting:'One moment',same:'Choose two different airports.',needEmail:'Enter a valid email and confirm consent.',err:'Could not save. Please try again.',
   dist:'Distance',time:'Private flight time',est:'Estimate',km:'km',hm:(h:number,m:number)=>`${h} h ${m} min`,
   sentH:'I sent you a sign-in link.',sentB:(e:string)=>`Open the message at ${e}. Your trip will be saved and the Eye will be reading the weather at both airports.`,sentN:'Weather refreshes in the database about every twenty minutes.',see:'Show my trip weather',keepH:'Keep the Eye on your trip',keepB:'I send you a sign-in link so the trip stays saved and the weather is current whenever you open it.',keepGo:'Save my trip and send the link',change:'Change trip',
   ok:'Weather looks fine at both ends.',part:'I only have a recent report for one airport so far.',bad:(a:string)=>`Conditions at ${a} deserve your attention.`,none:'No recent report for either airport right now. Our team will check.',
@@ -44,7 +44,7 @@ function Arc({a,b,rtl,nm}:{a?:Airport;b?:Airport;rtl:boolean;nm:(x:Airport)=>str
 export default function Watch(){
  const {t,lang,dir}=useI18n();const c=lang==='ar'?C.ar:C.en,rtl=dir==='rtl';
  const [ap,setAp]=useState<Airport[]>([]),[authed,setAuthed]=useState<boolean|null>(null),[trips,setTrips]=useState<MyTrip[]>([]),[sel,setSel]=useState(0),[adding,setAdding]=useState(false);
- const [o,setO]=useState(''),[d,setD]=useState(''),[at,setAt]=useState(''),[em,setEm]=useState(''),[ok,setOk]=useState(false),[err,setErr]=useState(''),[busy,setBusy]=useState(false),[sent,setSent]=useState(''),[pv,setPv]=useState<{o:string;d:string;at:string|null}|null>(null);
+ const [o,setO]=useState(''),[d,setD]=useState(''),[at,setAt]=useState(''),[em,setEm]=useState(''),[ok,setOk]=useState(false),[err,setErr]=useState(''),[busy,setBusy]=useState(false),[al,setAl]=useState(false),[sent,setSent]=useState(''),[pv,setPv]=useState<{o:string;d:string;at:string|null}|null>(null);
  const [wx,setWx]=useState<RouteWx[]|null>(null),[wxErr,setWxErr]=useState(false),[alts,setAlts]=useState<Alt[]>([]);
  const nm=useCallback((a:Airport)=>airportName(a),[lang]);
  const name=(code:string)=>{const a=ap.find(x=>x.iata===code);return a?nm(a):code};
@@ -73,10 +73,10 @@ export default function Watch(){
  const start=async()=>{setErr('');if(!o||!d||o===d){setErr(c.same);return}
   if(!authed){setPv({o,d,at:iso()});return}
   setBusy(true);
-  try{await realApi.addMyTrip(o,d,iso());await loadTrips();setAdding(false);setO('');setD('');setAt('')}catch{setErr(c.err)}finally{setBusy(false)}};
+  try{await addWatchedTrip(o,d,iso(),al);await loadTrips();setAdding(false);setO('');setD('');setAt('');setAl(false)}catch{setErr(c.err)}finally{setBusy(false)}};
  const keep=async()=>{setErr('');if(!pv)return;if(!em.includes('@')||!ok){setErr(c.needEmail);return}
   setBusy(true);
-  try{try{localStorage.setItem('iking_want',JSON.stringify({o:pv.o,d:pv.d,at:pv.at}))}catch{/* التخزين غير متاح */}
+  try{try{localStorage.setItem('iking_want',JSON.stringify({o:pv.o,d:pv.d,at:pv.at,a:al}))}catch{/* التخزين غير متاح */}
    const r=await sb.auth.signInWithOtp({email:em.trim(),options:{emailRedirectTo:location.origin}});
    if(r.error)throw r.error;setSent(em.trim())}catch{setErr(c.err)}finally{setBusy(false)}};
  const del=async(id:string)=>{try{await realApi.removeMyTrip(id);await loadTrips()}catch{setErr(c.err)}};
@@ -98,6 +98,7 @@ export default function Watch(){
    <label>{c.to}<select value={d} onChange={e=>setD(e.target.value)}><option value="">{c.pick}</option>{ap.map(a=><option key={a.iata} value={a.iata}>{nm(a)} · {a.iata}</option>)}</select></label></div>
   {est&&<p className="est"><span>{c.dist} <bdi>{est.k} {c.km}</bdi></span><span>{c.time} <bdi>{c.hm(est.h,est.m)}</bdi></span><em>{c.est}</em></p>}
   <label>{c.when}<input type="datetime-local" value={at} onChange={e=>setAt(e.target.value)}/></label>
+  {authed&&<label className="cs"><input type="checkbox" checked={al} onChange={e=>setAl(e.target.checked)}/><span>{c.alerts}</span></label>}
   {err&&<p className="er" role="alert">{err}</p>}
   <button className="go" disabled={busy||authed===null} onClick={start}>{busy?c.starting:authed?c.start:c.see}</button></div>;
  return <div className="wt" dir={dir} lang={lang}><div className="wrap">
@@ -115,6 +116,7 @@ export default function Watch(){
    <section className="keep"><h2>{c.keepH}</h2><p className="dim">{c.keepB}</p>
     <div className="form"><label>{c.email}<input type="email" autoComplete="email" inputMode="email" value={em} onChange={e=>setEm(e.target.value)}/></label>
      <label className="cs"><input type="checkbox" checked={ok} onChange={e=>setOk(e.target.checked)}/><span>{c.consent}</span></label>
+     <label className="cs"><input type="checkbox" checked={al} onChange={e=>setAl(e.target.checked)}/><span>{c.alerts}</span></label>
      {err&&<p className="er" role="alert">{err}</p>}
      <button className="go" disabled={busy} onClick={keep}>{busy?c.starting:c.keepGo}</button></div></section>
    <section className="does"><h2>{c.doH}</h2><p>{c.do1}</p><p>{c.do2}</p><p>{c.do3}</p></section>

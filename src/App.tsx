@@ -1,7 +1,7 @@
 import {sb} from './lib/supabase';
 import {radarAirports} from './data/hubs';
 import {useEffect,useRef,useState} from 'react';
-import {api,useRealApi} from './data/api';
+import {api,useRealApi} from './data/api';import {addWatchedTrip} from './data/supabaseApi';
 import SignIn from './SignIn';
 import OperatorRoom from './Operator';
 import Room from './Room';
@@ -89,7 +89,7 @@ export default function App(){
   if(!live||!data||data.status!=='active')return;
   useRealApi();setReal(true);setRole(data.role==='admin'||data.role==='broker'?'admin':data.role==='operator'?'operator':'customer');
   if(isLang(data.preferred_language)&&!hasStoredLang())setLang(data.preferred_language,false);
-  try{const w=localStorage.getItem('iking_want');if(w){localStorage.removeItem('iking_want');const x=JSON.parse(w);if(x?.o&&x?.d)await api.addMyTrip(x.o,x.d,typeof x.at==='string'?x.at:null)}}catch{/* يبقى الاختيار غير محفوظ */}
+  try{const w=localStorage.getItem('iking_want');if(w){localStorage.removeItem('iking_want');const x=JSON.parse(w);if(x?.o&&x?.d)await addWatchedTrip(x.o,x.d,typeof x.at==='string'?x.at:null,x.a===true)}}catch{/* يبقى الاختيار غير محفوظ */}
  })();return()=>{live=false}},[]);
  const run=async()=>{setSay('');setSay(await api.runPass(setSt))};
  const staff=role==='admin',table=op.filter(o=>o.status==='ACTIVATION_PENDING');
