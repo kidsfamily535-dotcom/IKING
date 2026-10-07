@@ -15,6 +15,8 @@ const simulated={
 };
 const mapWx=(data:any[]|null)=>(data??[]).map((r:any)=>({leg:r.leg_ar==='المغادرة'?'dep':'arr',code:r.airport_code,status:r.obs_status,observedAt:r.observed_at,ageMin:r.age_minutes,cat:WXC[r.condition_ar]??null,windDir:r.wind_dir,windKt:r.wind_speed_kt,vis:r.visibility,tempC:r.temp_c,forecast:!!r.forecast_available}) as RouteWx);
 // نفس الرصد الرسمي لكن مفتوح للزائر (قراءة فقط، بلا بيانات شخصية): صفحة «راقب رحلتك» ترى القيمة قبل أي بريد.
+// حفظ رحلة مع سجل مراقبة. alerts=true فقط إذا وافق العميل صراحةً على التنبيهات (تُسجَّل opted_in_at في القاعدة).
+export const addWatchedTrip=async(o:string,d:string,at:string|null,alerts:boolean)=>{const {error}=await sb.rpc('add_watched_trip',{p_origin:o,p_destination:d,p_departure:at,p_alerts:alerts});if(error)throw new Error(error.message)};
 export const routeWeatherPublic=async(o:string,d:string)=>{const {data,error}=await sb.rpc('get_route_weather_public',{p_origin:o,p_destination:d});if(error)throw new Error(error.message);return mapWx(data)};
 export const realApi:EyeApi={...simulated,
  // لا ذاكرة حقيقية بعد (customer_preferences غير موصولة): لا نعرض عناصر تبان محفوظة وهي ليست كذلك.
@@ -64,7 +66,8 @@ export const realApi:EyeApi={...simulated,
  async listMyTrips(){const {data,error}=await sb.from('customer_trips').select('id,origin_code,destination_code,departure_at,created_at').eq('kind','TRIP').or(`departure_at.is.null,departure_at.gte.${new Date(Date.now()-864e5).toISOString()}`).order('departure_at',{ascending:true,nullsFirst:false});
   if(error)throw new Error(error.message);
   return (data??[]).map((r:any)=>({id:r.id,origin:r.origin_code,destination:r.destination_code,departureAt:r.departure_at,createdAt:r.created_at}) as MyTrip)},
- async addMyTrip(o,d,at){const {error}=await sb.from('customer_trips').insert({origin_code:o,destination_code:d,departure_at:at,kind:'TRIP'});if(error)throw new Error(error.message)},
+ // كل رحلة تُحفظ عبر add_watched_trip: تنشئ الرحلة وسجل المراقبة معًا (trip_watches). التنبيهات مطفأة هنا؛ لا تُفعَّل إلا بموافقة صريحة (addWatchedTrip مع alerts=true).
+ async addMyTrip(o,d,at){await addWatchedTrip(o,d,at,false)},
  // لقطات الرحلات الفاضية التي يدوّنها العميل: CUSTOMER_PROVIDED وخاصة به، ولا تتحول لتوفّر أو فرصة قبل تحقق الوسيط.
  async listMyEmptyLegs(){const {data,error}=await sb.from('customer_trips').select('id,origin_code,destination_code,departure_at,seats,note,created_at').eq('kind','EMPTY_LEG').or(`departure_at.is.null,departure_at.gte.${new Date(Date.now()-864e5).toISOString()}`).order('departure_at',{ascending:true,nullsFirst:false});
   if(error)throw new Error(error.message);
