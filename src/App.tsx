@@ -100,6 +100,7 @@ export default function App(){
    <div className="mono">ALWAYS WATCHING · 24 / 7</div><h1>THE KING'S EYE</h1><div className="sub">{t('hero.sub1')} <b>{t('hero.sub2')}</b></div>
    <Eye an={st!=='WATCHING'}/><div className="mono">{st}</div>
    <button style={{marginTop:30}} onClick={()=>go('doors')}>{t('hero.see')}</button>
+   {!real&&<button className="g" style={{marginTop:14}} onClick={()=>{location.href='?view=cabin'}}>{lang==='ar'?'ادخل الكابينة':'Enter the cabin'}</button>}
    {!real&&<button className="g" style={{marginTop:14}} onClick={()=>{location.href='?view=watch'}}>{t('hero.watch')}</button>}
    {!real&&!login&&<button className="g" style={{marginTop:14}} onClick={()=>setLogin(true)}>{t('hero.account')}</button>}
    {staffMode&&<><div className="roles" style={{marginTop:22}} role="group" aria-label={t('hero.pick.aria')}>{(['admin','operator','customer'] as Role[]).map(r=><button key={r} className={role===r?'':'g'} onClick={()=>{setRole(r);setTimeout(()=>document.getElementById('room')?.scrollIntoView({behavior:'smooth'}),50)}}>{t('role.'+r)}</button>)}</div><div className="mono" style={{marginTop:14,opacity:.6}}>{t('hero.demoaccess')}</div></>}
