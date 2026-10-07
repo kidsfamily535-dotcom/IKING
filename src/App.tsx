@@ -6,6 +6,8 @@ import SignIn from './SignIn';
 import OperatorRoom from './Operator';
 import Room from './Room';
 import Show from './Show';
+import {Switch} from './cabin/Switch';
+import HomeRadar from './cabin/HomeRadar';
 import HoldRing from './Hold';
 import OperatorValue from './OperatorValue';
 import Scene from './eye/Scene';
@@ -96,22 +98,25 @@ export default function App(){
  const live=op.find(o=>o.availability==='CONFIRMED');
  return <>
   <div className="pill">{real?t('pill.live'):t('pill.demo')}</div><LangSwitch/>
-  <section className="hero"><div className="poster" style={{position:'absolute',inset:0}}><Radar airports={ap} arc={['RUH','JED']} poster/></div>
-   <div className="mono">ALWAYS WATCHING · 24 / 7</div><h1>THE KING'S EYE</h1><div className="sub">{t('hero.sub1')} <b>{t('hero.sub2')}</b></div>
-   <Eye an={st!=='WATCHING'}/><div className="mono">{st}</div>
-   <button style={{marginTop:30}} onClick={()=>go('doors')}>{t('hero.see')}</button>
-   {!real&&<button className="g" style={{marginTop:14}} onClick={()=>{location.href='?view=cabin'}}>{lang==='ar'?'ادخل الكابينة':'Enter the cabin'}</button>}
-   {!real&&<button className="g" style={{marginTop:14}} onClick={()=>{location.href='?view=watch'}}>{t('hero.watch')}</button>}
-   {!real&&!login&&<button className="g" style={{marginTop:14}} onClick={()=>setLogin(true)}>{t('hero.account')}</button>}
+  <section className="hero hx"><div className="hx-stage"><HomeRadar onGo={i=>{location.href='?view=cabin&to='+i}}/></div>
+   <div className="hx-copy"><p className="hx-mark">THE KING'S EYE</p>
+   <h1 className="hx-h">{t('hero.sub1')} <b>{t('hero.sub2')}</b></h1><p className="hx-lead">{t('hero.lead')}</p>
+   <div className="hx-sw">
+    {!real&&<Switch primary label={lang==='ar'?'ادخل الكابينة':'Enter the cabin'} sub={lang==='ar'?'جرّب رحلتك مع العين':'Plan a trip with the Eye'} onActivate={()=>{location.href='?view=cabin'}}/>}
+    <Switch label={t('d.mine')} sub={t('d.mine.s')} onActivate={()=>go('mine')}/>
+    {!real&&<Switch label={t('hero.watch')} onActivate={()=>{location.href='?view=watch'}}/>}
+    <div className="ln"><Switch small label={t('hero.see')} onActivate={()=>go('doors')}/>{!real&&!login&&<Switch small label={t('hero.account')} onActivate={()=>setLogin(true)}/>}</div>
+   </div>
    {staffMode&&<><div className="roles" style={{marginTop:22}} role="group" aria-label={t('hero.pick.aria')}>{(['admin','operator','customer'] as Role[]).map(r=><button key={r} className={role===r?'':'g'} onClick={()=>{setRole(r);setTimeout(()=>document.getElementById('room')?.scrollIntoView({behavior:'smooth'}),50)}}>{t('role.'+r)}</button>)}</div><div className="mono" style={{marginTop:14,opacity:.6}}>{t('hero.demoaccess')}</div></>}
    {login&&!real&&<SignIn onDone={(r,pl?:Lang)=>{useRealApi();setReal(true);setRole(r);setLogin(false);if(pl&&!hasStoredLang())setLang(pl,false)}}/>}
+   </div>
   </section>
-  {!role&&stage!=='home'&&<div id="guest">
-   {stage==='doors'&&<section className="doors"><h2>{t('d.q')}</h2><div className="dr">{([['explore','d.explore'],['try','d.try'],['mine','d.mine']] as const).map(([k,l])=><button key={k} className="g" onClick={()=>go(k)}>{t(l)}<small>{t(l+'.s')}</small></button>)}</div></section>}
-   {stage==='explore'&&<><Scene mode="customer" real={false} airports={ap} onState={setSt}/><section className="doors" style={{minHeight:0}}><button onClick={()=>go('try')}>{t('d.tryit')}</button><button className="g" onClick={()=>go('doors')}>{t('d.back')}</button></section></>}
+  {!role&&stage!=='home'&&<div id="guest" className="cbx">
+   {stage==='doors'&&<section className="doors"><h2>{t('d.q')}</h2><div className="dr">{([['explore','d.explore'],['try','d.try'],['mine','d.mine']] as const).map(([k,l])=><Switch key={k} label={t(l)} sub={t(l+'.s')} onActivate={()=>go(k)}/>)}</div></section>}
+   {stage==='explore'&&<><Scene mode="customer" real={false} airports={ap} onState={setSt}/><section className="doors" style={{minHeight:0}}><Switch primary label={t('d.tryit')} onActivate={()=>go('try')}/><button className="g" onClick={()=>go('doors')}>{t('d.back')}</button></section></>}
    {(stage==='try'||(stage==='mine'&&who&&(who!=='other'||rel)))&&<main id="under"><section className="doors" style={{minHeight:0,paddingBottom:0}}><button className="g" onClick={()=>{setWho('');setRel('');go('doors')}}>{t('d.back')}</button></section><Show airports={ap} who={who} rel={rel}/></main>}
-   {stage==='mine'&&!who&&<section className="doors"><h2>{t('d.who')}</h2><div className="dr">{([['me','d.me'],['other','d.other'],['group','d.group']] as const).map(([k,l])=><button key={k} className="g" onClick={()=>setWho(k)}>{t(l)}</button>)}</div></section>}
-   {stage==='mine'&&who==='other'&&!rel&&<section className="doors" style={{minHeight:0}}><h2>{t('d.rel')}</h2><div className="dr">{[1,2,3,4,5,6].map(i=><button key={i} className="g" onClick={()=>setRel('d.rel'+i)}>{t('d.rel'+i)}</button>)}</div></section>}
+   {stage==='mine'&&!who&&<section className="doors"><h2>{t('d.who')}</h2><div className="dr">{([['me','d.me'],['other','d.other'],['group','d.group']] as const).map(([k,l])=><Switch key={k} label={t(l)} onActivate={()=>setWho(k)}/>)}</div></section>}
+   {stage==='mine'&&who==='other'&&!rel&&<section className="doors" style={{minHeight:0}}><h2>{t('d.rel')}</h2><div className="dr">{[1,2,3,4,5,6].map(i=><Switch key={i} label={t('d.rel'+i)} onActivate={()=>setRel('d.rel'+i)}/>)}</div></section>}
   </div>}
   {role&&<>{role!=='customer'&&<div id="bar"><b>{st}</b>{FLOW.map(f=><span key={f} className={`fc${f===st?' on':''}`}>{f}</span>)}<span className="ed">{role.toUpperCase()}</span></div>}
   <Scene mode={role==='customer'?'customer':'operator'} real={real} airports={ap} onState={setSt}/>

@@ -4,6 +4,8 @@ import {realApi,routeWeatherPublic,addWatchedTrip} from './data/supabaseApi';
 import {sb} from './lib/supabase';
 import {useI18n,airportName} from './i18n';
 import LangSwitch from './LangSwitch';
+import WRadar from './cabin/WRadar';
+import {Switch,Toggle} from './cabin/Switch';
 import type {Airport,MyTrip,RouteWx} from './data/types';
 // «راقب رحلتك»: الباب العام للمنتج. العميل يكتب رحلته (حتى لو على طيران تجاري) ويرى العين تعمل له قبل أي عرض.
 // ما هو حقيقي هنا: الطقس الرسمي (METAR) من دالة عامة للقراءة فقط (يراه الزائر قبل أي بريد)، والرحلة المحفوظة (customer_trips). المسافة والزمن تقدير محسوب من الإحداثيات وموسوم تقديرًا.
@@ -32,15 +34,6 @@ const km=(a:Airport,b:Airport)=>{const r=Math.PI/180,dl=(b.lon-a.lon)*r,p1=a.lat
 const LOC={ar:'ar-EG',en:'en-GB',tr:'tr-TR',ru:'ru-RU'} as const;
 const BAD=new Set(['MVFR','IFR','LIFR']);
 type Alt={leg:'dep'|'arr';code:string;near?:{code:string;km:number}};
-const x0=70,x1=530,yb=150;
-function Arc({a,b,rtl,nm}:{a?:Airport;b?:Airport;rtl:boolean;nm:(x:Airport)=>string}){
- const ox=rtl?x1:x0,dx=rtl?x0:x1,both=!!(a&&b);
- return <svg className="arc" viewBox="0 0 600 230" role="img" aria-label={a&&b?`${a.iata} ${b.iata}`:''} key={both?a!.iata+b!.iata:'idle'}>
-  <path className={both?'draw':'idle'} d={`M${ox},${yb} Q300,18 ${dx},${yb}`} pathLength={1}/>
-  {[[ox,a],[dx,b]].map(([x,p],i)=>{const q=p as Airport|undefined;return <g key={i}><circle className={q?'on':''} cx={x as number} cy={yb} r={q?5:3.5}/>
-   {q&&<><text className="code" x={x as number} y={yb+44} textAnchor="middle">{q.iata}</text><text className="nm" x={x as number} y={yb+66} textAnchor="middle">{nm(q)}</text></>}</g>})}
- </svg>;
-}
 export default function Watch(){
  const {t,lang,dir}=useI18n();const c=lang==='ar'?C.ar:C.en,rtl=dir==='rtl';
  const [ap,setAp]=useState<Airport[]>([]),[authed,setAuthed]=useState<boolean|null>(null),[trips,setTrips]=useState<MyTrip[]>([]),[sel,setSel]=useState(0),[adding,setAdding]=useState(false);
@@ -82,6 +75,8 @@ export default function Watch(){
  const del=async(id:string)=>{try{await realApi.removeMyTrip(id);await loadTrips()}catch{setErr(c.err)}};
  const when=(v:string|null)=>v?new Date(v).toLocaleString(LOC[lang],{dateStyle:'medium',timeStyle:'short'}):c.nodate;
  const curWx=wx?wx.filter(r=>r.status==='CURRENT'):[],badLeg=curWx.find(r=>r.cat&&BAD.has(r.cat));
+ const warnCodes=curWx.filter(r=>r.cat&&BAD.has(r.cat)).map(r=>r.code);
+ const pickAp=(i:string)=>{if(!o)setO(i);else if(i===o)setO('');else setD(i)};
  const head=!wx?c.loading:badLeg?c.bad(name(badLeg.code)):curWx.length===2?c.ok:curWx.length===1?c.part:c.none;
  const dirTxt=(v:string|null)=>v&&/^\d+$/.test(v)?v+'°':v;
  const leg=(r:RouteWx)=>{const live=r.status==='CURRENT';
@@ -98,29 +93,29 @@ export default function Watch(){
    <label>{c.to}<select value={d} onChange={e=>setD(e.target.value)}><option value="">{c.pick}</option>{ap.map(a=><option key={a.iata} value={a.iata}>{nm(a)} · {a.iata}</option>)}</select></label></div>
   {est&&<p className="est"><span>{c.dist} <bdi>{est.k} {c.km}</bdi></span><span>{c.time} <bdi>{c.hm(est.h,est.m)}</bdi></span><em>{c.est}</em></p>}
   <label>{c.when}<input type="datetime-local" value={at} onChange={e=>setAt(e.target.value)}/></label>
-  {authed&&<label className="cs"><input type="checkbox" checked={al} onChange={e=>setAl(e.target.checked)}/><span>{c.alerts}</span></label>}
+  {authed&&<Toggle checked={al} onChange={setAl}>{c.alerts}</Toggle>}
   {err&&<p className="er" role="alert">{err}</p>}
-  <button className="go" disabled={busy||authed===null} onClick={start}>{busy?c.starting:authed?c.start:c.see}</button></div>;
+  <Switch primary busy={busy} disabled={authed===null} label={busy?c.starting:authed?c.start:c.see} onActivate={start}/></div>;
  return <div className="wt" dir={dir} lang={lang}><div className="wrap">
-  <header><span className="mark">THE KING’S EYE</span><LangSwitch/></header>
-  {sent?<main className="sent" aria-live="polite"><Arc a={ap.find(x=>x.iata===pv?.o)} b={ap.find(x=>x.iata===pv?.d)} rtl={rtl} nm={nm}/><h1>{c.sentH}</h1><p className="lead">{c.sentB(sent)}</p><p className="dim">{c.sentN}</p></main>
-  :cur?<main aria-live="polite"><Arc a={ap.find(x=>x.iata===cur.origin)} b={ap.find(x=>x.iata===cur.destination)} rtl={rtl} nm={nm}/>
+  <header><span className="mark">{lang==='ar'?'عين الملك':'The King’s Eye'}</span><LangSwitch/></header>
+  {sent?<main className="sent" aria-live="polite"><div className="wr"><WRadar ap={ap} a={ap.find(x=>x.iata===pv?.o)} b={ap.find(x=>x.iata===pv?.d)} nm={nm} warn={warnCodes}/></div><h1>{c.sentH}</h1><p className="lead">{c.sentB(sent)}</p><p className="dim">{c.sentN}</p></main>
+  :cur?<main aria-live="polite"><div className="wr"><WRadar ap={ap} a={ap.find(x=>x.iata===cur.origin)} b={ap.find(x=>x.iata===cur.destination)} nm={nm} warn={warnCodes}/></div>
    <h1>{head}</h1><p className="dim">{when(cur.departureAt)}</p>
    {Wx}
    <section className="does"><h2>{c.doH}</h2><p>{c.do1}</p><p>{c.do2}</p><p>{c.do3}</p></section>
    <section className="does"><h2>{c.privH}</h2><p>{c.privB}</p></section>
    {trips.length>1&&<section className="does"><h2>{c.mine}</h2><div className="chips">{trips.map((x,i)=><button key={x.id} className={i===sel?'on':''} onClick={()=>setSel(i)}><bdi>{x.origin}</bdi> – <bdi>{x.destination}</bdi></button>)}</div></section>}
-   <div className="row2"><button className="ghost" onClick={()=>setAdding(true)}>{c.another}</button><button className="ghost" onClick={()=>del(cur.id)}>{c.remove}</button></div></main>
-  :pv?<main aria-live="polite"><Arc a={ap.find(x=>x.iata===pv.o)} b={ap.find(x=>x.iata===pv.d)} rtl={rtl} nm={nm}/>
+   <div className="row2"><Switch small label={c.another} onActivate={()=>setAdding(true)}/><Switch small label={c.remove} onActivate={()=>del(cur.id)}/></div></main>
+  :pv?<main aria-live="polite"><div className="wr"><WRadar ap={ap} a={ap.find(x=>x.iata===pv.o)} b={ap.find(x=>x.iata===pv.d)} nm={nm} warn={warnCodes}/></div>
    <h1>{head}</h1><p className="dim">{when(pv.at)}</p>{Wx}
    <section className="keep"><h2>{c.keepH}</h2><p className="dim">{c.keepB}</p>
     <div className="form"><label>{c.email}<input type="email" autoComplete="email" inputMode="email" value={em} onChange={e=>setEm(e.target.value)}/></label>
-     <label className="cs"><input type="checkbox" checked={ok} onChange={e=>setOk(e.target.checked)}/><span>{c.consent}</span></label>
-     <label className="cs"><input type="checkbox" checked={al} onChange={e=>setAl(e.target.checked)}/><span>{c.alerts}</span></label>
+     <Toggle checked={ok} onChange={setOk}>{c.consent}</Toggle>
+     <Toggle checked={al} onChange={setAl}>{c.alerts}</Toggle>
      {err&&<p className="er" role="alert">{err}</p>}
-     <button className="go" disabled={busy} onClick={keep}>{busy?c.starting:c.keepGo}</button></div></section>
+     <Switch primary busy={busy} label={busy?c.starting:c.keepGo} onActivate={keep}/></div></section>
    <section className="does"><h2>{c.doH}</h2><p>{c.do1}</p><p>{c.do2}</p><p>{c.do3}</p></section>
-   <div className="row2"><button className="ghost" onClick={()=>{setPv(null);setErr('')}}>{c.change}</button></div></main>
-  :<main><Arc a={A} b={B} rtl={rtl} nm={nm}/><h1>{c.h}</h1><p className="lead">{c.sub}</p>{form}</main>}
+   <div className="row2"><Switch small label={c.change} onActivate={()=>{setPv(null);setErr('')}}/></div></main>
+  :<main><div className="wr"><WRadar ap={ap} a={A} b={B} nm={nm} warn={warnCodes}onPick={pickAp}/></div><h1>{c.h}</h1><p className="lead">{c.sub}</p>{form}</main>}
  </div></div>;
 }

@@ -31,7 +31,9 @@ function Coin({label,hint,onDone}:{label:string;hint:string;onDone:()=>void}){
 }
 export default function Cabin(){
  const {lang,setLang}=useI18n(),c=copy(lang),L=lang;
- const [stage,setStage]=useState<Stage>('ask'),[from,setFrom]=useState('RUH'),[to,setTo]=useState<string|null>(null),[mode,setMode]=useState<'to'|'from'>('to');
+ // الدخول من الصفحة الرئيسية: ?to=LON يفتح الكابينة وقد اختيرت الوجهة
+ const init=(()=>{const q=new URLSearchParams(location.search).get('to');return q&&q!=='RUH'&&HUBS.some(h=>h.iata===q)?q:null})();
+ const [stage,setStage]=useState<Stage>(init?'understand':'ask'),[from,setFrom]=useState('RUH'),[to,setTo]=useState<string|null>(init),[mode,setMode]=useState<'to'|'from'>('to');
  const [guests,setGuests]=useState(2),[date,setDate]=useState(()=>iso(Date.now()+864e5)),[win,setWin]=useState<Win>('am');
  const [hover,setHover]=useState<string|null>(null),[opt,setOpt]=useState<Opt>('best'),[ev,setEv]=useState(false),[why,setWhy]=useState(false);
  const [scan,setScan]=useState(0),[prog,setProg]=useState(0),[note,setNote]=useState<Note>(null),[resolved,setResolved]=useState('');

@@ -1,4 +1,5 @@
 import {useEffect,useMemo,useRef,useState} from 'react';
+import './cabin.css';
 import {between,plot,rr,type Hub} from './geo';
 // الرادار هو واجهة الإدخال والمعنى معًا. الدوائر والمسارات في SVG، والمدن والطائرات أزرار HTML
 // حتى تبقى أهداف اللمس 44px على أي شاشة والخطوط مقروءة (تتبع عرض الرادار لا عرض الصفحة).
@@ -6,7 +7,7 @@ export interface Blip{id:string;hub:string;dx:number;dy:number;sel:boolean;label
 interface Props{
  hubs:Hub[];from:string;to:string|null;hover:string|null;name:(h:Hub)=>string;
  range:number;blips:Blip[];scanning:boolean;plane:number|null;alt:string|null;hud:string;aria:string;
- onHover:(i:string|null)=>void;onPick:(i:string)=>void;onBlip:(id:string)=>void;kmUnit:string;
+ warn?:string[];onHover:(i:string|null)=>void;onPick:(i:string)=>void;onBlip:(id:string)=>void;kmUnit:string;
 }
 const N=56;
 const calm=()=>typeof matchMedia==='function'&&matchMedia('(prefers-reduced-motion: reduce)').matches;
@@ -66,7 +67,7 @@ export default function Radar(p:Props){
    {Array.from({length:72},(_,i)=>{const a=i*5*Math.PI/180,m=i%6?3:9;return <line key={i} x1={300+270*Math.sin(a)} y1={300-270*Math.cos(a)} x2={300+(270-m)*Math.sin(a)} y2={300-(270-m)*Math.cos(a)} stroke="#f4ecdc" strokeOpacity={i%6?.18:.4}/>})}
    <g className="cr-sweep"><path d="M300,300 L300,30 A270,270 0 0 1 400,48 Z" fill="#c9a961" fillOpacity=".08"/><line x1="300" y1="300" x2="300" y2="30" stroke="#c9a961" strokeOpacity=".5"/></g>
    {p.hover&&p.hover!==p.from&&P[p.hover]&&!p.to&&<path d={pts(Array.from({length:N+1},(_,i)=>plot(v,between(f,p.hubs.find(h=>h.iata===p.hover)!,i/N),v.range)))} fill="none" stroke="#f4ecdc" strokeOpacity=".55" strokeDasharray="2 6"/>}
-   {route.length>0&&<><path d={pts(route)} fill="none" stroke="#f4ecdc" strokeOpacity=".28" strokeDasharray="2 7"/><path className="cr-arc" d={pts(route.slice(0,done+1))} pathLength={1} fill="none" stroke="#c9a961" strokeWidth="1.6" strokeLinecap="round"/></>}
+   {route.length>0&&<><path d={pts(route)} fill="none" stroke="#f4ecdc" strokeOpacity=".28" strokeDasharray="2 7"/><path className="cr-arc" key={p.to??'x'} d={pts(route.slice(0,done+1))} pathLength={1} fill="none" stroke="#c9a961" strokeWidth="1.6" strokeLinecap="round"/></>}
    {p.blips.map(b=>{const o=P[b.hub];if(!o)return null;const q={x:o.x+b.dx,y:o.y+b.dy};return b.posFrom&&b.sel?<line key={b.id+'l'} x1={q.x} y1={q.y} x2={fx.x} y2={fx.y} stroke="#78a0c8" strokeOpacity=".8" strokeDasharray="3 5"/>:null})}
    {p.scanning&&<circle className="cr-scan" cx={fx.x} cy={fx.y} r="14" fill="none" stroke="#c9a961" style={{transformOrigin:`${fx.x}px ${fx.y}px`}}/>}
    {planeAt&&<g transform={`translate(${planeAt.x} ${planeAt.y}) rotate(${hd})`}><circle r="11" fill="#c9a961" fillOpacity=".18"/><path d="M0,-8 L5.5,7 L0,3.5 L-5.5,7Z" fill="#f4ecdc"/></g>}
@@ -74,7 +75,7 @@ export default function Radar(p:Props){
   </svg>
   {rings.map(k=><span key={'t'+k} className="cr-rl" style={{top:pct(300-rr(k,v.range))}}>{k.toLocaleString('en')} {p.kmUnit}</span>)}
   {p.hubs.map(h=>{const q=P[h.iata];if(q.d>v.range*1.001)return null;const s=shown[h.iata],on=h.iata===p.from||h.iata===p.to,hot=h.iata===p.hover;
-   return <button key={h.iata} type="button" className={`cr-n${on?' on':''}${hot?' hot':''}${h.iata===p.from?' org':''}`} style={{left:pct(q.x),top:pct(q.y)}} onClick={()=>p.onPick(h.iata)} aria-pressed={h.iata===p.to} aria-label={p.name(h)}>
+   return <button key={h.iata} type="button" className={`cr-n${p.warn?.includes(h.iata)?' warn':''}${on?' on':''}${hot?' hot':''}${h.iata===p.from?' org':''}`} style={{left:pct(q.x),top:pct(q.y)}} onClick={()=>p.onPick(h.iata)} aria-pressed={h.iata===p.to} aria-label={p.name(h)}>
     <i/>{s&&<span className={`cr-l ${s}`}>{p.name(h)}</span>}</button>})}
   <div className="cr-eye" style={{left:pct(fx.x),top:pct(fx.y)}} aria-hidden><span className="rg"/><span className="rg r2"/><span className="ir" style={{transform:`translate(${iris.x}px,${iris.y}px)`}}><i/></span></div>
   {p.blips.map(b=>{const o=P[b.hub];if(!o)return null;const q={x:o.x+b.dx,y:o.y+b.dy};

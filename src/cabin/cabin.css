@@ -130,7 +130,7 @@
 .cb-chipb{min-height:44px;padding:0 16px;border:1px dashed #8fb3d988;border-radius:99px;color:var(--blue);font-size:14px}
 
 /* الرادار */
-.cr{position:relative;aspect-ratio:1;width:100%;container-type:inline-size;direction:ltr;touch-action:pan-y;user-select:none;-webkit-user-select:none}
+.cr{--ink:#f4ecdc;--gold:#c9a961;--blue:#8fb3d9;--warn:#e6c36a;--sk2:#060b16;--sans:Tajawal,system-ui,-apple-system,'Segoe UI',sans-serif;position:relative;aspect-ratio:1;width:100%;container-type:inline-size;direction:ltr;touch-action:pan-y;user-select:none;-webkit-user-select:none}
 .cr svg{position:absolute;inset:0;width:100%;height:100%;display:block;overflow:visible}
 .cr-sweep{transform-origin:300px 300px;animation:crsw 16s linear infinite}
 @keyframes crsw{to{transform:rotate(360deg)}}
@@ -193,3 +193,6 @@
 @media (max-width:380px){.cb-top{gap:6px}.cb-lang button{min-width:36px}.cb-cta,.cb-ghost{font-size:16px}.cb-tl li{font-size:11.5px}}
 /* لا حركة إن طلب المستخدم ذلك */
 @media (prefers-reduced-motion:reduce){.cb *,.cb *::before,.cb *::after{animation:none!important;transition:none!important}.cr-arc{stroke-dashoffset:0}}
+
+.cr-n.warn i{background:var(--warn);box-shadow:0 0 14px var(--warn)}.cr-n.warn .cr-l{color:var(--warn)}
+.cr-skel{opacity:.4;background:radial-gradient(closest-side,#16264a,transparent)}
