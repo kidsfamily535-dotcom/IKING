@@ -20,6 +20,9 @@ export interface ParkedAircraft{icao24:string;registration:string|null;icao_type
 export interface CalendarEvent{signal_id:string;title:string;grade:string;source:string|null;event_date:string;days_until:number;airports:string[]|null;airports_basis:'EXPLICIT'|'INFERRED_FROM_TITLE'|'UNKNOWN';tracked_aircraft_near_24h:number|null}
 export type Companion='CHILDREN'|'LESS_WALKING'|'MEETING_AFTER';
 export type Priority='EARLY'|'PRIVACY'|'COMFORT'|'NO_WAIT';
+export type MissionPurpose='MEETING'|'FAMILY'|'EVENT';
+// «مهمة»: ما عند العميل ومتى يجب أن يصل. لا تعتمد على طائرة ولا رحلة. arriveLocal توقيت الوجهة كما كتبه العميل (بدون تحويل منطقة زمنية).
+export interface Mission{id:string;purpose:MissionPurpose|null;title:string|null;destination:string;arriveLocal:string|null;priority:Priority|null;createdAt:string}
 export interface MyTrip{id:string;origin:string;destination:string;departureAt:string|null;createdAt:string;companions:Companion[];priority:Priority|null}
 export interface MyEmptyLeg{id:string;origin:string;destination:string;departureAt:string|null;seats:number|null;note:string|null;createdAt:string}
 export type WxCat='VFR'|'MVFR'|'IFR'|'LIFR';

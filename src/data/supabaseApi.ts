@@ -1,7 +1,7 @@
 import {sb} from '../lib/supabase';
 import {mockApi} from './mockApi';
 import type {EyeApi} from './api';
-import type {Airport,Signal,DecisionPolicyRow,Opportunity,FleetAircraft,ParkedAircraft,CalendarEvent,RadarEvent,MyTrip,MyEmptyLeg,RouteWx,WxCat,Companion,Priority} from './types';
+import type {Airport,Signal,DecisionPolicyRow,Opportunity,FleetAircraft,ParkedAircraft,CalendarEvent,RadarEvent,MyTrip,MyEmptyLeg,RouteWx,WxCat,Companion,Priority,Mission,MissionPurpose} from './types';
 import {tr} from '../i18n';
 import {HUBS} from './hubs';
 // الدالة ترجع وصف الرؤية بالعربية فقط، فنحوله لفئة ثابتة ونترجمه في الواجهة. (الأفضل لاحقًا: ترجيع الفئة نفسها من الدالة)
@@ -17,6 +17,14 @@ const mapWx=(data:any[]|null)=>(data??[]).map((r:any)=>({leg:r.leg_ar==='الم�
 // نفس الرصد الرسمي لكن مفتوح للزائر (قراءة فقط، بلا بيانات شخصية): صفحة «راقب رحلتك» ترى القيمة قبل أي بريد.
 // حفظ رحلة مع سجل مراقبة. alerts=true فقط إذا وافق العميل صراحةً على التنبيهات (تُسجَّل opted_in_at في القاعدة).
 export const addWatchedTrip=async(o:string,d:string,at:string|null,alerts:boolean)=>{const {data,error}=await sb.rpc('add_watched_trip',{p_origin:o,p_destination:d,p_departure:at,p_alerts:alerts});if(error)throw new Error(error.message);return data as string};
+// «مهمتي»: جدول customer_missions (RLS: صفوف العميل فقط). arrive_local نصّ بتوقيت الوجهة بلا منطقة زمنية، نخزّنه ونعرضه كما هو.
+const asPurpose=(v:unknown):MissionPurpose|null=>v==='MEETING'||v==='FAMILY'||v==='EVENT'?v:null;
+const asPriority=(v:unknown):Priority|null=>v==='EARLY'||v==='PRIVACY'||v==='COMFORT'||v==='NO_WAIT'?v:null;
+export const listMissions=async():Promise<Mission[]>=>{const {data,error}=await sb.from('customer_missions').select('id,purpose,title,destination_code,arrive_local,priority,created_at').order('created_at',{ascending:false});if(error)throw new Error(error.message);
+ return (data??[]).map((r:any)=>({id:r.id,purpose:asPurpose(r.purpose),title:r.title??null,destination:r.destination_code,arriveLocal:r.arrive_local??null,priority:asPriority(r.priority),createdAt:r.created_at}))};
+export const addMission=async(m:{purpose:MissionPurpose|null;title:string;destination:string;arriveLocal:string|null;priority:Priority|null})=>{const {error}=await sb.from('customer_missions').insert({purpose:m.purpose,title:m.title.trim().slice(0,80)||null,destination_code:m.destination,arrive_local:m.arriveLocal,priority:m.priority});if(error)throw new Error(error.message)};
+export const setMissionPriority=async(id:string,priority:Priority|null)=>{const {error}=await sb.from('customer_missions').update({priority}).eq('id',id);if(error)throw new Error(error.message)};
+export const removeMission=async(id:string)=>{const {error}=await sb.from('customer_missions').delete().eq('id',id);if(error)throw new Error(error.message)};
 export const routeWeatherPublic=async(o:string,d:string)=>{const {data,error}=await sb.rpc('get_route_weather_public',{p_origin:o,p_destination:d});if(error)throw new Error(error.message);return mapWx(data)};
 export const realApi:EyeApi={...simulated,
  // لا ذاكرة حقيقية بعد (customer_preferences غير موصولة): لا نعرض عناصر تبان محفوظة وهي ليست كذلك.

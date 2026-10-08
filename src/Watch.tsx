@@ -17,7 +17,6 @@ const C={
   consent:'أوافق أن تحتفظ العين برحلتي وبريدي لتراقبها لي، وأن يصلني رابط الدخول.',alerts:'أبلغني بالإيميل عندما تُفعَّل تنبيهات الطقس (اختياري).',start:'ابدأ المراقبة',starting:'لحظة',same:'اختر مطارين مختلفين.',needEmail:'اكتب بريدًا صحيحًا وأكّد الموافقة.',err:'تعذّر الحفظ. حاول مرة أخرى.',
   dist:'المسافة',time:'زمن الطيران الخاص',est:'تقدير',km:'كم',hm:(h:number,m:number)=>`${h} س ${m} د`,
   sentH:'أرسلتُ لك رابط الدخول.',sentB:(e:string)=>`افتح الرسالة على ${e} وستجد رحلتك محفوظة والعين تقرأ طقس المطارين.`,sentN:'الطقس يتجدد في القاعدة كل عشرين دقيقة تقريبًا.',see:'اعرض طقس رحلتي',keepH:'أبقِ العين على رحلتك',keepB:'أرسل لك رابط دخول فتبقى الرحلة محفوظة، وتجد الطقس محدَّثًا كلما فتحتها.',keepGo:'احفظ رحلتي وأرسل الرابط',change:'غيّر الرحلة',
-  ok:'الطقس مناسب في الطرفين.',part:'عندي رصد حديث لمطار واحد فقط حتى الآن.',bad:(a:string)=>`الجو في ${a} يستحق انتباهك.`,none:'لا يوجد رصد حديث للمطارين الآن، وفريقنا سيتحقق.',
   dep:'الإقلاع',arr:'الوصول',altH:(a:string)=>`إن تعذّر الهبوط في ${a}`,altOk:(a:string,k:number)=>`أقرب مطار رصده سليم الآن هو ${a}، على بعد ${k} كم.`,altNone:'لا أجد الآن مطارًا قريبًا برصد حديث سليم، وسأتابع.',
   doH:'ما تفعله العين لرحلتك',do1:'تقرأ الرصد الرسمي لمطاري الرحلة وتحدّثه كل عشر دقائق ما دامت الصفحة مفتوحة.',do2:'تنبّهك هنا إذا ساء الجو، وتقترح مطارًا بديلًا قريبًا برصد سليم.',do3:'لا تراسلك بالبريد بعد. هذا غير مفعّل، وأقول لك ذلك بدل أن أوهمك.',
   privH:'وماذا عن الطيران الخاص؟',privB:'لا أعرض عليك خيارًا خاصًا إلا إذا أكّده مشغّل فعلًا. ولن أخترع واحدًا لأجذبك.',
@@ -26,7 +25,6 @@ const C={
   consent:'I agree the Eye keeps my trip and email to watch it for me, and that I receive a sign-in link.',alerts:'Email me when weather alerts are switched on (optional).',start:'Start watching',starting:'One moment',same:'Choose two different airports.',needEmail:'Enter a valid email and confirm consent.',err:'Could not save. Please try again.',
   dist:'Distance',time:'Private flight time',est:'Estimate',km:'km',hm:(h:number,m:number)=>`${h} h ${m} min`,
   sentH:'I sent you a sign-in link.',sentB:(e:string)=>`Open the message at ${e}. Your trip will be saved and the Eye will be reading the weather at both airports.`,sentN:'Weather refreshes in the database about every twenty minutes.',see:'Show my trip weather',keepH:'Keep the Eye on your trip',keepB:'I send you a sign-in link so the trip stays saved and the weather is current whenever you open it.',keepGo:'Save my trip and send the link',change:'Change trip',
-  ok:'Weather looks fine at both ends.',part:'I only have a recent report for one airport so far.',bad:(a:string)=>`Conditions at ${a} deserve your attention.`,none:'No recent report for either airport right now. Our team will check.',
   dep:'Departure',arr:'Arrival',altH:(a:string)=>`If landing at ${a} is not possible`,altOk:(a:string,k:number)=>`The nearest airport reporting good conditions now is ${a}, ${k} km away.`,altNone:'I cannot find a nearby airport with a recent, good report right now. I will keep looking.',
   doH:'What the Eye does for your trip',do1:'Reads the official report for both airports and refreshes it every ten minutes while this page is open.',do2:'Tells you here if conditions worsen, and suggests a nearby alternate with a good report.',do3:'Does not email you yet. That is not enabled, and I tell you so rather than imply it.',
   privH:'And private aviation?',privB:'I only show you a private option once an operator has actually confirmed it. I will not invent one to attract you.',
@@ -81,7 +79,7 @@ export default function Watch(){
  const curWx=wx?wx.filter(r=>r.status==='CURRENT'):[];
  const warnCodes=curWx.filter(r=>r.cat&&BAD.has(r.cat)).map(r=>r.code);
  const pickAp=(i:string)=>{if(!o)setO(i);else if(i===o)setO('');else setD(i)};
- const st=tripStatus(wx),head=t('st.'+st.state,{a:name(st.code)});
+ const st=tripStatus(wx),head=t('st.'+st.state,{a:name(st.code),n:st.age});
  const dirTxt=(v:string|null)=>v&&/^\d+$/.test(v)?v+'°':v;
  const leg=(r:RouteWx)=>{const live=r.status==='CURRENT';
   const det=live?[r.windKt!=null?t('wx.wind',{d:dirTxt(r.windDir)??'',k:r.windKt}):'',r.vis?t('wx.vis',{v:r.vis+' SM'}):'',r.ageMin!=null?t('wx.age',{n:r.ageMin}):''].filter(Boolean).join('، '):'';

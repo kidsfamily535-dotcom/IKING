@@ -42,7 +42,7 @@ export default function MyTrips({airports}:{airports:Airport[]}){
   {trips===null?null:!trips.length&&<div className="nt">{loadErr?t('mt.loadfail'):t('mt.none')}</div>}
   {next&&<div className="card"><div className="mono">{LT(`${next.origin} → ${next.destination}`)}<span className="badge">{t('mt.mine')}</span></div>
    <h3>{nm(next.origin)} · {nm(next.destination)}</h3>
-   {(()=>{const st=tripStatus(wx);return <div className={`nt${st.state==='WATCHING'?' e':''}`} role="status">{t('st.'+st.state,{a:nm(st.code)})}</div>})()}
+   {(()=>{const st=tripStatus(wx);return <div className={`nt${st.state==='WATCHING'?' e':''}`} role="status">{t('st.'+st.state,{a:nm(st.code),n:st.age})}</div>})()}
    <div className="row"><span>{t('j.departure')}</span><span style={{direction:dir}}>{when(next.departureAt)}</span></div>
    <div className="act"><button className="g" onClick={()=>del(next.id)}>{t('mt.remove')}</button></div>
    <div className="mono" style={{margin:'20px 0 4px'}}>{t('j.cap.wx')}</div>

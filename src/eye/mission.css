@@ -1,0 +1,20 @@
+/* «مهمتي»: يرث ألوان الصفحة (--ink --dim --gold --line --warn) ويكمل شكل الكابينة. لا زخرفة، كل عنصر له وظيفة. */
+.ms{max-width:560px;margin:0 auto;padding:28px clamp(18px,5vw,32px) 72px;text-align:start}
+.ms h2{font-weight:300;font-size:clamp(26px,5.4vw,38px);line-height:1.3;text-wrap:balance}
+.ms h3{font-weight:400;font-size:22px;margin-top:18px}
+.ms h4{font-weight:400;font-size:17px}
+.ms .lead{color:var(--dim);font-size:17px;margin:8px 0 18px;max-width:34em}
+.ms .dim{color:var(--dim);max-width:none}.ms .sm{font-size:13.5px;margin-top:10px}
+.ms .form{display:grid;gap:18px;margin-top:14px}
+.ms label{display:grid;gap:4px;font-size:14px;color:var(--dim)}
+.ms .lb{display:block;font-size:14px;color:var(--dim);margin-bottom:8px}
+.ms select,.ms input[type=text],.ms input[type=datetime-local],.ms input[type=email]{width:100%;min-height:48px;background:#f4ecdc10;border:1px solid var(--line);border-radius:2px;color:var(--ink);font:inherit;font-size:16px;padding:0 12px}
+.ms select option{background:#0d1a2e;color:#f4ecdc}
+.ms .chips{display:flex;gap:10px;flex-wrap:wrap}
+.ms .chips button{min-height:44px;background:none;border:1px solid #c9a96166;color:var(--gold);padding:0 18px;font-size:15px}
+.ms .chips button.on{background:var(--gold);color:var(--bg)}
+.ms .nt{margin:16px 0 8px}
+.ms .ms-wx{color:var(--dim);font-size:13.5px;margin:0 0 6px}
+.ms .blk{margin-top:26px}.ms .keep{padding-top:22px;border-top:1px solid var(--line)}
+.ms .er{color:var(--warn);font-size:15px}
+.ms-tour{max-width:560px;margin:0 auto;padding:18px clamp(18px,5vw,32px) 0;color:var(--dim);font-size:13.5px;text-align:center}

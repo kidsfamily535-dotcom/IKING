@@ -1,11 +1,12 @@
 import {sb} from './lib/supabase';
 import {radarAirports} from './data/hubs';
 import {useEffect,useRef,useState} from 'react';
-import {api,useRealApi} from './data/api';import {addWatchedTrip} from './data/supabaseApi';import {isPriority} from './data/guardian';
+import {api,useRealApi} from './data/api';import {addWatchedTrip,addMission} from './data/supabaseApi';import {isPriority} from './data/guardian';
 import SignIn from './SignIn';
 import OperatorRoom from './Operator';
 import Room from './Room';
 import Show from './Show';
+import Mission from './Mission';
 import {Switch} from './cabin/Switch';
 import HomeRadar from './cabin/HomeRadar';
 import HoldRing from './Hold';
@@ -92,6 +93,9 @@ export default function App(){
   useRealApi();setReal(true);setRole(data.role==='admin'||data.role==='broker'?'admin':data.role==='operator'?'operator':'customer');
   if(isLang(data.preferred_language)&&!hasStoredLang())setLang(data.preferred_language,false);
   try{const w=localStorage.getItem('iking_want');if(w){localStorage.removeItem('iking_want');const x=JSON.parse(w);if(x?.o&&x?.d){const id=await addWatchedTrip(x.o,x.d,typeof x.at==='string'?x.at:null,x.a===true);if(isPriority(x.p))await api.setTripPriority(id,x.p)}}}catch{/* يبقى الاختيار غير محفوظ */}
+   // مهمة كتبها الزائر قبل الدخول: نحفظها الآن ونفتح له «ما تستطيعه العين» حيث تظهر مهمته
+   try{const w=localStorage.getItem('iking_mission_want');if(w){localStorage.removeItem('iking_mission_want');const x=JSON.parse(w);
+    if(typeof x?.d==='string'&&x.d){await addMission({purpose:x.u==='MEETING'||x.u==='FAMILY'||x.u==='EVENT'?x.u:null,title:typeof x.t==='string'?x.t:'',destination:x.d,arriveLocal:typeof x.at==='string'&&x.at?x.at:null,priority:isPriority(x.p)?x.p:null});if(live)go('explore')}}}catch{/* تبقى المهمة غير محفوظة */}
  })();return()=>{live=false}},[]);
  const run=async()=>{setSay('');setSay(await api.runPass(setSt))};
  const staff=role==='admin',table=op.filter(o=>o.status==='ACTIVATION_PENDING');
@@ -111,11 +115,12 @@ export default function App(){
   </section>
   {!role&&stage!=='home'&&<div id="guest" className="cbx">
    {stage==='doors'&&<section className="doors"><h2>{t('d.q')}</h2><div className="dr">{([['explore','d.explore'],['try','d.try'],['mine','d.mine']] as const).map(([k,l])=><Switch key={k} label={t(l)} sub={t(l+'.s')} onActivate={()=>go(k)}/>)}</div></section>}
-   {stage==='explore'&&<><Scene mode="customer" real={false} airports={ap} onState={setSt}/><section className="doors" style={{minHeight:0}}><Switch primary label={t('d.tryit')} onActivate={()=>go('try')}/><button className="g" onClick={()=>go('home')}>{t('d.back')}</button></section></>}
+   {stage==='explore'&&<><p className="ms-tour">{t('ms.tour')}</p><Scene mode="customer" real={false} airports={ap} onState={setSt}/><Mission/><section className="doors" style={{minHeight:0}}><Switch primary label={t('d.tryit')} onActivate={()=>go('try')}/><button className="g" onClick={()=>go('home')}>{t('d.back')}</button></section></>}
    {(stage==='try'||(stage==='mine'&&who&&(who!=='other'||rel)))&&<main id="under"><section className="doors" style={{minHeight:0,paddingBottom:0}}><button className="g" onClick={()=>{setWho('');setRel('');go('home')}}>{t('d.back')}</button></section><Show airports={ap} who={who} rel={rel}/></main>}
    {stage==='mine'&&!who&&<section className="doors"><h2>{t('d.who')}</h2><div className="dr">{([['me','d.me'],['other','d.other'],['group','d.group']] as const).map(([k,l])=><Switch key={k} label={t(l)} onActivate={()=>setWho(k)}/>)}</div></section>}
    {stage==='mine'&&who==='other'&&!rel&&<section className="doors" style={{minHeight:0}}><h2>{t('d.rel')}</h2><div className="dr">{[1,2,3,4,5,6].map(i=><Switch key={i} label={t('d.rel'+i)} onActivate={()=>setRel('d.rel'+i)}/>)}</div></section>}
   </div>}
+  {role==='customer'&&stage==='explore'&&<div id="guest" className="cbx"><Mission/><section className="doors" style={{minHeight:0}}><button className="g" onClick={()=>go('home')}>{t('d.back')}</button></section></div>}
   {role&&<>{role!=='customer'&&<div id="bar"><b>{st}</b>{FLOW.map(f=><span key={f} className={`fc${f===st?' on':''}`}>{f}</span>)}<span className="ed">{role.toUpperCase()}</span></div>}
   <Scene mode={role==='customer'?'customer':'operator'} real={real} airports={ap} onState={setSt}/>
   <main id="under">
