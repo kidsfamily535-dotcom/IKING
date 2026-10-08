@@ -11,7 +11,8 @@ const n = (v: unknown) => Number(v ?? 0)
 Deno.serve(async (req) => {
   const url = Deno.env.get('SUPABASE_URL')!
   const db = createClient(url, Deno.env.get('SUPABASE_SERVICE_ROLE_KEY')!)
-  const mode = new URL(req.url).searchParams.get('mode') === 'digest' ? 'digest' : 'alerts'
+  const m = new URL(req.url).searchParams.get('mode')
+  const mode = m === 'digest' ? 'digest' : m === 'events' ? 'events' : 'alerts'
 
   let recipients: string[] = []
   const cronSecret = req.headers.get('x-cron-secret')
@@ -39,6 +40,25 @@ Deno.serve(async (req) => {
       headers: { Authorization: `Bearer ${key}`, 'Content-Type': 'application/json' },
       body: JSON.stringify({ from: "King's Eye <onboarding@resend.dev>", to: recipients, subject, html }),
     })
+
+  // ---- events: verified (2 sources) events starting within 14 days with ZERO operator-confirmed supply ----
+  if (mode === 'events') {
+    const { data: due, error: dueErr } = await db.rpc('eye_event_alerts_due')
+    if (dueErr) return json({ error: 'events_failed', detail: dueErr.message }, 500)
+    const list = (Array.isArray(due) ? due : []) as any[]
+    if (!list.length) return json({ sent: 0, note: 'no events due' })
+    const rows = list.map((e) => `<tr><td><b>${esc(e.title_ar || e.title)}</b><br><span style="color:#555" dir="ltr">${esc(e.title)}</span></td><td>${esc(e.city)}</td><td dir="ltr">${esc(e.starts_on)}<br>بعد ${esc(e.days_until)} يوم</td><td>${esc(n(e.confirmed_availability))}</td><td>${esc(n(e.tracked_aircraft_near_24h))}</td><td>${esc(n(e.open_requests))}</td></tr>`).join('')
+    const html = `<div dir="rtl" style="font-family:system-ui,Tahoma,sans-serif;color:#111;line-height:1.8;max-width:680px">
+<h2 style="margin:0">THE KING'S EYE — فعاليات قريبة وعرضها المؤكد صفر</h2>
+<p style="color:#555;margin-top:4px">فعاليات موثّقة بمصدرين مستقلين، وتبدأ خلال 14 يومًا، ومفيش أي مشغّل أكّد إتاحة لوجهتها.</p>
+<table cellpadding="6" border="1" style="border-collapse:collapse;border-color:#ddd"><tr style="background:#f6f6f6"><td>الفعالية</td><td>المدينة</td><td>تبدأ</td><td>إتاحة مؤكدة</td><td>طائرات مرصودة (استنتاج)</td><td>طلبات مفتوحة</td></tr>${rows}</table>
+<p>الخطوة المقترحة: كلّم مشغّلًا ينشر إتاحته لهذه الوجهة قبل بداية الفعالية.</p>
+<p style="color:#555">الفعالية حقيقة تقويمية من مصادر عامة، وليست طلبًا مؤكدًا. الطائرات المرصودة استنتاج ولا تعني التوافر. مفيش حاجة اتبعتت لأي عميل أو مشغّل.</p></div>`
+    const r = await send(`فعاليات قريبة بدون عرض مؤكد (${list.length})`, html)
+    if (!r.ok) return json({ error: 'email_failed', status: r.status }, 502)
+    await db.from('event_alerts_sent').upsert(list.map((e) => ({ event_id: e.id, band: e.band })), { onConflict: 'event_id,band', ignoreDuplicates: true })
+    return json({ sent: list.length })
+  }
 
   // Opportunities waiting for a human decision (used by both modes)
   const { data: opps, error: oppErr } = await db
@@ -73,33 +93,37 @@ Deno.serve(async (req) => {
   const f = d.flight ?? {}, w = d.journey ?? {}, dm = d.demand ?? {}, op = d.opportunities ?? {}, sy = d.system ?? {}
 
   const warns: string[] = []
-  if (f.minutes_since_last_sighting == null || n(f.minutes_since_last_sighting) > 30) warns.push(`عين الطيران: آخر رصد منذ ${f.minutes_since_last_sighting ?? '؟'} دقيقة (والمفترض كل بضع دقائق)`)
-  if (w.minutes_since_weather == null || n(w.minutes_since_weather) > 60) warns.push(`عين الرحلة: آخر تحديث للطقس منذ ${w.minutes_since_weather ?? '؟'} دقيقة`)
-  if (n(sy.cron_failed_24h) > 0) warns.push(`ثمّة ${n(sy.cron_failed_24h)} مهمة مجدولة أخفقت خلال آخر 24 ساعة`)
-  if (n(f.fetch_failed_24h) > 0) warns.push(`أخفق رصد الطائرات ${n(f.fetch_failed_24h)} مرة خلال آخر 24 ساعة`)
+  if (f.minutes_since_last_sighting == null || n(f.minutes_since_last_sighting) > 30) warns.push(`عين الطيران: آخر رصد من ${f.minutes_since_last_sighting ?? '؟'} دقيقة (المفروض كل بضع دقايق)`)
+  if (w.minutes_since_weather == null || n(w.minutes_since_weather) > 60) warns.push(`عين الرحلة: آخر تحديث للطقس من ${w.minutes_since_weather ?? '؟'} دقيقة`)
+  if (n(sy.cron_failed_24h) > 0) warns.push(`فيه ${n(sy.cron_failed_24h)} مهمة مجدولة فشلت في آخر 24 ساعة`)
+  if (n(f.fetch_failed_24h) > 0) warns.push(`رصد الطيارات فشل ${n(f.fetch_failed_24h)} مرة في آخر 24 ساعة`)
 
   const list = (a: unknown) => (Array.isArray(a) && a.length ? a.slice(0, 12).map(esc).join(' ، ') : 'لا يوجد')
   const grades = Object.entries(dm.by_grade ?? {}).map(([g, c]) => `${esc(g)}: ${esc(c)}`).join(' ، ') || '—'
   const pending = (opps ?? []) as any[]
+  const { data: newLeads } = await db.from('trip_leads').select('origin_code,destination_code,travel_date,passengers,created_at').eq('status', 'NEW').order('created_at', { ascending: false }).limit(20)
+  const leads = (newLeads ?? []) as any[]
   const html = `<div dir="rtl" style="font-family:system-ui,Tahoma,sans-serif;color:#111;line-height:1.8;max-width:640px">
 <h2 style="margin:0">THE KING'S EYE — تقرير العيون</h2>
-<p style="color:#555;margin-top:4px">آخر 24 ساعة. الأرقام مستمدّة من بيانات حقيقية، أما الفرص الحالية فتجريبية.</p>
-${warns.length ? `<div style="background:#fff4e5;border:1px solid #e6a23c;padding:10px"><b>تنبيهات النظام:</b><ul>${warns.map((x) => `<li>${esc(x)}</li>`).join('')}</ul></div>` : '<p>✅ جميع المهام تعمل على نحو طبيعي.</p>'}
+<p style="color:#555;margin-top:4px">آخر 24 ساعة. الأرقام دي من بيانات حقيقية، لكن الفرص الحالية تجريبية.</p>
+${warns.length ? `<div style="background:#fff4e5;border:1px solid #e6a23c;padding:10px"><b>تنبيهات النظام:</b><ul>${warns.map((x) => `<li>${esc(x)}</li>`).join('')}</ul></div>` : '<p>✅ كل المهام شغالة بشكل طبيعي.</p>'}
 <h3>1) عين الطيران</h3>
-<ul><li>${esc(n(f.sightings_24h))} رصد لـ ${esc(n(f.distinct_aircraft_24h))} طائرة مختلفة</li>
-<li>رحلات مستنتجة: ${esc(n(f.legs_24h))} اليوم (الإجمالي ${esc(n(f.legs_total))})</li>
-<li>الرصد: ${esc(n(f.fetch_ok_24h))} نجح، ${esc(n(f.fetch_failed_24h))} أخفق</li>
-<li style="color:#555">الطائرة المرصودة لا تعني أنها متاحة، والتوافر يؤكده المشغّل وحده.</li></ul>
+<ul><li>${esc(n(f.sightings_24h))} رصد لـ ${esc(n(f.distinct_aircraft_24h))} طيارة مختلفة</li>
+<li>رحلات اتستنتجت: ${esc(n(f.legs_24h))} اليوم (الإجمالي ${esc(n(f.legs_total))})</li>
+<li>الرصد: ${esc(n(f.fetch_ok_24h))} نجح، ${esc(n(f.fetch_failed_24h))} فشل</li>
+<li style="color:#555">الطيارة اللي اتشافت مش معناها متاحة. التوافر بيتأكد من المشغّل بس.</li></ul>
 <h3>2) عين الرحلة (الطقس)</h3>
 <ul><li>مطارات طقسها IFR أو أسوأ: ${list(w.ifr_or_worse)}</li>
-<li>مطارات تبلغ رياحها 25 عقدة أو أكثر: ${list(w.strong_wind_25kt)}</li></ul>
+<li>مطارات رياحها 25 عقدة أو أكتر: ${list(w.strong_wind_25kt)}</li></ul>
 <h3>3) عين الطلب</h3>
-<ul><li>إشارات طلب نشطة: ${esc(n(dm.active))} (الدرجة: ${grades}). الدرجة D تعني إشارة ضعيفة.</li>
+<ul><li>إشارات طلب نشطة: ${esc(n(dm.active))} (الدرجة: ${grades}). D معناها إشارة ضعيفة.</li>
 ${(dm.latest_titles ?? []).map((t: string) => `<li dir="ltr" style="text-align:left">${esc(t)}</li>`).join('')}</ul>
+<h3>طلبات العملاء الجديدة (من النموذج)</h3>
+${leads.length ? `<p>لسه ما اتردّش عليها: <b>${leads.length}</b></p><table cellpadding="6" dir="ltr" style="border-collapse:collapse">${leads.map((l) => `<tr><td><b>${esc(l.origin_code)} → ${esc(l.destination_code)}</b></td><td>${esc(l.travel_date)}</td><td>${esc(l.passengers)} pax</td></tr>`).join('')}</table>` : '<p>لا يوجد طلبات جديدة.</p>'}
 <h3>الفرص</h3>
-<p>بانتظار موافقتك: <b>${esc(n(op.awaiting_approval))}</b> — محققة: ${esc(n(op.validated))} — منتهية: ${esc(n(op.expired))}</p>
+<p>منتظرة موافقتك: <b>${esc(n(op.awaiting_approval))}</b> — محققة: ${esc(n(op.validated))} — منتهية: ${esc(n(op.expired))}</p>
 ${pending.length ? `<table cellpadding="6" dir="ltr" style="border-collapse:collapse">${pending.map(oppRow).join('')}</table>` : ''}
-<p style="color:#555">لم يُرسَل شيء إلى أي عميل، وكل إرسال بانتظار موافقتك.</p></div>`
+<p style="color:#555">مفيش حاجة اتبعتت لأي عميل. أي إرسال بيستنى موافقتك.</p></div>`
 
   const r = await send(`THE KING'S EYE — تقرير العيون${warns.length ? ' ⚠️' : ''}`, html)
   if (!r.ok) return json({ error: 'email_failed', status: r.status }, 502)
