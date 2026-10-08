@@ -1,8 +1,9 @@
 import Route from './Route';
 import {useCallback,useEffect,useState} from 'react';
 import {api} from './data/api';
-import type {Airport,Companion,MyTrip,MyEmptyLeg,RouteWx} from './data/types';
-import Guardian,{CompanionChips} from './Guardian';
+import type {Airport,Companion,MyTrip,MyEmptyLeg,Priority,RouteWx} from './data/types';
+import Guardian,{CompanionChips,PriorityChips} from './Guardian';
+import {tripStatus} from './data/guardian';
 import {useI18n,airportName} from './i18n';
 const LOC={ar:'ar-EG',en:'en-GB',tr:'tr-TR',ru:'ru-RU'} as const;
 const LT=(s:string|number)=><span dir="ltr">{s}</span>;
@@ -13,7 +14,7 @@ export default function MyTrips({airports}:{airports:Airport[]}){
  const [trips,setTrips]=useState<MyTrip[]|null>(null),[loadErr,setLoadErr]=useState(false);
  const [wx,setWx]=useState<RouteWx[]|null>(null),[wxErr,setWxErr]=useState(false);
  const [kind,setKind]=useState<'TRIP'|'LEG'>('TRIP'),[legs,setLegs]=useState<MyEmptyLeg[]>([]),[seats,setSeats]=useState(''),[note,setNote]=useState('');
- const [comp,setComp]=useState<Companion[]>([]),[o,setO]=useState(''),[d,setD]=useState(''),[at,setAt]=useState(''),[err,setErr]=useState(''),[busy,setBusy]=useState(false);
+ const [pri,setPri]=useState<Priority|null>(null),[comp,setComp]=useState<Companion[]>([]),[o,setO]=useState(''),[d,setD]=useState(''),[at,setAt]=useState(''),[err,setErr]=useState(''),[busy,setBusy]=useState(false);
  const nm=(c:string)=>{const a=airports.find(x=>x.iata===c);return a?airportName(a):c};
  const when=(x:string|null)=>x?new Date(x).toLocaleString(LOC[lang],{dateStyle:'medium',timeStyle:'short'}):t('mt.nodate');
  const load=useCallback(()=>api.listMyTrips().then(x=>{setTrips(x);setLoadErr(false)}).catch(()=>{setTrips([]);setLoadErr(true)}),[]);
@@ -28,8 +29,8 @@ export default function MyTrips({airports}:{airports:Airport[]}){
   const n=seats?Number(seats):null;if(kind==='LEG'&&n!==null&&(!Number.isInteger(n)||n<1||n>40)){setErr(t('mt.seats.bad'));return}
   setBusy(true);
   try{const iso=at?new Date(at).toISOString():null;
-   if(kind==='LEG'){await api.addMyEmptyLeg(o,d,iso,n,note);await loadLegs()}else{await api.addMyTrip(o,d,iso,comp);await load()}
-   setO('');setD('');setAt('');setSeats('');setNote('');setComp([])}catch{setErr(t('mt.err'))}finally{setBusy(false)}};
+   if(kind==='LEG'){await api.addMyEmptyLeg(o,d,iso,n,note);await loadLegs()}else{await api.addMyTrip(o,d,iso,comp,pri);await load()}
+   setO('');setD('');setAt('');setSeats('');setNote('');setComp([]);setPri(null)}catch{setErr(t('mt.err'))}finally{setBusy(false)}};
  const del=async(id:string)=>{try{await api.removeMyTrip(id);await Promise.all([load(),loadLegs()])}catch{setErr(t('mt.err'))}};
  const dirTxt=(v:string|null)=>v&&/^\d+$/.test(v)?v+'°':v;
  const leg=(r:RouteWx)=>{const ok=r.status==='CURRENT';
@@ -41,6 +42,7 @@ export default function MyTrips({airports}:{airports:Airport[]}){
   {trips===null?null:!trips.length&&<div className="nt">{loadErr?t('mt.loadfail'):t('mt.none')}</div>}
   {next&&<div className="card"><div className="mono">{LT(`${next.origin} → ${next.destination}`)}<span className="badge">{t('mt.mine')}</span></div>
    <h3>{nm(next.origin)} · {nm(next.destination)}</h3>
+   {(()=>{const st=tripStatus(wx);return <div className={`nt${st.state==='WATCHING'?' e':''}`} role="status">{t('st.'+st.state,{a:nm(st.code),n:st.age})}</div>})()}
    <div className="row"><span>{t('j.departure')}</span><span style={{direction:dir}}>{when(next.departureAt)}</span></div>
    <div className="act"><button className="g" onClick={()=>del(next.id)}>{t('mt.remove')}</button></div>
    <div className="mono" style={{margin:'20px 0 4px'}}>{t('j.cap.wx')}</div>
@@ -65,7 +67,7 @@ export default function MyTrips({airports}:{airports:Airport[]}){
    {kind==='LEG'&&<><div><label>{t('mt.seats')}</label><input type="number" inputMode="numeric" min={1} max={40} aria-label={t('mt.seats')} value={seats} onChange={e=>setSeats(e.target.value)}/></div>
    <div><label>{t('mt.note')}</label><input type="text" maxLength={300} aria-label={t('mt.note')} value={note} onChange={e=>setNote(e.target.value)}/></div></>}
   </div>
-  {kind==='TRIP'&&<><p className="dim sm" style={{margin:'10px 0 6px'}}>{t('gd.who')}</p><CompanionChips value={comp} onChange={setComp}/></>}
+  {kind==='TRIP'&&<><p className="dim sm" style={{margin:'10px 0 6px'}}>{t('gd.who')}</p><CompanionChips value={comp} onChange={setComp}/><p className="dim sm" style={{margin:'12px 0 6px'}}>{t('pr.q')}</p><PriorityChips value={pri} onChange={setPri}/></>}
   {kind==='LEG'&&<small style={{color:'var(--dim)',display:'block',marginBottom:8}}>{t('mt.leg.rule')}</small>}
   {err&&<div className="nt" role="alert">{err}</div>}
   <div className="act"><button disabled={busy} onClick={save}>{busy?t('mt.saving'):t(kind==='LEG'?'mt.leg.save':'mt.save')}</button></div>

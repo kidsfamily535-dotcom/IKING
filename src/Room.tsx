@@ -8,7 +8,7 @@ import Requests,{useMyRequests,reqNav} from './Requests';
 import Profile,{profNav} from './Profile';
 import Guardian,{CompanionChips} from './Guardian';
 const LOC={ar:'ar-EG',en:'en-GB',tr:'tr-TR',ru:'ru-RU'} as const;
-const SAMPLE:MyTrip={id:'sim',origin:'RUH',destination:'JED',departureAt:null,createdAt:'',companions:[]};
+const SAMPLE:MyTrip={id:'sim',origin:'RUH',destination:'JED',departureAt:null,createdAt:'',companions:[],priority:null};
 const NAME={now:'room.n0',wx:'room.n1',trips:'room.n2',mem:'j.mem.title'} as const;
 type Page=keyof typeof NAME|'req'|'prof';
 // شاشة العميل بعد الدخول: لحظة واحدة في كل مرة، بنفس لغة الجولة. لا شيء هنا محاكاة إلا حين تكون real=false (وتُعلَّم بذلك).
