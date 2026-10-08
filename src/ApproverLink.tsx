@@ -45,7 +45,7 @@ export default function ApproverLink(){
  const token=useMemo(readToken,[]);
  const [v,setV]=useState<View|null>(null),[neterr,setNeterr]=useState(false),[note,setNote]=useState('');
  const [busy,setBusy]=useState(false),[err,setErr]=useState(''),[done,setDone]=useState<'APPROVED'|'DECLINED'|null>(null);
- useEffect(()=>{document.title=`${t.desk} · THE KING'S EYE`;
+ useEffect(()=>{document.title=`${t.desk} · IKING`;
   for(const [n,c] of [['robots','noindex,nofollow'],['referrer','no-referrer']]){let m=document.querySelector(`meta[name=${n}]`);if(!m){m=document.createElement('meta');m.setAttribute('name',n);document.head.appendChild(m)}m.setAttribute('content',c)}},[t.desk]);
  const load=async()=>{setNeterr(false);setV(null);
   if(!/^[0-9a-f]{64}$/.test(token)){setV({state:'INVALID'});return}

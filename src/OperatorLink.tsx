@@ -50,7 +50,7 @@ export default function OperatorLink(){
  const [v,setV]=useState<View|null>(null),[neterr,setNeterr]=useState(false);
  const [av,setAv]=useState<boolean|null>(null),[type,setType]=useState(''),[price,setPrice]=useState(''),[cur,setCur]=useState('USD'),[fees,setFees]=useState<boolean|null>(null),[hrs,setHrs]=useState('24'),[mins,setMins]=useState(''),[restr,setRestr]=useState(''),[why,setWhy]=useState('');
  const [step,setStep]=useState<'form'|'review'|'sent'>('form'),[err,setErr]=useState(''),[busy,setBusy]=useState(false),[sentAs,setSentAs]=useState<'OFFER'|'DECLINED'|null>(null);
- useEffect(()=>{document.title=`${t.desk} · THE KING'S EYE`;
+ useEffect(()=>{document.title=`${t.desk} · IKING`;
   for(const [n,c] of [['robots','noindex,nofollow'],['referrer','no-referrer']]){let m=document.querySelector(`meta[name=${n}]`);if(!m){m=document.createElement('meta');m.setAttribute('name',n);document.head.appendChild(m)}m.setAttribute('content',c)}},[t.desk]);
  const load=async()=>{setNeterr(false);setV(null);
   if(!/^[0-9a-f]{64}$/.test(token)){setV({state:'INVALID'});return}

@@ -1,4 +1,5 @@
 import {createRoot} from 'react-dom/client';import './styles.css';import './eye/eye.css';import App from './App';import RoyalCut from './eye/RoyalCut';import JetexCut from './eye/JetexCut';import JourneysCut from './eye/JourneysCut';import OperatorLink from './OperatorLink';import OperatorDesk from './OperatorDesk';import Watch from './Watch';import ApproverLink from './ApproverLink';import Cabin from './cabin/Cabin';import {I18nProvider} from './i18n';
+import './brand/brand.css';
 // ?view=cabin يفتح تجربة العميل (الكابينة والرادار التفاعلي).
 // ?house=royaljet أو ?house=jetex أو ?view=journeys يفتح نسخة منفصلة. بدونها يفتح التطبيق الأصلي.
 const Q=new URLSearchParams(location.search),H=Q.get('house');

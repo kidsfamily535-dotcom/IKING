@@ -1,7 +1,7 @@
 // نصوص الكابينة. الصوت: العين تتكلم بصيغة المتكلم، جُمل قصيرة، لا وعود، وكل رقم تقديري يُسمّى تقديرًا.
 import type {Lang} from '../i18n';
 const ar={
- brand:'عين الملك',sim:'تجريبي · بيانات تمثيلية',
+ brand:'IKING',sim:'تجريبي · بيانات تمثيلية',
  simFoot:'تجريبي. لا بيانات حقيقية ولا إرسال لأي مشغّل. الطائرات والأوقات أمثلة توضيحية، والمسافات والأزمنة محسوبة من الإحداثيات.',
  phases:['على الأرض','صعود','تحليق','رحلتك','هبوط'],
  eye:{ask:'أنتظر وجهتك',understand:'أفهم رحلتك',search:'أبحث في السوق',found:'وجدتُ ما يستحق النظر',recommend:'أوصيك بخيار واحد',approve:'أحتاج موافقتك',waiting:'أنتظر ردّ المشغّل',confirmed:'تأكّد الطلب',monitor:'أراقب رحلتك',done:'اكتملت الرحلة'} as Record<string,string>,
@@ -38,7 +38,7 @@ const ar={
 };
 type C=typeof ar;
 const en:C={
- brand:"The King's Eye",sim:'Demo · sample data',
+ brand:"IKING",sim:'Demo · sample data',
  simFoot:'Demo. No real data and nothing is sent to any operator. Aircraft and times are examples; distances and durations are computed from coordinates.',
  phases:['On the ground','Climb','Cruise','Your journey','Descent'],
  eye:{ask:'Waiting for your destination',understand:'Understanding your trip',search:'Checking the market',found:'Found something worth a look',recommend:'Recommending one option',approve:'I need your approval',waiting:"Waiting for the operator's reply",confirmed:'Request confirmed',monitor:'Watching your trip',done:'Trip complete'},

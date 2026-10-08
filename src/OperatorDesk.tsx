@@ -36,7 +36,7 @@ export default function OperatorDesk(){
  const [v,setV]=useState<View|null>(null),[neterr,setNeterr]=useState(false);
  const [o,setO]=useState(''),[d,setD]=useState(''),[from,setFrom]=useState(''),[until,setUntil]=useState(''),[model,setModel]=useState(''),[seats,setSeats]=useState('4'),[price,setPrice]=useState(''),[cur,setCur]=useState('USD'),[notes,setNotes]=useState('');
  const [step,setStep]=useState<'form'|'review'>('form'),[err,setErr]=useState(''),[busy,setBusy]=useState(false),[ok,setOk]=useState(false);
- useEffect(()=>{document.title=`${t.desk} · THE KING'S EYE`;
+ useEffect(()=>{document.title=`${t.desk} · IKING`;
   for(const [n,c] of [['robots','noindex,nofollow'],['referrer','no-referrer']]){let m=document.querySelector(`meta[name=${n}]`);if(!m){m=document.createElement('meta');m.setAttribute('name',n);document.head.appendChild(m)}m.setAttribute('content',c)}},[t.desk]);
  const load=async()=>{setNeterr(false);
   if(!/^[0-9a-f]{64}$/.test(token)){setV({state:'INVALID'});return}

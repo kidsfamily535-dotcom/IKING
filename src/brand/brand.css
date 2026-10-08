@@ -1,0 +1,22 @@
+.ik-logo{display:inline-block;line-height:1;color:var(--ink)}
+.ik-wm{font:500 var(--ik-fs,96px)/1 Fraunces,'Instrument Serif',Georgia,serif;letter-spacing:-.01em;font-variation-settings:'SOFT' 100,'opsz' 144;white-space:nowrap}
+.ik-i{position:relative;display:inline-block}
+.ik-eye{position:absolute;left:-.03em;top:-.19em;width:.64em;height:auto;color:var(--gold)}
+.ik-logo.sm{--ik-fs:30px}.ik-logo.md{--ik-fs:56px}.ik-logo.xl{--ik-fs:clamp(72px,15vw,128px);padding-top:.16em}
+.ik-logo.sm .ik-eye{top:-.24em}
+.hero.hx.ik-home{display:flex!important;flex-direction:column;align-items:center;justify-content:center;text-align:center;gap:0}
+.ik-home .hx-copy{align-items:center!important;max-width:560px;gap:14px;position:relative;z-index:2}
+.ik-home h1.hx-h{text-align:center!important;margin-top:18px}
+.ik-home .hx-lead{text-align:center!important;max-width:36ch}
+.ik-home .hx-sw{align-items:center!important;margin-top:14px;gap:18px}
+.hero.hx.ik-home>.ik-bg{position:absolute;inset:0;display:grid;place-items:center;opacity:.16;pointer-events:none;z-index:0;overflow:hidden}
+.ik-bg>*{width:min(110vw,120dvh);max-width:none}
+.ik-links{display:flex;gap:6px 22px;flex-wrap:wrap;justify-content:center}
+.ik-link{background:none;color:var(--dim);border:0;padding:6px 2px;font-size:15px;border-bottom:1px solid #f4ecdc26;border-radius:0}
+.ik-link:hover{color:var(--gold);border-color:var(--gold)}
+.ik-note{position:relative;z-index:2;margin:26px 0 0;font-size:12.5px;color:#f4ecdc77}
+.ik-watch{border-top:1px solid var(--line)}
+.wt.emb{min-height:0}
+@media (prefers-reduced-motion:reduce){.ik-bg{display:none}}
+/* الرادار خلفية هادئة فقط: بلا أسماء مدن ولا نص فوق العناوين */
+.ik-bg .cr-hud,.ik-bg svg text{display:none}

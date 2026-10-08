@@ -4,6 +4,7 @@ import {realApi,routeWeatherPublic,addWatchedTrip} from './data/supabaseApi';
 import {sb} from './lib/supabase';
 import {useI18n,airportName} from './i18n';
 import LangSwitch from './LangSwitch';
+import Logo from './brand/Logo';
 import WRadar from './cabin/WRadar';
 import {Switch,Toggle} from './cabin/Switch';
 import type {Airport,MyTrip,RouteWx} from './data/types';
@@ -34,7 +35,7 @@ const km=(a:Airport,b:Airport)=>{const r=Math.PI/180,dl=(b.lon-a.lon)*r,p1=a.lat
 const LOC={ar:'ar-EG',en:'en-GB',tr:'tr-TR',ru:'ru-RU'} as const;
 const BAD=new Set(['MVFR','IFR','LIFR']);
 type Alt={leg:'dep'|'arr';code:string;near?:{code:string;km:number}};
-export default function Watch(){
+export default function Watch({embedded=false}:{embedded?:boolean}={}){
  const {t,lang,dir}=useI18n();const c=lang==='ar'?C.ar:C.en,rtl=dir==='rtl';
  const [ap,setAp]=useState<Airport[]>([]),[authed,setAuthed]=useState<boolean|null>(null),[trips,setTrips]=useState<MyTrip[]>([]),[sel,setSel]=useState(0),[adding,setAdding]=useState(false);
  const [o,setO]=useState(''),[d,setD]=useState(''),[at,setAt]=useState(''),[em,setEm]=useState(''),[ok,setOk]=useState(false),[err,setErr]=useState(''),[busy,setBusy]=useState(false),[al,setAl]=useState(false),[sent,setSent]=useState(''),[pv,setPv]=useState<{o:string;d:string;at:string|null}|null>(null);
@@ -96,8 +97,8 @@ export default function Watch(){
   {authed&&<Toggle checked={al} onChange={setAl}>{c.alerts}</Toggle>}
   {err&&<p className="er" role="alert">{err}</p>}
   <Switch primary busy={busy} disabled={authed===null} label={busy?c.starting:authed?c.start:c.see} onActivate={start}/></div>;
- return <div className="wt" dir={dir} lang={lang}><div className="wrap">
-  <header><span className="mark">{lang==='ar'?'عين الملك':'The King’s Eye'}</span><LangSwitch/></header>
+ return <div className={`wt${embedded?' emb':''}`} dir={dir} lang={lang}><div className="wrap">
+  {!embedded&&<header><span className="mark"><Logo size="sm"/></span><LangSwitch/></header>}
   {sent?<main className="sent" aria-live="polite"><div className="wr"><WRadar ap={ap} a={ap.find(x=>x.iata===pv?.o)} b={ap.find(x=>x.iata===pv?.d)} nm={nm} warn={warnCodes}/></div><h1>{c.sentH}</h1><p className="lead">{c.sentB(sent)}</p><p className="dim">{c.sentN}</p></main>
   :cur?<main aria-live="polite"><div className="wr"><WRadar ap={ap} a={ap.find(x=>x.iata===cur.origin)} b={ap.find(x=>x.iata===cur.destination)} nm={nm} warn={warnCodes}/></div>
    <h1>{head}</h1><p className="dim">{when(cur.departureAt)}</p>

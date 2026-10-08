@@ -17,6 +17,8 @@ import Cockpit from './Cockpit';
 import DeskLinks from './DeskLinks';
 import {useCopy} from './eye/copy';
 import LangSwitch from './LangSwitch';
+import Logo from './brand/Logo';
+import Watch from './Watch';
 import {useI18n,hasStoredLang,hasKey,catL,isLang,type Lang} from './i18n';
 import type {Airport,AgentState,DataStatus,EventPriority,Opportunity,Role,Signal,DecisionPolicyRow} from './data/types';
 const FLOW:AgentState[]=['WATCHING','DISCOVERING','THINKING','MATCHING','DECIDING','MONITORING','ANTICIPATING'];
@@ -77,7 +79,7 @@ function PolicyView(){
  return <details style={{marginBottom:48}}><summary className="mono" style={{cursor:'pointer'}}>DECISION POLICY · 8</summary>{r.map(x=><div className="row" key={x.decision}><span>{lang==='ar'||!hasKey('policy.'+x.decision)?x.descriptionAr:t('policy.'+x.decision)}</span><span className="pr">{x.decision}{x.requiresHuman?' · HUMAN':''}</span></div>)}</details>;
 }
 export default function App(){
- const {t,lang,setLang}=useI18n();const cp=useCopy();const [role,setRole]=useState<Role|null>(null),[real,setReal]=useState(false),[login,setLogin]=useState(false);
+ const {t,lang,setLang}=useI18n();const cp=useCopy();const [role,setRole]=useState<Role|null>(null),[real,setReal]=useState(false),[login,setLogin]=useState(false),[wo,setWo]=useState(false);
  const [stage,setStage]=useState<'home'|'doors'|'explore'|'try'|'mine'>('home'),[who,setWho]=useState<''|'me'|'other'|'group'>(''),[rel,setRel]=useState('');
  const go=(x:typeof stage)=>{setStage(x);setTimeout(()=>document.getElementById('guest')?.scrollIntoView({behavior:'smooth'}),50)};
  const staffMode=new URLSearchParams(location.search).has('staff');
@@ -97,20 +99,20 @@ export default function App(){
  const staff=role==='admin',table=op.filter(o=>o.status==='ACTIVATION_PENDING');
  const live=op.find(o=>o.availability==='CONFIRMED');
  return <>
-  <div className="pill">{real?t('pill.live'):t('pill.demo')}</div><LangSwitch/>
-  <section className="hero hx"><div className="hx-stage"><HomeRadar onGo={i=>{location.href='?view=cabin&to='+i}}/></div>
-   <div className="hx-copy"><p className="hx-mark">THE KING'S EYE</p>
+  {role&&<div className="pill">{real?t('pill.live'):t('pill.demo')}</div>}<LangSwitch/>
+  {!role&&<section className="hero hx ik-home"><div className="ik-bg" aria-hidden><HomeRadar onGo={()=>{}}/></div>
+   <div className="hx-copy"><Logo size="xl"/>
    <h1 className="hx-h">{t('hero.sub1')} <b>{t('hero.sub2')}</b></h1><p className="hx-lead">{t('hero.lead')}</p>
    <div className="hx-sw">
-    {!real&&<Switch primary label={lang==='ar'?'ادخل الكابينة':'Enter the cabin'} sub={lang==='ar'?'جرّب رحلتك مع العين':'Plan a trip with the Eye'} onActivate={()=>{location.href='?view=cabin'}}/>}
-    <Switch label={t('d.mine')} sub={t('d.mine.s')} onActivate={()=>go('mine')}/>
-    {!real&&<Switch label={t('hero.watch')} onActivate={()=>{location.href='?view=watch'}}/>}
-    <div className="ln"><Switch small label={t('hero.see')} onActivate={()=>go('doors')}/>{!real&&!login&&<Switch small label={t('hero.account')} onActivate={()=>setLogin(true)}/>}</div>
+    <Switch primary label={t('hero.write')} sub={t('hero.write.s')} onActivate={()=>{setWo(true);setTimeout(()=>document.getElementById('ik-watch')?.scrollIntoView({behavior:'smooth'}),80)}}/>
+    <div className="ik-links"><button type="button" className="ik-link" onClick={()=>{location.href='?view=cabin'}}>{t('d.try')}</button><button type="button" className="ik-link" onClick={()=>go('explore')}>{t('d.explore')}</button>{!login&&<button type="button" className="ik-link" onClick={()=>setLogin(true)}>{t('hero.account')}</button>}</div>
    </div>
    {staffMode&&<><div className="roles" style={{marginTop:22}} role="group" aria-label={t('hero.pick.aria')}>{(['admin','operator','customer'] as Role[]).map(r=><button key={r} className={role===r?'':'g'} onClick={()=>{setRole(r);setTimeout(()=>document.getElementById('room')?.scrollIntoView({behavior:'smooth'}),50)}}>{t('role.'+r)}</button>)}</div><div className="mono" style={{marginTop:14,opacity:.6}}>{t('hero.demoaccess')}</div></>}
-   {login&&!real&&<SignIn onDone={(r,pl?:Lang)=>{useRealApi();setReal(true);setRole(r);setLogin(false);if(pl&&!hasStoredLang())setLang(pl,false)}}/>}
+   {login&&<SignIn onDone={(r,pl?:Lang)=>{useRealApi();setReal(true);setRole(r);setLogin(false);if(pl&&!hasStoredLang())setLang(pl,false)}}/>}
+   <p className="ik-note">{t('pill.demo')}</p>
    </div>
-  </section>
+  </section>}
+  {!role&&wo&&<div id="ik-watch" className="ik-watch"><Watch embedded/></div>}
   {!role&&stage!=='home'&&<div id="guest" className="cbx">
    {stage==='doors'&&<section className="doors"><h2>{t('d.q')}</h2><div className="dr">{([['explore','d.explore'],['try','d.try'],['mine','d.mine']] as const).map(([k,l])=><Switch key={k} label={t(l)} sub={t(l+'.s')} onActivate={()=>go(k)}/>)}</div></section>}
    {stage==='explore'&&<><Scene mode="customer" real={false} airports={ap} onState={setSt}/><section className="doors" style={{minHeight:0}}><Switch primary label={t('d.tryit')} onActivate={()=>go('try')}/><button className="g" onClick={()=>go('doors')}>{t('d.back')}</button></section></>}
