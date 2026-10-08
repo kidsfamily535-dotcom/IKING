@@ -1,7 +1,7 @@
 import {sb} from './lib/supabase';
 import {radarAirports} from './data/hubs';
 import {useEffect,useRef,useState} from 'react';
-import {api,useRealApi} from './data/api';import {addWatchedTrip} from './data/supabaseApi';
+import {api,useRealApi} from './data/api';import {addWatchedTrip} from './data/supabaseApi';import {isPriority} from './data/guardian';
 import SignIn from './SignIn';
 import OperatorRoom from './Operator';
 import Room from './Room';
@@ -91,7 +91,7 @@ export default function App(){
   if(!live||!data||data.status!=='active')return;
   useRealApi();setReal(true);setRole(data.role==='admin'||data.role==='broker'?'admin':data.role==='operator'?'operator':'customer');
   if(isLang(data.preferred_language)&&!hasStoredLang())setLang(data.preferred_language,false);
-  try{const w=localStorage.getItem('iking_want');if(w){localStorage.removeItem('iking_want');const x=JSON.parse(w);if(x?.o&&x?.d)await addWatchedTrip(x.o,x.d,typeof x.at==='string'?x.at:null,x.a===true)}}catch{/* يبقى الاختيار غير محفوظ */}
+  try{const w=localStorage.getItem('iking_want');if(w){localStorage.removeItem('iking_want');const x=JSON.parse(w);if(x?.o&&x?.d){const id=await addWatchedTrip(x.o,x.d,typeof x.at==='string'?x.at:null,x.a===true);if(isPriority(x.p))await api.setTripPriority(id,x.p)}}}catch{/* يبقى الاختيار غير محفوظ */}
  })();return()=>{live=false}},[]);
  const run=async()=>{setSay('');setSay(await api.runPass(setSt))};
  const staff=role==='admin',table=op.filter(o=>o.status==='ACTIVATION_PENDING');
@@ -103,7 +103,7 @@ export default function App(){
    <h1 className="hx-h">{t('hero.sub1')} <b>{t('hero.sub2')}</b></h1><p className="hx-lead">{t('hero.lead')}</p>
    <div className="hx-sw">
     {!real&&<Switch primary label={lang==='ar'?'ادخل الكابينة':'Enter the cabin'} sub={lang==='ar'?'جرّب رحلتك مع العين':'Plan a trip with the Eye'} onActivate={()=>{location.href='?view=cabin'}}/>}
-    <div className="ln"><Switch small label={t('d.explore')} onActivate={()=>go('explore')}/>{!real&&!login&&<Switch small label={t('hero.account')} onActivate={()=>setLogin(true)}/>}</div>
+    <div className="ln"><Switch small label={t('d.explore')} onActivate={()=>go('explore')}/><Switch small label={t('hero.watch')} onActivate={()=>{location.href='?view=watch'}}/>{!real&&!login&&<Switch small label={t('hero.account')} onActivate={()=>setLogin(true)}/>}</div>
    </div>
    {staffMode&&<><div className="roles" style={{marginTop:22}} role="group" aria-label={t('hero.pick.aria')}>{(['admin','operator','customer'] as Role[]).map(r=><button key={r} className={role===r?'':'g'} onClick={()=>{setRole(r);setTimeout(()=>document.getElementById('room')?.scrollIntoView({behavior:'smooth'}),50)}}>{t('role.'+r)}</button>)}</div><div className="mono" style={{marginTop:14,opacity:.6}}>{t('hero.demoaccess')}</div></>}
    {login&&!real&&<SignIn onDone={(r,pl?:Lang)=>{useRealApi();setReal(true);setRole(r);setLogin(false);if(pl&&!hasStoredLang())setLang(pl,false)}}/>}

@@ -135,5 +135,16 @@ export const tur:Record<Key,string>={
 'gd.hot':"{a} havalimanında şu an {t}°. İnişinizde hâlâ bu kadar sıcaksa, önceden serinletilmiş bir araç öneririz.",
 'gd.wind':"{a} havalimanında rüzgâr şu an {k} knot. Uçuş daha az sakin olabilir; nihai karar operatör ve mürettebatındır. Bu sayfa raporu yaklaşık 10 dakikada bir yeniden okur.",
 'gd.lowvis':"{a} havalimanında görüş şu an düşük. Zamanlamayı etkileyebilir; karar operatör ve mürettebatındır, planlarınızı esnek tutun.",
-'gd.meeting':"İnişten sonra bir toplantınız var. Durak olmadan doğrudan bir transfer ve rahat bir zaman payı öneririz."
+'gd.meeting':"İnişten sonra bir toplantınız var. Durak olmadan doğrudan bir transfer ve rahat bir zaman payı öneririz.",
+'pr.q':"Bu yolculukta sizin için en önemli şey nedir? (isteğe bağlı)",
+'pr.EARLY':"Erken varış",
+'pr.PRIVACY':"Gizlilik",
+'pr.COMFORT':"Konfor",
+'pr.NO_WAIT':"Beklemeden",
+'pr.note':"Yalnızca sizin seçtiğinizi saklarız; istediğiniz zaman değiştirebilir veya silebilirsiniz.",
+'st.LOADING':"Göz raporu okuyor",
+'st.NO_DATA':"Şu anda iki havalimanı için de güncel rapor yok. Ekibimiz kontrol edecek.",
+'st.PARTIAL':"Şimdilik yalnızca bir havalimanı için güncel raporum var.",
+'st.ON_TRACK':"Hava şu anda iki havalimanında da uygun görünüyor.",
+'st.WATCHING':"{a} havalimanındaki koşullar dikkatinizi hak ediyor."
 };

@@ -1,4 +1,4 @@
-import type {Companion,RouteWx} from './types';
+import type {Companion,Priority,RouteWx} from './types';
 // «الحارس الأمين»: قواعد حتمية تحوّل الطقس الحالي + من يسافر معك إلى اقتراح واحد قصير. لا ذكاء غامض هنا.
 // الحدود الصادقة: (1) نستعمل الرصد الحالي CURRENT فقط، وهو الطقس الآن لا وقت الوصول، فالصياغة شرطية («لو بقي كذلك»).
 // (2) الاقتراح لا يُنفَّذ ولا يُرسَل. (3) لا نقول إن الجو آمن للطيران ولا إن الرحلة ستتأخر: هذا قرار المشغّل والطاقم.
@@ -22,3 +22,18 @@ export function guardianTips(wx:RouteWx[]|null,companions:Companion[]):Tip[]{
  // اجتماع بعد الهبوط: اقتراح ثابت لا يحتاج رصدًا، ولا يتضمن أرقامًا مخترعة
  if(has(companions,'MEETING_AFTER'))out.push({id:'meeting',code:arr?.code??'',vars:{}});
  return out}
+
+// «إيش الأهم لك»: خيار واحد يقوله العميل بنفسه. يُحفظ ويُعرض فقط، ولا نستنتج منه شيئًا عن العميل.
+export const PRIORITIES:Priority[]=['EARLY','PRIVACY','COMFORT','NO_WAIT'];
+export const isPriority=(v:unknown):v is Priority=>typeof v==='string'&&(PRIORITIES as string[]).includes(v);
+// سطر حالة الرحلة: حتمي من آخر رصد رسمي CURRENT فقط (الطقس الآن لا وقت الوصول).
+// لا نقول «مناسب» إلا لو عندنا رصد حديث للمطارين معًا. وحالة «محتاج قرارك» غير موجودة عمدًا: لا يوجد بعد خيار فعلي يقرّره العميل.
+export type TripState='LOADING'|'NO_DATA'|'PARTIAL'|'ON_TRACK'|'WATCHING';
+const BAD_CAT=new Set(['MVFR','IFR','LIFR']);
+export function tripStatus(wx:RouteWx[]|null):{state:TripState;code:string}{
+ if(!wx)return{state:'LOADING',code:''};
+ const cur=wx.filter(r=>r.status==='CURRENT'),bad=cur.find(r=>r.cat!=null&&BAD_CAT.has(r.cat));
+ if(bad)return{state:'WATCHING',code:bad.code};
+ if(cur.length>=2)return{state:'ON_TRACK',code:''};
+ if(cur.length===1)return{state:'PARTIAL',code:''};
+ return{state:'NO_DATA',code:''}}

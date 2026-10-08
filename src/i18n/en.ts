@@ -135,5 +135,16 @@ export const en:Record<Key,string>={
 'gd.hot':"It is {t}° at {a} right now. If it is still this hot when you land, we suggest a pre-cooled car.",
 'gd.wind':"Wind is {k} kt at {a} right now. The flight may be less smooth. The final decision rests with the operator and crew. This page re-reads the report about every 10 minutes.",
 'gd.lowvis':"Visibility is low at {a} right now. It can affect timing. The operator and crew decide, so keep your plans flexible.",
-'gd.meeting':"You have a meeting after landing. We suggest a direct transfer with no stops and a comfortable time buffer."
+'gd.meeting':"You have a meeting after landing. We suggest a direct transfer with no stops and a comfortable time buffer.",
+'pr.q':"What matters most on this trip? (optional)",
+'pr.EARLY':"Arriving early",
+'pr.PRIVACY':"Privacy",
+'pr.COMFORT':"Comfort",
+'pr.NO_WAIT':"No waiting",
+'pr.note':"We keep only what you choose, and you can change or clear it any time.",
+'st.LOADING':"The Eye is reading the report",
+'st.NO_DATA':"No recent report for either airport right now. Our team will check.",
+'st.PARTIAL':"I only have a recent report for one airport so far.",
+'st.ON_TRACK':"Weather looks fine at both ends right now.",
+'st.WATCHING':"Conditions at {a} deserve your attention."
 };
