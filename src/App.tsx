@@ -79,7 +79,7 @@ function PolicyView(){
 export default function App(){
  const {t,lang,setLang}=useI18n();const cp=useCopy();const [role,setRole]=useState<Role|null>(null),[real,setReal]=useState(false),[login,setLogin]=useState(false);
  const [stage,setStage]=useState<'home'|'doors'|'explore'|'try'|'mine'>('home'),[who,setWho]=useState<''|'me'|'other'|'group'>(''),[rel,setRel]=useState('');
- const go=(x:typeof stage)=>{setStage(x);setTimeout(()=>document.getElementById('guest')?.scrollIntoView({behavior:'smooth'}),50)};
+ const go=(x:typeof stage)=>{setStage(x);setTimeout(()=>x==='home'?window.scrollTo({top:0,behavior:'smooth'}):document.getElementById('guest')?.scrollIntoView({behavior:'smooth'}),50)};
  const staffMode=new URLSearchParams(location.search).has('staff');
  const [st,setSt]=useState<AgentState>('WATCHING'),[say,setSay]=useState('');
  const [ap,setAp]=useState<Airport[]>([]),[sg,setSg]=useState<Signal[]>([]),[op,setOp]=useState<Opportunity[]>([]);
@@ -103,9 +103,7 @@ export default function App(){
    <h1 className="hx-h">{t('hero.sub1')} <b>{t('hero.sub2')}</b></h1><p className="hx-lead">{t('hero.lead')}</p>
    <div className="hx-sw">
     {!real&&<Switch primary label={lang==='ar'?'ادخل الكابينة':'Enter the cabin'} sub={lang==='ar'?'جرّب رحلتك مع العين':'Plan a trip with the Eye'} onActivate={()=>{location.href='?view=cabin'}}/>}
-    <Switch label={t('d.mine')} sub={t('d.mine.s')} onActivate={()=>go('mine')}/>
-    {!real&&<Switch label={t('hero.watch')} onActivate={()=>{location.href='?view=watch'}}/>}
-    <div className="ln"><Switch small label={t('hero.see')} onActivate={()=>go('doors')}/>{!real&&!login&&<Switch small label={t('hero.account')} onActivate={()=>setLogin(true)}/>}</div>
+    <div className="ln"><Switch small label={t('d.explore')} onActivate={()=>go('explore')}/>{!real&&!login&&<Switch small label={t('hero.account')} onActivate={()=>setLogin(true)}/>}</div>
    </div>
    {staffMode&&<><div className="roles" style={{marginTop:22}} role="group" aria-label={t('hero.pick.aria')}>{(['admin','operator','customer'] as Role[]).map(r=><button key={r} className={role===r?'':'g'} onClick={()=>{setRole(r);setTimeout(()=>document.getElementById('room')?.scrollIntoView({behavior:'smooth'}),50)}}>{t('role.'+r)}</button>)}</div><div className="mono" style={{marginTop:14,opacity:.6}}>{t('hero.demoaccess')}</div></>}
    {login&&!real&&<SignIn onDone={(r,pl?:Lang)=>{useRealApi();setReal(true);setRole(r);setLogin(false);if(pl&&!hasStoredLang())setLang(pl,false)}}/>}
@@ -113,8 +111,8 @@ export default function App(){
   </section>
   {!role&&stage!=='home'&&<div id="guest" className="cbx">
    {stage==='doors'&&<section className="doors"><h2>{t('d.q')}</h2><div className="dr">{([['explore','d.explore'],['try','d.try'],['mine','d.mine']] as const).map(([k,l])=><Switch key={k} label={t(l)} sub={t(l+'.s')} onActivate={()=>go(k)}/>)}</div></section>}
-   {stage==='explore'&&<><Scene mode="customer" real={false} airports={ap} onState={setSt}/><section className="doors" style={{minHeight:0}}><Switch primary label={t('d.tryit')} onActivate={()=>go('try')}/><button className="g" onClick={()=>go('doors')}>{t('d.back')}</button></section></>}
-   {(stage==='try'||(stage==='mine'&&who&&(who!=='other'||rel)))&&<main id="under"><section className="doors" style={{minHeight:0,paddingBottom:0}}><button className="g" onClick={()=>{setWho('');setRel('');go('doors')}}>{t('d.back')}</button></section><Show airports={ap} who={who} rel={rel}/></main>}
+   {stage==='explore'&&<><Scene mode="customer" real={false} airports={ap} onState={setSt}/><section className="doors" style={{minHeight:0}}><Switch primary label={t('d.tryit')} onActivate={()=>go('try')}/><button className="g" onClick={()=>go('home')}>{t('d.back')}</button></section></>}
+   {(stage==='try'||(stage==='mine'&&who&&(who!=='other'||rel)))&&<main id="under"><section className="doors" style={{minHeight:0,paddingBottom:0}}><button className="g" onClick={()=>{setWho('');setRel('');go('home')}}>{t('d.back')}</button></section><Show airports={ap} who={who} rel={rel}/></main>}
    {stage==='mine'&&!who&&<section className="doors"><h2>{t('d.who')}</h2><div className="dr">{([['me','d.me'],['other','d.other'],['group','d.group']] as const).map(([k,l])=><Switch key={k} label={t(l)} onActivate={()=>setWho(k)}/>)}</div></section>}
    {stage==='mine'&&who==='other'&&!rel&&<section className="doors" style={{minHeight:0}}><h2>{t('d.rel')}</h2><div className="dr">{[1,2,3,4,5,6].map(i=><Switch key={i} label={t('d.rel'+i)} onActivate={()=>setRel('d.rel'+i)}/>)}</div></section>}
   </div>}
