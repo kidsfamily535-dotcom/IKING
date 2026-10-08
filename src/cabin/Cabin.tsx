@@ -4,6 +4,7 @@ import {useI18n,LANGS,type Lang} from '../i18n';
 import {copy} from './copy';
 import {HUBS,hub,dist,flightMin,rangeFor,localToUtc,clock,clocksChange,type Hub} from './geo';
 import Radar,{type Blip} from './Radar';
+import {Thumb,Spec} from './CabinMedia';
 // الكابينة: تجربة العميل كاملة حول الرادار. الرادار يستقبل الوجهة، ويعرض البحث، ويتابع الرحلة.
 // كل ما هنا محاكاة معلَّمة: لا مشغّل حقيقي ولا إرسال. المسافات والأزمنة تُحسب من الإحداثيات وتُسمّى تقديرًا.
 type Stage='ask'|'understand'|'search'|'found'|'recommend'|'approve'|'waiting'|'confirmed'|'monitor'|'done';
@@ -110,7 +111,7 @@ export default function Cabin(){
      {(stage==='found'||stage==='recommend')&&plan&&cur&&<>
       {stage==='found'&&<><h1>{c.found.title}</h1><p className="cb-sub">{c.found.sub}</p>
        <div className="cb-opts">{plan.opts.map(o=><button key={o.id} type="button" className={`cb-opt${opt===o.id?' on':''}`} aria-pressed={opt===o.id} onClick={()=>setOpt(o.id)}>
-        <small>{c.opt[o.id]}</small><b>{c.opt.cat[o.cat]}</b><span>{o.desc}</span><em>{c.opt.at(o.t.dep,o.t.arr)}</em>
+        <Thumb cat={o.cat} c={c}/><small>{c.opt[o.id]}</small><b>{c.opt.cat[o.cat]}</b><span>{o.desc}</span><em>{c.opt.at(o.t.dep,o.t.arr)}</em>
         <em className="dim">{o.pos?c.opt.pos(durTxt(o.pos)):c.opt.here}</em><em className="pend"><i aria-hidden/>{c.opt.status} · {c.opt.price}</em></button>)}</div>
        <button type="button" className="cb-link" aria-expanded={ev} onClick={()=>setEv(!ev)}>{c.found.evBtn}</button>
        {ev&&<div className="cb-evid"><h2>{c.found.evTitle}</h2><ul>
@@ -122,6 +123,7 @@ export default function Cabin(){
        <button type="button" className="cb-cta" onClick={()=>go('recommend')}>{c.rec.pick}</button></>}
       {stage==='recommend'&&<><h1>{cur.id==='best'?c.rec.lead:c.opt[cur.id]}</h1>
        <div className="cb-hero"><small>{c.opt[cur.id]}</small><b>{c.opt.cat[cur.cat]}</b><span>{nm(F)} {L==='ar'?'←':'→'} {nm(D!)}</span><em>{c.opt.at(cur.t.dep,cur.t.arr)}</em></div>
+       <Spec cat={cur.cat} guests={guests} c={c} L={L}/>
        <p className="cb-because">{cur.id==='best'?c.rec.because(cur.desc):cur.desc}</p>
        <p className="cb-pend"><i aria-hidden/>{c.opt.status} · {c.opt.price}</p>
        <button type="button" className="cb-link" aria-expanded={why} onClick={()=>setWhy(!why)}>{c.rec.why}</button>

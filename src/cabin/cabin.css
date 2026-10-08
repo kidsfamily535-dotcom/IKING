@@ -196,3 +196,23 @@
 
 .cr-n.warn i{background:var(--warn);box-shadow:0 0 14px var(--warn)}.cr-n.warn .cr-l{color:var(--warn)}
 .cr-skel{opacity:.4;background:radial-gradient(closest-side,#16264a,transparent)}
+/* صور ومواصفات الطراز التمثيلي */
+.cb-ph{position:relative;display:block;width:100%;height:96px;margin:-2px 0 8px;border-radius:10px;overflow:hidden;background:radial-gradient(120% 100% at 50% 100%,#16264a,#0a1226)}
+.cb-ph img{width:100%;height:100%;object-fit:cover;filter:saturate(.82) brightness(.88);transition:transform .8s cubic-bezier(.2,.7,.2,1)}
+.cb-ph:after,.cb-shot:after{content:"";position:absolute;inset:0;background:linear-gradient(transparent 35%,#060b16e6);pointer-events:none}
+.cb-opt.on .cb-ph img{transform:scale(1.04)}
+.cb-ph i{position:absolute;z-index:1;inset-inline:10px;bottom:6px;font-style:normal;font-size:12px;color:var(--dim)}
+.cb-media{margin:4px 0 2px;display:flex;flex-direction:column;gap:12px}
+.cb-shot{position:relative;aspect-ratio:16/9;border-radius:16px;overflow:hidden;background:radial-gradient(120% 100% at 50% 100%,#16264a,#0a1226);border:1px solid var(--line)}
+.cb-shot img{width:100%;height:100%;object-fit:cover;filter:saturate(.85) brightness(.9)}
+.cb-shot figcaption{position:absolute;z-index:1;inset-inline:14px;bottom:10px;font-size:13px;color:var(--ink)}
+.cb-plan{width:100%;height:auto;max-height:72px;direction:ltr}
+.cb-plan path{fill:#c9a9610f;stroke:var(--gold);stroke-width:1.2}.cb-plan .tk{fill:none;stroke:var(--dim);stroke-width:1}
+.cb-dims{display:grid;grid-template-columns:repeat(3,1fr);gap:0;margin:0;border-top:1px solid var(--line)}
+.cb-dims>div{padding:10px 0;border-bottom:1px solid var(--line);display:grid;gap:0}
+.cb-dims dt{font-size:12.5px;color:var(--dim)}.cb-dims dd{margin:0;font:400 clamp(18px,2.4vw,22px)/1.3 var(--serif);direction:ltr;text-align:start}
+[dir=rtl] .cb-dims dd{text-align:right}
+.cb-fit{font-size:14.5px;color:var(--dim);margin:0}.cb-fit.ok{color:var(--ok)}
+.cb-medianote{font-size:12.5px;color:#f4ecdc99;margin:0;max-width:50ch}
+@media (max-width:420px){.cb-dims{grid-template-columns:repeat(2,1fr)}}
+@media (prefers-reduced-motion:reduce){.cb-ph img{transition:none}}
