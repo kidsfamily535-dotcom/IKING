@@ -1,4 +1,4 @@
--- NOT YET APPLIED. What matters most on this trip, stated by the customer only (CUSTOMER_PROVIDED). Nullable; the customer can change or clear it.
+-- Applied on Supabase "I KING" (2026-10-09). What matters most on this trip, stated by the customer only (CUSTOMER_PROVIDED). Nullable; the customer can change or clear it.
 -- Own rows via the existing RLS policies (ct_*_own), same as companions.
 alter table public.customer_trips add column if not exists priority text;
 do $$ begin
