@@ -1,0 +1,17 @@
+/* «اطلب رحلتك»: يعيد استخدام هوية الكابينة (cabin.css). هنا فقط ما يخص الكتابة الحرة. */
+.ak .cb-grid{padding-top:8px}
+.ak .cb-panel{padding-top:clamp(8px,4vh,40px)}
+.ak-trap{position:absolute;inset-inline-start:-9999px;width:1px;height:1px;opacity:0}
+.ak-say{width:100%;resize:none;background:#f4ecdc08;border:0;border-bottom:1px solid var(--gold);border-radius:8px 8px 0 0;color:var(--ink);font:inherit;font-size:clamp(18px,2.4vw,22px);line-height:1.7;padding:14px 14px;min-height:120px}
+.ak-say.short{min-height:72px}
+.ak-say::placeholder,.ak-in::placeholder{color:#f4ecdc66}
+.ak-say:focus,.ak-in:focus{outline:none;background:#f4ecdc10}
+.ak-quote{border-inline-start:2px solid var(--line);padding-inline-start:12px;font-style:italic;white-space:pre-line}
+.ak-in{background:none;border:0;color:var(--ink);font-size:17px;min-height:44px;text-align:end;min-width:0;flex:1}
+.ak .cb-row select{background:none;border:0;color:var(--ink);font-size:16px;min-height:44px;color-scheme:dark;max-width:62%;text-align:end}
+.ak .cb-row select option{background:#0b1226;color:#f4ecdc}
+.ak-said{display:block;color:var(--dim);margin-top:-8px}
+.ak-seg4{grid-template-columns:repeat(4,1fr)}
+.ak-seg4 button,.ak .cb-seg button{font-size:14.5px}
+.ak .cb-seg button[aria-checked="true"]{background:var(--gold);color:var(--night)}
+.ak .cb-cta:disabled{opacity:.4;cursor:default}
