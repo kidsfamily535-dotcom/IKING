@@ -1,10 +1,12 @@
 import {useEffect,useMemo,useRef,useState} from 'react';
-import './cabin.css';
+import './cabin.css';import '../ask.css';
 import {useI18n,LANGS,type Lang} from '../i18n';
 import {copy} from './copy';
 import {HUBS,hub,dist,flightMin,rangeFor,localToUtc,clock,clocksChange,type Hub} from './geo';
 import Radar,{type Blip} from './Radar';
 import {Thumb,Spec} from './CabinMedia';
+import {Toggle} from './Switch';
+const BASE=import.meta.env.VITE_SUPABASE_URL??'https://yiklciblxwymcxxszkty.supabase.co';
 // الكابينة: تجربة العميل كاملة حول الرادار. الرادار يستقبل الوجهة، ويعرض البحث، ويتابع الرحلة.
 // كل ما هنا محاكاة معلَّمة: لا مشغّل حقيقي ولا إرسال. المسافات والأزمنة تُحسب من الإحداثيات وتُسمّى تقديرًا.
 type Stage='ask'|'understand'|'search'|'found'|'recommend'|'approve'|'waiting'|'confirmed'|'monitor'|'done';
@@ -31,7 +33,9 @@ function Coin({label,hint,onDone}:{label:string;hint:string;onDone:()=>void}){
   <b>{label}</b></button></div>;
 }
 export default function Cabin(){
- const {lang,setLang}=useI18n(),c=copy(lang),L=lang;
+ const {lang,setLang,t}=useI18n(),c=copy(lang),L=lang;
+ const [aps,setAps]=useState<string[]>([]),[nm0,setNm0]=useState(''),[ch,setCh]=useState<'whatsapp'|'phone'|'email'>('whatsapp'),[cv,setCv]=useState(''),[agree,setAgree]=useState(false),[sendErr,setSendErr]=useState(''),[sent,setSent]=useState(false);
+ useEffect(()=>{let live=true;fetch(`${BASE}/functions/v1/submit-request`).then(r=>r.ok?r.json():null).then(j=>{if(live&&j?.airports)setAps(j.airports.map((a:any)=>a.iata_code))}).catch(()=>{});return()=>{live=false}},[]);
  // الدخول من الصفحة الرئيسية: ?to=LON يفتح الكابينة وقد اختيرت الوجهة
  const init=(()=>{const q=new URLSearchParams(location.search).get('to');return q&&q!=='RUH'&&HUBS.some(h=>h.iata===q)?q:null})();
  const [stage,setStage]=useState<Stage>(init?'understand':'ask'),[from,setFrom]=useState('RUH'),[to,setTo]=useState<string|null>(init),[mode,setMode]=useState<'to'|'from'>('to');
@@ -62,7 +66,6 @@ export default function Cabin(){
  },[plan,stage,scan,opt,from,L]);
  // مؤقّتات الحالات
  useEffect(()=>{if(stage!=='search')return;setScan(0);let n=0;const id=setInterval(()=>{n++;setScan(n);if(n>=5){clearInterval(id);setTimeout(()=>go('found'),700)}},850);return()=>clearInterval(id)},[stage]);
- useEffect(()=>{if(stage!=='waiting')return;const id=setTimeout(()=>go('confirmed'),7000);return()=>clearTimeout(id)},[stage]);
  const pick=(i:string)=>{
   if(stage!=='ask'&&stage!=='understand')return;
   if(mode==='from'){if(i===to)setTo(from);setFrom(i);setMode('to');return}
@@ -70,7 +73,20 @@ export default function Cabin(){
   setTo(i);setMode('to');setHover(null);if(stage==='ask')go('understand');
  };
  const demo=()=>{setFrom('RUH');setTo('LON');setGuests(6);setDate(demoDate());setWin('am');setMode('to');go('understand')};
- const reset=()=>{setTo(null);setFrom('RUH');setMode('to');setOpt('best');setEv(false);setWhy(false);setProg(0);setNote(null);setResolved('');setGuests(2);go('ask')};
+ const reset=()=>{setSent(false);setSendErr('');setTo(null);setFrom('RUH');setMode('to');setOpt('best');setEv(false);setWhy(false);setProg(0);setNote(null);setResolved('');setGuests(2);go('ask')};
+ const contactOk=nm0.trim().length>=2&&(ch==='email'?/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(cv.trim()):/^\+?[0-9]{7,15}$/.test(cv.replace(/[\s\-()]/g,'')))&&agree;
+ // الحجز الحقيقي: طلب يصل إلى إنسان من الفريق (submit-request). لا يُرسل لأي مشغّل ولا يُؤكَّد توفر أو سعر.
+ const outside=aps.length>0&&(!aps.includes(from)||!(to&&aps.includes(to)));
+ const sendReal=async()=>{
+  if(!cur||!to||!contactOk||sent)return;setSendErr('');
+  const q=new URLSearchParams(location.search),SRC=['HOTEL','TRAVEL_AGENCY','CONCIERGE','YACHT_BROKER','CORPORATE','OTHER'],src=(q.get('src')||'').toUpperCase();
+  const note=`cabin | ${cur.id}: ${cur.cat} | ${TIME[win]}`.slice(0,500);
+  try{
+   const r=await fetch(`${BASE}/functions/v1/submit-request`,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({contact_name:nm0.trim(),contact_channel:ch,contact_value:cv.trim(),origin_code:from,destination_code:to,travel_date:date,departure_period:win==='am'?'morning':win==='noon'?'afternoon':'evening',passengers:guests,note,consent:true,source:SRC.includes(src)?src:'DIRECT',referral_partner:q.get('ref')||undefined,campaign:q.get('campaign')||'cabin'})});
+   if(r.ok){setSent(true);go('waiting');return}
+   const j=await r.json().catch(()=>({}));setSendErr(r.status===429?t('ask.err.limit'):j?.field?t('ask.err.field',{x:j.field}):t('ask.err.generic'));
+  }catch{setSendErr(t('ask.err.generic'))}
+ };
  // الرحلة: شريط الوقت يحرّك الطائرة على المسار
  const frac=Math.max(0,Math.min(1,(prog-18)/(97-18))),si=prog===0?0:prog<12?1:prog<20?2:prog<85?3:prog<100?4:5;
  const sIdx=Math.max(0,Math.min(4,prog<8?0:prog<14?1:prog<20?2:prog<97?3:4));
@@ -132,10 +148,17 @@ export default function Cabin(){
        <button type="button" className="cb-ghost" onClick={()=>go('found')}>{c.rec.other}</button></>}</>}
      {stage==='approve'&&cur&&D&&<><h1>{c.appr.title}</h1><p className="cb-sub">{c.appr.body}</p>
       <ul className="cb-sum"><li>{nm(F)} {L==='ar'?'←':'→'} {nm(D)}</li><li>{when} · {c.opt.at(cur.t.dep,cur.t.arr)}</li><li>{guests} · {c.opt.cat[cur.cat]}</li></ul>
-      <p className="cb-note">{c.appr.note}</p><Coin label={c.appr.ok} hint={c.appr.holdKey} onDone={()=>go('waiting')}/><p className="cb-hint">{c.appr.hold}</p>
+      <p className="cb-note">{t('ask.contactSub')}</p>
+      {outside?<p className="cb-note" role="alert">{t('ask.outside')}</p>:<>
+      <label className="cb-row"><span>{t('ask.name')}</span><input className="ak-in" value={nm0} maxLength={80} autoComplete="name" onChange={e=>setNm0(e.target.value)}/></label>
+      <div className="cb-row col"><div className="cb-seg" role="radiogroup" aria-label={t('ask.how')}>{(['whatsapp','phone','email'] as const).map(k=><button key={k} type="button" role="radio" aria-checked={ch===k} onClick={()=>{setCh(k);setCv('')}}>{t('ask.ch.'+k)}</button>)}</div></div>
+      <label className="cb-row"><span>{t('ask.ch.'+ch)}</span><input className="ak-in" dir="ltr" inputMode={ch==='email'?'email':'tel'} value={cv} maxLength={120} autoComplete={ch==='email'?'email':'tel'} onChange={e=>setCv(e.target.value)} placeholder={ch==='email'?'name@example.com':'+9665XXXXXXXX'}/></label>
+      <Toggle checked={agree} onChange={setAgree}>{t('ask.consent')}</Toggle>
+      {sendErr&&<p className="cb-note" role="alert">{sendErr}</p>}
+      {contactOk?<><Coin label={c.appr.ok} hint={c.appr.holdKey} onDone={sendReal}/><p className="cb-hint">{c.appr.hold}</p></>:<p className="cb-hint">{t('ask.need')}</p>}</>}
       <button type="button" className="cb-link" onClick={()=>go('recommend')}>{c.appr.back}</button></>}
-     {stage==='waiting'&&<><h1>{c.wait.title}</h1><p className="cb-sub">{c.wait.body}</p><p className="cb-pend"><i aria-hidden/>{c.wait.st}</p>
-      <button type="button" className="cb-ghost" onClick={()=>go('confirmed')}>{c.wait.sim}</button><button type="button" className="cb-link" onClick={()=>go('understand')}>{c.wait.edit}</button></>}
+     {stage==='waiting'&&<><h1>{t('ask.sentT')}</h1><p className="cb-sub">{t('ask.sentBody')}</p><p className="cb-pend"><i aria-hidden/>{t('ask.sentSt')}</p>
+      <button type="button" className="cb-ghost" onClick={()=>go('confirmed')}>{t('ask.seeDemo')}</button></>}
      {stage==='confirmed'&&cur&&<><h1>{c.conf.title}</h1><p className="cb-sub">{c.conf.body(c.opt.cat[cur.cat])}</p>
       <ul className="cb-evid inline"><li><span>{c.conf.ev}</span></li><li><span>{c.conf.price}</span></li></ul>
       <button type="button" className="cb-cta" onClick={()=>{setProg(0);go('monitor')}}>{c.conf.cta}</button></>}

@@ -234,5 +234,8 @@ export const en:Record<Key,string>={
 "ask.err.generic":"Could not send right now. Nothing was lost, please try again.",
 "ask.err.field":"Please check this field: {x}",
 "ask.foot":"A real request that reaches a human team. No automatic booking, and no promise of availability or price.",
-"ask.home":"Write your trip"
+"ask.home":"Write your trip",
+"ask.outside":"This destination is outside the trips we actually receive right now. You can try the cabin, but this request cannot be sent yet.",
+"ask.need":"Enter your name and contact, agree, then press and hold.",
+"ask.seeDemo":"See how I would follow your trip (demo)"
 };

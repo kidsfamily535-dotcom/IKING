@@ -234,5 +234,8 @@ export const tur:Record<Key,string>={
 "ask.err.generic":"Şu anda gönderilemedi. Hiçbir şey kaybolmadı, lütfen tekrar deneyin.",
 "ask.err.field":"Lütfen bu alanı kontrol edin: {x}",
 "ask.foot":"Bir insan ekibine ulaşan gerçek bir talep. Otomatik rezervasyon yok; müsaitlik veya fiyat vaadi yok.",
-"ask.home":"Yolculuğunuzu yazın"
+"ask.home":"Yolculuğunuzu yazın",
+"ask.outside":"Bu varış noktası şu anda gerçekten kabul ettiğimiz yolculukların dışında. Kabini deneyebilirsiniz ama bu talep henüz gönderilemez.",
+"ask.need":"Adınızı ve iletişim bilginizi yazın, onaylayın, sonra basılı tutun.",
+"ask.seeDemo":"Yolculuğunuzu nasıl izleyeceğimi görün (demo)"
 };
