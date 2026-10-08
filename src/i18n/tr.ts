@@ -118,5 +118,22 @@ export const tur:Record<Key,string>={
 'show.after.n':"Bunlar daha sonra gelecek; bugün yapmıyorum.",
 'show.alt':"Ya saatiniz değişirse?",
 'show.alt.now':"Mevcut saat",
-'show.alt.n':"Her alternatif saat, gerçek olmadan önce operatörün onayını gerektirir."
+'show.alt.n':"Her alternatif saat, gerçek olmadan önce operatörün onayını gerektirir.",
+'gd.title':"Gözün önerileri",
+'gd.who':"Sizinle kim seyahat ediyor? (isteğe bağlı)",
+'gd.c.CHILDREN':"Çocuklar",
+'gd.c.LESS_WALKING':"Az yürümeyi tercih eden biri",
+'gd.c.MEETING_AFTER':"İnişten sonra toplantı",
+'gd.who.note':"Yalnızca sizin söylediğinizi saklarız; istediğiniz zaman değiştirebilir veya silebilirsiniz.",
+'gd.none':"Şu an öneri yok. Kiminle seyahat ettiğinizi söyleyin, size uygun olanı önerelim.",
+'gd.note':"Tahmine değil, son resmi rasada dayanır. Hiçbir şey ayarlanmadı veya gönderilmedi; bunlar yalnızca önerilerdir.",
+'gd.cold.kids':"{a} havalimanında şu an {t}°. İnişinizde hâlâ bu kadar soğuksa, uçağın yanında sıcak bir araç ve çocukların montlarının elinizin altında olmasını öneririz.",
+'gd.cold.walk':"{a} havalimanında şu an {t}°. İnişinizde hâlâ bu kadar soğuksa, uçak kapısında sıcak bir araç ve mümkün olan en kısa yürüyüşü öneririz.",
+'gd.cold':"{a} havalimanında şu an {t}°. İnişinizde hâlâ bu kadar soğuksa, inerken montunuzu elinizin altında tutmanızı öneririz.",
+'gd.hot.walk':"{a} havalimanında şu an {t}°. İnişinizde hâlâ bu kadar sıcaksa, önceden serinletilmiş bir araç ve mümkün olan en kısa yürüyüşü öneririz.",
+'gd.hot.kids':"{a} havalimanında şu an {t}°. İnişinizde hâlâ bu kadar sıcaksa, önceden serinletilmiş bir araç ve çocuklar için su öneririz.",
+'gd.hot':"{a} havalimanında şu an {t}°. İnişinizde hâlâ bu kadar sıcaksa, önceden serinletilmiş bir araç öneririz.",
+'gd.wind':"{a} havalimanında rüzgâr şu an {k} knot. Uçuş daha az sakin olabilir; nihai karar operatör ve mürettebatındır. Bu sayfa raporu yaklaşık 10 dakikada bir yeniden okur.",
+'gd.lowvis':"{a} havalimanında görüş şu an düşük. Zamanlamayı etkileyebilir; karar operatör ve mürettebatındır, planlarınızı esnek tutun.",
+'gd.meeting':"İnişten sonra bir toplantınız var. Durak olmadan doğrudan bir transfer ve rahat bir zaman payı öneririz."
 };

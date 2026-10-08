@@ -195,7 +195,8 @@ create table public.customer_trips (
   operator_name text,
   note text,
   source text not null default 'CUSTOMER_PROVIDED'::text,
-  created_at timestamp with time zone not null default now()
+  created_at timestamp with time zone not null default now(),
+  companions text[] not null default '{}'::text[]
 );
 create table public.demand_fetch_runs (
   id uuid not null default gen_random_uuid(),
@@ -478,6 +479,7 @@ alter table public.audit_logs add constraint audit_logs_pkey PRIMARY KEY (id);
 alter table public.booking_intents add constraint booking_intents_pkey PRIMARY KEY (id);
 alter table public.contact_controls add constraint contact_controls_pkey PRIMARY KEY (customer_id);
 alter table public.conversations add constraint conversations_pkey PRIMARY KEY (id);
+alter table public.customer_trips add constraint customer_trips_companions_allowed check (companions <@ array['CHILDREN','LESS_WALKING','MEETING_AFTER']::text[]);
 alter table public.customer_preferences add constraint customer_preferences_pkey PRIMARY KEY (customer_id);
 alter table public.customer_trips add constraint customer_trips_pkey PRIMARY KEY (id);
 alter table public.demand_fetch_runs add constraint demand_fetch_runs_pkey PRIMARY KEY (id);

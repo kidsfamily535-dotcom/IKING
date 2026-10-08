@@ -1,13 +1,14 @@
 import Route from './Route';
 import {useCallback,useEffect,useState} from 'react';
 import {api} from './data/api';
-import type {Airport,MemoryItem,MyTrip,RouteWx} from './data/types';
+import type {Airport,Companion,MemoryItem,MyTrip,RouteWx} from './data/types';
 import {useI18n,airportName} from './i18n';
 import Glyph from './Glyph';
 import Requests,{useMyRequests,reqNav} from './Requests';
 import Profile,{profNav} from './Profile';
+import Guardian,{CompanionChips} from './Guardian';
 const LOC={ar:'ar-EG',en:'en-GB',tr:'tr-TR',ru:'ru-RU'} as const;
-const SAMPLE:MyTrip={id:'sim',origin:'RUH',destination:'JED',departureAt:null,createdAt:''};
+const SAMPLE:MyTrip={id:'sim',origin:'RUH',destination:'JED',departureAt:null,createdAt:'',companions:[]};
 const NAME={now:'room.n0',wx:'room.n1',trips:'room.n2',mem:'j.mem.title'} as const;
 type Page=keyof typeof NAME|'req'|'prof';
 // شاشة العميل بعد الدخول: لحظة واحدة في كل مرة، بنفس لغة الجولة. لا شيء هنا محاكاة إلا حين تكون real=false (وتُعلَّم بذلك).
@@ -17,7 +18,7 @@ export default function Room({airports,real}:{airports:Airport[];real:boolean}){
  const [trips,setTrips]=useState<MyTrip[]|null>(real?null:[SAMPLE]),[loadErr,setLoadErr]=useState(false),[sel,setSel]=useState(0),[pg,setPg]=useState(0),[adding,setAdding]=useState(false);
  const [wx,setWx]=useState<RouteWx[]|null>(null),[wxErr,setWxErr]=useState(false);
  const [mem,setMem]=useState<MemoryItem[]>([]),[ed,setEd]=useState<string|null>(null),[val,setVal]=useState('');
- const [o,setO]=useState(''),[d,setD]=useState(''),[at,setAt]=useState(''),[err,setErr]=useState(''),[busy,setBusy]=useState(false);
+ const [comp,setComp]=useState<Companion[]>([]),[o,setO]=useState(''),[d,setD]=useState(''),[at,setAt]=useState(''),[err,setErr]=useState(''),[busy,setBusy]=useState(false);
  const nm=(c:string)=>{const a=airports.find(x=>x.iata===c);return a?airportName(a):c};
  const when=(x:string|null)=>x?new Date(x).toLocaleString(LOC[lang],{dateStyle:'medium',timeStyle:'short'}):t('mt.nodate');
  const load=useCallback(()=>{if(!real)return Promise.resolve();return api.listMyTrips().then(x=>{setTrips(x);setLoadErr(false)}).catch(()=>{setTrips([]);setLoadErr(true)})},[real]);
@@ -34,7 +35,7 @@ export default function Room({airports,real}:{airports:Airport[];real:boolean}){
  const pages:Page[]=!real?base:reqFirst?['req',...base]:[base[0],'req',...base.slice(1)],pi=Math.min(pg,pages.length-1),page=pages[pi];
  const pageName=(p:Page)=>p==='req'?reqNav(lang):p==='prof'?profNav(lang):t(NAME[p]);
  const save=async()=>{setErr('');if(!o||!d||o===d){setErr(t('mt.same'));return}setBusy(true);
-  try{await api.addMyTrip(o,d,at?new Date(at).toISOString():null);setO('');setD('');setAt('');setAdding(false);setSel(0);setPg(0);await load()}catch{setErr(t('mt.err'))}finally{setBusy(false)}};
+  try{await api.addMyTrip(o,d,at?new Date(at).toISOString():null,comp);setO('');setD('');setAt('');setComp([]);setAdding(false);setSel(0);setPg(0);await load()}catch{setErr(t('mt.err'))}finally{setBusy(false)}};
  const del=async(id:string)=>{try{await api.removeMyTrip(id);setSel(0);await load()}catch{setErr(t('mt.err'))}};
  const dirTxt=(v:string|null)=>v&&/^\d+$/.test(v)?v+'°':v;
  const route=(x:MyTrip)=><Route from={nm(x.origin)} to={nm(x.destination)}/>;
@@ -42,6 +43,7 @@ export default function Room({airports,real}:{airports:Airport[];real:boolean}){
    <div><label>{t('mt.from')}</label><select aria-label={t('mt.from')} value={o} onChange={e=>setO(e.target.value)}><option value="">{t('mt.pick')}</option>{airports.map(a=><option key={a.iata} value={a.iata}>{airportName(a)} · {a.iata}</option>)}</select></div>
    <div><label>{t('mt.to')}</label><select aria-label={t('mt.to')} value={d} onChange={e=>setD(e.target.value)}><option value="">{t('mt.pick')}</option>{airports.map(a=><option key={a.iata} value={a.iata}>{airportName(a)} · {a.iata}</option>)}</select></div>
    <div><label>{t('mt.when')}</label><input type="datetime-local" aria-label={t('mt.when')} value={at} onChange={e=>setAt(e.target.value)}/></div></div>
+  <p className="dim sm" style={{margin:'10px 0 6px'}}>{t('gd.who')}</p><CompanionChips value={comp} onChange={setComp}/>
   {err&&<div className="nt" role="alert">{err}</div>}
   <div className="act"><button disabled={busy} onClick={save}>{busy?t('mt.saving'):t('mt.save')}</button></div></div>;
  const ok=wx?wx.filter(r=>r.status==='CURRENT').length:0;
@@ -60,7 +62,8 @@ export default function Room({airports,real}:{airports:Airport[];real:boolean}){
     <h2 className="big">{!real?t('room.wx.sim'):wx===null?'':ok>=2?t('room.wx.ok'):ok===1?t('room.wx.part'):t('wx.unknown')}</h2>
     <ul>{real?wx&&wx.map(leg):[cur.origin,cur.destination].map(c=><li key={c}><span>{nm(c)}</span><b>{t('j.wx.row')}</b></li>)}</ul>
     {wxErr&&<div className="nt" role="alert">{t('wx.fail')}</div>}
-    {ok>0&&<p className="dim sm">{t('wx.src')}</p>}{real&&<p className="dim sm">{t('wx.refresh')}</p>}</>}
+    {ok>0&&<p className="dim sm">{t('wx.src')}</p>}{real&&<p className="dim sm">{t('wx.refresh')}</p>}
+    {real&&<Guardian trip={cur} wx={wx} nm={nm} onChange={load}/>}</>}
    {page==='trips'&&trips&&<><Glyph k="radar" s={56}/><h2 className="big">{t('room.trips')}</h2>
     <ul>{trips.map((x,i)=><li key={x.id}><button className={`tp${i===sel?' on':''}`} onClick={()=>{setSel(i);setPg(0)}}>{route(x)} · {when(x.departureAt)}</button>{real&&<button className="g sm" onClick={()=>del(x.id)}>{t('mt.remove')}</button>}</li>)}</ul>
     {err&&!adding&&<div className="nt" role="alert">{err}</div>}

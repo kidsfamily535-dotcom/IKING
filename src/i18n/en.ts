@@ -118,5 +118,22 @@ export const en:Record<Key,string>={
 'show.after.n':"These come later. I don't do them today.",
 'show.alt':"And if your time changes?",
 'show.alt.now':"Current time",
-'show.alt.n':"Any other time needs the operator's confirmation before it is real."
+'show.alt.n':"Any other time needs the operator's confirmation before it is real.",
+'gd.title':"Suggestions from the Eye",
+'gd.who':"Who is travelling with you? (optional)",
+'gd.c.CHILDREN':"Children",
+'gd.c.LESS_WALKING':"Someone who prefers less walking",
+'gd.c.MEETING_AFTER':"A meeting after landing",
+'gd.who.note':"We keep only what you tell us, and you can change or clear it any time.",
+'gd.none':"No suggestion right now. Tell us who is travelling with you and we will suggest what fits.",
+'gd.note':"Based on the latest official reading, not a forecast. Nothing has been arranged or sent; these are suggestions only.",
+'gd.cold.kids':"It is {t}° at {a} right now. If it is still this cold when you land, we suggest a warm car waiting at the aircraft and the children's coats within reach.",
+'gd.cold.walk':"It is {t}° at {a} right now. If it is still this cold when you land, we suggest a warm car at the aircraft door and the shortest possible walk.",
+'gd.cold':"It is {t}° at {a} right now. If it is still this cold when you land, keep a coat within reach for the exit.",
+'gd.hot.walk':"It is {t}° at {a} right now. If it is still this hot when you land, we suggest a pre-cooled car and the shortest possible walk.",
+'gd.hot.kids':"It is {t}° at {a} right now. If it is still this hot when you land, we suggest a pre-cooled car and water within reach for the children.",
+'gd.hot':"It is {t}° at {a} right now. If it is still this hot when you land, we suggest a pre-cooled car.",
+'gd.wind':"Wind is {k} kt at {a} right now. The flight may be less smooth. The final decision rests with the operator and crew. This page re-reads the report about every 10 minutes.",
+'gd.lowvis':"Visibility is low at {a} right now. It can affect timing. The operator and crew decide, so keep your plans flexible.",
+'gd.meeting':"You have a meeting after landing. We suggest a direct transfer with no stops and a comfortable time buffer."
 };

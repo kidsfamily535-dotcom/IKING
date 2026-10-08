@@ -1,7 +1,7 @@
 import {sb} from '../lib/supabase';
 import {mockApi} from './mockApi';
 import type {EyeApi} from './api';
-import type {Airport,Signal,DecisionPolicyRow,Opportunity,FleetAircraft,ParkedAircraft,CalendarEvent,RadarEvent,MyTrip,MyEmptyLeg,RouteWx,WxCat} from './types';
+import type {Airport,Signal,DecisionPolicyRow,Opportunity,FleetAircraft,ParkedAircraft,CalendarEvent,RadarEvent,MyTrip,MyEmptyLeg,RouteWx,WxCat,Companion} from './types';
 import {tr} from '../i18n';
 import {HUBS} from './hubs';
 // الدالة ترجع وصف الرؤية بالعربية فقط، فنحوله لفئة ثابتة ونترجمه في الواجهة. (الأفضل لاحقًا: ترجيع الفئة نفسها من الدالة)
@@ -16,7 +16,7 @@ const simulated={
 const mapWx=(data:any[]|null)=>(data??[]).map((r:any)=>({leg:r.leg_ar==='المغادرة'?'dep':'arr',code:r.airport_code,status:r.obs_status,observedAt:r.observed_at,ageMin:r.age_minutes,cat:WXC[r.condition_ar]??null,windDir:r.wind_dir,windKt:r.wind_speed_kt,vis:r.visibility,tempC:r.temp_c,forecast:!!r.forecast_available}) as RouteWx);
 // نفس الرصد الرسمي لكن مفتوح للزائر (قراءة فقط، بلا بيانات شخصية): صفحة «راقب رحلتك» ترى القيمة قبل أي بريد.
 // حفظ رحلة مع سجل مراقبة. alerts=true فقط إذا وافق العميل صراحةً على التنبيهات (تُسجَّل opted_in_at في القاعدة).
-export const addWatchedTrip=async(o:string,d:string,at:string|null,alerts:boolean)=>{const {error}=await sb.rpc('add_watched_trip',{p_origin:o,p_destination:d,p_departure:at,p_alerts:alerts});if(error)throw new Error(error.message)};
+export const addWatchedTrip=async(o:string,d:string,at:string|null,alerts:boolean)=>{const {data,error}=await sb.rpc('add_watched_trip',{p_origin:o,p_destination:d,p_departure:at,p_alerts:alerts});if(error)throw new Error(error.message);return data as string};
 export const routeWeatherPublic=async(o:string,d:string)=>{const {data,error}=await sb.rpc('get_route_weather_public',{p_origin:o,p_destination:d});if(error)throw new Error(error.message);return mapWx(data)};
 export const realApi:EyeApi={...simulated,
  // لا ذاكرة حقيقية بعد (customer_preferences غير موصولة): لا نعرض عناصر تبان محفوظة وهي ليست كذلك.
@@ -63,11 +63,13 @@ export const realApi:EyeApi={...simulated,
  // طقس مطاري الرحلة من آخر رصد رسمي مخزّن (METAR). لو الرصد أقدم من 150 دقيقة يرجع STALE ولا نعرض قيمه.
  async routeWeather(o,d){const {data,error}=await sb.rpc('get_route_weather',{p_origin:o,p_destination:d});if(error)throw new Error(error.message);return mapWx(data)},
  // رحلات العميل التي أدخلها بنفسه (RLS: صفوفه فقط). نخفي ما مضى عليه أكثر من يوم.
- async listMyTrips(){const {data,error}=await sb.from('customer_trips').select('id,origin_code,destination_code,departure_at,created_at').eq('kind','TRIP').or(`departure_at.is.null,departure_at.gte.${new Date(Date.now()-864e5).toISOString()}`).order('departure_at',{ascending:true,nullsFirst:false});
+ async listMyTrips(){const {data,error}=await sb.from('customer_trips').select('id,origin_code,destination_code,departure_at,created_at,companions').eq('kind','TRIP').or(`departure_at.is.null,departure_at.gte.${new Date(Date.now()-864e5).toISOString()}`).order('departure_at',{ascending:true,nullsFirst:false});
   if(error)throw new Error(error.message);
-  return (data??[]).map((r:any)=>({id:r.id,origin:r.origin_code,destination:r.destination_code,departureAt:r.departure_at,createdAt:r.created_at}) as MyTrip)},
+  return (data??[]).map((r:any)=>({id:r.id,origin:r.origin_code,destination:r.destination_code,departureAt:r.departure_at,createdAt:r.created_at,companions:(r.companions??[]) as Companion[]}) as MyTrip)},
  // كل رحلة تُحفظ عبر add_watched_trip: تنشئ الرحلة وسجل المراقبة معًا (trip_watches). التنبيهات مطفأة هنا؛ لا تُفعَّل إلا بموافقة صريحة (addWatchedTrip مع alerts=true).
- async addMyTrip(o,d,at){await addWatchedTrip(o,d,at,false)},
+ async addMyTrip(o,d,at,companions){const id=await addWatchedTrip(o,d,at,false);if(companions&&companions.length)await realApi.setTripCompanions(id,companions)},
+ // من يسافر معك: يقوله العميل بنفسه، صفّه فقط (RLS)، ويقدر يغيّره أو يمسحه في أي وقت.
+ async setTripCompanions(id,companions){const {error}=await sb.from('customer_trips').update({companions}).eq('id',id);if(error)throw new Error(error.message)},
  // لقطات الرحلات الفاضية التي يدوّنها العميل: CUSTOMER_PROVIDED وخاصة به، ولا تتحول لتوفّر أو فرصة قبل تحقق الوسيط.
  async listMyEmptyLegs(){const {data,error}=await sb.from('customer_trips').select('id,origin_code,destination_code,departure_at,seats,note,created_at').eq('kind','EMPTY_LEG').or(`departure_at.is.null,departure_at.gte.${new Date(Date.now()-864e5).toISOString()}`).order('departure_at',{ascending:true,nullsFirst:false});
   if(error)throw new Error(error.message);
