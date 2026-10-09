@@ -32,7 +32,7 @@ html[lang=ru] .kc h3,html[lang=ru] .sc h3{font-family:'Cormorant Garamond',Georg
 .tl-row{display:flex;align-items:center;gap:10px;width:100%;background:none;color:var(--ink);border:0;border-radius:0;padding:9px 12px;text-align:start;min-height:44px;letter-spacing:0}
 .tl-row .tm{font:12px 'JetBrains Mono',monospace;color:var(--dim);direction:ltr;width:42px;flex:none}
 .tl-row .tt{font-size:14.5px;line-height:1.5}
-.tl-row.on{background:#f4ecdc0d;box-shadow:inset 2px 0 0 var(--tone)}[dir=rtl] .tl-row.on{box-shadow:inset -2px 0 0 var(--tone)}
+.tl-row.on{background:#f5f0e80d;box-shadow:inset 2px 0 0 var(--tone)}[dir=rtl] .tl-row.on{box-shadow:inset -2px 0 0 var(--tone)}
 .tl-row:disabled{cursor:default;opacity:1}
 .stage .ke-eye{width:64px;height:64px;margin:0 0 40px}.stage .ke-eye i{width:9px;height:9px}
 .sc{border-top:1px solid var(--tone);padding-top:16px;animation:keIn .35s}

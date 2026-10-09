@@ -10,6 +10,7 @@ import {TermsView} from './PilotSteps';
 import './requests.css';
 import './profile.css';
 import BriefTicker,{briefLabel,briefKind} from './BriefTicker';
+import RequestTimeline from './RequestTimeline';
 
 // جهة العميل من سلسلة الطلب: يطلب رحلة، يتابع حالتها بلغة بسيطة، ثم يقبل العرض أو يرفضه.
 // العميل لا يرى المشغّل ولا سعره ولا الهامش: الدالة list_my_loop_offers تعيد ما أقرّه الوسيط فقط.
@@ -138,6 +139,7 @@ export default function Requests({airports,my,nm}:{airports:Airport[];my:My;nm:(
    <OfferCard key={off.client_offer_id} offer={off} route={rt(rq(off.request_id))} t={t} lang={lang} reload={reload}/></>}
   {reqs.length>0&&<><p className="dim sm">{t.yours}</p><ul>{reqs.map(r=><li key={r.id}><span>{rt(r)}{r.travel_date?` · ${new Date(r.travel_date).toLocaleDateString(LOC[lang],{dateStyle:'medium'})}`:''}</span>
    <b>{t[GROUP[r.loop_status]??'new']}</b>
+    <RequestTimeline group={GROUP[r.loop_status]??'new'} lang={lang}/>
    {!FINAL.has(r.loop_status)&&<button className="g sm" onClick={()=>del(r.id)}>{t.cancel}</button>}
    {!FINAL.has(r.loop_status)&&r.origin_code&&r.destination_code&&r.travel_date&&<FlexLegs requestId={r.id} nm={nm}/>}</li>)}</ul></>}
   {err&&<div className="nt" role="alert">{err}</div>}

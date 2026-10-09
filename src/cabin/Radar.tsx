@@ -42,12 +42,13 @@ export default function Radar(p:Props){
  // أي الأسماء تظهر: الأهم أولًا، ومن غير تصادم
  const shown=useMemo(()=>{
   const order=[...p.hubs].filter(h=>P[h.iata].d<=v.range*1.001).sort((a,b)=>{const w=(h:Hub)=>h.iata===p.from?-3:h.iata===p.to?-2:h.iata===p.hover?-4:h.pri;return w(a)-w(b)});
-  const rects:{x0:number;x1:number;y0:number;y1:number}[]=[],out:Record<string,'r'|'l'>={};
+  const rects:{x0:number;x1:number;y0:number;y1:number}[]=[],out:Record<string,'r'|'l'>={},kept:{x:number;y:number}[]=[];
   for(const h of order){const q=P[h.iata],w=p.name(h).length*10+16,must=h.iata===p.from||h.iata===p.to||h.iata===p.hover;
+   if(!must&&kept.some(k=>Math.hypot(k.x-q.x,k.y-q.y)<40))continue;
    for(const s of ['r','l'] as const){const x0=s==='r'?q.x+8:q.x-8-w,r={x0,x1:x0+w,y0:q.y-11,y1:q.y+11};
     if(r.x0<4||r.x1>596)continue;if(!must&&rects.some(o=>r.x0<o.x1&&r.x1>o.x0&&r.y0<o.y1&&r.y1>o.y0))continue;
     rects.push(r);out[h.iata]=s;break}
-   if(!out[h.iata]&&must)out[h.iata]=q.x>300?'l':'r'}
+   if(!out[h.iata]&&must)out[h.iata]=q.x>300?'l':'r';if(out[h.iata])kept.push(q)}
   return out;
  },[P,p.hubs,p.from,p.to,p.hover,p.name,v.range]);
  const scrub=(e:React.PointerEvent)=>{
@@ -60,17 +61,17 @@ export default function Radar(p:Props){
  const pct=(n:number)=>`${(n/6).toFixed(2)}%`;
  return <div className="cr" ref={box} role="group" aria-label={p.aria} onPointerMove={scrub} onPointerLeave={()=>p.onHover(null)}>
   <svg viewBox="0 0 600 600" aria-hidden>
-   <defs><radialGradient id="rdg" cx="50%" cy="50%" r="50%"><stop offset="0" stopColor="#16264a" stopOpacity=".85"/><stop offset="1" stopColor="#060b16" stopOpacity="0"/></radialGradient></defs>
+   <defs><radialGradient id="rdg" cx="50%" cy="50%" r="50%"><stop offset="0" stopColor="#2a2218" stopOpacity=".85"/><stop offset="1" stopColor="#111111" stopOpacity="0"/></radialGradient></defs>
    <circle cx="300" cy="300" r="286" fill="url(#rdg)"/>
-   {rings.map(k=><circle key={k} cx="300" cy="300" r={rr(k,v.range)} fill="none" stroke="#f4ecdc" strokeOpacity=".09"/>)}
-   <circle cx="300" cy="300" r="270" fill="none" stroke="#f4ecdc" strokeOpacity=".16"/>
-   {Array.from({length:72},(_,i)=>{const a=i*5*Math.PI/180,m=i%6?3:9;return <line key={i} x1={300+270*Math.sin(a)} y1={300-270*Math.cos(a)} x2={300+(270-m)*Math.sin(a)} y2={300-(270-m)*Math.cos(a)} stroke="#f4ecdc" strokeOpacity={i%6?.18:.4}/>})}
-   <g className="cr-sweep"><path d="M300,300 L300,30 A270,270 0 0 1 400,48 Z" fill="#c9a961" fillOpacity=".08"/><line x1="300" y1="300" x2="300" y2="30" stroke="#c9a961" strokeOpacity=".5"/></g>
-   {p.hover&&p.hover!==p.from&&P[p.hover]&&!p.to&&<path d={pts(Array.from({length:N+1},(_,i)=>plot(v,between(f,p.hubs.find(h=>h.iata===p.hover)!,i/N),v.range)))} fill="none" stroke="#f4ecdc" strokeOpacity=".55" strokeDasharray="2 6"/>}
-   {route.length>0&&<><path d={pts(route)} fill="none" stroke="#f4ecdc" strokeOpacity=".28" strokeDasharray="2 7"/><path className="cr-arc" key={p.to??'x'} d={pts(route.slice(0,done+1))} pathLength={1} fill="none" stroke="#c9a961" strokeWidth="1.6" strokeLinecap="round"/></>}
+   {rings.map(k=><circle key={k} cx="300" cy="300" r={rr(k,v.range)} fill="none" stroke="#f5f0e8" strokeOpacity=".09"/>)}
+   <circle cx="300" cy="300" r="270" fill="none" stroke="#f5f0e8" strokeOpacity=".16"/>
+   {Array.from({length:72},(_,i)=>{const a=i*5*Math.PI/180,m=i%6?3:9;return <line key={i} x1={300+270*Math.sin(a)} y1={300-270*Math.cos(a)} x2={300+(270-m)*Math.sin(a)} y2={300-(270-m)*Math.cos(a)} stroke="#f5f0e8" strokeOpacity={i%6?.18:.4}/>})}
+   <g className="cr-sweep">{Array.from({length:9},(_,k)=>{const a=(x:number)=>x*Math.PI/180,a1=-(k+1)*3.4,a2=-k*3.4;return <path key={k} d={`M300,300 L${300+270*Math.sin(a(a1))},${300-270*Math.cos(a(a1))} A270,270 0 0 1 ${300+270*Math.sin(a(a2))},${300-270*Math.cos(a(a2))} Z`} fill="#c6a15b" fillOpacity={.06*(1-k/9)}/>})}<line x1="300" y1="300" x2="300" y2="30" stroke="#c6a15b" strokeOpacity=".35"/></g>
+   {p.hover&&p.hover!==p.from&&P[p.hover]&&!p.to&&<path d={pts(Array.from({length:N+1},(_,i)=>plot(v,between(f,p.hubs.find(h=>h.iata===p.hover)!,i/N),v.range)))} fill="none" stroke="#f5f0e8" strokeOpacity=".55" strokeDasharray="2 6"/>}
+   {route.length>0&&<><path d={pts(route)} fill="none" stroke="#f5f0e8" strokeOpacity=".28" strokeDasharray="2 7"/><path className="cr-arc" key={p.to??'x'} d={pts(route.slice(0,done+1))} pathLength={1} fill="none" stroke="#c6a15b" strokeWidth="1.6" strokeLinecap="round"/></>}
    {p.blips.map(b=>{const o=P[b.hub];if(!o)return null;const q={x:o.x+b.dx,y:o.y+b.dy};return b.posFrom&&b.sel?<line key={b.id+'l'} x1={q.x} y1={q.y} x2={fx.x} y2={fx.y} stroke="#78a0c8" strokeOpacity=".8" strokeDasharray="3 5"/>:null})}
-   {p.scanning&&<circle className="cr-scan" cx={fx.x} cy={fx.y} r="14" fill="none" stroke="#c9a961" style={{transformOrigin:`${fx.x}px ${fx.y}px`}}/>}
-   {planeAt&&<g transform={`translate(${planeAt.x} ${planeAt.y}) rotate(${hd})`}><circle r="11" fill="#c9a961" fillOpacity=".18"/><path d="M0,-8 L5.5,7 L0,3.5 L-5.5,7Z" fill="#f4ecdc"/></g>}
+   {p.scanning&&<circle className="cr-scan" cx={fx.x} cy={fx.y} r="14" fill="none" stroke="#c6a15b" style={{transformOrigin:`${fx.x}px ${fx.y}px`}}/>}
+   {planeAt&&<g transform={`translate(${planeAt.x} ${planeAt.y}) rotate(${hd})`}><circle r="11" fill="#c6a15b" fillOpacity=".18"/><path d="M0,-8 L5.5,7 L0,3.5 L-5.5,7Z" fill="#f5f0e8"/></g>}
    {p.alt&&dx&&<><circle cx={dx.x+18} cy={dx.y-14} r="9" fill="none" stroke="#e6c36a" strokeDasharray="2 3"/><line x1={dx.x} y1={dx.y} x2={dx.x+18} y2={dx.y-14} stroke="#e6c36a" strokeOpacity=".6"/></>}
   </svg>
   {rings.map(k=><span key={'t'+k} className="cr-rl" style={{top:pct(300-rr(k,v.range))}}>{k.toLocaleString('en')} {p.kmUnit}</span>)}

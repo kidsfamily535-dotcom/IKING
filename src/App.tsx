@@ -18,13 +18,14 @@ import Cockpit from './Cockpit';
 import DeskLinks from './DeskLinks';
 import {useCopy} from './eye/copy';
 import LangSwitch from './LangSwitch';
+import StatusChip,{chipKind} from './StatusChip';
 import {useI18n,hasStoredLang,hasKey,catL,isLang,type Lang} from './i18n';
 import type {Airport,AgentState,DataStatus,EventPriority,Opportunity,Role,Signal,DecisionPolicyRow} from './data/types';
 const FLOW:AgentState[]=['WATCHING','DISCOVERING','THINKING','MATCHING','DECIDING','MONITORING','ANTICIPATING'];
 const hm=(m:number)=>{const d=new Date(Date.now()-m*60000);return d.toTimeString().slice(0,5)};
 const L=(s:string)=><span dir="ltr">{s}</span>;
 const DS:Record<DataStatus,string>={CONFIRMED:'',LIVE:'',SIM:'b',INFERRED:'b',ESTIMATED:'b',UNKNOWN:'u'};
-const Badge=({s}:{s:DataStatus})=><span className={`badge ${DS[s]}`}>{s}</span>;
+const Badge=({s}:{s:DataStatus})=><span className={`badge ${DS[s]}`}><StatusChip kind={chipKind(s)}>{s}</StatusChip></span>;
 const PR:Record<EventPriority,string>={SILENT:'SILENT',WATCH:'WATCH',INVESTIGATE:'INVESTIGATE',RECOMMEND:'RECOMMEND',ACT_INTERNAL:'ACT · INTERNAL',APPROVAL_REQUIRED:'APPROVAL REQUIRED',ESCALATE:'ESCALATE'};
 const Eye=({an}:{an?:boolean})=><div className={`eye${an?' an':''}`} aria-hidden><i/></div>;
 
@@ -41,13 +42,13 @@ function Radar({airports:all,arc,poster}:{airports:Airport[];arc?:[string,string
  const ticks=Array.from({length:36},(_,i)=>i*10);
  const e=arc&&P[arc[0]]&&P[arc[1]]?arc.map(k=>P[k]):null;
  return <svg viewBox="0 0 600 600" role="img" aria-label={t('radar.aria')} className={poster?'poster':undefined} preserveAspectRatio="xMidYMid slice">
-  {[67,135,202,270].map(r=><circle key={r} cx="300" cy="300" r={r} fill="none" stroke="#f4ecdc" strokeOpacity=".1"/>)}
-  {ticks.map(t=>{const a=t*Math.PI/180,m=t%30?4:10;return <line key={t} x1={300+270*Math.sin(a)} y1={300-270*Math.cos(a)} x2={300+(270-m)*Math.sin(a)} y2={300-(270-m)*Math.cos(a)} stroke="#f4ecdc" strokeOpacity=".3"/>})}
-  <text x="12" y="304" fill="#f4ecdc99" fontSize="9" fontFamily="JetBrains Mono">270</text><text x="570" y="304" fill="#f4ecdc99" fontSize="9" fontFamily="JetBrains Mono">090</text>
-  {e&&<path d={`M${e[0].x},${e[0].y} Q300,${Math.min(e[0].y,e[1].y)-60} ${e[1].x},${e[1].y}`} fill="none" stroke="#c9a961" strokeWidth="1.2"/>}
-  {airports.map(a=>{const p=P[a.iata];return <g key={a.iata}><circle cx={p.x} cy={p.y} r={a.iata==='RUH'?3.5:2.2} fill={a.iata==='RUH'?'#c9a961':'#f4ecdc'}/><text x={!poster&&p.x>500?p.x-6:p.x+6} textAnchor={!poster&&p.x>500?'end':'start'} y={p.y-5} fill="#f4ecdc99" fontSize="8.5" fontFamily="JetBrains Mono" letterSpacing="1">{a.iata}</text></g>})}
+  {[67,135,202,270].map(r=><circle key={r} cx="300" cy="300" r={r} fill="none" stroke="#f5f0e8" strokeOpacity=".1"/>)}
+  {ticks.map(t=>{const a=t*Math.PI/180,m=t%30?4:10;return <line key={t} x1={300+270*Math.sin(a)} y1={300-270*Math.cos(a)} x2={300+(270-m)*Math.sin(a)} y2={300-(270-m)*Math.cos(a)} stroke="#f5f0e8" strokeOpacity=".3"/>})}
+  <text x="12" y="304" fill="#f5f0e899" fontSize="9" fontFamily="JetBrains Mono">270</text><text x="570" y="304" fill="#f5f0e899" fontSize="9" fontFamily="JetBrains Mono">090</text>
+  {e&&<path d={`M${e[0].x},${e[0].y} Q300,${Math.min(e[0].y,e[1].y)-60} ${e[1].x},${e[1].y}`} fill="none" stroke="#c6a15b" strokeWidth="1.2"/>}
+  {airports.map(a=>{const p=P[a.iata];return <g key={a.iata}><circle cx={p.x} cy={p.y} r={a.iata==='RUH'?3.5:2.2} fill={a.iata==='RUH'?'#c6a15b':'#f5f0e8'}/><text x={!poster&&p.x>500?p.x-6:p.x+6} textAnchor={!poster&&p.x>500?'end':'start'} y={p.y-5} fill="#f5f0e899" fontSize="8.5" fontFamily="JetBrains Mono" letterSpacing="1">{a.iata}</text></g>})}
   <circle cx={P.JED?P.JED.x-26:0} cy={P.JED?P.JED.y+8:0} r="2.4" fill="#78a0c8" opacity=".8"/>
-  <text x="300" y="590" textAnchor="middle" fill="#f4ecdc88" fontSize="8" fontFamily="JetBrains Mono" letterSpacing="2.5">{airports.length} POINTS OF AWARENESS · NO SIGNAL ASSUMED AVAILABLE</text>
+  <text x="300" y="590" textAnchor="middle" fill="#f5f0e888" fontSize="8" fontFamily="JetBrains Mono" letterSpacing="2.5">{airports.length} POINTS OF AWARENESS · NO SIGNAL ASSUMED AVAILABLE</text>
  </svg>;
 }
 
@@ -104,9 +105,9 @@ export default function App(){
   <div className="pill">{real?t('pill.live'):t('pill.demo')}</div><LangSwitch/>
   <section className="hero hx"><div className="hx-stage"><HomeRadar onGo={i=>{location.href='?view=cabin&to='+i}}/></div>
    <div className="hx-copy"><p className="hx-mark">THE KING'S EYE</p>
-   <h1 className="hx-h">{t('hero.sub1')} <b>{t('hero.sub2')}</b></h1><p className="hx-lead">{t('hero.lead')}</p>
+   <h1 className="hx-h">{t('hero.sub1')}</h1><p className="hx-lead">{t('hero.lead')}</p>
    <div className="hx-sw">
-    {!real&&<Switch primary label={lang==='ar'?'ادخل الكابينة':'Enter the cabin'} sub={lang==='ar'?'جرّب رحلتك مع العين':'Plan a trip with the Eye'} onActivate={()=>{location.href='?view=cabin'}}/>}
+    {!real&&<Switch primary label={lang==='ar'?'افتح عينك':'Open your eye'} sub={lang==='ar'?'جرّب رحلتك مع العين':'Plan a trip with the Eye'} onActivate={()=>{location.href='?view=cabin'}}/>}
     <div className="ln"><Switch small label={t('d.explore')} onActivate={()=>go('explore')}/>{!real&&!login&&<Switch small label={t('hero.account')} onActivate={()=>setLogin(true)}/>}</div>
    </div>
    {staffMode&&<><div className="roles" style={{marginTop:22}} role="group" aria-label={t('hero.pick.aria')}>{(['admin','operator','customer'] as Role[]).map(r=><button key={r} className={role===r?'':'g'} onClick={()=>{setRole(r);setTimeout(()=>document.getElementById('room')?.scrollIntoView({behavior:'smooth'}),50)}}>{t('role.'+r)}</button>)}</div><div className="mono" style={{marginTop:14,opacity:.6}}>{t('hero.demoaccess')}</div></>}

@@ -82,7 +82,7 @@ export default function ApproverLink(){
    <p className="ol-names"><bdi>{nm(s.origin_code,s.origin_ar,s.origin_en)}</bdi> {t.to} <bdi>{nm(s.destination_code,s.destination_ar,s.destination_en)}</bdi></p>
    <dl className="ol-led"><dt>{t.date}</dt><dd>{dt(s.travel_date)}</dd><dt>{t.period}</dt><dd>{per}</dd><dt>{t.pax}</dt><dd>{s.passengers==null?t.unspec:<bdi>{s.passengers}</bdi>}</dd>
     {s.cabin_label&&<><dt>{t.cabin}</dt><dd><bdi>{s.cabin_label}</bdi></dd></>}
-    <dt>{t.price}</dt><dd className="ap-price" dir="ltr">{nf.format(s.price)} {s.currency}<small style={{display:'block',fontSize:'.7em',color:'#0b1322b3'}}>{s.fees_included==null?'':s.fees_included?t.incl:t.excl}{s.fees_note?` · ${s.fees_note}`:''}</small></dd>
+    <dt>{t.price}</dt><dd className="ap-price" dir="ltr">{nf.format(s.price)} {s.currency}<small style={{display:'block',fontSize:'.7em',color:'#171410b3'}}>{s.fees_included==null?'':s.fees_included?t.incl:t.excl}{s.fees_note?` · ${s.fees_note}`:''}</small></dd>
     <dt>{t.valid}</dt><dd>{dtm(s.valid_until)}</dd></dl>
    <p className="ol-priv">{t.intent}</p>
   </section>

@@ -6,7 +6,7 @@
 .kc-wait{font:italic 400 22px 'Instrument Serif','Tajawal',serif;color:var(--gold);margin:14px 0 8px}
 .kc-list{display:grid}
 .kc-it{display:grid;grid-template-columns:auto 1fr auto;gap:0 14px;align-items:center;width:100%;text-align:start;background:none;color:var(--ink);border:0;border-bottom:1px dashed var(--line);border-radius:0;padding:14px 4px}
-.kc-it:hover,.kc-it:focus-visible{background:#c9a9610f}
+.kc-it:hover,.kc-it:focus-visible{background:#c6a15b0f}
 .kc-it-m{display:grid;min-width:0}.kc-it-r{font-size:18px}.kc-it small{color:var(--dim);font-size:13px}
 .kc-dot{width:10px;height:10px;border-radius:50%;border:1px solid var(--dim)}
 .kc-dot.me{background:var(--gold);border-color:var(--gold)}.kc-dot.done{opacity:.35}
@@ -23,7 +23,7 @@
 .kc-rail li.done::before,.kc-rail li.cur::before{background:var(--gold)}
 .kc-n{position:relative;width:20px;height:20px;border-radius:50%;border:1px solid var(--dim);background:var(--bg);display:grid;place-items:center;font:11px 'JetBrains Mono',monospace;color:var(--dim)}
 li.done .kc-n{background:var(--gold);border-color:var(--gold);color:var(--bg)}
-li.cur .kc-n{border-color:var(--gold);color:var(--gold);box-shadow:0 0 0 4px #c9a9611f}
+li.cur .kc-n{border-color:var(--gold);color:var(--gold);box-shadow:0 0 0 4px #c6a15b1f}
 .kc-n.g.ok{background:var(--gold);border-color:var(--gold);color:var(--bg)}
 .kc-l{font-size:12px;color:var(--dim);line-height:1.3}li.cur .kc-l{color:var(--ink)}
 .kc-p{border:1px solid var(--gold);padding:22px;margin:0 0 20px}.kc-p.q{border-color:var(--line)}
@@ -32,7 +32,7 @@ li.cur .kc-n{border-color:var(--gold);color:var(--gold);box-shadow:0 0 0 4px #c9
 .kc-op{text-transform:capitalize}
 .kc-m{font:400 18px 'JetBrains Mono',monospace;direction:ltr}
 .kc-off{padding:14px 0;border-top:1px dashed var(--line)}.kc-off:first-of-type{border-top:0}
-.kc-co{margin-top:10px;padding:12px 14px;border-inline-start:2px solid var(--gold);background:#c9a9610a}
+.kc-co{margin-top:10px;padding:12px 14px;border-inline-start:2px solid var(--gold);background:#c6a15b0a}
 .kc-mg{font-size:14px;color:var(--dim);margin:6px 0}.kc-mg b{color:var(--ink);font-weight:500}
 .kc-yn{display:flex;gap:10px;margin:8px 0}.kc-yn button{padding:8px 22px}
 .kc-rf{padding:10px 0;border-top:1px dashed var(--line)}.kc-rf:first-of-type{border-top:0}
