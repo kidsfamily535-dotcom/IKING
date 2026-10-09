@@ -102,11 +102,11 @@ export default function App(){
  const live=op.find(o=>o.availability==='CONFIRMED');
  return <>
   <div className="pill">{real?t('pill.live'):t('pill.demo')}</div><LangSwitch/>
-  <section className="hero hx"><div className="hx-stage"><HomeRadar onGo={i=>{location.href='?view=cabin&to='+i}}/></div>
+  <section className="hero hx hxe"><div className="hx-stage hxe-s"><HomeRadar onGo={i=>{location.href='?view=cabin&to='+i}}/></div>
    <div className="hx-copy"><p className="hx-mark">THE KING'S EYE</p>
-   <h1 className="hx-h">{t('hero.sub1')} <b>{t('hero.sub2')}</b></h1><p className="hx-lead">{t('hero.lead')}</p>
+   <h1 className="hx-h">{t('hero.sub1')}</h1><p className="hx-lead">{t('hero.lead')}</p>
    <div className="hx-sw">
-    {!real&&<Switch primary label={lang==='ar'?'ادخل الكابينة':'Enter the cabin'} sub={lang==='ar'?'جرّب رحلتك مع العين':'Plan a trip with the Eye'} onActivate={()=>{location.href='?view=cabin'}}/>}
+    {!real&&<Switch primary label={lang==='ar'?'افتح عينك':'Open your eye'} sub={lang==='ar'?'جرّب رحلتك مع العين':'Plan a trip with the Eye'} onActivate={()=>{location.href='?view=cabin'}}/>}
     <div className="ln"><Switch small label={t('d.explore')} onActivate={()=>go('explore')}/>{!real&&!login&&<Switch small label={t('hero.account')} onActivate={()=>setLogin(true)}/>}</div>
    </div>
    {staffMode&&<><div className="roles" style={{marginTop:22}} role="group" aria-label={t('hero.pick.aria')}>{(['admin','operator','customer'] as Role[]).map(r=><button key={r} className={role===r?'':'g'} onClick={()=>{setRole(r);setTimeout(()=>document.getElementById('room')?.scrollIntoView({behavior:'smooth'}),50)}}>{t('role.'+r)}</button>)}</div><div className="mono" style={{marginTop:14,opacity:.6}}>{t('hero.demoaccess')}</div></>}
