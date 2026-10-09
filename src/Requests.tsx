@@ -9,6 +9,7 @@ import FlexLegs from './FlexLegs';
 import {TermsView} from './PilotSteps';
 import './requests.css';
 import './profile.css';
+import BriefTicker,{briefLabel,briefKind} from './BriefTicker';
 
 // جهة العميل من سلسلة الطلب: يطلب رحلة، يتابع حالتها بلغة بسيطة، ثم يقبل العرض أو يرفضه.
 // العميل لا يرى المشغّل ولا سعره ولا الهامش: الدالة list_my_loop_offers تعيد ما أقرّه الوسيط فقط.
@@ -104,7 +105,7 @@ function OfferCard({offer,route,t,lang,reload}:{offer:MyOffer;route:ReactNode;t:
  const decide=async(accept:boolean)=>{setBusy(true);setErr('');
   const {error}=await sb.rpc('loop_customer_decide',{p_client_offer:offer.client_offer_id,p_accept:accept,p_reason:accept?null:(why.trim()||null)});
   setBusy(false);if(error){setErr(t.err);return}setRes(accept?t.accepted:t.declined);setStep('');await reload()};
- return <div className="rq-offer"><p className="rt">{route}</p>
+ return <div className="rq-offer"><span className={`bf-rib${briefKind(offer.status)==='conf'?' o':''}`}>{briefLabel(offer.status,lang)}</span><p className="rt">{route}</p>
   <p className="rq-cab"><bdi>{offer.cabin_label}</bdi></p>
   <p className="rq-price" dir="ltr">{new Intl.NumberFormat('en-US',{maximumFractionDigits:0}).format(offer.price)} <span>{offer.currency}</span></p>
   <p className="dim sm">{offer.fees_included?t.incl:t.excl}{offer.fees_note?<> · <bdi>{offer.fees_note}</bdi></>:null}</p>
@@ -133,7 +134,7 @@ export default function Requests({airports,my,nm}:{airports:Airport[];my:My;nm:(
   <Glyph k={live.length?'star':reqs.length?'lens':'air'} s={64}/>
   <h2 className="big">{head}</h2>
   {sent&&<div className="nt e" role="status">{t.sent}</div>}
-  {off&&<>{shown.length>1&&<ul>{shown.map((o,i)=><li key={o.client_offer_id}><button className={`tp${i===sel?' on':''}`} onClick={()=>setSel(i)}>{rt(rq(o.request_id))} · <bdi>{o.cabin_label}</bdi></button></li>)}</ul>}
+  {off&&<>{shown.length>1&&<BriefTicker loop={shown.length>=3} sel={Math.min(sel,shown.length-1)} onSel={setSel} fmt={v=>new Date(v).toLocaleString(LOC[lang],{dateStyle:'medium',timeStyle:'short'})} cards={shown.map(o=>({id:o.client_offer_id,route:rt(rq(o.request_id)),cabin:o.cabin_label,price:o.price,currency:o.currency,status:o.status,until:o.valid_until}))}/>}
    <OfferCard key={off.client_offer_id} offer={off} route={rt(rq(off.request_id))} t={t} lang={lang} reload={reload}/></>}
   {reqs.length>0&&<><p className="dim sm">{t.yours}</p><ul>{reqs.map(r=><li key={r.id}><span>{rt(r)}{r.travel_date?` · ${new Date(r.travel_date).toLocaleDateString(LOC[lang],{dateStyle:'medium'})}`:''}</span>
    <b>{t[GROUP[r.loop_status]??'new']}</b>
