@@ -1,0 +1,17 @@
+.op{max-width:680px;margin:0 auto;padding:14px 18px 64px;min-height:100svh}
+.op header{display:flex;justify-content:space-between;align-items:center;padding:6px 0 14px}.op header b{font:400 26px 'Instrument Serif','Tajawal',serif;color:var(--ink)}
+.op nav{display:grid;grid-template-columns:repeat(4,1fr);border-bottom:1px solid var(--line);margin-bottom:18px}
+.op nav button{background:none;color:var(--dim);padding:12px 2px;min-height:48px;border-radius:0;border-bottom:2px solid transparent;font-size:15px}.op nav button.on{color:var(--gold);border-color:var(--gold)}
+.op section{display:grid;gap:14px}.op h2,.op h3{font:400 22px 'Instrument Serif','Tajawal',serif;margin:0}
+.opc{display:grid;gap:12px;border-top:1px solid var(--gold);padding:16px 0}
+.opg{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:12px}
+.opf{display:grid;gap:2px;font-size:13px;color:var(--dim)}
+.opf input,.opf select,.opf textarea{font:inherit;font-size:16px;color:var(--ink);background:none;border:0;border-bottom:1px solid var(--line);padding:8px 2px;min-height:44px;border-radius:0}
+.opf select option{background:#0b1322}
+.opf input:focus,.opf select:focus,.opf textarea:focus{outline:none;border-color:var(--gold)}
+.opa{display:flex;gap:10px;flex-wrap:wrap}
+.opr{display:flex;align-items:center;justify-content:space-between;gap:12px;border-bottom:1px dashed var(--line);padding:12px 0;flex-wrap:wrap}.opr.col{display:grid}
+.opr small,.opn,.op small{color:var(--dim);font-size:14px;line-height:1.7}
+.opb{font:11px 'JetBrains Mono',monospace;letter-spacing:.06em;border:1px solid #78a0c866;color:var(--blue);padding:3px 10px;border-radius:99px}.opb.ok{border-color:#7fc8a099;color:var(--ok)}
+.ope{border:1px solid #f0a08a88;color:#f0a08a;padding:10px 14px;font-size:14px}
+.op button:disabled{opacity:.45;cursor:default}
