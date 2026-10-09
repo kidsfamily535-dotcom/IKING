@@ -91,3 +91,15 @@ button.sw:focus-visible{outline:2px solid var(--cb-blue);outline-offset:3px}
 .wt.wt .form .sw,.wt.wt .row2 .sw{justify-self:start}
 .wt.wt .wxl li{border-top:1px solid #f4ecdc18}
 @media(max-width:560px){.wt.wt .form .sw:not(.small){max-width:none;justify-self:stretch}}
+
+/* ===== الصفحة الرئيسية: العاجي سطحٌ والذهبي حلية ===== */
+/* الزر الأساسي وحده عاجي مضيء، والثانويان خطوط هادئة بكرة أصغر */
+.hx-sw button.sw.primary{background:linear-gradient(#f8f1e0,#e8ddc3);border-color:#e6cd8f;color:#1b1405;box-shadow:0 12px 34px #00000070,inset 0 0 0 1px #fff6,0 0 44px #c9a96122}
+.hx-sw button.sw.primary .sw-t small{color:#4d3f1e}
+.hx-sw button.sw.primary:hover{box-shadow:0 12px 34px #00000070,inset 0 0 0 1px #fff8,0 0 56px #c9a96140}
+.hx-sw button.sw.primary[data-on="true"]{background:linear-gradient(#fffaeb,#f2e8cb);box-shadow:0 12px 34px #00000070,0 0 64px #e6cd8f66}
+.hx-sw button.sw.primary:focus-visible{outline-color:#f4ecdc}
+.hx-sw .ln button.sw{background:none;border-color:#c9a96150;box-shadow:none}
+.hx-sw .ln button.sw:hover{border-color:#c9a961aa}
+.hx-sw .ln button.sw .sw-k{background:#c9a96122;box-shadow:inset 0 0 0 1px #c9a96199}
+.hx-sw .ln button.sw .sw-k::after{background:#c9a961;opacity:.9}
