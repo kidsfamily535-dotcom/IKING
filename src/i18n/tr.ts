@@ -233,7 +233,7 @@ export const tur:Record<Key,string>={
 "ask.err.limit":"Kısa sürede çok fazla istek. Biraz sonra tekrar deneyin.",
 "ask.err.generic":"Şu anda gönderilemedi. Hiçbir şey kaybolmadı, lütfen tekrar deneyin.",
 "ask.err.field":"Lütfen bu alanı kontrol edin: {x}",
-"ask.foot":"Bir insan ekibine ulaşan gerçek bir talep. Otomatik rezervasyon yok; müsaitlik veya fiyat vaadi yok.",
+"ask.foot":"Bir insan ekibine ulaşan gerçek bir talep. Otomatik rezervasyon yok; müsaitlik veya fiyat vaadi yok.","eye.saw":"Gördüm","eye.sawD":"Sizden anladığım bu. Yanlışsam düzeltin.","eye.unk":"Henüz bilmiyorum","eye.unkD":"Bu saatte uygun bir uçak olup olmadığını ve fiyatını bilmiyorum. Henüz hiçbir operatöre sormadım.","eye.unkB":"? BİLİNMİYOR","eye.shall":"Ayarlayayım mı?","eye.shallD":"Talebiniz önce insan ekibimize ulaşır. Ekip incelemeden hiçbir operatöre bir şey gönderilmez.",
 "ask.home":"Yolculuğunuzu yazın",
 "ask.outside":"Bu varış noktası şu anda gerçekten kabul ettiğimiz yolculukların dışında. Kabini deneyebilirsiniz ama bu talep henüz gönderilemez.",
 "ask.need":"Adınızı ve iletişim bilginizi yazın, onaylayın, sonra basılı tutun.",

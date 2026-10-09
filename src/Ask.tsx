@@ -79,6 +79,7 @@ export default function Ask(){
     <button type="button" className="cb-link" onClick={()=>setStage('confirm')}>{t('ask.manual')}</button></>}
    {stage==='confirm'&&<><h1>{t('ask.confirmT')}</h1><p className="cb-sub">{t('ask.confirmSub')}</p>
     {err&&<p className="cb-note" role="alert">{err}</p>}{check&&!err&&<p className="cb-note">{t('ask.check')}</p>}
+    <div className="ak-eye"><p><b>{t('eye.saw')}</b> {t('eye.sawD')}</p><p><b>{t('eye.unk')}</b> <span className="ak-unk">{t('eye.unkB')}</span> {t('eye.unkD')}</p><p><b>{t('eye.shall')}</b> {t('eye.shallD')}</p></div>
     {selF('origin_code',t('ask.f.from'))}{said('origin_code')}{selF('destination_code',t('ask.f.to'))}{said('destination_code')}
     <label className="cb-row"><span>{t('ask.f.date')}</span><input type="date" min={top} value={f.travel_date??''} onChange={e=>setF({...f,travel_date:e.target.value||null})}/></label>{said('travel_date')}
     <div className="cb-row"><span id="akp">{t('ask.f.pax')}</span><div className="cb-step" role="group" aria-labelledby="akp"><button type="button" aria-label="−" disabled={(f.passengers??0)<=1} onClick={()=>setF({...f,passengers:Math.max(1,(f.passengers??2)-1)})}>−</button><output>{f.passengers??'…'}</output><button type="button" aria-label="+" onClick={()=>setF({...f,passengers:Math.min(40,(f.passengers??0)+1)})}>+</button></div></div>{said('passengers')}
