@@ -52,16 +52,9 @@ button.sw:focus-visible{outline:2px solid var(--cb-blue);outline-offset:3px}
  .hx-copy{grid-column:1;grid-row:1;align-items:flex-start}.hx-stage{grid-column:2;grid-row:1;width:min(100%,calc(100dvh - 130px),720px)}
  .hx-sw{align-items:flex-start}.hero.hx h1.hx-h{text-align:start}.hx-lead{text-align:start}
 }
-/* المسرح بعرض اللوزة: يتّسع قليلًا على الجوال، ويأخذ عمودًا أعرض على الشاشات الكبيرة */
-.hx-stage.hxe-s{width:min(calc(100% + 24px),700px);margin-inline:-12px}
-@media(min-width:980px){
- .hero.hx.hxe{grid-template-columns:minmax(0,.9fr) minmax(0,1.3fr)}
- .hx-stage.hxe-s{grid-column:2;grid-row:1;margin-inline:0;width:min(100%,calc((100dvh - 130px) * 1.15),860px)}
-}
 @media(orientation:landscape) and (max-height:560px) and (min-width:560px) and (max-width:979px){
  .hero.hx{display:grid;grid-template-columns:1fr 1fr;column-gap:20px;align-items:center;text-align:start;padding-top:56px}
  .hx-copy{grid-column:1;grid-row:1;align-items:flex-start}.hx-stage{grid-column:2;grid-row:1;width:min(100%,calc(100dvh - 90px))}
- .hx-stage.hxe-s{margin-inline:0;width:min(100%,calc((100dvh - 90px) * 1.15))}
 }
 
 /* ===== «عندي رحلة» و«جرّبها» و«ما تستطيعه العين»: نفس هوية الكابينة ===== */

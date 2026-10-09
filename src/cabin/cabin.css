@@ -216,14 +216,3 @@
 .cb-medianote{font-size:12.5px;color:#f4ecdc99;margin:0;max-width:50ch}
 @media (max-width:420px){.cb-dims{grid-template-columns:repeat(2,1fr)}}
 @media (prefers-reduced-motion:reduce){.cb-ph img{transition:none}}
-
-/* ===== الرادار على شكل عين (الصفحة الرئيسية) ===== */
-.cr.eye{aspect-ratio:760/660}
-.cr.eye .cr-lid{filter:drop-shadow(0 0 12px #c9a96133)}
-.cr.eye .cr-hud{inset-inline:2%;bottom:.5%}
-/* المدن تتوهّج لحظة يمرّ بها خط المسح (نفس مدة الدوران 16 ثانية) ثم تخفت */
-.cr.eye .cr-n i{animation:crpd 16s linear infinite;animation-delay:var(--d,0s)}
-.cr.eye .cr-n .cr-l{animation:crpl 16s linear infinite;animation-delay:var(--d,0s)}
-@keyframes crpd{0%{filter:brightness(2.6) drop-shadow(0 0 6px #c9a961)}55%,100%{filter:none}}
-@keyframes crpl{0%{filter:brightness(1.7);text-shadow:0 0 12px #c9a961aa,0 1px 6px #060b16}55%,100%{filter:none}}
-@media (prefers-reduced-motion:reduce){.cr.eye .cr-n i,.cr.eye .cr-n .cr-l,.cr.eye .cr-sweep{animation:none}}

@@ -3,7 +3,7 @@ import {useI18n} from '../i18n';
 import {copy} from './copy';
 import {HUBS,hub,dist,flightMin,rangeFor} from './geo';
 import Radar from './Radar';
-// رادار الصفحة الرئيسية (بشكل العين): يعرض العين وهي تعمل (وجهات تتبدّل وطائرة تمشي على المسار)، ولمس أي مدينة يدخلك الكابينة بها.
+// رادار الصفحة الرئيسية: يعرض العين وهي تعمل (وجهات تتبدّل وطائرة تمشي على المسار)، ولمس أي مدينة يدخلك الكابينة بها.
 const DEST=['JED','DXB','LON','CAI','IST','DOH','CDG'];
 const km10=(n:number)=>(Math.round(n/10)*10).toLocaleString('en');
 export default function HomeRadar({onGo}:{onGo:(iata:string)=>void}){
@@ -19,6 +19,6 @@ export default function HomeRadar({onGo}:{onGo:(iata:string)=>void}){
   raf=requestAnimationFrame(tick);return()=>cancelAnimationFrame(raf)},[i,hover,to]);
  const nm=(h:{ar:string;en:string})=>L==='ar'?h.ar:h.en;
  const m=flightMin(km),dur=m<60?`${m} ${c.units.m}`:`${Math.floor(m/60)} ${c.units.h} ${String(m%60).padStart(2,'0')} ${c.units.m}`;
- return <Radar hubs={HUBS} from="RUH" to={to} hover={hover} name={nm} range={rangeFor(km)} blips={[]} scanning={false} plane={p} alt={null} eye
+ return <Radar hubs={HUBS} from="RUH" to={to} hover={hover} name={nm} range={rangeFor(km)} blips={[]} scanning={false} plane={p} alt={null}
   hud={`${c.ask.read(nm(F),nm(D),km10(km),dur)}`} aria={c.gl.radar} kmUnit={c.units.km} onHover={setHover} onPick={id=>id!=='RUH'&&onGo(id)} onBlip={()=>{}}/>;
 }

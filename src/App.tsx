@@ -102,7 +102,7 @@ export default function App(){
  const live=op.find(o=>o.availability==='CONFIRMED');
  return <>
   <div className="pill">{real?t('pill.live'):t('pill.demo')}</div><LangSwitch/>
-  <section className="hero hx hxe"><div className="hx-stage hxe-s"><HomeRadar onGo={i=>{location.href='?view=cabin&to='+i}}/></div>
+  <section className="hero hx"><div className="hx-stage"><HomeRadar onGo={i=>{location.href='?view=cabin&to='+i}}/></div>
    <div className="hx-copy"><p className="hx-mark">THE KING'S EYE</p>
    <h1 className="hx-h">{t('hero.sub1')}</h1><p className="hx-lead">{t('hero.lead')}</p>
    <div className="hx-sw">
