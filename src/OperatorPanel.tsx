@@ -1,27 +1,38 @@
 import {useCallback,useEffect,useState} from 'react';
 import {sb} from './lib/supabase';
 import {useI18n} from './i18n';
+import LangSwitch from './LangSwitch';
 import './opanel.css';
 // لوحة المشغّل الحقيقية (?view=panel): 4 تبويبات فوق قاعدة I KING. كل الصلاحيات من RLS والدوال، والواجهة لا تقرّر شيئًا حرجًا.
 const S={
 ar:{title:'لوحة المشغّل',in:'ادخل بالإيميل',email:'الإيميل',send:'ابعت رابط الدخول',sent:'الرابط وصل إيميلك. افتحه وارجع هنا.',out:'خروج',noop:'حسابك مش مفعّل كمشغّل لسه. كلّم فريق iKing.',
-tabs:['طائراتي','رحلاتي','الطلبات','الدفع'],add:'إضافة',save:'حفظ',edit:'تعديل',cancel:'إلغاء',
+tabs:['طائراتي','رحلاتي','الطلبات','الدفع'],sub:['طائراتك المسجّلة وحالة اعتمادها','رحلاتك المعروضة وحالة كل واحدة','طلبات مناسبة لطائراتك، بانتظار سعرك','طريقة استلام دفعتك والرحلات التي قبلها العملاء'],
+brandSub:'بوابة المشغّل',loginH:'ادخل إلى لوحتك',loginP:'اكتب إيميلك ونرسل لك رابط دخول. من غير كلمة سر.',another:'استخدم إيميلًا آخر',
+side:'الطلبات المناسبة تصلك. وفريقنا يراجع كل سعر قبل ما يشوفه العميل.',
+qTitle:'سعرك للمراجعة',qHow:'كيف يصل سعرك للعميل',qHow1:'تكتب سعرك الإجمالي وصلاحيته.',qHow2:'فريق iKing يراجعه ويؤكد التوفر معك.',qHow3:'بعد موافقته يظهر للعميل. اسم العميل يبقى عندنا.',
+qPick:'اختر طلبًا من القائمة لتسعّره.',qTrust:'السعر هنا للمراجعة. مش عرضًا نهائيًا للعميل.',noPhoto:'بدون صورة',seatsN:'مقاعد',
+add:'إضافة',save:'حفظ',edit:'تعديل',cancel:'إلغاء',
 model:'الطراز',maker:'الشركة المصنّعة',year:'سنة الصنع',pax:'عدد المقاعد',bag:'حد الأمتعة (كجم)',range:'المدى (ميل بحري)',layout:'التخطيط',amen:'المرافق (افصل بفاصلة)',apt:'متطلبات المطارات',lic:'رقم الترخيص / AOC',reg:'التسجيل (خاص، مش بيظهر للعملاء)',photos:'روابط صور حقيقية (https، افصل بفاصلة)',notes:'ملاحظات',
 DECLARED:'بانتظار تأكيد الفريق',CONFIRMED:'مؤكدة',REJECTED:'مرفوضة',nofleet:'لسه ماضفتش طائرات.',needfleet:'أضف طائرة الأول.',
 aircraft:'الطائرة',kind:'النوع',SCHEDULED:'رحلة مجدولة',EMPTY_LEG:'رحلة فارغة',ON_DEMAND:'عند الطلب',from:'من',to:'إلى',dep1:'أبكر إقلاع',dep2:'آخر إقلاع',seats:'مقاعد متاحة',price:'السعر الإجمالي (USD)',onreq:'السعر عند الطلب',
 note1:'أي رحلة تدخل «بانتظار التحقق». مش بتتعرض كمتاحة إلا بعد تأكيد فريقنا.',withdraw:'سحب',noflights:'مفيش رحلات.',
 PENDING_VERIFICATION:'بانتظار التحقق',AVAILABLE:'متاحة',HELD:'محجوزة مؤقتًا',BOOKED:'محجوزة',EXPIRED:'منتهية',CANCELLED:'مسحوبة',
-noreq:'مفيش طلبات جديدة.',pax2:'ركّاب',offer:'رد بسعر',decline:'اعتذار',quoteP:'سعرك (USD)',hrs:'صالح لمدة (ساعات)',reason:'السبب (اختياري)',sendq:'ابعت السعر',sentq:'اتبعت. الفريق هيراجعه قبل ما يوصل للعميل.',
+noreq:'مفيش طلبات جديدة.',pax2:'ركّاب',offer:'رد بسعر',decline:'اعتذار',quoteP:'سعرك (USD)',hrs:'صالح لمدة (ساعات)',reason:'السبب (اختياري)',sendq:'ابعت السعر للمراجعة',sentq:'اتبعت. الفريق هيراجعه قبل ما يوصل للعميل.',
 paydet:'طريقة استلام الدفع',link:'رابط دفع',bank:'تحويل بنكي',linkF:'رابط الدفع (https)',bankF:'بيانات التحويل',warn:'ما تكتبش أرقام بطاقات. البيانات دي بتبان للفريق بس.',
 acc:'رحلات قبلها العميل',none:'مفيش رحلات مقبولة لسه.',got:'استلمت الدفع',ref:'رقم التحويل / الإيصال',conf:'تأكيد',waiting:'بانتظار تأكيد الفريق',done:'الفريق أكّد الدفع',pnote:'ضغطك على «استلمت الدفع» تسجيل منك، والفريق هو اللي يأكده.',err:'حصلت مشكلة'},
 en:{title:'Operator panel',in:'Sign in by email',email:'Email',send:'Send sign-in link',sent:'Link sent. Open it, then come back.',out:'Sign out',noop:'Your account is not an active operator yet. Contact the iKing team.',
-tabs:['My aircraft','My flights','Requests','Payment'],add:'Add',save:'Save',edit:'Edit',cancel:'Cancel',
+tabs:['My aircraft','My flights','Requests','Payment'],sub:['Your registered aircraft and their approval status','Your listed flights and the status of each','Requests that fit your aircraft, waiting for your price','How you get paid and the flights customers accepted'],
+brandSub:'Operator portal',loginH:'Open your panel',loginP:'Enter your email and we send a sign-in link. No password.',another:'Use another email',
+side:'Matching requests reach you. Our team reviews every price before a customer sees it.',
+qTitle:'Your price, for review',qHow:'How your price reaches the customer',qHow1:'You enter your total price and how long it holds.',qHow2:'The iKing team reviews it and confirms availability with you.',qHow3:'Only then does the customer see it. The customer name stays with us.',
+qPick:'Pick a request from the list to price it.',qTrust:'This price is for review. It is not a final offer to the customer.',noPhoto:'No photo',seatsN:'seats',
+add:'Add',save:'Save',edit:'Edit',cancel:'Cancel',
 model:'Model',maker:'Manufacturer',year:'Year built',pax:'Seats',bag:'Baggage limit (kg)',range:'Range (nm)',layout:'Layout',amen:'Amenities (comma separated)',apt:'Airport requirements',lic:'Licence / AOC no.',reg:'Registration (private, never shown to customers)',photos:'Real photo links (https, comma separated)',notes:'Notes',
 DECLARED:'Awaiting team confirmation',CONFIRMED:'Confirmed',REJECTED:'Rejected',nofleet:'No aircraft yet.',needfleet:'Add an aircraft first.',
 aircraft:'Aircraft',kind:'Type',SCHEDULED:'Scheduled flight',EMPTY_LEG:'Empty leg',ON_DEMAND:'On demand',from:'From',to:'To',dep1:'Earliest departure',dep2:'Latest departure',seats:'Seats available',price:'Total price (USD)',onreq:'Price on request',
 note1:'Every flight starts as pending verification. It is not shown as available until our team confirms it.',withdraw:'Withdraw',noflights:'No flights.',
 PENDING_VERIFICATION:'Pending verification',AVAILABLE:'Available',HELD:'Held',BOOKED:'Booked',EXPIRED:'Expired',CANCELLED:'Withdrawn',
-noreq:'No new requests.',pax2:'passengers',offer:'Quote',decline:'Decline',quoteP:'Your price (USD)',hrs:'Valid for (hours)',reason:'Reason (optional)',sendq:'Send quote',sentq:'Sent. Our team reviews it before the customer sees it.',
+noreq:'No new requests.',pax2:'passengers',offer:'Quote',decline:'Decline',quoteP:'Your price (USD)',hrs:'Valid for (hours)',reason:'Reason (optional)',sendq:'Send price for review',sentq:'Sent. Our team reviews it before the customer sees it.',
 paydet:'How you receive payment',link:'Payment link',bank:'Bank transfer',linkF:'Payment link (https)',bankF:'Transfer details',warn:'Never enter card numbers. Only our team can see this.',
 acc:'Flights the customer accepted',none:'No accepted flights yet.',got:'I received payment',ref:'Transfer / receipt number',conf:'Confirm',waiting:'Awaiting team confirmation',done:'Team confirmed payment',pnote:'“I received payment” is your declaration; our team confirms it.',err:'Something went wrong'}};
 type Tx=typeof S.ar;type Row=Record<string,any>;
@@ -29,21 +40,41 @@ const empty={model:'',manufacturer:'',year_built:'',max_pax:'',baggage_kg:'',ran
 const num=(v:string)=>v===''?null:Number(v);
 function Fld({l,v,on,type='text',area}:{l:string;v:string;on:(s:string)=>void;type?:string;area?:boolean}){
  return <label className="opf">{l}{area?<textarea value={v} onChange={e=>on(e.target.value)} rows={2}/>:<input type={type} value={v} onChange={e=>on(e.target.value)}/>}</label>}
+const IC=[
+ <path key="a" d="M3 14l8-2 6-8c.7-.8 2 .3 1.3 1.2L15 11l5 1.5-.7 1.6L13 13.8 10.5 20l-1.7.2.4-5.6L3 15.7z"/>,
+ <path key="b" d="M4 6h16M4 12h16M4 18h10"/>,
+ <path key="c" d="M4 5h16v11H8l-4 4zM8 9h8M8 12h5"/>,
+ <path key="d" d="M3 7h18v12H3zM3 7l2-3h14l2 3M16 13h2"/>];
+const Ic=({i}:{i:number})=><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">{IC[i]}</svg>;
+const Brand=({T}:{T:Tx})=><div className="op-brand"><i aria-hidden="true"/><span><b>THE KING'S EYE</b><small>{T.brandSub}</small></span></div>;
 export default function OperatorPanel(){
  const {lang,dir}=useI18n();const T:Tx=lang==='ar'?S.ar:S.en;
- const [ses,setSes]=useState<string|null|undefined>(undefined),[ok,setOk]=useState<boolean|null>(null),[tab,setTab]=useState(0),[err,setErr]=useState('');
- useEffect(()=>{sb.auth.getSession().then(r=>setSes(r.data.session?.user.id??null));const {data}=sb.auth.onAuthStateChange((_e,s)=>setSes(s?.user.id??null));return()=>data.subscription.unsubscribe()},[]);
+ const [ses,setSes]=useState<string|null|undefined>(undefined),[mail,setMail]=useState(''),[ok,setOk]=useState<boolean|null>(null),[tab,setTab]=useState(0),[err,setErr]=useState(''),[cnt,setCnt]=useState(0);
+ useEffect(()=>{sb.auth.getSession().then(r=>{setSes(r.data.session?.user.id??null);setMail(r.data.session?.user.email??'')});const {data}=sb.auth.onAuthStateChange((_e,s)=>{setSes(s?.user.id??null);setMail(s?.user.email??'')});return()=>data.subscription.unsubscribe()},[]);
  useEffect(()=>{if(!ses){setOk(null);return}sb.from('profiles').select('role,status').eq('id',ses).maybeSingle().then(r=>setOk(r.data?.role==='operator'&&r.data?.status==='active'))},[ses]);
  const run=async(f:()=>PromiseLike<{error:{message:string}|null}>)=>{setErr('');const r=await f();if(r.error){setErr(r.error.message||T.err);return false}return true};
- return <div className="op" dir={dir}><header><b>{T.title}</b>{ses&&<button className="g" onClick={()=>sb.auth.signOut()}>{T.out}</button>}</header>
-  {ses===undefined?null:!ses?<Login T={T}/>:ok===null?null:!ok?<p className="opn">{T.noop}</p>:<>
-   <nav role="tablist">{T.tabs.map((x,i)=><button key={x} role="tab" aria-selected={tab===i} className={tab===i?'on':''} onClick={()=>{setTab(i);setErr('')}}>{x}</button>)}</nav>
+ if(ses===undefined)return <div className="op" dir={dir}/>;
+ if(!ses)return <div className="op" dir={dir}><Login T={T}/></div>;
+ if(ok===null)return <div className="op" dir={dir}/>;
+ if(!ok)return <div className="op" dir={dir}><div className="op-solo"><Brand T={T}/><p className="opn">{T.noop}</p><button className="g" onClick={()=>sb.auth.signOut()}>{T.out}</button></div></div>;
+ return <div className="op op-app" dir={dir}>
+  <aside className="op-side"><Brand T={T}/>
+   <nav role="tablist" aria-label={T.title}>{T.tabs.map((x,i)=><button key={x} role="tab" aria-selected={tab===i} className={tab===i?'on':''} onClick={()=>{setTab(i);setErr('')}}><Ic i={i}/><span>{x}</span>{i===2&&cnt>0&&<em aria-label={String(cnt)}>{cnt}</em>}</button>)}</nav>
+   <p className="op-tag">{T.side}</p></aside>
+  <div className="op-main">
+   <header><div><h1>{T.tabs[tab]}</h1><p>{T.sub[tab]}</p></div>
+    <div className="op-who"><LangSwitch/><span dir="ltr">{mail}</span><button className="g" onClick={()=>sb.auth.signOut()}>{T.out}</button></div></header>
    {err&&<div className="ope" role="alert">{err}</div>}
-   {tab===0&&<Fleet T={T} uid={ses} run={run}/>}{tab===1&&<Flights T={T} uid={ses} run={run}/>}{tab===2&&<Requests T={T} run={run}/>}{tab===3&&<Pay T={T} uid={ses} run={run}/>}</>}
- </div>}
-function Login({T}:{T:Tx}){const [e,setE]=useState(''),[m,setM]=useState(''),[b,setB]=useState(false);
- const go=async()=>{setB(true);const r=await sb.auth.signInWithOtp({email:e.trim(),options:{emailRedirectTo:location.href}});setB(false);setM(r.error?T.err:T.sent)};
- return <section className="opc"><h2>{T.in}</h2><Fld l={T.email} v={e} on={setE} type="email"/><button disabled={b||!e.includes('@')} onClick={go}>{T.send}</button>{m&&<p className="opn">{m}</p>}</section>}
+   {tab===0&&<Fleet T={T} uid={ses} run={run}/>}{tab===1&&<Flights T={T} uid={ses} run={run}/>}{tab===2&&<Requests T={T} run={run} onCount={setCnt}/>}{tab===3&&<Pay T={T} uid={ses} run={run}/>}
+  </div></div>}
+function Login({T}:{T:Tx}){const [e,setE]=useState(''),[m,setM]=useState(''),[b,setB]=useState(false),[sent,setSent]=useState(false);
+ const go=async()=>{setB(true);setM('');const r=await sb.auth.signInWithOtp({email:e.trim(),options:{emailRedirectTo:location.href}});setB(false);if(r.error){setM(T.err);return}setSent(true)};
+ const valid=e.includes('@')&&e.includes('.');
+ return <div className="op-login"><div className="op-lside" aria-hidden="true"><div className="op-rings"><i/><i/><i/><b/></div></div>
+  <div className="op-lform"><Brand T={T}/><div className="op-lbox"><LangSwitch/><h1>{T.loginH}</h1>
+   {sent?<><p className="op-ok" role="status">{T.sent}</p><button className="g" onClick={()=>setSent(false)}>{T.another}</button></>
+   :<><p>{T.loginP}</p><Fld l={T.email} v={e} on={setE} type="email"/><button disabled={b||!valid} onClick={go}>{T.send}</button>{m&&<div className="ope" role="alert">{m}</div>}</>}
+   <small>{T.side}</small></div></div></div>}
 type P={T:Tx;run:(f:()=>PromiseLike<{error:{message:string}|null}>)=>Promise<boolean>};
 function Fleet({T,uid,run}:P&{uid:string}){
  const [rows,setRows]=useState<Row[]>([]),[f,setF]=useState({...empty}),[eid,setEid]=useState<string|null>(null),[open,setOpen]=useState(false);
@@ -62,7 +93,11 @@ function Fleet({T,uid,run}:P&{uid:string}){
    <Fld l={T.apt} v={f.airport_requirements} on={s('airport_requirements')} area/><Fld l={T.photos} v={f.photos} on={s('photos')} area/><Fld l={T.notes} v={f.notes} on={s('notes')} area/>
    <div className="opa"><button disabled={!f.model.trim()} onClick={save}>{T.save}</button><button className="g" onClick={()=>{setOpen(false);setEid(null);setF({...empty})}}>{T.cancel}</button></div></div>}
   {rows.length===0&&!open&&<p className="opn">{T.nofleet}</p>}
-  {rows.map(r=><div className="opr" key={r.id}><div><b>{r.model}</b> · {r.max_pax??'?'} <small>{r.manufacturer??''}</small></div><span className={`opb ${r.verification==='CONFIRMED'?'ok':''}`}>{(T as any)[r.verification]}</span><button className="g" onClick={()=>edit(r)}>{T.edit}</button></div>)}
+  <div className="op-cards">{rows.map(r=>{const ph=(r.photo_urls??[]).find((x:string)=>x.startsWith('https://'));return <article className="op-ac" key={r.id}>
+   <div className="op-ph">{ph?<img src={ph} alt={r.model} loading="lazy"/>:<span><Ic i={0}/><small>{T.noPhoto}</small></span>}</div>
+   <div className="op-ab"><b>{r.model}</b><small>{r.manufacturer??''}{r.year_built?` · ${r.year_built}`:''}</small>
+    <div className="op-meta"><span>{r.max_pax??'?'} {T.seatsN}</span>{r.range_nm?<span dir="ltr">{r.range_nm} nm</span>:null}</div></div>
+   <div className="op-af"><span className={`opb ${r.verification==='CONFIRMED'?'ok':''}`}>{(T as any)[r.verification]}</span><button className="g" onClick={()=>edit(r)}>{T.edit}</button></div></article>})}</div>
  </section>}
 function Flights({T,uid,run}:P&{uid:string}){
  const [rows,setRows]=useState<Row[]>([]),[fl,setFl]=useState<Row[]>([]),[ap,setAp]=useState<Row[]>([]),[open,setOpen]=useState(false);
@@ -84,22 +119,36 @@ function Flights({T,uid,run}:P&{uid:string}){
    <Fld l={T.dep1} v={f.a} on={set('a')} type="datetime-local"/><Fld l={T.dep2} v={f.b} on={set('b')} type="datetime-local"/><Fld l={T.seats} v={f.seats} on={set('seats')} type="number"/><Fld l={T.price} v={f.price} on={set('price')} type="number"/></div>
    {!f.price&&<small>{T.onreq}</small>}<div className="opa"><button disabled={bad} onClick={save}>{T.save}</button><button className="g" onClick={()=>setOpen(false)}>{T.cancel}</button></div></div>}
   {rows.length===0&&<p className="opn">{T.noflights}</p>}
-  {rows.map(r=><div className="opr" key={r.id}><div><b dir="ltr">{r.origin_code} → {r.destination_code??'—'}</b> · {r.aircraft_model}<br/><small>{new Date(r.departure_from).toLocaleString(lang2())} · {r.seats}</small></div>
-   <span className={`opb ${r.status==='AVAILABLE'?'ok':''}`}>{(T as any)[r.status]}</span>
-   {['PENDING_VERIFICATION','AVAILABLE','HELD'].includes(r.status)&&<button className="g" onClick={async()=>{if(await run(()=>sb.rpc('set_availability_status',{p_id:r.id,p_new:'CANCELLED',p_reason:'withdrawn by operator'})))load()}}>{T.withdraw}</button>}</div>)}
+  <div className="op-cards">{rows.map(r=><article className="op-fl" key={r.id}>
+   <div className="op-route" dir="ltr"><b>{r.origin_code}</b><i aria-hidden="true">→</i><b>{r.destination_code??'—'}</b></div>
+   <div className="op-ab"><b>{r.aircraft_model}</b><small>{fmt(r.departure_from)} · {r.seats} {T.seatsN}</small></div>
+   <div className="op-af"><span className={`opb ${r.status==='AVAILABLE'?'ok':''}`}>{(T as any)[r.status]}</span>
+   {['PENDING_VERIFICATION','AVAILABLE','HELD'].includes(r.status)&&<button className="g" onClick={async()=>{if(await run(()=>sb.rpc('set_availability_status',{p_id:r.id,p_new:'CANCELLED',p_reason:'withdrawn by operator'})))load()}}>{T.withdraw}</button>}</div></article>)}</div>
  </section>}
 const lang2=()=>document.documentElement.lang||'ar';
-function Requests({T,run}:P){
+const fmt=(d:string)=>new Date(d).toLocaleString(lang2(),{dateStyle:'medium',timeStyle:'short'});
+function Requests({T,run,onCount}:P&{onCount:(n:number)=>void}){
  const [rows,setRows]=useState<Row[]>([]),[sel,setSel]=useState<string|null>(null),[mode,setMode]=useState<'q'|'d'>('q'),[price,setPrice]=useState(''),[hrs,setHrs]=useState('24'),[txt,setTxt]=useState(''),[msg,setMsg]=useState('');
- const load=()=>{sb.rpc('list_operator_requests').then(r=>setRows(r.data??[]))};useEffect(load,[]);
+ const load=()=>{sb.rpc('list_operator_requests').then(r=>{const d=r.data??[];setRows(d);onCount(d.length)})};useEffect(load,[]);
+ const cur=rows.find(r=>r.quote_request_id===sel);
  const go=async()=>{if(!sel)return;const okk=await run(()=>mode==='q'?sb.rpc('operator_submit_quote',{p_quote_request_id:sel,p_price_usd:Number(price),p_valid_until:new Date(Date.now()+Number(hrs)*36e5).toISOString(),p_note:txt||null}):sb.rpc('operator_decline_request',{p_quote_request_id:sel,p_reason:txt||null}));
   if(okk){setMsg(mode==='q'?T.sentq:'');setSel(null);setPrice('');setTxt('');load()}};
- return <section>{msg&&<p className="opn">{msg}</p>}{rows.length===0&&<p className="opn">{T.noreq}</p>}
-  {rows.map(r=><div key={r.quote_request_id} className="opr col"><div><b dir="ltr">{r.origin_code} → {r.destination_code??'—'}</b> · {r.passengers} {T.pax2}<br/><small>{new Date(r.departure_from).toLocaleString(lang2())}</small></div>
-   {sel!==r.quote_request_id?<div className="opa"><button onClick={()=>{setSel(r.quote_request_id);setMode('q')}}>{T.offer}</button><button className="g" onClick={()=>{setSel(r.quote_request_id);setMode('d')}}>{T.decline}</button></div>
-   :<div className="opc">{mode==='q'&&<div className="opg"><Fld l={T.quoteP} v={price} on={setPrice} type="number"/><Fld l={T.hrs} v={hrs} on={setHrs} type="number"/></div>}
-    <Fld l={mode==='q'?T.notes:T.reason} v={txt} on={setTxt} area/><div className="opa"><button disabled={mode==='q'&&(!price||Number(price)<=0)} onClick={go}>{mode==='q'?T.sendq:T.decline}</button><button className="g" onClick={()=>setSel(null)}>{T.cancel}</button></div></div>}</div>)}
- </section>}
+ return <section className="op-split">
+  <div className="op-cards">{msg&&<p className="op-ok" role="status">{msg}</p>}{rows.length===0&&<p className="opn">{T.noreq}</p>}
+   {rows.map(r=><article key={r.quote_request_id} className={`op-fl op-rq${sel===r.quote_request_id?' on':''}`}>
+    <div className="op-route" dir="ltr"><b>{r.origin_code}</b><i aria-hidden="true">→</i><b>{r.destination_code??'—'}</b></div>
+    <div className="op-ab"><b>{r.passengers} {T.pax2}</b><small>{fmt(r.departure_from)}</small></div>
+    <div className="op-af"><button onClick={()=>{setSel(r.quote_request_id);setMode('q');setMsg('')}}>{T.offer}</button><button className="g" onClick={()=>{setSel(r.quote_request_id);setMode('d');setMsg('')}}>{T.decline}</button></div></article>)}</div>
+  <aside className="op-q" aria-live="polite">
+   {!cur?<><h2>{T.qHow}</h2><ol><li>{T.qHow1}</li><li>{T.qHow2}</li><li>{T.qHow3}</li></ol><p className="opn">{T.qPick}</p></>
+   :<><h2>{mode==='q'?T.qTitle:T.decline}</h2>
+    <div className="op-route sm" dir="ltr"><b>{cur.origin_code}</b><i aria-hidden="true">→</i><b>{cur.destination_code??'—'}</b></div>
+    <p className="opn">{cur.passengers} {T.pax2} · {fmt(cur.departure_from)}</p>
+    {mode==='q'&&<div className="opg"><Fld l={T.quoteP} v={price} on={setPrice} type="number"/><Fld l={T.hrs} v={hrs} on={setHrs} type="number"/></div>}
+    <Fld l={mode==='q'?T.notes:T.reason} v={txt} on={setTxt} area/>
+    {mode==='q'&&<p className="op-trust">{T.qTrust}</p>}
+    <div className="opa"><button disabled={mode==='q'&&(!price||Number(price)<=0)} onClick={go}>{mode==='q'?T.sendq:T.decline}</button><button className="g" onClick={()=>setSel(null)}>{T.cancel}</button></div></>}
+  </aside></section>}
 function Pay({T,uid,run}:P&{uid:string}){
  const [m,setM]=useState<'PAYMENT_LINK'|'BANK_TRANSFER'>('PAYMENT_LINK'),[lk,setLk]=useState(''),[bk,setBk]=useState(''),[rows,setRows]=useState<Row[]>([]),[ask,setAsk]=useState<string|null>(null),[ref,setRef]=useState(''),[saved,setSaved]=useState(false);
  const load=useCallback(()=>{sb.from('operator_payment_details').select('*').eq('operator_id',uid).maybeSingle().then(r=>{if(r.data){setM(r.data.method);setLk(r.data.payment_link??'');setBk(r.data.bank_details??'')}});sb.rpc('list_operator_accepted_quotes').then(r=>setRows(r.data??[]))},[uid]);useEffect(load,[load]);
