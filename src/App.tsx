@@ -106,7 +106,7 @@ export default function App(){
    <div className="hx-copy"><p className="hx-mark">THE KING'S EYE</p>
    <h1 className="hx-h">{t('hero.sub1')} <b>{t('hero.sub2')}</b></h1><p className="hx-lead">{t('hero.lead')}</p>
    <div className="hx-sw">
-    {!real&&<Switch primary label={lang==='ar'?'ادخل الكابينة':'Enter the cabin'} sub={lang==='ar'?'جرّب رحلتك مع العين':'Plan a trip with the Eye'} onActivate={()=>{location.href='?view=app'}}/>}
+    {!real&&<Switch primary label={lang==='ar'?'ادخل الكابينة':'Enter the cabin'} sub={lang==='ar'?'جرّب رحلتك مع العين':'Plan a trip with the Eye'} onActivate={()=>{location.href='?view=ask'}}/>}
     <div className="ln"><Switch small label={t('d.explore')} onActivate={()=>go('explore')}/>{!real&&!login&&<Switch small label={t('hero.account')} onActivate={()=>setLogin(true)}/>}</div>
    </div>
    {staffMode&&<><div className="roles" style={{marginTop:22}} role="group" aria-label={t('hero.pick.aria')}>{(['admin','operator','customer'] as Role[]).map(r=><button key={r} className={role===r?'':'g'} onClick={()=>{setRole(r);setTimeout(()=>document.getElementById('room')?.scrollIntoView({behavior:'smooth'}),50)}}>{t('role.'+r)}</button>)}</div><div className="mono" style={{marginTop:14,opacity:.6}}>{t('hero.demoaccess')}</div></>}

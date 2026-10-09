@@ -2,7 +2,7 @@ import {useEffect,useMemo,useRef,useState} from 'react';
 import './cabin/cabin.css';import './ask.css';
 import {sb} from './lib/supabase';
 import {useI18n,LANGS,type Lang} from './i18n';
-import {Toggle} from './cabin/Switch';
+import {Toggle} from './cabin/Switch';import {HUBS,dist,flightMin,hm} from './cabin/geo';
 // «اطلب رحلتك»: العميل يكتب رحلته بكلامه، والعين تفهم وتسأل عمّا ينقص فقط (سؤال واحد كل مرة)،
 // ثم يؤكد العميل فهمها ويترك طريقة التواصل. لا يُرسل شيء لأي مشغّل: الطلب يصل إلى إنسان من الفريق (submit-request).
 // الفهم يقترحه النموذج (understand-request) وتتحقق منه الشيفرة؛ التأكيد والإرسال قرار العميل.
@@ -58,6 +58,7 @@ export default function Ask(){
   }catch{setErr(t('ask.err.generic'));setStage('contact')}
  };
  const again=()=>{setLines([]);setDraft('');setF(EMPTY);setEv({});setCheck(false);setMiss([]);setVal('');setOk(false);setErr('');setStage('say')};
+ const eo=HUBS.find(h=>h.iata===f.origin_code),ed=HUBS.find(h=>h.iata===f.destination_code),ekm=eo&&ed&&eo.iata!==ed.iata?Math.round(dist(eo,ed)):null;
  const D=lang==='ar'?'rtl':'ltr',arrow=lang==='ar'?'←':'→',top=iso(Date.now());
  const selF=(k:'origin_code'|'destination_code',lbl:string)=><label className="cb-row"><span>{lbl}</span><select value={f[k]??''} onChange={e=>setF({...f,[k]:e.target.value||null})}><option value="">…</option>{aps.length?aps.map(a=><option key={a.iata_code} value={a.iata_code}>{apName(a)}</option>):f[k]?<option value={f[k]!}>{f[k]}</option>:null}</select></label>;
  const said=(k:string)=>ev[k]?<small className="ak-said">{t('ask.said',{x:ev[k]})}</small>:null;
@@ -79,7 +80,7 @@ export default function Ask(){
     <button type="button" className="cb-link" onClick={()=>setStage('confirm')}>{t('ask.manual')}</button></>}
    {stage==='confirm'&&<><h1>{t('ask.confirmT')}</h1><p className="cb-sub">{t('ask.confirmSub')}</p>
     {err&&<p className="cb-note" role="alert">{err}</p>}{check&&!err&&<p className="cb-note">{t('ask.check')}</p>}
-    <div className="ak-eye"><p><b>{t('eye.saw')}</b> {t('eye.sawD')}</p><p><b>{t('eye.unk')}</b> <span className="ak-unk">{t('eye.unkB')}</span> {t('eye.unkD')}</p><p><b>{t('eye.shall')}</b> {t('eye.shallD')}</p></div>
+    <div className="ak-eye"><p><b>{t('eye.saw')}</b> {t('eye.sawD')}</p>{ekm&&<p><b>{t('eye.est')}</b> <span className="ak-est">{t('eye.estB')}</span> {t('eye.estD',{k:ekm,h:hm(flightMin(ekm))})}</p>}<p><b>{t('eye.unk')}</b> <span className="ak-unk">{t('eye.unkB')}</span> {t('eye.unkD')}</p><p><b>{t('eye.shall')}</b> {t('eye.shallD')}</p></div>
     {selF('origin_code',t('ask.f.from'))}{said('origin_code')}{selF('destination_code',t('ask.f.to'))}{said('destination_code')}
     <label className="cb-row"><span>{t('ask.f.date')}</span><input type="date" min={top} value={f.travel_date??''} onChange={e=>setF({...f,travel_date:e.target.value||null})}/></label>{said('travel_date')}
     <div className="cb-row"><span id="akp">{t('ask.f.pax')}</span><div className="cb-step" role="group" aria-labelledby="akp"><button type="button" aria-label="−" disabled={(f.passengers??0)<=1} onClick={()=>setF({...f,passengers:Math.max(1,(f.passengers??2)-1)})}>−</button><output>{f.passengers??'…'}</output><button type="button" aria-label="+" onClick={()=>setF({...f,passengers:Math.min(40,(f.passengers??0)+1)})}>+</button></div></div>{said('passengers')}

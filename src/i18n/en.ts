@@ -233,7 +233,7 @@ export const en:Record<Key,string>={
 "ask.err.limit":"Too many requests in a short time. Please try again shortly.",
 "ask.err.generic":"Could not send right now. Nothing was lost, please try again.",
 "ask.err.field":"Please check this field: {x}",
-"ask.foot":"A real request that reaches a human team. No automatic booking, and no promise of availability or price.","eye.saw":"I saw","eye.sawD":"This is what I understood from you. Correct me if I got it wrong.","eye.unk":"I do not know yet","eye.unkD":"I do not know whether a jet is available at this time, or its price. I have not asked any operator yet.","eye.unkB":"? UNKNOWN","eye.shall":"Shall I arrange it?","eye.shallD":"Your request goes to our human team first. Nothing is sent to any operator before the team reviews it.",
+"ask.foot":"A real request that reaches a human team. No automatic booking, and no promise of availability or price.","eye.saw":"I saw","eye.sawD":"This is what I understood from you. Correct me if I got it wrong.","eye.unk":"I do not know yet","eye.unkD":"I do not know whether a jet is available at this time, or its price. I have not asked any operator yet.","eye.unkB":"? UNKNOWN","eye.shall":"Shall I arrange it?","eye.shallD":"Your request goes to our human team first. Nothing is sent to any operator before the team reviews it.","eye.est":"I infer","eye.estB":"◐ ESTIMATE","eye.estD":"Distance about {k} km, flight time about {h} h. An estimate from coordinates; it may differ by aircraft and routing.",
 "ask.home":"Write your trip",
 "ask.outside":"This destination is outside the trips we actually receive right now. You can try the cabin, but this request cannot be sent yet.",
 "ask.need":"Enter your name and contact, agree, then press and hold.",
