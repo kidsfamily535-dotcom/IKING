@@ -1,0 +1,23 @@
+.bf-tick{overflow:hidden;margin:14px -4px;padding:4px;-webkit-mask-image:linear-gradient(90deg,transparent,#000 6%,#000 94%,transparent);mask-image:linear-gradient(90deg,transparent,#000 6%,#000 94%,transparent)}
+.bf-track{display:flex;gap:12px;width:max-content}
+.bf-tick:not(.loop){overflow-x:auto;scroll-snap-type:x proximity}.bf-tick:not(.loop) .bf-c{scroll-snap-align:center}
+.bf-tick.loop .bf-track{animation:bf-run 45s linear infinite}
+[dir=rtl] .bf-tick.loop .bf-track{animation-name:bf-run-r}
+.bf-tick.loop:hover .bf-track,.bf-tick.loop:focus-within .bf-track,.bf-tick.loop:active .bf-track{animation-play-state:paused}
+@keyframes bf-run{to{transform:translateX(calc(-50% - 6px))}}@keyframes bf-run-r{to{transform:translateX(calc(50% + 6px))}}
+@media (prefers-reduced-motion:reduce){.bf-tick.loop{overflow-x:auto}.bf-tick.loop .bf-track{animation:none}}
+.bf-c{flex:none;width:236px;display:flex;flex-direction:column;gap:4px;text-align:start;background:#15120e;color:inherit;border:1px solid #2e271d;border-radius:14px;padding:12px 14px;min-height:44px;cursor:pointer;font:inherit}
+.bf-c.on{border-color:#b98d45;background:linear-gradient(160deg,#1d160c,#15120e)}
+.bf-c:focus-visible{outline:2px solid #e9cd92;outline-offset:2px}
+.bf-st{align-self:flex-start;font-size:12px;border:1px solid currentColor;border-radius:999px;padding:0 9px}
+.bf-st.o{color:#86d3a9}.bf-st.e{color:#e3b45c}.bf-st.m{color:#a89c86;border-style:dashed}
+.bf-rt{font-size:15px}.bf-cb{opacity:.75;font-size:13.5px}.bf-pr{font-size:22px;font-weight:700;font-family:Amiri,serif}.bf-pr small{font-size:12px;font-weight:400;opacity:.7}.bf-tl{font-size:12px;opacity:.65}
+.bf-rib{display:inline-block;font-size:12.5px;border:1px solid #e3b45c;color:#e3b45c;border-radius:999px;padding:0 10px;margin:0 0 6px}
+.bf-rib.o{color:#86d3a9;border-color:#86d3a9}
+.bf-demo{max-width:720px;margin:0 auto;padding:18px 14px 60px}
+.bf-demo h1{font-family:Amiri,serif;margin:6px 0}
+.bf-big{border:1px solid #b98d45;background:linear-gradient(160deg,#1d160c,#15120e);border-radius:16px;padding:16px;margin-top:6px}
+.bf-big h3{font-family:Amiri,serif;font-size:22px;margin:4px 0}
+.bf-big .sm{font-size:14px;opacity:.8}
+.bf-flex{display:flex;gap:8px;align-items:center;margin:10px 0;font-size:14px}.bf-flex input{flex:1}
+.bf-act{display:flex;gap:8px;flex-wrap:wrap;margin-top:12px}
