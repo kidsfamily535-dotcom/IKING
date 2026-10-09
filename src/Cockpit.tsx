@@ -4,6 +4,7 @@ import {useI18n,airportName} from './i18n';
 import Route from './Route';
 import HoldRing from './Hold';
 import type {Airport} from './data/types';
+import {TermsForm,AfterConfirm} from './PilotSteps';
 import './cockpit.css';
 
 // غرفة الوسيط: طلب واحد في كل مرة، وخيط يوضّح أين وصل الطلب وما المطلوب منك الآن.
@@ -158,6 +159,8 @@ function Prep({off,cur,t,done,onErr,onClose}:{off:Off;cur?:Co;t:Tx;done:()=>void
 function Thread({req,t,lang,nm,reload,onList}:{req:Req;t:Tx;lang:string;nm:(c:string|null)=>string;reload:()=>void;onList:()=>void}){
  const [d,setD]=useState<Detail|null>(null),[err,setErr]=useState(''),[prepOff,setPrepOff]=useState(''),[addOp,setAddOp]=useState(false),[rejId,setRejId]=useState(''),[rejW,setRejW]=useState(''),[note,setNote]=useState(''),[cf,setCf]=useState('');
  const [xo,setXo]=useState<''|'close'|'cancel'|'reopen'>(''),[xw,setXw]=useState('');
+ const [hasTerms,setHasTerms]=useState<Record<string,boolean>>({});
+ const termsState=useCallback((id:string)=>(h:boolean)=>setHasTerms(m=>m[id]===h?m:{...m,[id]:h}),[]);
  const loc=lang==='ar'?'ar-u-nu-latn':'en-GB';
  const dt=(s:string)=>new Date(s).toLocaleString(loc,{day:'numeric',month:'short',hour:'2-digit',minute:'2-digit'});
  const load=useCallback(async()=>{
@@ -229,11 +232,11 @@ function Thread({req,t,lang,nm,reload,onList}:{req:Req;t:Tx;lang:string;nm:(c:st
        <p className="kc-mg"><span className="badge b">{t.inn.split(':')[0]}</span> {t.mg}: <b dir="ltr">{money(co.client_price-o.operator_total_price,co.currency)}</b></p>
        {co.client_note&&<small className="kc-h"><bdi>{co.client_note}</bdi></small>}{co.fees_note&&<small className="kc-h"><bdi>{co.fees_note}</bdi></small>}
        {prepOff===co.id?<Prep off={o} cur={co} t={t} done={after} onErr={fail} onClose={()=>setPrepOff('')}/>:<>
-        {co.status==='DRAFT'&&<><p className="kc-h"><b>{t.g2}.</b> {t.g2h}</p>
-         <Approve label={t.g2hold} onDone={async()=>{setErr('');try{await call('loop_approve_gate',{p_request:req.id,p_gate:2,p_decision:'APPROVED',p_note:null,p_operators:null,p_client_offer:co.id});after()}catch(e:any){fail(e.message)}}}/>
+        {co.status==='DRAFT'&&<><TermsForm coId={co.id} onState={termsState(co.id)}/><p className="kc-h"><b>{t.g2}.</b> {t.g2h}</p>
+         {hasTerms[co.id]?<Approve label={t.g2hold} onDone={async()=>{setErr('');try{await call('loop_approve_gate',{p_request:req.id,p_gate:2,p_decision:'APPROVED',p_note:null,p_operators:null,p_client_offer:co.id});after()}catch(e:any){fail(e.message)}}}/>:<div className="nt">{lang==='ar'?'سجّل شروط العرض أولًا. لا إقرار ولا عرض للعميل بدونها.':'Record the offer terms first. No approval and no client offer without them.'}</div>}
          <div className="act"><button className="g" onClick={()=>setPrepOff(co.id)}>{t.edit}</button><button className="g" onClick={()=>setRejId(rejId===co.id?'':co.id)}>{t.rej}</button></div>
          {rejId===co.id&&<div className="act"><input aria-label={t.rejW} placeholder={t.rejW} value={rejW} onChange={e=>setRejW(e.target.value)}/><button disabled={rejW.trim().length<3} onClick={()=>act(async()=>{await call('loop_approve_gate',{p_request:req.id,p_gate:2,p_decision:'REJECTED',p_note:rejW.trim(),p_operators:null,p_client_offer:co.id});setRejId('');setRejW('')})}>{t.rejGo}</button></div>}</>}
-        {co.status==='APPROVED'&&<><p className="kc-h">{t.presentH}</p><div className="act"><button onClick={()=>act(()=>call('loop_present_client_offer',{p_client_offer:co.id}))}>{t.present}</button><button className="g" onClick={()=>setPrepOff(co.id)}>{t.edit}</button></div></>}</>}
+        {co.status==='APPROVED'&&<><TermsForm coId={co.id} onState={termsState(co.id)}/><p className="kc-h">{t.presentH}</p><div className="act"><button disabled={!hasTerms[co.id]} onClick={()=>act(()=>call('loop_present_client_offer',{p_client_offer:co.id}))}>{t.present}</button><button className="g" onClick={()=>setPrepOff(co.id)}>{t.edit}</button></div></>}</>}
       </div>}
      </div>})}</div>}
 
@@ -250,6 +253,8 @@ function Thread({req,t,lang,nm,reload,onList}:{req:Req;t:Tx;lang:string;nm:(c:st
     <textarea aria-label={t.cf} rows={3} maxLength={300} placeholder={t.cfph} value={cf} onChange={e=>setCf(e.target.value)}/>
     <div className="act"><button disabled={cf.trim().length<5} onClick={()=>act(async()=>{await call('loop_confirm',{p_request:req.id,p_note:cf.trim()});setCf('')})}>{t.cfs}</button>
      <button className="g" onClick={()=>act(()=>call('loop_set_status',{p_request:req.id,p_new:'SEARCHING',p_reason:'operator did not confirm, search reopened'}))}>{t.cff}</button></div></div>}
+
+   {s==='CONFIRMED'&&shown&&<AfterConfirm reqId={req.id} offer={{id:shown.id,client_price:shown.client_price,currency:shown.currency}} defaultNote={req.loop_status_reason??''}/>}
 
    {Other}
    {d.appr.length>0&&<details className="kc-more"><summary className="mono">{t.log}</summary>

@@ -6,6 +6,7 @@ import Glyph from './Glyph';
 import type {Airport} from './data/types';
 import {Switch} from './cabin/Switch';
 import FlexLegs from './FlexLegs';
+import {TermsView} from './PilotSteps';
 import './requests.css';
 import './profile.css';
 
@@ -107,6 +108,7 @@ function OfferCard({offer,route,t,lang,reload}:{offer:MyOffer;route:ReactNode;t:
   <p className="rq-cab"><bdi>{offer.cabin_label}</bdi></p>
   <p className="rq-price" dir="ltr">{new Intl.NumberFormat('en-US',{maximumFractionDigits:0}).format(offer.price)} <span>{offer.currency}</span></p>
   <p className="dim sm">{offer.fees_included?t.incl:t.excl}{offer.fees_note?<> · <bdi>{offer.fees_note}</bdi></>:null}</p>
+  <TermsView coId={offer.client_offer_id}/>
   {open&&<p className="dim sm">{t.valid} {till}</p>}
   {!open&&<p className="dim">{t.acc}</p>}
   {res&&<div className="nt e" role="status">{res}</div>}{err&&<div className="nt" role="alert">{err}</div>}
