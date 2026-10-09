@@ -29,7 +29,7 @@ function Coin({label,hint,onDone}:{label:string;hint:string;onDone:()=>void}){
  const C=2*Math.PI*46;
  return <div className="cb-coinw"><button type="button" className="cb-coin" onPointerDown={start} onPointerUp={stop} onPointerLeave={stop} onPointerCancel={stop}
   onKeyDown={e=>{if((e.key==='Enter'||e.key===' ')&&!e.repeat){e.preventDefault();start()}else if(e.key==='Escape')stop()}} aria-label={`${label}. ${hint}`}>
-  <svg viewBox="0 0 100 100" aria-hidden><circle cx="50" cy="50" r="46" fill="none" stroke="#1b2438" strokeOpacity=".18" strokeWidth="2"/><circle cx="50" cy="50" r="46" fill="none" stroke="#8a6a24" strokeWidth="3" strokeLinecap="round" strokeDasharray={C} strokeDashoffset={C*(1-p)} transform="rotate(-90 50 50)"/></svg>
+  <svg viewBox="0 0 100 100" aria-hidden><circle cx="50" cy="50" r="46" fill="none" stroke="#292929" strokeOpacity=".18" strokeWidth="2"/><circle cx="50" cy="50" r="46" fill="none" stroke="#8a6a24" strokeWidth="3" strokeLinecap="round" strokeDasharray={C} strokeDashoffset={C*(1-p)} transform="rotate(-90 50 50)"/></svg>
   <b>{label}</b></button></div>;
 }
 export default function Cabin(){

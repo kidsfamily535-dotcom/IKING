@@ -1,0 +1,19 @@
+/* شارات الحالة وخط زمن الطلب (هوية iKing: أسود دافئ + ذهبي نحاسي + عاجي) */
+.sc{display:inline-flex;align-items:center;gap:6px;min-height:28px;padding:2px 11px 2px 9px;border:1px solid #7a6a4f;border-radius:999px;background:#1a1713;color:#f5f0e8;font:400 12.5px/1.2 Tajawal,system-ui,sans-serif;letter-spacing:.02em;white-space:nowrap}
+.sc svg{width:14px;height:14px;flex:none}
+.sc-confirmed{border-color:#c6a15b;color:#e2c98d}
+.sc-estimate{border-color:#c6a15b88;color:#f5f0e8}
+.sc-sim{border-style:dashed;color:#d9cdb0}
+.sc-unknown{border-color:#7a6a4f;color:#b9ad92}
+.rt-tl{list-style:none;margin:10px 0 4px;padding:0;display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:0;width:100%;grid-column:1/-1;flex-basis:100%}
+.rt-tl li{position:relative;display:flex;flex-direction:column;align-items:center;gap:6px;text-align:center;font:400 12px/1.35 Tajawal,system-ui,sans-serif;color:#b9ad92;padding:0 2px;list-style:none;border:0;background:none;min-height:0}
+.rt-tl li::before{content:"";position:absolute;top:6px;inset-inline:-50% 50%;height:1px;background:#7a6a4f88}
+.rt-tl li:first-child::before{display:none}
+.rt-tl i{position:relative;z-index:1;width:12px;height:12px;border-radius:50%;border:1px solid #7a6a4f;background:#111111}
+.rt-tl li.done i{background:#7a6a4f}
+.rt-tl li.done::before,.rt-tl li.now::before{background:#c6a15b}
+.rt-tl li.now{color:#f5f0e8}
+.rt-tl li.now i{background:#c6a15b;border-color:#e2c98d;box-shadow:0 0 12px #c6a15b99}
+@media(max-width:520px){.rt-tl li{font-size:11px}}
+@media(prefers-reduced-motion:no-preference){.rt-tl li.now i{animation:rtp 2.4s ease-in-out infinite}}
+@keyframes rtp{50%{box-shadow:0 0 4px #c6a15b55}}

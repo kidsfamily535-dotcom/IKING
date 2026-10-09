@@ -8,10 +8,10 @@
 .ms .form{display:grid;gap:18px;margin-top:14px}
 .ms label{display:grid;gap:4px;font-size:14px;color:var(--dim)}
 .ms .lb{display:block;font-size:14px;color:var(--dim);margin-bottom:8px}
-.ms select,.ms input[type=text],.ms input[type=datetime-local],.ms input[type=email]{width:100%;min-height:48px;background:#f4ecdc10;border:1px solid var(--line);border-radius:2px;color:var(--ink);font:inherit;font-size:16px;padding:0 12px}
-.ms select option{background:#0d1a2e;color:#f4ecdc}
+.ms select,.ms input[type=text],.ms input[type=datetime-local],.ms input[type=email]{width:100%;min-height:48px;background:#f5f0e810;border:1px solid var(--line);border-radius:2px;color:var(--ink);font:inherit;font-size:16px;padding:0 12px}
+.ms select option{background:#1b1814;color:#f5f0e8}
 .ms .chips{display:flex;gap:10px;flex-wrap:wrap}
-.ms .chips button{min-height:44px;background:none;border:1px solid #c9a96166;color:var(--gold);padding:0 18px;font-size:15px}
+.ms .chips button{min-height:44px;background:none;border:1px solid #c6a15b66;color:var(--gold);padding:0 18px;font-size:15px}
 .ms .chips button.on{background:var(--gold);color:var(--bg)}
 .ms .nt{margin:16px 0 8px}
 .ms .ms-wx{color:var(--dim);font-size:13.5px;margin:0 0 6px}

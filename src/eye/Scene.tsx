@@ -27,14 +27,14 @@ function World({airports:all,arc,focus,k}:{airports:Airport[];arc?:[string,strin
  const d=e?`M${e[0].x},${e[0].y} Q${(e[0].x+e[1].x)/2},${Math.min(e[0].y,e[1].y)-70} ${e[1].x},${e[1].y}`:'';
  const hot=new Set([...(arc??[]),...(focus?[focus]:[])]);
  return <svg className="sc-map" viewBox="0 0 600 600" preserveAspectRatio="xMidYMid slice" aria-hidden>
-  {[67,135,202,270].map(r=><circle key={r} cx="300" cy="300" r={r} fill="none" stroke="#f4ecdc" strokeOpacity=".06"/>)}
-  <path className="sc-sweep" d="M300,300 L300,30 A270,270 0 0 1 470,90 Z" fill="#c9a961" fillOpacity=".07"/>
+  {[67,135,202,270].map(r=><circle key={r} cx="300" cy="300" r={r} fill="none" stroke="#f5f0e8" strokeOpacity=".06"/>)}
+  <path className="sc-sweep" d="M300,300 L300,30 A270,270 0 0 1 470,90 Z" fill="#c6a15b" fillOpacity=".07"/>
   {airports.map(a=>{const p=P[a.iata],h=hot.has(a.iata);return <g key={a.iata}>
-   {h&&<circle className="sc-ping" cx={p.x} cy={p.y} r="7" fill="none" stroke="#c9a961" style={{transformOrigin:`${p.x}px ${p.y}px`}}/>}
-   <circle cx={p.x} cy={p.y} r={h?3.6:1.8} fill={h?'#c9a961':'#f4ecdc'} fillOpacity={h?1:.45}/>
-   <text x={p.x>500?p.x-7:p.x+7} textAnchor={p.x>500?'end':'start'} y={p.y-6} fill="#f4ecdc" fillOpacity={h?.85:.28} fontSize="8.5" fontFamily="JetBrains Mono" letterSpacing="1.5">{a.iata}</text></g>})}
-  {e&&<g key={k}><path className="sc-arc" d={d} pathLength={1} fill="none" stroke="#c9a961" strokeWidth="1.4"/>
-   <circle r="3.2" fill="#f4ecdc"><animateMotion dur="5s" repeatCount="indefinite" path={d}/></circle></g>}
+   {h&&<circle className="sc-ping" cx={p.x} cy={p.y} r="7" fill="none" stroke="#c6a15b" style={{transformOrigin:`${p.x}px ${p.y}px`}}/>}
+   <circle cx={p.x} cy={p.y} r={h?3.6:1.8} fill={h?'#c6a15b':'#f5f0e8'} fillOpacity={h?1:.45}/>
+   <text x={p.x>500?p.x-7:p.x+7} textAnchor={p.x>500?'end':'start'} y={p.y-6} fill="#f5f0e8" fillOpacity={h?.85:.28} fontSize="8.5" fontFamily="JetBrains Mono" letterSpacing="1.5">{a.iata}</text></g>})}
+  {e&&<g key={k}><path className="sc-arc" d={d} pathLength={1} fill="none" stroke="#c6a15b" strokeWidth="1.4"/>
+   <circle r="3.2" fill="#f5f0e8"><animateMotion dur="5s" repeatCount="indefinite" path={d}/></circle></g>}
  </svg>;
 }
 function useBrief(on:boolean,real:boolean){

@@ -66,10 +66,10 @@ export default function JourneyRoom({airports,demo=false,real=false,ask,guest=fa
    <div className="card"><div className="mono">{LT('RUH → JED')}<span className="badge b">{cp('badge.sim')}</span></div>
     <h3>{nm('RUH')} · {nm('JED')}</h3>
     <div className="row"><span>{t('st.label')}</span><span>{t('table.empty')}</span></div>
-    <div className="radar"><svg viewBox="0 0 600 260" role="img" aria-label={t('j.trips.title')}><rect width="600" height="260" fill="#08111f"/>{[1,2,3].map(i=><line key={i} x1="0" x2="600" y1={i*65} y2={i*65} stroke="#f4ecdc" strokeOpacity=".07"/>)}
-     <path d="M80,170 Q300,-10 520,110" fill="none" stroke="#c9a961" strokeOpacity=".55"/><circle cx="80" cy="170" r="3" fill="#f4ecdc"/><circle cx="520" cy="110" r="3" fill="#f4ecdc"/>
-     <text x="70" y="192" fill="#f4ecdc99" fontSize="10" fontFamily="JetBrains Mono">RUH</text><text x="490" y="132" fill="#f4ecdc99" fontSize="10" fontFamily="JetBrains Mono">JED</text>
-     <circle cx={x} cy={y} r="5" fill="#c9a961"/></svg></div>
+    <div className="radar"><svg viewBox="0 0 600 260" role="img" aria-label={t('j.trips.title')}><rect width="600" height="260" fill="#131110"/>{[1,2,3].map(i=><line key={i} x1="0" x2="600" y1={i*65} y2={i*65} stroke="#f5f0e8" strokeOpacity=".07"/>)}
+     <path d="M80,170 Q300,-10 520,110" fill="none" stroke="#c6a15b" strokeOpacity=".55"/><circle cx="80" cy="170" r="3" fill="#f5f0e8"/><circle cx="520" cy="110" r="3" fill="#f5f0e8"/>
+     <text x="70" y="192" fill="#f5f0e899" fontSize="10" fontFamily="JetBrains Mono">RUH</text><text x="490" y="132" fill="#f5f0e899" fontSize="10" fontFamily="JetBrains Mono">JED</text>
+     <circle cx={x} cy={y} r="5" fill="#c6a15b"/></svg></div>
     <div className="parts" style={{gridTemplateColumns:'repeat(3,1fr)'}}><div><small>{t('j.progress')}</small><b>{Math.round(prog*100)}%</b></div><div><small>{t('j.remainKm')}</small><b>{dist}</b></div><div><small>{t('j.timeLeft')}</small><b>{left}{t('unit.m')}</b></div></div>
     {demo&&<div className="act"><span className="mono">DEMO TOOLS</span><button className="g" onClick={()=>setPlay(!play)}>{play?t('j.pause'):t('j.play')}</button>{[1,3,10].map(s=><button key={s} className={spd===s?'':'g'} onClick={()=>setSpd(s)}>{LT(`×${s}`)}</button>)}</div>}
     {late&&<div className="nt"><span className="mono">{t('j.noticed')}<span className="badge b">{cp('badge.sim')}</span></span><p>{t('j.late')}</p>

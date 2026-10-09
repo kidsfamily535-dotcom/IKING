@@ -1,19 +1,19 @@
 /* هوية الكابينة لبقية الصفحات: المفتاح (on/off)، الصفحة الرئيسية، «عندي رحلة»، «راقب رحلتك». لا مربعات ولا جداول. */
-:root{--cb-gold:#c9a961;--cb-ink:#f4ecdc;--cb-dim:#f4ecdccc;--cb-night:#060b16;--cb-blue:#8fb3d9;--cb-serif:'Amiri','Cormorant Garamond',Georgia,serif}
+:root{--cb-gold:#c6a15b;--cb-ink:#f5f0e8;--cb-dim:#f5f0e8cc;--cb-night:#111111;--cb-blue:#8fb3d9;--cb-serif:'Amiri','Cormorant Garamond',Georgia,serif}
 
 /* ===== المفتاح: زر يشبه مفتاح on/off ينزلق فيه زر ذهبي ===== */
 button.sw{--h:66px;--kn:54px;position:relative;display:flex;align-items:center;justify-content:center;width:100%;max-width:440px;min-height:var(--h);padding:6px calc(var(--kn) + 16px);margin:0;
- border:1px solid #c9a96166;border-radius:99px;background:linear-gradient(#f4ecdc0d,#f4ecdc04);color:var(--cb-ink);font:inherit;letter-spacing:normal;cursor:pointer;overflow:hidden;-webkit-tap-highlight-color:transparent;
+ border:1px solid #c6a15b66;border-radius:99px;background:linear-gradient(#f5f0e80d,#f5f0e804);color:var(--cb-ink);font:inherit;letter-spacing:normal;cursor:pointer;overflow:hidden;-webkit-tap-highlight-color:transparent;
  transition:border-color .35s,background .45s,box-shadow .35s}
 button.sw:hover{border-color:var(--cb-gold)}
 .sw-k{position:absolute;inset-inline-start:6px;top:50%;margin-top:calc(var(--kn) / -2);width:var(--kn);height:var(--kn);border-radius:50%;display:grid;place-items:center;
  background:radial-gradient(circle at 35% 30%,#e8cf8d,#b88f3a 72%);box-shadow:0 6px 16px #8a6a2455,inset 0 0 0 1px #fff4;transition:inset-inline-start .4s cubic-bezier(.3,.8,.2,1)}
 .sw-k::after{content:"";width:9px;height:9px;border-radius:50%;background:#2a1f08;opacity:.5;transition:all .3s}
 button.sw:hover .sw-k{inset-inline-start:12px}
-button.sw[data-on="true"]{border-color:var(--cb-gold);background:linear-gradient(#c9a96130,#c9a9611c);box-shadow:0 0 30px #c9a96122}
+button.sw[data-on="true"]{border-color:var(--cb-gold);background:linear-gradient(#c6a15b30,#c6a15b1c);box-shadow:0 0 30px #c6a15b22}
 button.sw[data-on="true"] .sw-k{inset-inline-start:calc(100% - var(--kn) - 6px)}
 button.sw[data-on="true"] .sw-k::after{opacity:1;background:#fffbe6;box-shadow:0 0 12px #fff}
-button.sw.primary{border-color:var(--cb-gold);background:linear-gradient(#c9a96124,#c9a96110)}
+button.sw.primary{border-color:var(--cb-gold);background:linear-gradient(#c6a15b24,#c6a15b10)}
 .sw-t{display:flex;flex-direction:column;align-items:center;text-align:center;line-height:1.3;gap:1px}
 .sw-t b{font-weight:500;font-size:clamp(17px,2.2vw,19px)}
 .sw-t small{font-size:13px;font-weight:300;color:var(--cb-dim)}
@@ -26,15 +26,15 @@ button.sw:focus-visible{outline:2px solid var(--cb-blue);outline-offset:3px}
 /* خانة اختيار = مفتاح on/off صغير */
 .tg{position:relative;display:grid;grid-template-columns:auto 1fr;gap:14px;align-items:start;cursor:pointer;min-height:44px;font-size:14.5px;line-height:1.6;color:var(--cb-dim)}
 .tg input{position:absolute;opacity:0;width:44px;height:44px;margin:0;inset-inline-start:0;top:0;cursor:pointer}
-.tg-k{position:relative;display:block;width:54px;height:32px;border-radius:99px;border:1px solid #f4ecdc40;background:#f4ecdc10;flex:none;margin-top:2px;transition:background .3s,border-color .3s}
-.tg-k::after{content:"";position:absolute;top:3px;inset-inline-start:3px;width:24px;height:24px;border-radius:50%;background:#f4ecdc99;transition:inset-inline-start .3s cubic-bezier(.3,.8,.2,1),background .3s}
-.tg input:checked+.tg-k{background:#c9a96133;border-color:var(--cb-gold)}
+.tg-k{position:relative;display:block;width:54px;height:32px;border-radius:99px;border:1px solid #f5f0e840;background:#f5f0e810;flex:none;margin-top:2px;transition:background .3s,border-color .3s}
+.tg-k::after{content:"";position:absolute;top:3px;inset-inline-start:3px;width:24px;height:24px;border-radius:50%;background:#f5f0e899;transition:inset-inline-start .3s cubic-bezier(.3,.8,.2,1),background .3s}
+.tg input:checked+.tg-k{background:#c6a15b33;border-color:var(--cb-gold)}
 .tg input:checked+.tg-k::after{inset-inline-start:25px;background:radial-gradient(circle at 35% 30%,#e8cf8d,#b88f3a 72%)}
 .tg input:focus-visible+.tg-k{outline:2px solid var(--cb-blue);outline-offset:3px}
 
 /* ===== الصفحة الرئيسية ===== */
 .hero.hx{min-height:100vh;min-height:100dvh;padding:calc(64px + env(safe-area-inset-top,0px)) max(clamp(16px,4vw,48px),calc((100vw - 1400px) / 2)) calc(36px + env(safe-area-inset-bottom,0px));gap:6px;justify-content:flex-start;overflow:hidden;
- background:radial-gradient(120% 70% at 50% 100%,#2a3a63 0%,transparent 70%),#060b16}
+ background:radial-gradient(120% 70% at 50% 100%,#3a2f1d 0%,transparent 70%),#111111}
 .hero.hx::after{display:none}
 .hx-stage{width:min(100%,calc(42dvh + 24px),500px);margin:0 auto}
 .hx-copy{display:flex;flex-direction:column;align-items:center;width:100%;gap:10px}
@@ -45,7 +45,7 @@ button.sw:focus-visible{outline:2px solid var(--cb-blue);outline-offset:3px}
 .hx-sw{display:flex;flex-direction:column;align-items:center;gap:12px;width:100%;margin-top:8px}
 .hx-sw .sw{max-width:420px}
 .hx-sw .ln{display:flex;gap:12px;width:100%;max-width:420px}.hx-sw .ln .sw{flex:1}
-.hx-hint{font-size:12.5px;color:#f4ecdc88;margin:2px 0 0}
+.hx-hint{font-size:12.5px;color:#f5f0e888;margin:2px 0 0}
 .hero.hx .roles button{border-radius:99px;min-height:44px;padding:0 20px}
 @media(min-width:980px){
  .hero.hx{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.05fr);column-gap:clamp(24px,5vw,80px);align-items:center;align-content:center;justify-content:stretch;text-align:start}
@@ -58,48 +58,51 @@ button.sw:focus-visible{outline:2px solid var(--cb-blue);outline-offset:3px}
 }
 
 /* ===== «عندي رحلة» و«جرّبها» و«ما تستطيعه العين»: نفس هوية الكابينة ===== */
-.cbx{position:relative;background:radial-gradient(120% 55% at 50% 0%,#16264a66,transparent 72%)}
+.cbx{position:relative;background:radial-gradient(120% 55% at 50% 0%,#2a221866,transparent 72%)}
 .cbx h2,.cbx .show .big{font-family:var(--cb-serif);font-weight:400;letter-spacing:0;line-height:1.3}
 .cbx .doors h2{font-size:clamp(28px,5.4vw,44px);text-wrap:balance}
 .cbx .dr{display:flex;flex-direction:column;align-items:center;gap:12px;max-width:440px}
 .cbx .dr .sw{max-width:none}
 .cbx button{border-radius:99px}
-.cbx button:not(.sw):not(.hold):not(.pri).g{border:1px solid #c9a96166;min-height:46px;padding:0 22px;background:none}
+.cbx button:not(.sw):not(.hold):not(.pri).g{border:1px solid #c6a15b66;min-height:46px;padding:0 22px;background:none}
 .cbx .show .bk,.cbx .doors>button.g:only-child{border:0;background:none;color:var(--cb-blue);text-decoration:underline;text-underline-offset:5px}
 .cbx .show .act{justify-content:center;gap:10px}
-.cbx .show .pri{border-radius:26px;border:1px solid #c9a96166;background:none;color:var(--cb-ink)}
+.cbx .show .pri{border-radius:26px;border:1px solid #c6a15b66;background:none;color:var(--cb-ink)}
 .cbx .show .ask input,.cbx .act input{border-radius:0}
 .cbx .show .scan li,.cbx .show .opts .o{border:0}
-.cbx .show .opts .o{border-radius:18px;background:#f4ecdc08;padding:12px 14px}
+.cbx .show .opts .o{border-radius:18px;background:#f5f0e808;padding:12px 14px}
 .cbx .show .scan{gap:6px}
 .cbx .show>.sw,.cbx .doors>.sw{align-self:center}
 .cbx .show .big,.cbx .show .rt{text-wrap:balance}
 
 /* ===== «راقب رحلتك» ===== */
-.wt.wt{background:radial-gradient(120% 70% at 50% 100%,#2a3a6355,transparent 70%),radial-gradient(120% 70% at 50% 0%,#0d1a2e,#060b16 70%)}
+.wt.wt{background:radial-gradient(120% 70% at 50% 100%,#3a2f1d55,transparent 70%),radial-gradient(120% 70% at 50% 0%,#1b1814,#111111 70%)}
 .wt.wt .mark{font:400 22px/1 var(--cb-serif);letter-spacing:0;direction:inherit;color:var(--cb-gold)}
 .wt.wt h1{font:400 clamp(30px,6.4vw,50px)/1.28 var(--cb-serif);letter-spacing:0}
 .wt.wt h2{font:400 clamp(19px,2.4vw,23px)/1.4 var(--cb-serif);color:var(--cb-gold)}
 .wt.wt .wrap{max-width:680px}
 .wt.wt header{padding-top:50px}
 .wt.wt .wr{width:min(100%,calc(44dvh + 20px),440px);margin:clamp(6px,2vh,18px) auto 6px}
-.wt.wt select,.wt.wt input[type=datetime-local],.wt.wt input[type=email]{border-radius:16px;background:#f4ecdc0c;min-height:52px}
+.wt.wt select,.wt.wt input[type=datetime-local],.wt.wt input[type=email]{border-radius:16px;background:#f5f0e80c;min-height:52px}
 .wt.wt .est em{border-radius:99px}
-.wt.wt .alt{border-radius:16px;border-inline-start:0;border:1px solid #c9a96166;background:#c9a9610d}
+.wt.wt .alt{border-radius:16px;border-inline-start:0;border:1px solid #c6a15b66;background:#c6a15b0d}
 .wt.wt .chips button{border-radius:99px}
-.wt.wt .chips button.on{background:#c9a96133;color:var(--cb-ink);border-color:var(--cb-gold)}
+.wt.wt .chips button.on{background:#c6a15b33;color:var(--cb-ink);border-color:var(--cb-gold)}
 .wt.wt .form .sw,.wt.wt .row2 .sw{justify-self:start}
-.wt.wt .wxl li{border-top:1px solid #f4ecdc18}
+.wt.wt .wxl li{border-top:1px solid #f5f0e818}
 @media(max-width:560px){.wt.wt .form .sw:not(.small){max-width:none;justify-self:stretch}}
 
-/* ===== الصفحة الرئيسية: العاجي سطحٌ والذهبي حلية ===== */
-/* الزر الأساسي وحده عاجي مضيء، والثانويان خطوط هادئة بكرة أصغر */
-.hx-sw button.sw.primary{background:linear-gradient(#f8f1e0,#e8ddc3);border-color:#e6cd8f;color:#1b1405;box-shadow:0 12px 34px #00000070,inset 0 0 0 1px #fff6,0 0 44px #c9a96122}
-.hx-sw button.sw.primary .sw-t small{color:#4d3f1e}
-.hx-sw button.sw.primary:hover{box-shadow:0 12px 34px #00000070,inset 0 0 0 1px #fff8,0 0 56px #c9a96140}
-.hx-sw button.sw.primary[data-on="true"]{background:linear-gradient(#fffaeb,#f2e8cb);box-shadow:0 12px 34px #00000070,0 0 64px #e6cd8f66}
-.hx-sw button.sw.primary:focus-visible{outline-color:#f4ecdc}
-.hx-sw .ln button.sw{background:none;border-color:#c9a96150;box-shadow:none}
-.hx-sw .ln button.sw:hover{border-color:#c9a961aa}
-.hx-sw .ln button.sw .sw-k{background:#c9a96122;box-shadow:inset 0 0 0 1px #c9a96199}
-.hx-sw .ln button.sw .sw-k::after{background:#c9a961;opacity:.9}
+/* ===== هوية iKing على الصفحة الرئيسية ===== */
+/* الأساسي: ذهبي نحاسي مملوء بنص غامق وكرة عاجية بأيقونة العين. الثانويان: جرافيت بحدود بنية هادئة */
+:root{--eye:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 16'><path d='M1 8C4 3 8 1 12 1s8 2 11 7c-3 5-7 7-11 7S4 13 1 8z' fill='none' stroke='black' stroke-width='1.8'/><circle cx='12' cy='8' r='3.4' fill='black'/></svg>")}
+.hx-sw button.sw.primary{background:linear-gradient(#d9bb78,#c6a15b 55%,#b48d47);border-color:#e2c98d;color:#1a1408;box-shadow:0 12px 32px #00000066,inset 0 1px 0 #fff5,0 0 40px #c6a15b26}
+.hx-sw button.sw.primary:hover{box-shadow:0 12px 32px #00000066,inset 0 1px 0 #fff6,0 0 56px #c6a15b44}
+.hx-sw button.sw.primary[data-on="true"]{background:linear-gradient(#e6cd91,#d3b26c 55%,#c6a15b)}
+.hx-sw button.sw.primary .sw-t small{color:#3b2d10}
+.hx-sw button.sw.primary .sw-k{background:radial-gradient(circle at 35% 30%,#fffaf0,#f5f0e8 70%);box-shadow:0 4px 12px #0005,inset 0 0 0 1px #fff8}
+.hx-sw button.sw.primary .sw-k::after,.hx-sw button.sw.primary[data-on="true"] .sw-k::after{width:24px;height:16px;border-radius:0;background:#2a1f08;opacity:.85;box-shadow:none;-webkit-mask:var(--eye) center/contain no-repeat;mask:var(--eye) center/contain no-repeat}
+.hx-sw button.sw.primary:focus-visible{outline-color:#f5f0e8}
+.hx-sw .ln button.sw{background:linear-gradient(#292929,#1a1713);border-color:#7a6a4f99;box-shadow:none}
+.hx-sw .ln button.sw:hover{border-color:#c6a15b}
+.hx-sw .ln button.sw .sw-k{background:#c6a15b22;box-shadow:inset 0 0 0 1px #c6a15b99}
+.hx-sw .ln button.sw .sw-k::after{background:#c6a15b;opacity:.9}
