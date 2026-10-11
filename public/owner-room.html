@@ -145,7 +145,7 @@ section.block{margin-bottom:40px}
 var URL_='https://yiklciblxwymcxxszkty.supabase.co';
 var KEY='sb_publishable_RS0irv5OzcD1Z2VHLD-gzQ_4-wYez8_'; // مفتاح عام مسموح بوجوده في المتصفح
 var FN=URL_+'/functions/v1/owner-room';
-var sb=supabase.createClient(URL_,KEY,{auth:{persistSession:true,autoRefreshToken:true,detectSessionInUrl:true,storageKey:'kings-eye-owner'}});
+var sb=supabase.createClient(URL_,KEY,{auth:{persistSession:true,autoRefreshToken:true,detectSessionInUrl:true}});
 var $=function(id){return document.getElementById(id)};
 
 /* كل نص قادم من الشبكة أو الويب يدخل الصفحة عبر textContent فقط */
@@ -187,7 +187,7 @@ function viewLogin(){
   var rec=h('button',{class:'link',type:'button',text:'أول مرة، أو نسيت كلمة السر',onclick:async function(){
     if(!em.input.value.includes('@')){m.textContent='اكتب بريدك أولًا.';return}
     var r=await sb.auth.resetPasswordForEmail(em.input.value.trim(),{redirectTo:location.origin+location.pathname});
-    if(r.error){m.textContent='تعذّر الإرسال. حاول بعد دقيقة.';return}
+    if(r.error){m.textContent=(r.error.status===429||r.error.code==='over_email_send_rate_limit')?'وصلنا للحد المجاني لرسائل الإيميل في Supabase. انتظر نحو ساعة ثم جرّب، أو سجّل الدخول من الصفحة الرئيسية للموقع ثم ارجع هنا.':'تعذّر الإرسال. حاول بعد دقيقة.';return}
     m.className='msg ok';m.textContent='لو البريد مسجّل، وصلك رابط لضبط كلمة السر.';
   }});
   gate.appendChild(h('div',null,[h('h1',{text:'مركز القيادة'}),h('p',{text:'للمالك فقط. الدخول بكلمة سر ثم كود من تطبيق المصادقة.'}),em.wrap,pw.wrap,go,rec,m]));
