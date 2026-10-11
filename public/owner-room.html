@@ -1,0 +1,413 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex, nofollow">
+<title>مركز القيادة — عين الملك</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Amiri:wght@400;700&family=IBM+Plex+Sans+Arabic:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --navy:#0A1422; --panel:#0F1C2F; --line:#1E3048; --ivory:#F1E9D8; --muted:#9AA7B8;
+  --gold:#C7A35A; --ok:#7FB3A6; --warn:#D69A55; --bad:#C97A6B;
+  --serif:'Amiri','Noto Naskh Arabic',serif; --sans:'IBM Plex Sans Arabic','Segoe UI',Tahoma,sans-serif;
+}
+*{box-sizing:border-box}
+html{background:var(--navy);color:var(--ivory);font-family:var(--sans);font-size:16px;line-height:1.7}
+body{margin:0;min-height:100vh}
+button,input,textarea{font:inherit;color:inherit}
+:focus-visible{outline:2px solid var(--gold);outline-offset:3px}
+[hidden]{display:none!important}
+a{color:var(--gold)}
+
+/* الدخول */
+#gate{max-width:420px;margin:0 auto;padding:12vh 24px 48px}
+#gate h1{font-family:var(--serif);font-weight:700;font-size:2rem;margin:0 0 6px}
+#gate p{color:var(--muted);margin:0 0 24px}
+.field{display:block;margin:0 0 16px}
+.field span{display:block;font-size:.88rem;color:var(--muted);margin-bottom:6px}
+.field input{width:100%;background:var(--panel);border:1px solid var(--line);border-radius:6px;padding:12px 14px;direction:ltr;text-align:left}
+.field input.code{font-size:1.6rem;letter-spacing:.5em;text-align:center}
+.btn{background:var(--gold);color:#1A1405;border:0;border-radius:6px;padding:11px 20px;font-weight:600;cursor:pointer}
+.btn:disabled{opacity:.5;cursor:default}
+.btn.quiet{background:transparent;color:var(--ivory);border:1px solid var(--line)}
+.btn.small{padding:7px 14px;font-size:.9rem}
+.link{background:none;border:0;color:var(--muted);text-decoration:underline;cursor:pointer;padding:0;margin-top:14px;display:block}
+.msg{margin-top:14px;font-size:.92rem;min-height:1.4em;color:var(--warn)}
+.msg.ok{color:var(--ok)}
+.qr{background:#fff;padding:10px;border-radius:6px;width:196px;height:196px;margin:0 0 12px}
+.qr img{width:100%;height:100%;display:block}
+.secret{direction:ltr;text-align:left;font-size:.85rem;color:var(--muted);word-break:break-all;margin-bottom:16px}
+
+/* الغرفة */
+#room{max-width:1180px;margin:0 auto;padding:20px 28px 64px}
+.bar{display:flex;justify-content:space-between;align-items:center;gap:12px;padding-bottom:14px;border-bottom:1px solid var(--line)}
+.brand{font-family:var(--serif);font-size:1.25rem;color:var(--gold)}
+.bar .who{color:var(--muted);font-size:.88rem;margin-inline-end:14px}
+.statement{padding:44px 0 36px;max-width:820px}
+.statement p{font-family:var(--serif);font-size:clamp(1.7rem,3.4vw,2.5rem);line-height:1.55;margin:0}
+.eye{display:inline-block;width:.5em;height:.5em;border-radius:50%;background:var(--gold);margin-inline-start:.45em;vertical-align:.12em;animation:breathe 4.5s ease-in-out infinite}
+.eye.off{background:var(--bad);animation:none}
+@keyframes breathe{0%,100%{opacity:1}50%{opacity:.35}}
+@media (prefers-reduced-motion:reduce){.eye{animation:none}}
+.statement p.sub{font-family:var(--sans);color:var(--muted);margin:14px 0 0;font-size:.98rem;line-height:1.7}
+
+.grid{display:grid;grid-template-columns:minmax(0,1.55fr) minmax(0,1fr);gap:56px;align-items:start}
+@media (max-width:900px){.grid{grid-template-columns:1fr;gap:36px}#room{padding:16px 18px 48px}}
+h2{font-size:1.05rem;font-weight:600;margin:0 0 14px;color:var(--ivory)}
+section.block{margin-bottom:40px}
+.rule{border:0;border-top:1px solid var(--line);margin:0}
+
+/* الإشارات */
+.sig{display:grid;grid-template-columns:64px 1fr;gap:18px;padding:22px 0;border-top:1px solid var(--line)}
+.sig:first-of-type{border-top:0;padding-top:4px}
+.grade{font-family:var(--serif);font-size:2.6rem;line-height:1;color:var(--gold);text-align:center}
+.grade small{display:block;font-family:var(--sans);font-size:.72rem;color:var(--muted);margin-top:6px;line-height:1.35}
+.sig.weak .grade{color:var(--muted)}
+.sig h3{font-size:1.05rem;font-weight:600;margin:0 0 6px}
+.sig .ev{margin:0 0 10px;color:#D8D1C0;font-size:.95rem}
+.meta{display:flex;flex-wrap:wrap;gap:6px 18px;color:var(--muted);font-size:.86rem;margin-bottom:12px}
+.flag{color:var(--warn);font-size:.88rem;margin-bottom:10px}
+.chip{display:inline-block;border:1px solid var(--line);border-radius:999px;padding:1px 10px;font-size:.78rem;color:var(--muted);margin-inline-start:8px}
+.acts{display:flex;flex-wrap:wrap;gap:8px;align-items:center}
+.acts input{flex:1 1 180px;min-width:140px;background:var(--panel);border:1px solid var(--line);border-radius:6px;padding:7px 10px;font-size:.9rem}
+.empty{color:var(--muted);padding:12px 0}
+
+/* الجانب */
+.kv{display:flex;justify-content:space-between;gap:12px;padding:7px 0;border-bottom:1px dashed var(--line);font-size:.93rem}
+.kv span:first-child{color:var(--muted)}
+.ok{color:var(--ok)} .warn{color:var(--warn)} .bad{color:var(--bad)}
+.tools{display:flex;flex-wrap:wrap;gap:8px;margin:14px 0 8px}
+.out{background:var(--panel);border:1px solid var(--line);border-radius:6px;padding:10px 12px;font-size:.88rem;white-space:pre-wrap;word-break:break-word;margin-top:8px;max-height:220px;overflow:auto}
+.log{list-style:none;margin:0;padding:0}
+.log li{display:grid;grid-template-columns:96px 1fr;gap:10px;padding:8px 0;border-bottom:1px solid var(--line);font-size:.9rem}
+.log time{color:var(--muted);font-size:.82rem}
+.log .note{color:#D8D1C0}
+.log .note b{font-weight:600;color:var(--ivory)}
+.routine{color:var(--muted);font-size:.85rem;padding-top:10px}
+</style>
+</head>
+<body>
+
+<main id="gate" hidden></main>
+
+<div id="room" hidden>
+  <header class="bar">
+    <div class="brand">عين الملك</div>
+    <div><span class="who" id="who"></span><button class="btn quiet small" id="out">خروج</button></div>
+  </header>
+
+  <section class="statement">
+    <p id="statement"></p>
+    <p class="sub" id="substate"></p>
+  </section>
+
+  <div class="grid">
+    <div>
+      <section class="block">
+        <h2>تنتظر قرارك</h2>
+        <div id="signals"></div>
+      </section>
+    </div>
+
+    <aside>
+      <section class="block">
+        <h2>الوكيل</h2>
+        <div id="agent"></div>
+        <div class="tools">
+          <button class="btn quiet small" id="btnDry">تشغيل تجريبي للصياد</button>
+          <button class="btn quiet small" id="btnSave">تشغيل وحفظ النتائج</button>
+          <button class="btn quiet small" id="btnSelf">فحص ذاتي</button>
+        </div>
+        <div class="out" id="agentOut" hidden></div>
+      </section>
+
+      <section class="block">
+        <h2>الأمان</h2>
+        <div id="safety"></div>
+      </section>
+
+      <section class="block">
+        <h2>السجل الموحّد</h2>
+        <ul class="log" id="log"></ul>
+        <div class="routine" id="routine"></div>
+      </section>
+    </aside>
+  </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.min.js"></script>
+<script>
+(function(){
+'use strict';
+var URL_='https://yiklciblxwymcxxszkty.supabase.co';
+var KEY='sb_publishable_RS0irv5OzcD1Z2VHLD-gzQ_4-wYez8_'; // مفتاح عام مسموح بوجوده في المتصفح
+var FN=URL_+'/functions/v1/owner-room';
+var sb=supabase.createClient(URL_,KEY,{auth:{persistSession:true,autoRefreshToken:true,detectSessionInUrl:true,storageKey:'kings-eye-owner'}});
+var $=function(id){return document.getElementById(id)};
+
+/* كل نص قادم من الشبكة أو الويب يدخل الصفحة عبر textContent فقط */
+function h(tag,attrs,kids){
+  var e=document.createElement(tag);
+  if(attrs)for(var k in attrs){
+    if(k==='text')e.textContent=attrs[k];
+    else if(k==='class')e.className=attrs[k];
+    else if(k.slice(0,2)==='on')e.addEventListener(k.slice(2),attrs[k]);
+    else e.setAttribute(k,attrs[k]);
+  }
+  (kids||[]).forEach(function(c){if(c)e.appendChild(typeof c==='string'?document.createTextNode(c):c)});
+  return e;
+}
+function clear(n){while(n.firstChild)n.removeChild(n.firstChild)}
+function fmt(d){try{return new Date(d).toLocaleString('ar-EG',{month:'short',day:'numeric',hour:'2-digit',minute:'2-digit'})}catch(e){return ''}}
+function fmtDay(d){try{return new Date(d).toLocaleDateString('ar-EG',{month:'long',day:'numeric'})}catch(e){return ''}}
+
+/* ---------- الدخول ---------- */
+var gate=$('gate'),room=$('room'),recovering=/type=recovery/.test(location.hash);
+function showGate(){room.hidden=true;gate.hidden=false;clear(gate)}
+function msgBox(){return h('div',{class:'msg',role:'status','aria-live':'polite'})}
+function field(label,type,auto,cls){
+  var i=h('input',{type:type,autocomplete:auto,class:cls||'',required:'required'});
+  return {wrap:h('label',{class:'field'},[h('span',{text:label}),i]),input:i};
+}
+
+function viewLogin(){
+  showGate();
+  var em=field('البريد','email','username'),pw=field('كلمة السر','password','current-password'),m=msgBox();
+  var go=h('button',{class:'btn',text:'دخول',type:'button',onclick:async function(){
+    go.disabled=true;m.className='msg';m.textContent='';
+    var r=await sb.auth.signInWithPassword({email:em.input.value.trim(),password:pw.input.value});
+    go.disabled=false;
+    if(r.error){m.textContent='البريد أو كلمة السر غير صحيحة.';return}
+    afterLogin();
+  }});
+  pw.input.addEventListener('keydown',function(e){if(e.key==='Enter')go.click()});
+  var rec=h('button',{class:'link',type:'button',text:'أول مرة، أو نسيت كلمة السر',onclick:async function(){
+    if(!em.input.value.includes('@')){m.textContent='اكتب بريدك أولًا.';return}
+    var r=await sb.auth.resetPasswordForEmail(em.input.value.trim(),{redirectTo:location.origin+location.pathname});
+    if(r.error){m.textContent='تعذّر الإرسال. حاول بعد دقيقة.';return}
+    m.className='msg ok';m.textContent='لو البريد مسجّل، وصلك رابط لضبط كلمة السر.';
+  }});
+  gate.appendChild(h('div',null,[h('h1',{text:'مركز القيادة'}),h('p',{text:'للمالك فقط. الدخول بكلمة سر ثم كود من تطبيق المصادقة.'}),em.wrap,pw.wrap,go,rec,m]));
+}
+
+function viewSetPassword(){
+  showGate();
+  var p1=field('كلمة سر جديدة (12 حرفًا على الأقل)','password','new-password'),p2=field('أعد كتابتها','password','new-password'),m=msgBox();
+  var go=h('button',{class:'btn',type:'button',text:'حفظ كلمة السر',onclick:async function(){
+    if(p1.input.value.length<12){m.textContent='كلمة السر أقصر من 12 حرفًا.';return}
+    if(p1.input.value!==p2.input.value){m.textContent='الكلمتان غير متطابقتين.';return}
+    var r=await sb.auth.updateUser({password:p1.input.value});
+    if(r.error){m.textContent='تعذّر الحفظ: '+r.error.message;return}
+    history.replaceState(null,'',location.pathname);recovering=false;afterLogin();
+  }});
+  gate.appendChild(h('div',null,[h('h1',{text:'اضبط كلمة السر'}),h('p',{text:'بعدها نفعّل كود المصادقة.'}),p1.wrap,p2.wrap,go,m]));
+}
+
+async function afterLogin(){
+  var a=await sb.auth.mfa.getAuthenticatorAssuranceLevel();
+  if(a.error){viewLogin();return}
+  if(a.data.currentLevel==='aal2'){enter();return}
+  var f=await sb.auth.mfa.listFactors();
+  var verified=(f.data&&f.data.totp)||[];
+  if(verified.length)viewChallenge(verified[0].id);else viewEnroll();
+}
+
+function viewChallenge(factorId){
+  showGate();
+  var code=field('الكود من تطبيق المصادقة','text','one-time-code','code'),m=msgBox();
+  code.input.setAttribute('inputmode','numeric');code.input.setAttribute('maxlength','6');
+  var go=h('button',{class:'btn',type:'button',text:'تأكيد',onclick:async function(){
+    go.disabled=true;
+    var r=await sb.auth.mfa.challengeAndVerify({factorId:factorId,code:code.input.value.trim()});
+    go.disabled=false;
+    if(r.error){m.textContent='الكود غير صحيح أو انتهى. جرّب الكود التالي.';return}
+    enter();
+  }});
+  code.input.addEventListener('keydown',function(e){if(e.key==='Enter')go.click()});
+  gate.appendChild(h('div',null,[h('h1',{text:'الخطوة الثانية'}),h('p',{text:'افتح تطبيق المصادقة واكتب الكود الحالي.'}),code.wrap,go,m]));
+  code.input.focus();
+}
+
+async function viewEnroll(){
+  showGate();
+  var all=await sb.auth.mfa.listFactors();
+  var stale=((all.data&&all.data.all)||[]).filter(function(x){return x.factor_type==='totp'&&x.status!=='verified'});
+  for(var i=0;i<stale.length;i++)await sb.auth.mfa.unenroll({factorId:stale[i].id});
+  var r=await sb.auth.mfa.enroll({factorType:'totp',friendlyName:'owner-'+Date.now()});
+  if(r.error){gate.appendChild(h('div',null,[h('h1',{text:'تعذّر تفعيل المصادقة'}),h('p',{text:r.error.message})]));return}
+  var factor=r.data,code=field('الكود الظاهر في التطبيق','text','one-time-code','code'),m=msgBox();
+  code.input.setAttribute('inputmode','numeric');code.input.setAttribute('maxlength','6');
+  var img=h('img',{alt:'رمز QR لتفعيل تطبيق المصادقة'});img.src=factor.totp.qr_code;
+  var go=h('button',{class:'btn',type:'button',text:'فعّل',onclick:async function(){
+    go.disabled=true;
+    var v=await sb.auth.mfa.challengeAndVerify({factorId:factor.id,code:code.input.value.trim()});
+    go.disabled=false;
+    if(v.error){m.textContent='الكود غير صحيح. جرّب الكود التالي.';return}
+    enter();
+  }});
+  gate.appendChild(h('div',null,[
+    h('h1',{text:'فعّل المصادقة'}),
+    h('p',{text:'امسح الرمز بتطبيق مصادقة مثل Google Authenticator أو Microsoft Authenticator، ثم اكتب الكود.'}),
+    h('div',{class:'qr'},[img]),
+    h('div',{class:'secret',text:'أو أدخل المفتاح يدويًا: '+factor.totp.secret}),
+    code.wrap,go,m]));
+}
+
+/* ---------- الاتصال بالدالة ---------- */
+async function call(body){
+  var s=(await sb.auth.getSession()).data.session;
+  if(!s){viewLogin();return {status:401,j:{}}}
+  var res=await fetch(FN,{method:'POST',headers:{'Content-Type':'application/json',Authorization:'Bearer '+s.access_token,apikey:KEY},body:JSON.stringify(body)});
+  var j={};try{j=await res.json()}catch(e){}
+  if(res.status===401){await sb.auth.signOut();viewLogin()}
+  else if(res.status===403&&j.error==='mfa_required'){afterLogin()}
+  return {status:res.status,j:j};
+}
+
+/* ---------- الغرفة ---------- */
+var GRADES={A:'طلب صريح',B:'متطلب سفر قوي',C:'إشارة قوية، مش طلب مؤكد',D:'إشارة ضعيفة',E:'معلومة سوق فقط'};
+var STATUS={NEW:'جديدة',IN_REVIEW:'قيد التحقق',MONITORING:'تحت المتابعة'};
+var LABELS={owner_room_review:'قرارك على إشارة',owner_room_run:'تشغيل الصياد من الغرفة',owner_room_selftest:'فحص ذاتي',owner_room_denied:'محاولة دخول مرفوضة',set_role:'تغيير دور مستخدم',opportunity_status:'تغيّرت حالة فرصة',hunt_persist:'حفظ نتيجة الصياد',gcc_session_insert:'إضافة جلسة فعالية',gcc_session_update:'تعديل جلسة فعالية'};
+var ROUTINE={engine_run:1,brain_run:1,intake_understand:1,hunt_broker_dry_run:1,hunt_signals_dry_run:1,hunt_persist_dry_run:1};
+var data=null;
+
+function plural(n){return n===1?'إشارة واحدة':n===2?'إشارتان':(n>=3&&n<=10)?n+' إشارات':n+' إشارة'}
+
+async function enter(){
+  gate.hidden=true;room.hidden=false;
+  await refresh();
+}
+async function refresh(){
+  var r=await call({action:'overview'});
+  if(r.status!==200){
+    if(r.status===403&&r.j.error==='mfa_required')return;
+    $('statement').textContent='تعذّر تحميل الغرفة.';$('substate').textContent='السبب: '+(r.j.error||('http_'+r.status));return;
+  }
+  data=r.j;render();
+}
+
+function render(){
+  $('who').textContent=data.owner||'';
+  var pending=data.signals.filter(function(s){return s.status==='NEW'||s.status==='IN_REVIEW'});
+  var st=$('statement');clear(st);
+  st.appendChild(document.createTextNode(pending.length?'العين تعمل، وعندك '+plural(pending.length)+' تنتظر قرارك.':'العين تعمل، ولا شيء ينتظر قرارك الآن.'));
+  st.appendChild(h('span',{class:'eye'+(data.contact_locked?'':' off'),'aria-hidden':'true'}));
+  $('substate').textContent=data.contact_locked?'التواصل الخارجي مقفول. أي رسالة تبقى مسودة حتى تعتمدها.':'تنبيه: قفل التواصل الخارجي غير مفعّل. راجع الإعدادات قبل أي شيء.';
+  renderSignals();renderAgent();renderSafety();renderLog();
+}
+
+function renderSignals(){
+  var box=$('signals');clear(box);
+  if(!data.signals.length){box.appendChild(h('div',{class:'empty',text:'لا توجد إشارات مفتوحة. العين تواصل المراقبة.'}));return}
+  data.signals.forEach(function(s){
+    var weak=/^[CDE]$/.test(s.grade||'');
+    var note=h('input',{type:'text',placeholder:'ملاحظة اختيارية',maxlength:'300','aria-label':'ملاحظة'});
+    function act(dec,label){return h('button',{class:'btn small'+(dec==='interested'?'':' quiet'),type:'button',text:label,onclick:function(ev){decide(s.id,dec,note.value,ev.target)}})}
+    var meta=[];
+    if(s.est_origin||s.est_destination)meta.push((s.est_origin||'؟')+' ← '+(s.est_destination||'؟'));
+    if(s.est_event_start)meta.push('الموعد '+fmtDay(s.est_event_start));
+    if(s.est_pax)meta.push('نحو '+s.est_pax+' ركاب');
+    if(s.demand_confidence!=null)meta.push('ثقة الطلب '+s.demand_confidence+'%');
+    if(s.source_name)meta.push('المصدر: '+s.source_name);
+    var kids=[
+      h('h3',null,[s.title||'بدون عنوان',h('span',{class:'chip',text:STATUS[s.status]||s.status})]),
+      s.evidence?h('p',{class:'ev',text:String(s.evidence).slice(0,420)}):null,
+      h('div',{class:'meta'},meta.map(function(t){return h('span',{text:t})})),
+      weak?h('div',{class:'flag',text:'هذه إشارة وليست طلبًا مؤكدًا. لا تُعرض كطلب ولا يُتواصل بناءً عليها.'}):null,
+      s.recommended_action?h('div',{class:'meta',text:'اقتراح العين: '+String(s.recommended_action).slice(0,200)}):null
+    ];
+    if(s.source_url&&/^https?:\/\//i.test(s.source_url))kids.push(h('div',{class:'meta'},[h('a',{href:s.source_url,target:'_blank',rel:'noopener noreferrer',text:'افتح المصدر'})]));
+    kids.push(h('div',{class:'acts'},[act('interested','أتابعها'),act('verify','أتحقق أكثر'),act('ignore','أتجاهلها'),note]));
+    box.appendChild(h('article',{class:'sig'+(weak?' weak':'')},[
+      h('div',{class:'grade'},[s.grade||'؟',h('small',{text:GRADES[s.grade]||''})]),
+      h('div',null,kids)
+    ]));
+  });
+}
+
+async function decide(id,dec,note,btn){
+  btn.disabled=true;
+  var r=await call({action:'review',id:id,decision:dec,note:note});
+  if(r.status===200&&r.j.ok){await refresh()}
+  else{btn.disabled=false;alert('لم يُحفظ القرار: '+(r.j.error||r.status))}
+}
+
+function kv(k,v,cls){return h('div',{class:'kv'},[h('span',{text:k}),h('span',{class:cls||'',text:v})])}
+
+function renderAgent(){
+  var box=$('agent');clear(box);
+  box.appendChild(kv('آخر تشغيل للصياد',data.last_run?fmt(data.last_run.created_at):'لا يوجد'));
+  var n=data.notes&&data.notes[0];
+  if(n){
+    box.appendChild(kv('آخر تسليم',fmtDay(n.created_at)));
+    if(n.next_step)box.appendChild(h('div',{class:'out',text:'الخطوة التالية المسجّلة: '+n.next_step}));
+  }
+}
+
+function renderSafety(){
+  var box=$('safety');clear(box);
+  box.appendChild(kv('التواصل الخارجي',data.contact_locked?'مقفول':'غير مقفول',data.contact_locked?'ok':'bad'));
+  var rg=data.regions||{},keys=Object.keys(rg);
+  box.appendChild(kv('حالة المناطق',keys.length?keys.map(function(k){return rg[k]+' '+k}).join('، '):'غير معروف',keys.length&&keys.every(function(k){return k==='NORMAL'})?'ok':'warn'));
+  var op=data.opportunities;
+  box.appendChild(kv('الفرص',op&&Object.keys(op).length?Object.keys(op).map(function(k){return op[k]+' '+k}).join('، '):(op===null?'غير معروف، يحتاج تحققًا':'لا توجد فرص بعد')));
+}
+
+function renderLog(){
+  var ul=$('log');clear(ul);
+  var items=[],routine=0;
+  (data.activity||[]).forEach(function(a){
+    if(ROUTINE[a.action]){routine++;return}
+    items.push({t:a.created_at,label:LABELS[a.action]||a.action,detail:a.entity_type&&a.entity_type!=='owner_room'?a.entity_type:''});
+  });
+  (data.notes||[]).forEach(function(n){items.push({t:n.created_at,label:'تسليم جلسة',detail:n.summary,long:true})});
+  items.sort(function(a,b){return new Date(b.t)-new Date(a.t)});
+  items.slice(0,14).forEach(function(it){
+    var body=h('div',{class:'note'},[h('b',{text:it.label})]);
+    if(it.detail)body.appendChild(h('div',{text:it.long?it.detail.slice(0,160)+'…':it.detail}));
+    ul.appendChild(h('li',null,[h('time',{text:fmt(it.t)}),body]));
+  });
+  if(!items.length)ul.appendChild(h('li',null,[h('span'),h('span',{class:'empty',text:'لا أحداث بعد.'})]));
+  $('routine').textContent=routine?'وراء هذا السجل '+routine+' عملية روتينية للمحرك لا تحتاج انتباهك.':'';
+}
+
+/* ---------- أدوات الوكيل ---------- */
+function showOut(t){var o=$('agentOut');o.hidden=false;o.textContent=t}
+async function runHunter(save){
+  if(save&&!confirm('سيُحفظ ما يجده الصياد كإشارات جديدة في قاعدة البيانات. لن يُرسل شيء لأي جهة. متابعة؟'))return;
+  showOut('جارٍ التشغيل، قد يستغرق دقيقة…');
+  var r=await call({action:'run',save:save});
+  var j=r.j;
+  if(r.status!==200||j.ok===false){showOut('تعذّر التشغيل: '+(j.status||j.error||r.status)+'\n'+(j.note||''));return}
+  showOut([save?'تم التشغيل مع الحفظ.':'تشغيل تجريبي، لم يُكتب شيء.','حالة الصياد: '+(j.hunter_status||'غير معروف'),'فرص مكتشفة: '+(j.hunter_opportunities==null?'غير معروف':j.hunter_opportunities),'مكتوب: '+(j.written||0),j.note||''].join('\n'));
+  if(save)refresh();
+}
+async function selftest(){
+  showOut('جارٍ الفحص الذاتي…');
+  var r=await call({action:'selftest'});var j=r.j;
+  if(r.status!==200||j.ok===false){showOut('تعذّر الفحص: '+(j.status||j.error||r.status));return}
+  var lines=['النتيجة: '+(j.passed==null?'غير معروفة':j.passed+(j.total?' من '+j.total:''))];
+  if(j.providers_used)lines.push('المراجعون المستخدمون: '+JSON.stringify(j.providers_used));
+  lines.push('','الرد الخام:',j.raw||'');
+  showOut(lines.join('\n'));
+}
+$('btnDry').addEventListener('click',function(){runHunter(false)});
+$('btnSave').addEventListener('click',function(){runHunter(true)});
+$('btnSelf').addEventListener('click',selftest);
+$('out').addEventListener('click',async function(){await sb.auth.signOut();viewLogin()});
+
+/* ---------- البداية ---------- */
+(async function boot(){
+  if(recovering){viewSetPassword();return}
+  var s=(await sb.auth.getSession()).data.session;
+  if(!s){viewLogin();return}
+  afterLogin();
+})();
+sb.auth.onAuthStateChange(function(ev){if(ev==='PASSWORD_RECOVERY')viewSetPassword()});
+})();
+</script>
+</body>
+</html>
