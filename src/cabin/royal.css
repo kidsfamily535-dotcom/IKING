@@ -1,19 +1,19 @@
 /* الطبقة الملكية: إعادة تصميم بصري للكابينة (أسود + ذهبي، وكريمي لورقة الموافقة فقط).
    ملف إضافي فوق cabin.css، يُحمَّل بعده. لا يلمس منطق الرادار ولا ملفاته: الرادار (.cr) يبقى كما هو. */
 .cb{
- --r-gold-1:#e6cd91;--r-gold-2:#c6a15b;--r-gold-3:#a98238;
+ --r-gold-1:var(--t-accent-hi);--r-gold-2:var(--t-accent);--r-gold-3:var(--t-accent-lo);
  --r-gold-grad:linear-gradient(180deg,var(--r-gold-1),var(--r-gold-2) 55%,var(--r-gold-3));
- --r-card:linear-gradient(180deg,#1d1a15f2,#14120ef2);--r-edge:#c6a15b40;--r-edge-hi:#c6a15bcc;
+ --r-card:linear-gradient(180deg,color-mix(in srgb,var(--t-surf2) 96%,transparent),color-mix(in srgb,var(--t-surf) 95%,transparent));--r-edge:color-mix(in srgb,var(--t-accent) 25%,transparent);--r-edge-hi:color-mix(in srgb,var(--t-accent) 80%,transparent);
  --r-shadow:0 18px 50px #000000a0;
 }
 
 /* الرأس: شعار التاج والعين */
-.cb-top{border-bottom:1px solid #c6a15b1f;background:linear-gradient(#0b0a08cc,transparent)}
+.cb-top{border-bottom:1px solid color-mix(in srgb,var(--t-accent) 12%,transparent);background:linear-gradient(color-mix(in srgb,var(--t-night) 80%,transparent),transparent)}
 .cb-brand{display:flex;align-items:center;gap:10px}
 .cb-mark{width:34px;height:34px;flex:none;color:var(--r-gold-2)}
 .cb-brand-t{display:flex;flex-direction:column;line-height:1.05}
 .cb-brand-t b{font:400 clamp(20px,2.4vw,24px)/1 var(--serif);color:var(--r-gold-1)}
-.cb-brand-t small{font:400 9.5px/1 'JetBrains Mono',monospace;letter-spacing:.34em;color:#c6a15bb0;direction:ltr;margin-top:5px}
+.cb-brand-t small{font:400 9.5px/1 'JetBrains Mono',monospace;letter-spacing:.34em;color:color-mix(in srgb,var(--t-accent) 69%,transparent);direction:ltr;margin-top:5px}
 .cb-sim{border-color:#8fb3d944;background:#8fb3d90d}
 
 /* اللوحة: بطاقة زجاجية داكنة */
@@ -21,29 +21,29 @@
 @media (min-width:980px){.cb-panel:not(.paper){padding:30px 32px;min-height:0}}
 
 /* الأزرار: ذهب متدرّج */
-.cb-cta{background:var(--r-gold-grad);color:#1a1408;border:1px solid #e2c98d;box-shadow:0 10px 26px #00000066,inset 0 1px 0 #fff5,0 0 34px #c6a15b22;font-weight:600;letter-spacing:.01em}
-.cb-cta:hover{filter:brightness(1.06);box-shadow:0 12px 30px #00000070,inset 0 1px 0 #fff6,0 0 48px #c6a15b3a}
-.cb-ghost{background:#c6a15b0d;border-color:var(--r-edge-hi)}
-.cb-ghost:hover{background:#c6a15b1c}
+.cb-cta{background:var(--r-gold-grad);color:var(--t-night);border:1px solid var(--t-accent-hi);box-shadow:0 10px 26px #00000066,inset 0 1px 0 #fff5,0 0 34px color-mix(in srgb,var(--t-accent) 13%,transparent);font-weight:600;letter-spacing:.01em}
+.cb-cta:hover{filter:brightness(1.06);box-shadow:0 12px 30px #00000070,inset 0 1px 0 #fff6,0 0 48px color-mix(in srgb,var(--t-accent) 23%,transparent)}
+.cb-ghost{background:color-mix(in srgb,var(--t-accent) 5%,transparent);border-color:var(--r-edge-hi)}
+.cb-ghost:hover{background:color-mix(in srgb,var(--t-accent) 11%,transparent)}
 
 /* خيارات الرحلة: بطاقات تقودها الصورة */
 .cb-opts{gap:14px}
-.cb-opt{position:relative;padding:0 0 14px;overflow:hidden;border-radius:20px;border:1px solid var(--r-edge);background:linear-gradient(#1b1812,#121009)}
+.cb-opt{position:relative;padding:0 0 14px;overflow:hidden;border-radius:20px;border:1px solid var(--r-edge);background:linear-gradient(var(--t-surf2),var(--t-surf))}
 .cb-opt>*:not(.cb-ph){margin-inline:16px}
 .cb-opt .cb-ph{height:132px;margin:0 0 12px;border-radius:0}
 .cb-opt .cb-ph img{filter:saturate(.95) brightness(.95)}
 .cb-opt:hover{border-color:var(--r-edge-hi)}
-.cb-opt.on{border-color:var(--r-gold-2);background:linear-gradient(#241f14,#15120b);box-shadow:0 0 0 1px #c6a15b66,0 16px 40px #00000090,0 0 44px #c6a15b1f}
+.cb-opt.on{border-color:var(--r-gold-2);background:linear-gradient(color-mix(in srgb,var(--t-accent) 14%,var(--t-surf2)),var(--t-surf));box-shadow:0 0 0 1px color-mix(in srgb,var(--t-accent) 40%,transparent),0 16px 40px #00000090,0 0 44px color-mix(in srgb,var(--t-accent) 12%,transparent)}
 /* الوسم العلوي (الأنسب / الأوفر / البديل) يظهر شارةً ذهبية */
-.cb-opt>small{align-self:flex-start;display:inline-block;padding:2px 12px;border-radius:99px;background:#c6a15b24;border:1px solid #c6a15b66;color:var(--r-gold-1);font-size:12.5px;line-height:1.7}
-.cb-opt.on>small{background:var(--r-gold-grad);border-color:#e2c98d;color:#1a1408;font-weight:600}
-.cb-opt>em.pend{padding-top:8px;border-top:1px dashed #c6a15b30;width:calc(100% - 32px)}
+.cb-opt>small{align-self:flex-start;display:inline-block;padding:2px 12px;border-radius:99px;background:color-mix(in srgb,var(--t-accent) 14%,transparent);border:1px solid color-mix(in srgb,var(--t-accent) 40%,transparent);color:var(--r-gold-1);font-size:12.5px;line-height:1.7}
+.cb-opt.on>small{background:var(--r-gold-grad);border-color:var(--t-accent-hi);color:var(--t-night);font-weight:600}
+.cb-opt>em.pend{padding-top:8px;border-top:1px dashed color-mix(in srgb,var(--t-accent) 19%,transparent);width:calc(100% - 32px)}
 
 /* البطل في شاشة التوصية */
-.cb-hero{padding:14px 16px;border:1px solid var(--r-edge);border-radius:18px;background:linear-gradient(#c6a15b14,#c6a15b05)}
+.cb-hero{padding:14px 16px;border:1px solid var(--r-edge);border-radius:18px;background:linear-gradient(color-mix(in srgb,var(--t-accent) 8%,transparent),color-mix(in srgb,var(--t-accent) 2%,transparent))}
 .cb-hero b{color:var(--r-gold-1)}
 .cb-shot{border-radius:18px;border-color:var(--r-edge);box-shadow:0 14px 36px #00000080}
-.cb-dims{border-top-color:#c6a15b30}.cb-dims>div{border-bottom-color:#c6a15b24}
+.cb-dims{border-top-color:color-mix(in srgb,var(--t-accent) 19%,transparent)}.cb-dims>div{border-bottom-color:color-mix(in srgb,var(--t-accent) 14%,transparent)}
 
 /* الدليل والبطاقات */
 .cb-evid,.cb-card{border-color:var(--r-edge);background:#ffffff05;border-radius:18px}
@@ -51,28 +51,40 @@
 
 /* السياق (من ← إلى) */
 .cb-chip{border-color:var(--r-edge);background:#ffffff05;border-radius:16px}
-.cb-chip.on{border-color:var(--r-gold-2);background:#c6a15b1c}
+.cb-chip.on{border-color:var(--r-gold-2);background:color-mix(in srgb,var(--t-accent) 11%,transparent)}
 
 /* الخط الزمني: بطاقة بخط عمودي ذهبي */
 .cb-tl{flex-direction:column;gap:0;padding:8px 6px 4px;border:1px solid var(--r-edge);border-radius:18px;background:#ffffff04}
-.cb-tl::before{inset-inline:auto;inset-inline-start:23px;top:22px;bottom:22px;width:1px;height:auto;background:linear-gradient(#c6a15b66,#c6a15b1a)}
-.cb-tl li{flex-direction:row;align-items:center;justify-content:flex-start;gap:16px;min-height:46px;padding:4px 12px;font-size:15px;text-align:start;color:#f5f0e888}
-.cb-tl i{width:13px;height:13px;flex:none;background:#14120e;border:1.5px solid #c6a15b80}
+.cb-tl::before{inset-inline:auto;inset-inline-start:23px;top:22px;bottom:22px;width:1px;height:auto;background:linear-gradient(color-mix(in srgb,var(--t-accent) 40%,transparent),color-mix(in srgb,var(--t-accent) 10%,transparent))}
+.cb-tl li{flex-direction:row;align-items:center;justify-content:flex-start;gap:16px;min-height:46px;padding:4px 12px;font-size:15px;text-align:start;color:color-mix(in srgb,var(--t-ink) 53%,transparent)}
+.cb-tl i{width:13px;height:13px;flex:none;background:var(--t-surf);border:1.5px solid color-mix(in srgb,var(--t-accent) 50%,transparent)}
 .cb-tl .past{color:var(--ink)}.cb-tl .past i{background:var(--r-gold-2);border-color:transparent}
-.cb-tl .now{color:var(--r-gold-1);font-weight:500}.cb-tl .now i{background:var(--r-gold-1);box-shadow:0 0 0 5px #c6a15b24,0 0 16px var(--r-gold-2)}
+.cb-tl .now{color:var(--r-gold-1);font-weight:500}.cb-tl .now i{background:var(--r-gold-1);box-shadow:0 0 0 5px color-mix(in srgb,var(--t-accent) 14%,transparent),0 0 16px var(--r-gold-2)}
 
 /* خطوات البحث والتحكم */
 .cb-seg{border-color:var(--r-edge);background:#ffffff05}
-.cb-seg button[aria-checked="true"]{background:var(--r-gold-grad);color:#1a1408;font-weight:600}
+.cb-seg button[aria-checked="true"]{background:var(--r-gold-grad);color:var(--t-night);font-weight:600}
 .cb-step button{border-color:var(--r-edge)}
 .cb-rail li.now{color:var(--r-gold-1)}
 
 /* ورقة الموافقة (كريمي): نفس اللغة، بإطار ذهبي رفيع */
-.cb-panel.paper{border:1px solid #c6a15b99;background:linear-gradient(#f6eedc,#eadfc4)}
-.cb-panel.paper .cb-cta{border-color:#8a6a24}
-.cb-panel.paper .cb-evid{background:#ffffff40;border-color:#8a6a2440}
+.cb-panel.paper{border:1px solid color-mix(in srgb,var(--t-accent) 60%,transparent);background:linear-gradient(var(--t-paper1),var(--t-paper2))}
+.cb-panel.paper .cb-cta{border-color:var(--t-accent-lo)}
+.cb-panel.paper .cb-evid{background:#ffffff40;border-color:color-mix(in srgb,var(--t-accent-lo) 25%,transparent)}
 
 /* هاتف: الرادار فوق، واللوحة تحته بحافة مستديرة */
 @media (max-width:979px){.cb-panel:not(.paper){border-radius:22px}.cb-opt .cb-ph{height:118px}}
 @media (min-width:640px) and (max-width:979px){.cb-opt .cb-ph{height:96px}}
 @media (min-width:980px){.cb-opt .cb-ph{height:120px}}
+
+/* مراحل الرحلة: ألوان السماء تُشتق من الثيم الحالي (بدل الكحلي الثابت) */
+.cb[data-phase="0"]{--sk1:color-mix(in srgb,var(--t-accent) 24%,var(--t-night));--sk2:var(--t-night)}
+.cb[data-phase="1"]{--sk1:var(--t-deep);--sk2:var(--t-night)}
+.cb[data-phase="2"]{--sk1:color-mix(in srgb,var(--t-deep) 70%,var(--t-night));--sk2:var(--t-night)}
+.cb[data-phase="3"]{--sk1:color-mix(in srgb,var(--t-deep) 40%,var(--t-night));--sk2:var(--t-night)}
+.cb[data-phase="4"]{--sk1:color-mix(in srgb,var(--t-accent-lo) 50%,var(--t-night));--sk2:var(--t-night)}
+
+/* مبدّل الثيم */
+.th{display:flex;gap:6px;align-items:center;direction:ltr}
+.th button{width:28px;height:28px;min-width:0;padding:0;border-radius:50%;border:1.5px solid color-mix(in srgb,var(--t-ink) 35%,transparent);background:var(--sw);position:relative}
+.th button[aria-pressed="true"]{border-color:var(--t-accent-hi);box-shadow:0 0 0 3px color-mix(in srgb,var(--t-accent) 35%,transparent)}

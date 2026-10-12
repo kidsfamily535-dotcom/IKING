@@ -1,0 +1,14 @@
+/* ثيمات الموقع. الألوان مأخوذة من الباليتين المعتمدتين (بكسل بكسل من الصور). الافتراضي: الزمردي السيادي. */
+:root,:root[data-theme="emerald"]{
+ --t-night:#171b18;--t-surf:#1c2320;--t-surf2:#222d28;
+ --t-accent:#c4a66a;--t-accent-hi:#e2cb94;--t-accent-lo:#8f7a43;
+ --t-ink:#f3efe5;--t-deep:#183c32;--t-main:#28624c;
+ --t-paper1:#f3efe5;--t-paper2:#e3dcc6;
+}
+/* البرونزي الصحراوي */
+:root[data-theme="bronze"]{
+ --t-night:#191714;--t-surf:#211c17;--t-surf2:#2c241d;
+ --t-accent:#a87549;--t-accent-hi:#d1b99a;--t-accent-lo:#7a5230;
+ --t-ink:#f1e6d5;--t-deep:#49362a;--t-main:#a87549;
+ --t-paper1:#f1e6d5;--t-paper2:#dcc8aa;
+}

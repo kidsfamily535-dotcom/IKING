@@ -6,6 +6,7 @@ import {HUBS,hub,dist,flightMin,rangeFor,localToUtc,clock,clocksChange,type Hub}
 import Radar,{type Blip} from './Radar';
 import {Thumb,Spec} from './CabinMedia';
 import {Toggle} from './Switch';
+import ThemeSwitch from '../ThemeSwitch';
 const BASE=import.meta.env.VITE_SUPABASE_URL??'https://yiklciblxwymcxxszkty.supabase.co';
 // الكابينة: تجربة العميل كاملة حول الرادار. الرادار يستقبل الوجهة، ويعرض البحث، ويتابع الرحلة.
 // كل ما هنا محاكاة معلَّمة: لا مشغّل حقيقي ولا إرسال. المسافات والأزمنة تُحسب من الإحداثيات وتُسمّى تقديرًا.
@@ -29,7 +30,7 @@ function Coin({label,hint,onDone}:{label:string;hint:string;onDone:()=>void}){
  const C=2*Math.PI*46;
  return <div className="cb-coinw"><button type="button" className="cb-coin" onPointerDown={start} onPointerUp={stop} onPointerLeave={stop} onPointerCancel={stop}
   onKeyDown={e=>{if((e.key==='Enter'||e.key===' ')&&!e.repeat){e.preventDefault();start()}else if(e.key==='Escape')stop()}} aria-label={`${label}. ${hint}`}>
-  <svg viewBox="0 0 100 100" aria-hidden><circle cx="50" cy="50" r="46" fill="none" stroke="#292929" strokeOpacity=".18" strokeWidth="2"/><circle cx="50" cy="50" r="46" fill="none" stroke="#8a6a24" strokeWidth="3" strokeLinecap="round" strokeDasharray={C} strokeDashoffset={C*(1-p)} transform="rotate(-90 50 50)"/></svg>
+  <svg viewBox="0 0 100 100" aria-hidden><circle cx="50" cy="50" r="46" fill="none" stroke="#292929" strokeOpacity=".18" strokeWidth="2"/><circle cx="50" cy="50" r="46" fill="none" stroke="var(--t-accent-lo)" strokeWidth="3" strokeLinecap="round" strokeDasharray={C} strokeDashoffset={C*(1-p)} transform="rotate(-90 50 50)"/></svg>
   <b>{label}</b></button></div>;
 }
 const Mark=()=><svg className="cb-mark" viewBox="0 0 48 48" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" aria-hidden><path d="M12 13l4.5 4.5L24 8l7.5 9.5L36 13l-2 7H14z"/><path d="M5 31c5-7 12-10.5 19-10.5S38 24 43 31c-5 7-12 10.5-19 10.5S10 38 5 31z"/><circle cx="24" cy="31" r="4.2"/><circle cx="24" cy="31" r="1.3" fill="currentColor" stroke="none"/></svg>;
@@ -106,7 +107,7 @@ export default function Cabin(){
  const stepsDone=(i:number)=>i===3?false:scan>i+0;
  return <div className="cb" data-phase={PHASE[stage]} data-stage={stage} dir={L==='ar'?'rtl':'ltr'} lang={L}>
   <header className="cb-top"><span className="cb-brand"><Mark/><span className="cb-brand-t"><b>{c.brand}</b><small>THE KING'S EYE</small></span></span><span className="cb-sim">{c.sim}</span>
-   <div className="cb-lang" role="group" aria-label="Language">{LANGS.map(l=><button key={l} type="button" lang={l} aria-pressed={L===l} onClick={()=>setLang(l as Lang)}>{l.toUpperCase()}</button>)}</div></header>
+   <div className="cb-lang" role="group" aria-label="Language">{LANGS.map(l=><button key={l} type="button" lang={l} aria-pressed={L===l} onClick={()=>setLang(l as Lang)}>{l.toUpperCase()}</button>)}</div><ThemeSwitch/></header>
   <div className="cb-grid">
    <nav className="cb-rail" aria-label={c.phases[PHASE[stage]]}><ol>{c.phases.map((p,i)=><li key={p} className={i<PHASE[stage]?'past':i===PHASE[stage]?'now':''} aria-current={i===PHASE[stage]?'step':undefined}><i/><span>{p}</span></li>)}</ol></nav>
    <section className={`cb-panel${stage==='approve'?' paper':''}`} aria-live="polite">
