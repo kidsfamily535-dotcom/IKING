@@ -106,3 +106,6 @@ button.sw:focus-visible{outline:2px solid var(--cb-blue);outline-offset:3px}
 .hx-sw .ln button.sw:hover{border-color:var(--t-accent)}
 .hx-sw .ln button.sw .sw-k{background:color-mix(in srgb,var(--t-accent) 13%,transparent);box-shadow:inset 0 0 0 1px color-mix(in srgb,var(--t-accent) 60%,transparent)}
 .hx-sw .ln button.sw .sw-k::after{background:var(--t-accent);opacity:.9}
+
+/* موبايل: زرّا «ما تستطيعه العين» و«لي حساب» فوق بعض بعرض كامل بدل ما يتكسّر النص على 3 أسطر */
+@media(max-width:480px){.hx-sw .ln{flex-direction:column;gap:10px}.hx-sw .ln .sw{width:100%;max-width:none}}

@@ -55,7 +55,8 @@
 :root[data-theme="ivory"] .cb-panel.paper{border:1px solid #c5a46d;box-shadow:0 18px 44px #3b2f1a2e}
 :root[data-theme="ivory"] .cb-panel:not(.paper),:root[data-theme="ivory"] .cb-opt{background:linear-gradient(#fbf8f1,#f1e9d7)}
 /* مشهد العين الكامل (Scene) يبقى فحميًا. الرادار نفسه بدون أي إطار أو مربع: يرسم مباشرة على الصفحة كما صُمّم أصلًا. */
-:root[data-theme="ivory"] :is(.sc-stage,.hero.hx){
+:root[data-theme="ivory"] :is(.sc-stage,.hero.hx,.jy .scene){
+ --n1:#171717;--n2:#2b2a27;--dusk:#171717;--ln:color-mix(in srgb,#f5f0e6 14%,transparent);--glow:#c5a46d;
  --cb-ink:#f5f0e6;--cb-dim:color-mix(in srgb,#f5f0e6 82%,transparent);--cb-gold:#c5a46d;--cb-night:#171717;
  --t-night:#171717;--t-surf:#222220;--t-surf2:#2b2a27;--t-ink:#f5f0e6;--t-deep:#1d2420;
  --t-accent:#c5a46d;--t-accent-hi:#e3ce9e;--t-accent-lo:#8f7440;
@@ -68,3 +69,4 @@
 /* الصفحة الرئيسية: الأرض ليلًا خلفية كاملة، والرادار فوقها بدون أي مربعات */
 :root[data-theme="ivory"] .hero.hx{background:linear-gradient(rgba(8,10,18,.28),rgba(8,10,18,.72)),url(/earth-night.jpg) center 35%/cover no-repeat,#05070f}
 :root[data-theme="ivory"] .hero.hx .hx-sw .ln button.sw{background:linear-gradient(#26262499,#17171799);border-color:#c5a46d80;color:#f5f0e6}
+:root[data-theme="ivory"] .cb-rail li.now{color:#6b4f1f;font-weight:500}
