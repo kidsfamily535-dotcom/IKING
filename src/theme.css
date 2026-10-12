@@ -1,4 +1,4 @@
-/* ثيمات الموقع. الألوان مأخوذة من الباليتين المعتمدتين (بكسل بكسل من الصور). الافتراضي الآن: «الصحراء الزمردية» (خلفية برونزية صحراوية + زمرد لامع). */
+/* ثيمات الموقع. الألوان مأخوذة من الباليتين المعتمدتين (بكسل بكسل من الصور). الافتراضي الآن: «العاجي الملكي» (عاجي دافئ + فحمي + ذهبي شامبانيا + زمردي للثقة فقط). */
 :root[data-theme="emerald"]{
  --t-night:#171b18;--t-surf:#1c2320;--t-surf2:#222d28;
  --t-accent:#c4a66a;--t-accent-hi:#e2cb94;--t-accent-lo:#8f7a43;
@@ -13,8 +13,8 @@
  --t-paper1:#f1e6d5;--t-paper2:#dcc8aa;
 }
 
-/* الصحراء الزمردية (الافتراضي): خلفية برونزية صحراوية دافئة، والزمرد اللامع للأزرار والتفاصيل المهمة. الألوان من صورتَي المرجع. */
-:root,:root[data-theme="desert"]{
+/* الصحراء الزمردية (اختياري): خلفية برونزية صحراوية دافئة، والزمرد اللامع للأزرار والتفاصيل المهمة. الألوان من صورتَي المرجع. */
+:root[data-theme="desert"]{
  --t-night:#6e4c2e;--t-surf:#7f5a38;--t-surf2:#946b43;
  --t-accent:#1fcb8b;--t-accent-hi:#6ff0be;--t-accent-lo:#0b8f62;
  --t-ink:#f7ecd9;--t-deep:#0b6b4a;--t-main:#1fcb8b;
@@ -22,10 +22,46 @@
  --t-on-accent:#0f2a20;
 }
 /* نص داكن فوق الزمرد اللامع ليبقى مقروءًا */
-:root[data-theme="desert"] button:not(.g):not(.sw):not(.hold),
-:root:not([data-theme]) button:not(.g):not(.sw):not(.hold){color:var(--t-on-accent)}
+:root[data-theme="desert"] button:not(.g):not(.sw):not(.hold) {color:var(--t-on-accent)}
 :root[data-theme="desert"] .cb-cta,:root[data-theme="desert"] .cb-opt.on>small,
 :root[data-theme="desert"] .hx-sw button.sw.primary,:root[data-theme="desert"] .hx-sw button.sw.primary .sw-t small,
 :root[data-theme="desert"] .lang button.on{color:var(--t-on-accent)}
 /* خلفية الصفحة: تدرّج برونزي صحراوي بدل لون مسطّح */
-:root[data-theme="desert"] body,:root:not([data-theme]) body{background:radial-gradient(120% 80% at 50% 0%,#9a6f44 0%,#6e4c2e 55%,#553a22 100%) fixed}
+:root[data-theme="desert"] body{background:radial-gradient(120% 80% at 50% 0%,#9a6f44 0%,#6e4c2e 55%,#553a22 100%) fixed}
+
+/* ========== العاجي الملكي (الافتراضي) ==========
+   60% عاجي دافئ · 25% فحمي (الرادار والعين) · 10% ذهبي شامبانيا · 5% ألوان الحالة. الزمردي للتحقق والتأكيد فقط. */
+:root,:root[data-theme="ivory"]{
+ --t-night:#f5f0e6;--t-surf:#ede5d3;--t-surf2:#e6dcc4;
+ --t-accent:#86672f;--t-accent-hi:#d8bc83;--t-accent-lo:#7a5e2e;
+ --t-ink:#171717;--t-deep:#e9dfc8;--t-main:#174c3a;
+ --t-paper1:#fbf8f1;--t-paper2:#f0e8d6;
+ --t-on-accent:#171717;--t-champagne:#c5a46d;
+ color-scheme:light;
+}
+/* حالات الثقة والتنبيه على العاجي */
+:root[data-theme="ivory"],:root[data-theme="ivory"] .cb{--ok:#174c3a;--warn:#8a5a00;--blue:#2f5d8a}
+:root[data-theme="ivory"] .cb{--r-shadow:0 14px 36px #3b2f1a26}
+/* الأزرار الذهبية: شامبانيا بنص فحمي */
+:root[data-theme="ivory"] button:not(.g):not(.sw):not(.hold):not(.cb-ghost){color:#171717;background:linear-gradient(#e0c994,#c5a46d 55%,#b08f55)}
+:root[data-theme="ivory"] .cb-cta,:root[data-theme="ivory"] .hx-sw button.sw.primary{background:linear-gradient(#e0c994,#c5a46d 55%,#b08f55);border-color:#d8bc83;color:#171717;box-shadow:0 10px 26px #3b2f1a33,inset 0 1px 0 #fff8}
+:root[data-theme="ivory"] .hx-sw button.sw.primary .sw-t small,:root[data-theme="ivory"] .cb-opt.on>small,:root[data-theme="ivory"] .lang button.on,:root[data-theme="ivory"] .cb-lang button[aria-pressed="true"]{color:#171717}
+:root[data-theme="ivory"] .lang button.on,:root[data-theme="ivory"] .cb-lang button[aria-pressed="true"]{background:#c5a46d}
+:root[data-theme="ivory"] .hx-sw .ln button.sw{background:linear-gradient(#fbf8f1,#efe7d4);border-color:#c5a46d99}
+/* نصوص ذهبية على العاجي تُغمَّق لتُقرأ */
+:root[data-theme="ivory"] .cb-brand-t b,:root[data-theme="ivory"] .cb-hero b{color:#171717}
+:root[data-theme="ivory"] .cb-brand-t small{color:#7a5e2e}
+:root[data-theme="ivory"] .cb-opt>small{color:#4a3a1a}
+:root[data-theme="ivory"] .cb[data-phase="4"]{--sk1:#e6d3a8}
+:root[data-theme="ivory"] .cb-panel.paper{border:1px solid #c5a46d;box-shadow:0 18px 44px #3b2f1a2e}
+:root[data-theme="ivory"] .cb-panel:not(.paper),:root[data-theme="ivory"] .cb-opt{background:linear-gradient(#fbf8f1,#f1e9d7)}
+/* الرادار والعين: عدسة فحمية بخطوط ذهبية رفيعة (روح التجربة) */
+:root[data-theme="ivory"] :is(.cb-stage,.hx-stage,.wr,.sc-stage,.radar){
+ --t-night:#171717;--t-surf:#222220;--t-surf2:#2b2a27;--t-ink:#f5f0e6;--t-deep:#1d2420;
+ --t-accent:#c5a46d;--t-accent-hi:#e3ce9e;--t-accent-lo:#8f7440;
+ --night:#171717;--ink:#f5f0e6;--dim:color-mix(in srgb,#f5f0e6 78%,transparent);--gold:#c5a46d;--glow:#e3ce9e;
+ --line:color-mix(in srgb,#f5f0e6 16%,transparent);--sk1:#222220;--sk2:#171717;
+ --ok:#3fb68b;--warn:#e6c36a;--blue:#8fb3d9;color:#f5f0e6;
+}
+:root[data-theme="ivory"] :is(.cb-stage,.hx-stage,.wr,.radar){background:radial-gradient(120% 90% at 50% 100%,#2b2a27 0%,#171717 70%);border:1px solid #c5a46d66;border-radius:28px;padding:10px;box-shadow:0 20px 50px #17171740}
+:root[data-theme="ivory"] .sc-stage{background:radial-gradient(110% 75% at 50% 26%,#2b2a27 0%,#171717 70%)}
