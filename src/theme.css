@@ -1,5 +1,5 @@
-/* ثيمات الموقع. الألوان مأخوذة من الباليتين المعتمدتين (بكسل بكسل من الصور). الافتراضي: الزمردي السيادي. */
-:root,:root[data-theme="emerald"]{
+/* ثيمات الموقع. الألوان مأخوذة من الباليتين المعتمدتين (بكسل بكسل من الصور). الافتراضي الآن: «الصحراء الزمردية» (خلفية برونزية صحراوية + زمرد لامع). */
+:root[data-theme="emerald"]{
  --t-night:#171b18;--t-surf:#1c2320;--t-surf2:#222d28;
  --t-accent:#c4a66a;--t-accent-hi:#e2cb94;--t-accent-lo:#8f7a43;
  --t-ink:#f3efe5;--t-deep:#183c32;--t-main:#28624c;
@@ -12,3 +12,20 @@
  --t-ink:#f1e6d5;--t-deep:#49362a;--t-main:#a87549;
  --t-paper1:#f1e6d5;--t-paper2:#dcc8aa;
 }
+
+/* الصحراء الزمردية (الافتراضي): خلفية برونزية صحراوية دافئة، والزمرد اللامع للأزرار والتفاصيل المهمة. الألوان من صورتَي المرجع. */
+:root,:root[data-theme="desert"]{
+ --t-night:#6e4c2e;--t-surf:#7f5a38;--t-surf2:#946b43;
+ --t-accent:#1fcb8b;--t-accent-hi:#6ff0be;--t-accent-lo:#0b8f62;
+ --t-ink:#f7ecd9;--t-deep:#0b6b4a;--t-main:#1fcb8b;
+ --t-paper1:#f7ecd9;--t-paper2:#e8d3ae;
+ --t-on-accent:#0f2a20;
+}
+/* نص داكن فوق الزمرد اللامع ليبقى مقروءًا */
+:root[data-theme="desert"] button:not(.g):not(.sw):not(.hold),
+:root:not([data-theme]) button:not(.g):not(.sw):not(.hold){color:var(--t-on-accent)}
+:root[data-theme="desert"] .cb-cta,:root[data-theme="desert"] .cb-opt.on>small,
+:root[data-theme="desert"] .hx-sw button.sw.primary,:root[data-theme="desert"] .hx-sw button.sw.primary .sw-t small,
+:root[data-theme="desert"] .lang button.on{color:var(--t-on-accent)}
+/* خلفية الصفحة: تدرّج برونزي صحراوي بدل لون مسطّح */
+:root[data-theme="desert"] body,:root:not([data-theme]) body{background:radial-gradient(120% 80% at 50% 0%,#9a6f44 0%,#6e4c2e 55%,#553a22 100%) fixed}
