@@ -43,7 +43,6 @@
 :root[data-theme="ivory"],:root[data-theme="ivory"] .cb{--ok:#174c3a;--warn:#8a5a00;--blue:#2f5d8a}
 :root[data-theme="ivory"] .cb{--r-shadow:0 14px 36px #3b2f1a26}
 /* الأزرار الذهبية: شامبانيا بنص فحمي */
-:root[data-theme="ivory"] button:not(.g):not(.sw):not(.hold):not(.cb-ghost){color:#171717;background:linear-gradient(#e0c994,#c5a46d 55%,#b08f55)}
 :root[data-theme="ivory"] .cb-cta,:root[data-theme="ivory"] .hx-sw button.sw.primary{background:linear-gradient(#e0c994,#c5a46d 55%,#b08f55);border-color:#d8bc83;color:#171717;box-shadow:0 10px 26px #3b2f1a33,inset 0 1px 0 #fff8}
 :root[data-theme="ivory"] .hx-sw button.sw.primary .sw-t small,:root[data-theme="ivory"] .cb-opt.on>small,:root[data-theme="ivory"] .lang button.on,:root[data-theme="ivory"] .cb-lang button[aria-pressed="true"]{color:#171717}
 :root[data-theme="ivory"] .lang button.on,:root[data-theme="ivory"] .cb-lang button[aria-pressed="true"]{background:#c5a46d}
@@ -56,7 +55,8 @@
 :root[data-theme="ivory"] .cb-panel.paper{border:1px solid #c5a46d;box-shadow:0 18px 44px #3b2f1a2e}
 :root[data-theme="ivory"] .cb-panel:not(.paper),:root[data-theme="ivory"] .cb-opt{background:linear-gradient(#fbf8f1,#f1e9d7)}
 /* مشهد العين الكامل (Scene) يبقى فحميًا. الرادار نفسه بدون أي إطار أو مربع: يرسم مباشرة على الصفحة كما صُمّم أصلًا. */
-:root[data-theme="ivory"] .sc-stage{
+:root[data-theme="ivory"] :is(.sc-stage,.hero.hx){
+ --cb-ink:#f5f0e6;--cb-dim:color-mix(in srgb,#f5f0e6 82%,transparent);--cb-gold:#c5a46d;--cb-night:#171717;
  --t-night:#171717;--t-surf:#222220;--t-surf2:#2b2a27;--t-ink:#f5f0e6;--t-deep:#1d2420;
  --t-accent:#c5a46d;--t-accent-hi:#e3ce9e;--t-accent-lo:#8f7440;
  --night:#171717;--ink:#f5f0e6;--dim:color-mix(in srgb,#f5f0e6 78%,transparent);--gold:#c5a46d;--glow:#e3ce9e;
@@ -64,3 +64,7 @@
  --ok:#3fb68b;--warn:#e6c36a;--blue:#8fb3d9;color:#f5f0e6;
 }
 :root[data-theme="ivory"] .sc-stage{background:radial-gradient(110% 75% at 50% 26%,#2b2a27 0%,#171717 70%)}
+
+/* الصفحة الرئيسية: الأرض ليلًا خلفية كاملة، والرادار فوقها بدون أي مربعات */
+:root[data-theme="ivory"] .hero.hx{background:linear-gradient(rgba(8,10,18,.28),rgba(8,10,18,.72)),url(/earth-night.jpg) center 35%/cover no-repeat,#05070f}
+:root[data-theme="ivory"] .hero.hx .hx-sw .ln button.sw{background:linear-gradient(#26262499,#17171799);border-color:#c5a46d80;color:#f5f0e6}
