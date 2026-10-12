@@ -4,6 +4,7 @@ import {useI18n} from './i18n';
 import {Switch} from './cabin/Switch';
 import './operator.css';
 import './profile.css';
+import './redesign.css';
 
 // صفحة صاحب القرار: تفتح من رابط آمن (?view=approve#t=الرمز) بلا حساب. الرمز بعد # فلا يصل لأي خادم ولا يظهر في سجلات الوصول.
 // يرى ملخصًا من ثلاثة أسطر وزرّ «أوافق». الموافقة تسجّل نية حجز فقط (لا حجز تلقائي)، والتأكيد النهائي بعد مراجعة الوسيط والمشغّل.
@@ -63,8 +64,8 @@ export default function ApproverLink(){
  const nf=useMemo(()=>new Intl.NumberFormat(l==='ar'?'ar-u-nu-latn':'en-US',{maximumFractionDigits:0}),[l]);
  const dt=(d:string|null)=>d?new Date(d+'T00:00:00').toLocaleDateString(l==='ar'?'ar-u-nu-latn':'en-GB',{weekday:'long',day:'numeric',month:'long',year:'numeric'}):t.unspec;
  const dtm=(s:string)=>new Date(s).toLocaleString(l==='ar'?'ar-u-nu-latn':'en-GB',{day:'numeric',month:'short',hour:'2-digit',minute:'2-digit'});
- const Shell=({children}:{children:React.ReactNode})=><div className="ol" lang={l} dir={l==='ar'?'rtl':'ltr'}>
-  <header><span className="ol-brand"><i aria-hidden/>{t.brand}<small>{t.desk}</small></span>
+ const Shell=({children}:{children:React.ReactNode})=><div className="ol ap" lang={l} dir={l==='ar'?'rtl':'ltr'}>
+  <header><span className="ol-brand"><svg width="26" height="22" viewBox="0 0 46 38" fill="none" stroke="#8f6f2a" strokeWidth="1.8" aria-hidden="true"><path d="M13 10 16 2l5 5 4-7 4 7 5-5 3 8Z"/><path d="M3 26C12 14 34 14 43 26 34 38 12 38 3 26Z"/><circle cx="23" cy="26" r="5"/><circle cx="23" cy="26" r="1.8" fill="#8f6f2a"/></svg>{t.brand}<small>{t.desk}</small></span>
    <div className="ol-l" role="group" aria-label="Language"><button className={l==='ar'?'on':''} onClick={()=>setLang('ar')} aria-pressed={l==='ar'}>عربي</button><button className={l==='en'?'on':''} onClick={()=>setLang('en')} aria-pressed={l==='en'}>EN</button></div></header>
   <main>{children}</main></div>;
  if(neterr)return <Shell><div className="ol-msg" role="alert"><p>{t.neterr}</p><button onClick={load}>{t.retry}</button></div></Shell>;
