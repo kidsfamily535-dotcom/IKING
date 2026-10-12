@@ -43,3 +43,10 @@
 .ol .ap-sw .sw{max-width:440px}
 .ol .ap-sw .sw.small{width:auto}
 @media(max-width:560px){.rm .pf-add{grid-template-columns:1fr}.rm .pf-add .sw{width:100%}}
+
+/* اللي قلته للعين: جمل بالخط الأميري، بلا بطاقات */
+.rm .sd-line{font:400 clamp(19px,2.6vw,22px)/1.7 'Amiri','Cormorant Garamond',Georgia,serif;color:var(--ink)}
+.rm .sd-none{font:400 clamp(19px,2.6vw,22px)/1.7 'Amiri','Cormorant Garamond',Georgia,serif;color:var(--dim);margin:0}
+.rm .sd-list li{display:flex;align-items:center;gap:12px;flex-wrap:wrap}
+.rm .sd-say{margin-top:8px}
+.rm .sd-ok{font:400 clamp(19px,2.6vw,22px)/1.7 'Amiri','Cormorant Garamond',Georgia,serif;color:var(--gold);margin:0}
