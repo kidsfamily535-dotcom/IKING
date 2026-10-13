@@ -1,0 +1,140 @@
+/* الهوية المعتمدة من محاكاتَي الرئيسية والكابينة: أسود دافئ + ذهب شامبانيا، والقرار على ورق عاجي دافئ.
+   «فخامة ليلية واضحة التفاصيل» وليست شاشة سوداء كاملة. يُحمَّل بعد كل ملفات الأنماط الأخرى. */
+
+/* ===== ألوان الليل الدافئ (الرئيسية والكابينة) ===== */
+:root:root[data-theme="ivory"] :is(.hero.hx,.cb){
+ --t-night:#100E0A;--t-surf:#19150F;--t-surf2:#211B12;--t-deep:#19150F;
+ --t-ink:#F5ECDD;--t-accent:#D8B66A;--t-accent-hi:#ECD9A8;--t-accent-lo:#9B8049;
+ --night:#100E0A;--ink:#F5ECDD;--dim:#C6BBA6;--cb-ink:#F5ECDD;--cb-dim:#C6BBA6;--cb-gold:#D8B66A;--cb-night:#100E0A;
+ --gold:#D8B66A;--glow:#ECD9A8;--line:color-mix(in srgb,#F5ECDD 16%,transparent);--blue:#D8B66A;--ok:#7fc8a0;--warn:#e6c36a;color:#F5ECDD;
+}
+
+/* ===== الشارة التجريبية: أهدأ وأصغر ===== */
+.pill{font:400 11px/1.4 var(--cb-sans,Tajawal,system-ui,sans-serif);letter-spacing:0;direction:inherit;padding:2px 12px;border-color:color-mix(in srgb,var(--t-accent) 28%,transparent);color:color-mix(in srgb,var(--t-accent) 85%,transparent);background:color-mix(in srgb,#100E0A 55%,transparent);backdrop-filter:blur(6px)}
+
+/* ===== الصفحة الرئيسية ===== */
+:root:root[data-theme="ivory"] .hero.hx{position:relative;isolation:isolate;background:#100E0A}
+/* الأرض ليلًا: مدفّأة وأكثر إضاءة، والمدن والطرق الذهبية أوضح */
+:root:root[data-theme="ivory"] .hero.hx::before{content:"";position:absolute;inset:0;z-index:-2;background:url(/earth-night.jpg) center 35%/cover no-repeat;filter:sepia(.32) saturate(.9) brightness(1.3) contrast(1.12)}
+:root:root[data-theme="ivory"] .hero.hx::after{display:block;content:"";position:absolute;inset:0;z-index:-1;pointer-events:none;
+ background:linear-gradient(270deg,rgba(16,14,10,.82) 0%,rgba(16,14,10,.42) 55%,rgba(16,14,10,.14) 100%),
+  radial-gradient(ellipse 85% 34% at 28% 102%,rgba(216,182,106,.30),transparent 70%),
+  radial-gradient(ellipse 70% 18% at 50% 100%,rgba(120,150,180,.16),transparent 80%),
+  linear-gradient(180deg,rgba(16,14,10,.45),transparent 25%)}
+:root:root[data-theme="ivory"] .hero.hx .hx-sw .ln button.sw{background:linear-gradient(#19150Fcc,#100E0Acc);border-color:#D8B66A73;color:#F5ECDD;backdrop-filter:blur(6px)}
+.hx-mark{font:400 clamp(15px,1.4vw,17px)/1.6 var(--cb-sans,Tajawal,system-ui,sans-serif)!important;letter-spacing:0!important;direction:inherit!important;color:var(--cb-gold);margin:0 0 4px}
+.hero.hx h1.hx-h{font:700 clamp(2.9rem,6vw,5.4rem)/1.15 var(--cb-serif)}
+.hx-lead{font:400 clamp(1.3rem,2.2vw,1.85rem)/1.6 var(--cb-serif);color:#ECD9A8;max-width:none;margin:0 0 18px}
+.hx-sw .ln{justify-content:center}
+.hx-sw .ln .sw{flex:1}
+@media(max-width:979px){.hero.hx .hx-copy{align-items:center;text-align:center}}
+
+/* العين: الرادار بطل الشاشة. الخطوط أفتح بنحو 25% والشعاع أدفأ والقزحية أنصع */
+.he{margin:0;display:flex;flex-direction:column;align-items:center;gap:12px;width:100%}
+.he svg{width:100%;max-width:660px;max-height:78vh;overflow:visible;display:block}
+.he .ring{fill:none;stroke:#D8B66A;stroke-opacity:.27}
+.he .ring.t{stroke-opacity:.44;stroke-width:.8}
+.he .rl{fill:#B89A5C;font-size:9px;font-family:var(--cb-sans,Tajawal,sans-serif)}
+.he .fib{stroke:#D8B66A;stroke-opacity:.48;stroke-width:.7}
+.he .city{cursor:pointer;outline:none}
+.he .city circle.d{fill:#F5ECDD;opacity:.9}
+.he .city text{fill:#F5ECDD;font-size:12.5px;font-family:var(--cb-sans,Tajawal,sans-serif);opacity:.95;paint-order:stroke;stroke:#100E0A99;stroke-width:3px}
+.he .city .hit{fill:transparent}
+.he .city:hover circle.d,.he .city:focus-visible circle.d{fill:#ECD9A8;opacity:1}
+.he .city:focus-visible .hit{stroke:#ECD9A8;stroke-width:1.5}
+.he .route{fill:none;stroke:#ECD9A8;stroke-width:1.6;filter:drop-shadow(0 0 5px rgba(236,217,168,.8));stroke-dasharray:420;stroke-dashoffset:420;animation:he-draw 3.2s ease-out .6s forwards}
+@keyframes he-draw{to{stroke-dashoffset:0}}
+.he .sweep{transform-origin:300px 300px;animation:he-sw 16s linear infinite}
+@keyframes he-sw{to{transform:rotate(-360deg)}}
+.he .iris{transform-box:fill-box;transform-origin:center;animation:he-br 5.5s ease-in-out infinite}
+@keyframes he-br{0%,100%{transform:scale(1)}50%{transform:scale(1.1)}}
+.he .glow{transform-box:fill-box;transform-origin:center;animation:he-gl 5.5s ease-in-out infinite}
+@keyframes he-gl{0%,100%{opacity:.6;transform:scale(1)}50%{opacity:1;transform:scale(1.2)}}
+.he .echo{fill:none;stroke:#D8B66A;stroke-width:1;transform-box:fill-box;transform-origin:center;opacity:0;animation:he-ec 8s ease-out infinite}
+@keyframes he-ec{0%{transform:scale(1);opacity:.6}70%,100%{transform:scale(8);opacity:0}}
+.he .p{fill:none;stroke:#ECD9A8;stroke-width:1;transform-box:fill-box;transform-origin:center;opacity:0;animation:he-pl 8s ease-out infinite;animation-delay:var(--d)}
+@keyframes he-pl{0%{transform:scale(1);opacity:.9}18%{transform:scale(6);opacity:0}100%{transform:scale(6);opacity:0}}
+.he .rn{fill:#F5ECDD;font-size:14px;font-weight:500;font-family:var(--cb-sans,Tajawal,sans-serif)}
+.he .cap{margin:0;font-size:.95rem;color:#F5ECDD;text-align:center;font-feature-settings:"tnum";text-shadow:0 1px 8px rgba(0,0,0,.6)}
+@media(max-width:860px){.he svg{max-height:44vh}.he .p.x{display:none}}
+@media(prefers-reduced-motion:reduce){.he .sweep,.he .iris,.he .glow,.he .echo,.he .p{animation:none}.he .p,.he .echo{display:none}.he .route{animation:none;stroke-dashoffset:0}}
+
+/* ===== الكابينة: رادار داكن، والقرار على ورق عاجي دافئ ===== */
+:root:root[data-theme="ivory"] .cb{--sk1:#19150F;--sk2:#100E0A;--r-card:#19150F;--r-edge:#D8B66A40;--r-edge-hi:#D8B66AB3;--r-shadow:0 24px 60px rgba(0,0,0,.45);
+ --r-gold-1:#ECD9A8;--r-gold-2:#D8B66A;--r-gold-3:#B08F55;--r-gold-grad:linear-gradient(#ecd9a8,#d6bb82 55%,#bd9d5c)}
+:root:root[data-theme="ivory"] .cb[data-phase]{--sk1:#19150F;--sk2:#100E0A}
+:root:root[data-theme="ivory"] .cb[data-phase="4"]{--sk1:#3a2e17}
+:root:root[data-theme="ivory"] .cb .cb-rail li{color:color-mix(in srgb,#F5ECDD 66%,transparent)}
+:root:root[data-theme="ivory"] .cb .cb-rail li.now{color:#D8B66A}
+:root:root[data-theme="ivory"] .cb .cb-rail li i{background:#100E0A}
+:root:root[data-theme="ivory"] .cb .cr-sweep path{fill-opacity:.11}
+/* بطاقة القرار */
+:root:root[data-theme="ivory"] .cb-panel{
+ --t-night:#f5f0e6;--t-surf:#fbf8f1;--t-surf2:#efe6d2;--t-deep:#e9dfc8;--t-ink:#1c1710;--t-accent:#86672f;--t-accent-hi:#d8bc83;--t-accent-lo:#7a5e2e;
+ --night:#f5f0e6;--ink:#1c1710;--dim:#6f6350;--gold:#86672f;--glow:#d8bc83;--line:#d9ccb0;--blue:#7a5e2e;--ok:#174c3a;--warn:#8a5a00;
+ --r-gold-1:#ecd9a8;--r-gold-2:#d6bb82;--r-gold-3:#bd9d5c;--r-card:#fbf8f1;--r-edge:#c5a46d;--r-edge-hi:#c5a46d;
+ --r-shadow:0 24px 60px rgba(0,0,0,.45);color:#1c1710;
+ background:linear-gradient(#f9f4e8,#f3ebd8)!important;border:1px solid #c5a46d!important;border-radius:24px;box-shadow:0 24px 60px rgba(0,0,0,.45)!important}
+:root:root[data-theme="ivory"] .cb-panel h1,:root:root[data-theme="ivory"] .cb-panel h2,:root:root[data-theme="ivory"] .cb-panel .cb-trip b,:root:root[data-theme="ivory"] .cb-panel .cb-chip{color:#1c1710}
+:root:root[data-theme="ivory"] .cb-panel .cb-sub,:root:root[data-theme="ivory"] .cb-panel .cb-note,:root:root[data-theme="ivory"] .cb-panel .cb-hint,:root:root[data-theme="ivory"] .cb-panel .cb-foot,:root:root[data-theme="ivory"] .cb-panel .cb-trip span,:root:root[data-theme="ivory"] .cb-panel .cb-chip small{color:#6f6350}
+:root:root[data-theme="ivory"] .cb-panel .cb-eye{color:#86672f}
+:root:root[data-theme="ivory"] .cb-panel .cb-eye i{background:#86672f;box-shadow:none}
+:root:root[data-theme="ivory"] .cb-panel .cb-link{color:#86672f}
+:root:root[data-theme="ivory"] .cb-panel .cb-cta{background:linear-gradient(#e6cf98,#c9a864 55%,#b08f55);border:1px solid #d8bc83;color:#1b1408;box-shadow:0 8px 20px rgba(59,47,26,.2)}
+:root:root[data-theme="ivory"] .cb-panel .cb-ghost{background:transparent;border:1px solid #c5a46d;color:#86672f}
+:root:root[data-theme="ivory"] .cb-panel .cb-ghost:hover{background:#c5a46d1f}
+:root:root[data-theme="ivory"] .cb-panel .cb-seg button[aria-checked="true"]{background:linear-gradient(#a98543,#86672f);color:#fff8e6}
+:root:root[data-theme="ivory"] .cb-panel .cb-row input[type=date]{color-scheme:light;color:#1c1710}
+:root:root[data-theme="ivory"] .cb-panel .cb-step button{color:#1c1710}
+:root:root[data-theme="ivory"] .cb-panel .cb-chip.on{background:#c5a46d1f}
+:root:root[data-theme="ivory"] .cb-panel .cb-steps li{color:#9b8f78}
+:root:root[data-theme="ivory"] .cb-panel .cb-steps li.busy,:root:root[data-theme="ivory"] .cb-panel .cb-steps li.ok{color:#1c1710}
+:root:root[data-theme="ivory"] .cb-panel .cb-steps li.ok b{color:#174c3a}
+:root:root[data-theme="ivory"] .cb-panel .cb-sum{border-color:#d9ccb0}
+:root:root[data-theme="ivory"] .cb-panel .cb-st.estimated,:root:root[data-theme="ivory"] .cb-panel .cb-st.inferred{color:#7a5e2e;border-color:#c5a46d}
+:root:root[data-theme="ivory"] .cb-panel .cr-l{color:#1c1710}
+
+/* ===== البابان والمدخل ===== */
+.cb-doors{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+.cb-door{display:flex;flex-direction:column;gap:6px;text-align:start;padding:20px 18px;border:1px solid #c5a46d;border-radius:18px;background:#fbf8f1;color:#1c1710;transition:transform .2s,box-shadow .2s;min-height:120px}
+.cb-door:hover{transform:translateY(-3px);box-shadow:0 12px 26px rgba(59,47,26,.18)}
+.cb-door b{font:700 clamp(1.25rem,2.2vw,1.45rem)/1.3 var(--serif);color:#1c1710}
+.cb-door small{font-size:14px;line-height:1.6;color:#6f6350}
+@media(max-width:560px){.cb-doors{grid-template-columns:1fr}}
+
+/* خانة كتابة المدينة */
+.cb-find{display:flex;flex-direction:column;gap:4px}
+.cb-find label{font-size:13px;color:var(--dim)}
+.cb-find input{width:100%;background:transparent;border:0;border-bottom:1px solid var(--line);padding:8px 2px;font-size:1.15rem;color:var(--ink);border-radius:0}
+.cb-find input::placeholder{color:#9b8f78}
+.cb-find input:focus-visible{outline:0;border-bottom-color:#86672f}
+.cb-sug{display:flex;flex-wrap:wrap;gap:8px;margin-top:8px}
+.cb-sug button{border:1px solid var(--line);border-radius:99px;padding:6px 16px;min-height:40px;color:var(--ink)}
+.cb-sug button:hover{border-color:#c5a46d;background:#c5a46d1f}
+.cb-field{display:block;border-bottom:1px solid var(--line);padding:8px 0}
+.cb-field span{display:block;font-size:13px;color:var(--dim)}
+.cb-field input,.cb-field textarea{width:100%;background:transparent;border:0;padding:6px 2px;font-size:1.05rem;color:var(--ink);border-radius:0;font-family:inherit}
+.cb-field textarea{min-height:76px;resize:vertical}
+.cb-field input:focus-visible,.cb-field textarea:focus-visible{outline:0}
+
+/* ===== الخيارات الثلاثة: صفوف مدمجة، والسبب أولًا ===== */
+:root:root[data-theme="ivory"] .cb-panel .cb-opts{display:flex;flex-direction:column;gap:10px}
+:root:root[data-theme="ivory"] .cb-panel .cb-opt{padding:14px 16px;gap:2px;border-radius:16px;border:1px solid #d9ccb0;background:#fbf8f1;overflow:visible}
+:root:root[data-theme="ivory"] .cb-panel .cb-opt>*:not(.cb-ph){margin-inline:0}
+:root:root[data-theme="ivory"] .cb-panel .cb-opt:hover,:root:root[data-theme="ivory"] .cb-panel .cb-opt.on{border-color:#c5a46d;background:#fbf8f1;box-shadow:0 8px 22px rgba(59,47,26,.14)}
+:root:root[data-theme="ivory"] .cb-panel .cb-opt>small{align-self:flex-start;background:#86672f;border:0;color:#fff8e6;font-weight:400;padding:1px 12px}
+:root:root[data-theme="ivory"] .cb-panel .cb-opt.on>small{background:#86672f;color:#fff8e6}
+:root:root[data-theme="ivory"] .cb-panel .cb-opt>em.pend{width:100%;border-top:0;padding-top:4px}
+.cb-opt>span.why{color:#1c1710;font-size:15.5px}
+.cb-det{border-top:1px solid var(--line);padding-top:10px}
+.cb-det summary{cursor:pointer;color:#86672f;font-size:15px;min-height:44px;display:flex;align-items:center}
+.cb-det[open] summary{margin-bottom:8px}
+:root:root[data-theme="ivory"] .cb-panel .cb-media .cb-shot{border-color:#d9ccb0}
+:root:root[data-theme="ivory"] .cb-panel .cb-shot figcaption{color:#fff8e6}
+:root:root[data-theme="ivory"] .cb-panel .cb-medianote{color:#6f6350}
+:root:root[data-theme="ivory"] .cb-panel .cb-plan path{fill:#c5a46d1f;stroke:#86672f}
+
+/* تتبّع رحلة عند مشغّل آخر */
+.cb-ul{display:flex;flex-direction:column;gap:2px}
+.cb-ul li{display:flex;gap:12px;align-items:flex-start;padding:8px 0;font-size:1.05rem}
+.cb-ul li::before{content:"";width:9px;height:9px;border-radius:50%;background:#c5a46d;margin-top:.7em;flex:none}

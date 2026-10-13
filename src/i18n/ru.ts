@@ -39,7 +39,7 @@ export const rus:Record<Key,string>={
 'role.admin':'Администратор','role.operator':'Оператор','role.customer':'Клиент',
 'radar.aria':'Радар Персидского залива',
 'pill.live':'LIVE · PARTIAL — сигналы настоящие, остальное симуляция','pill.demo':'DEMO MODE · SIMULATION',
-'hero.sub1':'Всегда на страже.','hero.sub2':'Всегда на шаг впереди.',
+'hero.eyebrow':'Платформа частной авиации','hero.sub1':'Всегда на страже.','hero.sub2':'Всегда на шаг впереди.',
 'hero.lead':'Ваш персональный помощник по частной авиации. Скажите Оку, что вам нужно, и оно возьмёт остальное на себя.',
 'hero.enter':'Войти в Око','hero.pick.aria':'Выберите демо-роль','hero.demoaccess':'DEMO ACCESS · это не настоящий вход','hero.realLogin':'Настоящий вход',
 'disc.title':'Око наблюдает','disc.lead':'Ничто не считается «доступным», пока оператор не подтвердит.','disc.run':'Запустить Око',

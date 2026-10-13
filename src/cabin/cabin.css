@@ -138,20 +138,20 @@
 @keyframes crsc{from{transform:scale(.5);opacity:.9}to{transform:scale(18);opacity:0}}
 .cr-arc{stroke-dasharray:1;stroke-dashoffset:1;animation:crdr 1.6s .1s ease-out forwards}
 @keyframes crdr{to{stroke-dashoffset:0}}
-.cr-rl{position:absolute;left:50%;transform:translate(-50%,-110%);font:clamp(9px,2cqw,11px)/1 'JetBrains Mono',monospace;letter-spacing:.06em;color:color-mix(in srgb,var(--t-ink) 47%,transparent);pointer-events:none;white-space:nowrap;background:radial-gradient(closest-side,var(--sk2),transparent);padding:2px 6px}
+.cr-rl{position:absolute;left:50%;transform:translate(-50%,-110%);font:clamp(9px,2cqw,11px)/1 'JetBrains Mono',monospace;letter-spacing:.06em;color:color-mix(in srgb,var(--t-ink) 60%,transparent);pointer-events:none;white-space:nowrap;background:radial-gradient(closest-side,var(--sk2),transparent);padding:2px 6px}
 .cr-n,.cr-b{position:absolute;width:44px;height:44px;transform:translate(-50%,-50%);display:grid;place-items:center;background:none;border:0;padding:0;color:var(--ink);z-index:2}
 .cr-n i{width:6px;height:6px;border-radius:50%;background:color-mix(in srgb,var(--t-ink) 67%,transparent);transition:all .3s}
 .cr-n.on i,.cr-n.hot i{width:10px;height:10px;background:var(--gold);box-shadow:0 0 14px var(--gold)}
 .cr-n.org i{width:0;height:0;box-shadow:none}
 .cr-n:hover i{background:var(--gold)}
-.cr-l{position:absolute;top:50%;transform:translateY(-50%);font:400 clamp(11px,2.7cqw,15px)/1 var(--sans);white-space:nowrap;color:color-mix(in srgb,var(--t-ink) 69%,transparent);pointer-events:none;text-shadow:0 1px 6px var(--t-night),0 0 3px var(--t-night);transition:color .3s}
+.cr-l{position:absolute;top:50%;transform:translateY(-50%);font:400 clamp(11px,2.7cqw,15px)/1 var(--sans);white-space:nowrap;color:color-mix(in srgb,var(--t-ink) 86%,transparent);pointer-events:none;text-shadow:0 1px 6px var(--t-night),0 0 3px var(--t-night);transition:color .3s}
 .cr-l.r{left:calc(50% + 9px)}.cr-l.l{right:calc(50% + 9px)}
 .cr-n.on .cr-l,.cr-n.hot .cr-l{color:var(--ink);font-weight:500}
 .cr-b i{width:9px;height:9px;border:1.5px solid var(--blue);border-radius:2px;transform:rotate(45deg);background:var(--t-surf);transition:all .3s}
 .cr-b.sel i{background:var(--blue);box-shadow:0 0 16px var(--blue);width:11px;height:11px}
 .cr-b .cr-l{color:var(--blue);font-size:clamp(11px,2.5cqw,14px)}
 .cr-eye{position:absolute;width:0;height:0;z-index:1;pointer-events:none}
-.cr-eye .ir{position:absolute;left:-19px;top:-19px;width:38px;height:38px;border-radius:50%;border:1px solid var(--gold);display:grid;place-items:center;box-shadow:0 0 34px color-mix(in srgb,var(--t-accent) 27%,transparent),inset 0 0 14px color-mix(in srgb,var(--t-accent) 13%,transparent);transition:transform 1s cubic-bezier(.3,.8,.2,1)}
+.cr-eye .ir{position:absolute;left:-19px;top:-19px;width:38px;height:38px;border-radius:50%;border:1px solid var(--gold);display:grid;place-items:center;box-shadow:0 0 46px color-mix(in srgb,var(--t-accent) 40%,transparent),inset 0 0 14px color-mix(in srgb,var(--t-accent) 13%,transparent);transition:transform 1s cubic-bezier(.3,.8,.2,1)}
 .cr-eye .ir i{width:11px;height:11px;border-radius:50%;background:var(--gold);box-shadow:0 0 16px var(--gold)}
 .cr-eye .rg{position:absolute;left:-19px;top:-19px;width:38px;height:38px;border-radius:50%;border:1px solid color-mix(in srgb,var(--t-accent) 53%,transparent);animation:crrg 5s ease-out infinite}.cr-eye .r2{animation-delay:2.5s}
 @keyframes crrg{from{transform:scale(.9);opacity:.6}to{transform:scale(2.6);opacity:0}}

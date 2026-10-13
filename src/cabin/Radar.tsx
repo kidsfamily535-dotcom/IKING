@@ -63,10 +63,10 @@ export default function Radar(p:Props){
   <svg viewBox="0 0 600 600" aria-hidden>
    <defs><radialGradient id="rdg" cx="50%" cy="50%" r="50%"><stop offset="0" stopColor="var(--t-surf2)" stopOpacity=".85"/><stop offset="1" stopColor="var(--t-night)" stopOpacity="0"/></radialGradient></defs>
    <circle cx="300" cy="300" r="286" fill="url(#rdg)"/>
-   {rings.map(k=><circle key={k} cx="300" cy="300" r={rr(k,v.range)} fill="none" stroke="var(--t-ink)" strokeOpacity=".09"/>)}
-   <circle cx="300" cy="300" r="270" fill="none" stroke="var(--t-ink)" strokeOpacity=".16"/>
-   {Array.from({length:72},(_,i)=>{const a=i*5*Math.PI/180,m=i%6?3:9;return <line key={i} x1={300+270*Math.sin(a)} y1={300-270*Math.cos(a)} x2={300+(270-m)*Math.sin(a)} y2={300-(270-m)*Math.cos(a)} stroke="var(--t-ink)" strokeOpacity={i%6?.18:.4}/>})}
-   <g className="cr-sweep">{Array.from({length:9},(_,k)=>{const a=(x:number)=>x*Math.PI/180,a1=-(k+1)*3.4,a2=-k*3.4;return <path key={k} d={`M300,300 L${300+270*Math.sin(a(a1))},${300-270*Math.cos(a(a1))} A270,270 0 0 1 ${300+270*Math.sin(a(a2))},${300-270*Math.cos(a(a2))} Z`} fill="var(--t-accent)" fillOpacity={.06*(1-k/9)}/>})}<line x1="300" y1="300" x2="300" y2="30" stroke="var(--t-accent)" strokeOpacity=".35"/></g>
+   {rings.map(k=><circle key={k} cx="300" cy="300" r={rr(k,v.range)} fill="none" stroke="var(--t-ink)" strokeOpacity=".12"/>)}
+   <circle cx="300" cy="300" r="270" fill="none" stroke="var(--t-ink)" strokeOpacity=".2"/>
+   {Array.from({length:72},(_,i)=>{const a=i*5*Math.PI/180,m=i%6?3:9;return <line key={i} x1={300+270*Math.sin(a)} y1={300-270*Math.cos(a)} x2={300+(270-m)*Math.sin(a)} y2={300-(270-m)*Math.cos(a)} stroke="var(--t-ink)" strokeOpacity={i%6?.24:.5}/>})}
+   <g className="cr-sweep">{Array.from({length:9},(_,k)=>{const a=(x:number)=>x*Math.PI/180,a1=-(k+1)*3.4,a2=-k*3.4;return <path key={k} d={`M300,300 L${300+270*Math.sin(a(a1))},${300-270*Math.cos(a(a1))} A270,270 0 0 1 ${300+270*Math.sin(a(a2))},${300-270*Math.cos(a(a2))} Z`} fill="var(--t-accent)" fillOpacity={.1*(1-k/9)}/>})}<line x1="300" y1="300" x2="300" y2="30" stroke="var(--t-accent)" strokeOpacity=".5"/></g>
    {p.hover&&p.hover!==p.from&&P[p.hover]&&!p.to&&<path d={pts(Array.from({length:N+1},(_,i)=>plot(v,between(f,p.hubs.find(h=>h.iata===p.hover)!,i/N),v.range)))} fill="none" stroke="var(--t-ink)" strokeOpacity=".55" strokeDasharray="2 6"/>}
    {route.length>0&&<><path d={pts(route)} fill="none" stroke="var(--t-ink)" strokeOpacity=".28" strokeDasharray="2 7"/><path className="cr-arc" key={p.to??'x'} d={pts(route.slice(0,done+1))} pathLength={1} fill="none" stroke="var(--t-accent)" strokeWidth="1.6" strokeLinecap="round"/></>}
    {p.blips.map(b=>{const o=P[b.hub];if(!o)return null;const q={x:o.x+b.dx,y:o.y+b.dy};return b.posFrom&&b.sel?<line key={b.id+'l'} x1={q.x} y1={q.y} x2={fx.x} y2={fx.y} stroke="#78a0c8" strokeOpacity=".8" strokeDasharray="3 5"/>:null})}

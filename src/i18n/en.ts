@@ -39,7 +39,7 @@ export const en:Record<Key,string>={
 'role.admin':'Admin','role.operator':'Operator','role.customer':'Customer',
 'radar.aria':'Gulf radar',
 'pill.live':'LIVE · PARTIAL — signals are real, the rest is simulated','pill.demo':'DEMO MODE · SIMULATION',
-'hero.sub1':'Always watching.','hero.sub2':'Always ahead.',
+'hero.eyebrow':'Private aviation platform','hero.sub1':'Always watching.','hero.sub2':'Always ahead.',
 'hero.lead':'Your personal private-aviation assistant. Tell the Eye what you need and it takes care of the rest.',
 'hero.enter':'Enter the Eye','hero.pick.aria':'Choose your demo role','hero.demoaccess':'DEMO ACCESS · not a real sign-in','hero.realLogin':'Real sign-in',
 'disc.title':'The Eye is watching','disc.lead':'Nothing counts as “available” until an operator confirms it.','disc.run':'Run the Eye',

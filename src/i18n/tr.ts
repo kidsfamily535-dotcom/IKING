@@ -39,7 +39,7 @@ export const tur:Record<Key,string>={
 'role.admin':'Yönetici','role.operator':'Operatör','role.customer':'Müşteri',
 'radar.aria':'Körfez radarı',
 'pill.live':'LIVE · PARTIAL — sinyaller gerçek, geri kalanı simülasyon','pill.demo':'DEMO MODE · SIMULATION',
-'hero.sub1':'Hep gözcü.','hero.sub2':'Hep bir adım önde.',
+'hero.eyebrow':'Özel havacılık platformu','hero.sub1':'Hep gözcü.','hero.sub2':'Hep bir adım önde.',
 'hero.lead':'Kişisel özel havacılık asistanınız. Göze neye ihtiyacınız olduğunu söyleyin, gerisini o halletsin.',
 'hero.enter':'Göze gir','hero.pick.aria':'Demo rolünüzü seçin','hero.demoaccess':'DEMO ACCESS · gerçek giriş değil','hero.realLogin':'Gerçek giriş',
 'disc.title':'Göz izliyor','disc.lead':'Bir operatör onaylamadıkça hiçbir şey “müsait” sayılmaz.','disc.run':'Gözü çalıştır',
