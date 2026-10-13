@@ -54,17 +54,17 @@
 :root[data-theme="ivory"] .cb[data-phase="4"]{--sk1:#e6d3a8}
 :root[data-theme="ivory"] .cb-panel.paper{border:1px solid #c5a46d;box-shadow:0 18px 44px #3b2f1a2e}
 :root[data-theme="ivory"] .cb-panel:not(.paper),:root[data-theme="ivory"] .cb-opt{background:linear-gradient(#fbf8f1,#f1e9d7)}
-/* مشهد العين الكامل (Scene) يبقى فحميًا. الرادار نفسه بدون أي إطار أو مربع: يرسم مباشرة على الصفحة كما صُمّم أصلًا. */
+/* مشهد العين الكامل (Scene): موكا دافئ أخف من البني الغامق (#463a2f ← #5a4a3b) بدل الفحمي، والنص عاجي والذهب أفتح للقراءة. الرادار نفسه بدون أي إطار أو مربع: يرسم مباشرة على الصفحة كما صُمّم أصلًا. */
 :root[data-theme="ivory"] :is(.sc-stage,.hero.hx,.jy .scene){
- --n1:#171717;--n2:#2b2a27;--dusk:#171717;--ln:color-mix(in srgb,#f5f0e6 14%,transparent);--glow:#c5a46d;
- --cb-ink:#f5f0e6;--cb-dim:color-mix(in srgb,#f5f0e6 82%,transparent);--cb-gold:#c5a46d;--cb-night:#171717;
- --t-night:#171717;--t-surf:#222220;--t-surf2:#2b2a27;--t-ink:#f5f0e6;--t-deep:#1d2420;
- --t-accent:#c5a46d;--t-accent-hi:#e3ce9e;--t-accent-lo:#8f7440;
- --night:#171717;--ink:#f5f0e6;--dim:color-mix(in srgb,#f5f0e6 78%,transparent);--gold:#c5a46d;--glow:#e3ce9e;
- --line:color-mix(in srgb,#f5f0e6 16%,transparent);--sk1:#222220;--sk2:#171717;
+ --n1:#463a2f;--n2:#5a4a3b;--dusk:#463a2f;--ln:color-mix(in srgb,#f5f0e6 14%,transparent);--glow:#c5a46d;
+ --cb-ink:#f5f0e6;--cb-dim:color-mix(in srgb,#f5f0e6 82%,transparent);--cb-gold:#dcc189;--cb-night:#463a2f;
+ --t-night:#463a2f;--t-surf:#524437;--t-surf2:#5a4a3b;--t-ink:#f5f0e6;--t-deep:#1d2420;
+ --t-accent:#dcc189;--t-accent-hi:#ecd9a8;--t-accent-lo:#8f7440;
+ --night:#463a2f;--ink:#f5f0e6;--dim:color-mix(in srgb,#f5f0e6 78%,transparent);--gold:#dcc189;--glow:#ecd9a8;
+ --line:color-mix(in srgb,#f5f0e6 16%,transparent);--sk1:#524437;--sk2:#463a2f;
  --ok:#3fb68b;--warn:#e6c36a;--blue:#8fb3d9;color:#f5f0e6;
 }
-:root[data-theme="ivory"] .sc-stage{background:radial-gradient(110% 75% at 50% 26%,#2b2a27 0%,#171717 70%)}
+:root[data-theme="ivory"] .sc-stage{background:radial-gradient(110% 75% at 50% 26%,#5a4a3b 0%,#463a2f 70%)}
 
 /* الصفحة الرئيسية: الأرض ليلًا خلفية كاملة، والرادار فوقها بدون أي مربعات */
 :root[data-theme="ivory"] .hero.hx{background:linear-gradient(rgba(8,10,18,.28),rgba(8,10,18,.72)),url(/earth-night.jpg) center 35%/cover no-repeat,#05070f}
