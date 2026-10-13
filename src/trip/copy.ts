@@ -1,0 +1,61 @@
+import {useI18n} from '../i18n';
+// نصوص «ملف الرحلة الحي». عربي وإنجليزي، وبقية اللغات تعرض الإنجليزية إلى أن تُترجم.
+// كل ما في هذه الشاشة محاكاة موسومة، ولا شيء فيها حقيقي أو مؤكد أو مُرسل.
+type D=Record<string,string>;
+const ar:D={
+'title':'ملف رحلتك','sub':'من الباب إلى الباب. أراقب، وأجهّز، وأنت تعتمد.','route':'الرياض ← جدة',
+'sim':'محاكاة · بيانات تمثيلية، ولا يُرسل شيء لأي جهة',
+'brief.t':'ملخص ما قبل الرحلة','brief.wx':'الطقس عند الهبوط: سُحب كثيفة ورياح خفيفة، واحتمال تأخير بسيط.',
+'brief.car':'موعد السيارة محسوب بهامش 60 دقيقة قبل الإقلاع المقدّر.','brief.wait':'ينتظر اعتمادك: {n}','brief.none':'لا شيء ينتظر اعتمادك الآن.',
+'chip.confirmed':'مؤكد','chip.estimate':'تقدير','chip.sim':'محاكاة','chip.unknown':'مجهول',
+'src':'المصدر','src.sim':'المصدر: بيانات تمثيلية داخل المحاكاة. وقت التحقق: لا يوجد.',
+'src.est':'المصدر: حساب العين من هامش وزمن مقدّرين، وليس تأكيداً من أي جهة.','src.unk':'لم يُتحقق منه بعد، ولذلك لا مصدر له ولا وقت تحقق.',
+'unk.msg':'لم نتمكن من التحقق بعد؛ نتابع ونصلك عند التوفر.',
+'n.car1':'السيارة إلى المطار','n.car1.d':'موعد الاستلام محسوب من الإقلاع المقدّر مع هامش 60 دقيقة.',
+'n.apt':'المطار والإجراءات','n.apt.d':'لا نعرف بعد أي صالة أو FBO ستستقبلك.',
+'n.fly':'الإقلاع','n.fly.d':'الموعد يحدده المشغّل ولم يُؤكَّد.',
+'n.wx':'الطقس عند الهبوط','n.wx.d':'سُحب كثيفة ورياح خفيفة. احتمال تأخير بسيط عند الإقلاع.',
+'n.land':'الهبوط','n.land.d':'وقت الوصول مقدّر من زمن الرحلة المتوقع.',
+'n.car2':'السيارة من المطار','n.car2.d':'توفّر السيارة لم يُتحقق منه بعد، والسعر يُحدد بعد تأكيد الشريك المحلي.',
+'n.event':'اجتماعك','n.event.d':'الهامش بين الهبوط والاجتماع مريح إن لم يتأخر شيء (تقدير).',
+'d.wx.q':'هل أجهّز خطة للتأخير المحتمل؟ اختر ما يناسبك، وتبقى مسودة حتى تعتمدها.',
+'d.wx.a':'ننتظر ونتابع الطقس','d.wx.b':'نؤخّر موعد السيارة ساعتين','d.wx.c':'نبلّغ مدير مكتبك بالتأخير المحتمل',
+'d.car.q':'هل أجهّز طلب السيارة لتراجعه قبل أي إرسال؟',
+'d.hold':'اضغط مطوّلاً للاعتماد','d.pick':'اختر خطة أولاً',
+'d.done':'اعتُمدت كمسودة. لن يُرسل شيء لأي جهة قبل أن يراجعها فريقنا ويؤكدها.',
+'led.t':'ما فعلته العين لأجلك','led.empty':'لا شيء بعد.',
+'k.noticed':'رصدتُ','k.prepared':'جهّزتُ','k.approved':'اعتمدتَ',
+'l.1':'توقعات الطقس عند الهبوط (محاكاة).','l.2':'حسبتُ موعد السيارة من هامش 60 دقيقة (تقدير).','l.3':'جهّزتُ مسودتين تنتظران اعتمادك.',
+'l.a':'اعتمدتَ خطة الطقس: {x}.','l.b':'اعتمدتَ مسودة طلب السيارة من المطار.',
+'human':'تحدث مع فريقنا','human.msg':'وصل طلبك إلى فريقنا، وسيصلك رد خلال [مدة حقيقية]. (محاكاة: لم يُرسل شيء.)',
+'at':'الساعة {t}','back':'الرئيسية'
+};
+const en:D={
+'title':'Your trip file','sub':'Door to door. I watch, I prepare, you approve.','route':'Riyadh → Jeddah',
+'sim':'Simulation · illustrative data, nothing is sent to anyone',
+'brief.t':'Pre-trip brief','brief.wx':'Weather at landing: broken cloud, light wind, slight chance of delay.',
+'brief.car':'Car pickup is computed with a 60-minute buffer before estimated departure.','brief.wait':'Waiting for your approval: {n}','brief.none':'Nothing is waiting for your approval.',
+'chip.confirmed':'Confirmed','chip.estimate':'Estimate','chip.sim':'Simulation','chip.unknown':'Unknown',
+'src':'Source','src.sim':'Source: illustrative data inside the simulation. Verified at: none.',
+'src.est':'Source: the Eye’s calculation from an assumed buffer and duration, not confirmed by anyone.','src.unk':'Not verified yet, so it has no source and no verification time.',
+'unk.msg':'We could not verify this yet; we keep watching and will tell you when it is available.',
+'n.car1':'Car to the airport','n.car1.d':'Pickup time computed from estimated departure with a 60-minute buffer.',
+'n.apt':'Airport and formalities','n.apt.d':'We do not yet know which terminal or FBO will receive you.',
+'n.fly':'Departure','n.fly.d':'The time is set by the operator and is not confirmed.',
+'n.wx':'Weather at landing','n.wx.d':'Broken cloud and light wind. Slight chance of delay at departure.',
+'n.land':'Landing','n.land.d':'Arrival time is estimated from expected flight time.',
+'n.car2':'Car from the airport','n.car2.d':'Car availability has not been verified, and the price is set once the local partner confirms.',
+'n.event':'Your meeting','n.event.d':'The margin between landing and the meeting is comfortable if nothing slips (estimate).',
+'d.wx.q':'Shall I prepare a plan for the possible delay? Choose one; it stays a draft until you approve.',
+'d.wx.a':'Wait and keep watching the weather','d.wx.b':'Move the car back two hours','d.wx.c':'Tell your office manager about the possible delay',
+'d.car.q':'Shall I prepare the car request for you to review before anything is sent?',
+'d.hold':'Press and hold to approve','d.pick':'Choose a plan first',
+'d.done':'Approved as a draft. Nothing is sent to anyone until our team reviews and confirms it.',
+'led.t':'What the Eye did for you','led.empty':'Nothing yet.',
+'k.noticed':'Noticed','k.prepared':'Prepared','k.approved':'You approved',
+'l.1':'Weather outlook at landing (simulation).','l.2':'Computed the car pickup from a 60-minute buffer (estimate).','l.3':'Prepared two drafts waiting for your approval.',
+'l.a':'You approved the weather plan: {x}.','l.b':'You approved the draft car request from the airport.',
+'human':'Talk to our team','human.msg':'Your request reached our team, and you will hear back within [a real time]. (Simulation: nothing was sent.)',
+'at':'at {t}','back':'Home'
+};
+export const useTripCopy=()=>{const {lang}=useI18n();const D=lang==='ar'?ar:en;return (k:string,v?:Record<string,string|number>)=>{let s=D[k]??en[k]??k;if(v)for(const x in v)s=s.split(`{${x}}`).join(String(v[x]));return s}};

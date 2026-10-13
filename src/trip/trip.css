@@ -1,0 +1,43 @@
+/* ملف الرحلة الحي: خلفية أردوازية، بطاقات عاجية للقراءة، ذهب شامبانيا. أهداف اللمس 44px فأكثر. */
+.tf{--n:#232a30;--s:#2b333a;--g:#D8B66A;--i:#F5ECDD;--p:#fbf8f1;--k:#1c1710;min-height:100vh;background:var(--n);color:var(--i);font:400 16px/1.8 Tajawal,system-ui,sans-serif;padding:72px 16px 48px}
+.tf-top{max-width:1100px;margin:0 auto 18px;display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap}
+.tf-back{color:var(--g);min-height:44px;display:inline-flex;align-items:center;text-underline-offset:5px}
+.tf-sim{font-size:13px;color:var(--g);border:1px solid #D8B66A66;border-radius:10px;padding:4px 14px}
+.tf-main{max-width:1100px;margin:0 auto}
+.tf-eye{margin:0;color:var(--g);font-size:15px}
+.tf h1{font:700 clamp(2rem,5vw,3rem)/1.25 Amiri,Georgia,serif;margin:0 0 6px}
+.tf-sub{margin:0 0 18px;color:#C6BBA6;font-size:17px}
+.tf-brief{background:var(--s);border:1px solid #D8B66A40;border-radius:14px;padding:14px 18px;margin-bottom:22px}
+.tf-brief b{color:var(--g);font-weight:500}.tf-brief ul{margin:6px 0 0;padding:0;list-style:none}.tf-brief li{padding:2px 0;font-size:15px}.tf-brief li.w{color:var(--g)}
+.tf-grid{display:grid;grid-template-columns:minmax(0,1.6fr) minmax(0,1fr);gap:22px;align-items:start}
+.tf-line{list-style:none;margin:0;padding:0;position:relative}
+.tf-line::before{content:"";position:absolute;inset-block:10px;inset-inline-start:7px;width:1px;background:#D8B66A59}
+.tf-n{position:relative;padding-inline-start:34px;margin-bottom:14px}
+.tf-dot{position:absolute;inset-inline-start:0;top:20px;width:15px;height:15px;border-radius:50%;background:var(--n);border:1px solid var(--g)}
+.tf-n.tf-ask .tf-dot{background:var(--g);box-shadow:0 0 0 5px #D8B66A29}
+.tf-n.tf-ok .tf-dot{background:#174c3a;border-color:#174c3a}
+.tf-card{background:var(--p);color:var(--k);border:1px solid #c5a46d;border-radius:14px;padding:14px 18px;box-shadow:0 14px 34px rgba(0,0,0,.28)}
+.tf-card p{margin:2px 0 8px;color:#3d3426;font-size:15.5px}
+.tf-row{display:flex;justify-content:space-between;gap:10px;align-items:baseline}
+.tf-row b{font:700 1.25rem/1.4 Amiri,Georgia,serif}.tf-time{font:400 14px/1 'JetBrains Mono',monospace;color:#6f6350}
+.tf-meta{display:flex;gap:10px;align-items:center;flex-wrap:wrap}
+.tf-src{background:none;border:0;color:#7a5e2e;text-decoration:underline;text-underline-offset:4px;cursor:pointer;min-height:44px;padding:0 6px;font:inherit;font-size:14px}
+.tf-srcl{margin:2px 0 6px;font-size:14px;color:#5a4d36;border-inline-start:2px solid #c5a46d;padding-inline-start:10px}
+.tf-dec{margin-top:10px;padding-top:10px;border-top:1px dashed #c5a46d}.tf-dec p{color:var(--k)}
+.tf-opts{display:grid;gap:8px;margin:6px 0 10px}
+.tf-opts button{min-height:44px;text-align:start;border:1px solid #c5a46d;border-radius:10px;background:#fff;color:var(--k);padding:8px 14px;font:inherit;font-size:15px;cursor:pointer}
+.tf-opts button.on{background:#f1e6c7;border-color:#86672f;box-shadow:inset 0 0 0 1px #86672f}
+.tf-act{display:flex;align-items:center;gap:12px;min-height:56px}.tf-act span{font-size:14px;color:#6f6350}
+.tf .hold{background:none;border:0;padding:0;width:56px;height:56px;cursor:pointer;color:var(--k)}
+.tf .hold svg{width:56px;height:56px}.tf .hold circle:first-child{stroke:#86672f;stroke-opacity:.3}.tf .hold circle:last-child{stroke:#86672f}
+.tf-done{margin-top:10px;padding:10px 14px;border:1px solid #174c3a;border-radius:10px;background:#e7f1ec;color:#12382b;font-size:15px}
+.tf-led{background:var(--s);border:1px solid #D8B66A40;border-radius:14px;padding:16px 18px;position:sticky;top:12px}
+.tf-led h2{font:700 1.4rem/1.4 Amiri,Georgia,serif;margin:0 0 8px;color:var(--g)}
+.tf-led ul{list-style:none;margin:0 0 12px;padding:0}.tf-led li{display:flex;gap:10px;padding:9px 0;border-top:1px solid #D8B66A2e;font-size:15px}
+.tf-led small{color:#C6BBA6}
+.tf-k{flex:none;font-size:13px;border:1px solid #D8B66A66;border-radius:8px;padding:0 10px;height:26px;display:inline-flex;align-items:center;color:var(--g)}
+.tf-k.approved{background:#174c3a;border-color:#174c3a;color:#fff}.tf-k.prepared{border-style:dashed}
+.tf-human{min-height:44px;background:none;border:1px solid #D8B66A80;border-radius:10px;color:var(--g);padding:0 18px;font:inherit;cursor:pointer}
+.tf :focus-visible{outline:2px solid var(--g);outline-offset:3px;border-radius:6px}
+@media(max-width:860px){.tf-grid{grid-template-columns:1fr}.tf-led{position:static}.tf{padding-top:96px}}
+.tf .lang button{min-height:44px}
