@@ -1,0 +1,223 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>داخل عين الملك — THE KING'S EYE</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Aref+Ruqaa:wght@400;700&family=Tajawal:wght@300;400;500;700&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#080604;--bg2:#120e09;--ink:#f3e9d6;--mute:#a99c84;--gold:#d9b469;--gold2:#f2d99a;--line:rgba(217,180,105,.22);--ok:#8fcf9f;--warn:#e0b45a;--info:#8fb4d9;
+box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px);color-scheme:dark}
+*,*:before,*:after{box-sizing:inherit}
+html{height:100%;scroll-padding-top:env(safe-area-inset-top,0px)}
+body{margin:0;min-height:100%;background:radial-gradient(120% 90% at 70% 0%,#1d1409 0%,var(--bg) 55%);color:var(--ink);font-family:Tajawal,"Segoe UI",Tahoma,sans-serif;line-height:1.7;overflow-x:hidden}
+button{font:inherit;color:inherit;cursor:pointer}
+header{display:flex;align-items:center;justify-content:space-between;padding:18px 28px;gap:12px}
+.logo{display:flex;flex-direction:column;align-items:center;letter-spacing:.38em;font-size:13px;color:var(--gold2);direction:ltr}
+.logo svg{width:34px;height:20px;margin-bottom:4px}
+.badge{font-size:12px;border:1px solid var(--line);color:var(--gold);border-radius:99px;padding:3px 12px;white-space:nowrap}
+.skip{background:none;border:1px solid var(--line);border-radius:99px;padding:3px 14px;font-size:12px;color:var(--mute)}
+/* opening */
+#intro{position:fixed;inset:0;z-index:20;background:radial-gradient(90% 70% at 50% 40%,#21170a,#050403);display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;transition:opacity 1s ease,visibility 1s;padding:24px}
+#intro.off{opacity:0;visibility:hidden}
+#intro svg{width:min(70vw,360px);height:auto}
+#intro h1{font-family:"Aref Ruqaa",serif;font-weight:700;font-size:clamp(40px,8vw,76px);margin:12px 0 0;color:var(--gold2);opacity:0;animation:rise 1.4s .6s forwards}
+#intro p{color:var(--mute);margin:6px 0 22px;opacity:0;animation:rise 1.4s 1.3s forwards}
+#intro .skip{opacity:0;animation:rise 1s 1.8s forwards}
+@keyframes rise{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:none}}
+/* stage */
+main{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:28px;align-items:center;max-width:1180px;margin:0 auto;padding:6px 28px 20px}
+.radar{position:relative;aspect-ratio:1;max-width:520px;width:100%;margin:0 auto}
+.radar svg{width:100%;height:100%;overflow:visible}
+.ring{fill:none;stroke:var(--line);stroke-width:1}
+.sweep{transform-origin:200px 200px;animation:spin 9s linear infinite}
+@keyframes spin{to{transform:rotate(360deg)}}
+.city{fill:var(--mute);font-size:11px;font-family:Tajawal,sans-serif}
+.dot{fill:var(--gold)}
+.pulse{fill:none;stroke:var(--gold);transform-box:fill-box;transform-origin:center;animation:pl 2.8s ease-out infinite}
+@keyframes pl{from{transform:scale(.4);opacity:.9}to{transform:scale(2.6);opacity:0}}
+[data-s]{opacity:0;transition:opacity .8s ease}
+svg[data-m="1"] [data-s~="1"],svg[data-m="2"] [data-s~="2"],svg[data-m="3"] [data-s~="3"],svg[data-m="4"] [data-s~="4"],svg[data-m="5"] [data-s~="5"]{opacity:1}
+.route{fill:none;stroke:var(--gold2);stroke-width:1.6;stroke-dasharray:6 6}
+.panel{min-width:0}
+.eyebrow{color:var(--gold);letter-spacing:.2em;font-size:13px;direction:ltr;text-align:right}
+.panel h2{font-family:"Aref Ruqaa",serif;font-size:clamp(34px,5vw,54px);line-height:1.25;margin:4px 0 6px;color:var(--gold2);font-weight:700}
+.msg{font-size:clamp(17px,2.2vw,21px);color:var(--ink);margin:0 0 10px}
+.lead{color:var(--mute);margin:0 0 18px;max-width:46ch}
+.card{background:linear-gradient(160deg,rgba(217,180,105,.09),rgba(255,255,255,.02));border:1px solid var(--line);border-radius:18px;padding:16px 18px;backdrop-filter:blur(6px)}
+.sim{display:inline-block;font-size:11px;border:1px solid var(--line);color:var(--gold);border-radius:99px;padding:1px 10px;margin-bottom:10px}
+.row{display:flex;justify-content:space-between;align-items:center;gap:10px;padding:9px 0;border-top:1px solid rgba(217,180,105,.12);font-size:15px}
+.row:first-of-type{border-top:0}
+.chip{font-size:12px;border-radius:99px;padding:1px 10px;border:1px solid currentColor;white-space:nowrap}
+.ok{color:var(--ok)}.warn{color:var(--warn)}.info{color:var(--info)}
+.tags{display:flex;flex-wrap:wrap;gap:8px}
+.tags span{border:1px solid var(--line);border-radius:99px;padding:4px 14px;font-size:14px}
+.big{font-size:22px;font-weight:700}
+.sub{color:var(--mute);font-size:14px}
+.cta{margin-top:12px;width:100%;border:0;border-radius:99px;padding:12px;font-weight:700;color:#201505;background:linear-gradient(90deg,#c79d4e,#f2d99a)}
+.more{background:none;border:0;color:var(--gold);padding:10px 0 0;font-size:14px}
+.detail{display:none;color:var(--mute);font-size:14px;margin:6px 0 0}
+.detail.open{display:block}
+.phone{width:150px;border:1px solid var(--line);border-radius:22px;padding:10px;margin:0 auto;background:#0c0905;text-align:center;font-size:13px}
+.phone b{display:block;font-size:18px;direction:ltr;margin:4px 0}
+/* nav */
+nav{max-width:1180px;margin:0 auto;padding:0 28px 28px}
+.steps{display:grid;grid-template-columns:repeat(5,1fr);gap:8px}
+.steps button{background:none;border:0;border-top:2px solid var(--line);padding:10px 4px 0;text-align:right;color:var(--mute);transition:.4s}
+.steps button small{display:block;direction:ltr;text-align:right;letter-spacing:.2em;font-size:11px}
+.steps button.on{border-color:var(--gold);color:var(--gold2)}
+.ctrl{display:flex;justify-content:space-between;align-items:center;margin-top:18px;gap:10px}
+.btn{border:1px solid var(--line);background:rgba(255,255,255,.03);border-radius:99px;padding:9px 22px}
+.btn.gold{background:linear-gradient(90deg,#c79d4e,#f2d99a);color:#201505;border:0;font-weight:700}
+.btn[disabled]{opacity:.3;cursor:default}
+.fade{animation:rise .7s both}
+.langs{display:flex;gap:6px}.langs button{background:none;border:1px solid var(--line);border-radius:99px;padding:2px 11px;font-size:12px;color:var(--mute)}.langs button.on{color:#201505;background:var(--gold);border-color:var(--gold)}
+html[dir=ltr] .eyebrow,html[dir=ltr] .steps button,html[dir=ltr] .steps small{text-align:left}html[dir=ltr] .panel h2,html[dir=ltr] .msg{letter-spacing:0}
+@media(max-width:820px){#replay{display:none}}
+#final{display:none;text-align:center;max-width:1180px;margin:0 auto;padding:10px 28px 40px}
+#final h3{font-family:"Aref Ruqaa",serif;font-size:clamp(30px,5vw,48px);margin:0;color:var(--gold2)}
+@media(max-width:820px){main{grid-template-columns:1fr;gap:6px}.radar{max-width:340px}header{padding:14px 16px}main,nav,#final{padding-inline:16px}.steps small+span{font-size:13px}.steps button{font-size:13px}}
+@media(prefers-reduced-motion:reduce){*{animation-duration:.01s!important;animation-iteration-count:1!important;transition:none!important}}
+</style>
+</head>
+<body>
+
+<div id="intro" role="dialog" aria-label="افتتاحية">
+  <svg viewBox="0 0 400 400" aria-hidden="true">
+    <circle class="ring" cx="200" cy="200" r="60"/><circle class="ring" cx="200" cy="200" r="110"/><circle class="ring" cx="200" cy="200" r="160"/><circle class="ring" cx="200" cy="200" r="192"/>
+    <defs><radialGradient id="g0"><stop offset="0" stop-color="#f2d99a"/><stop offset="1" stop-color="#d9b469" stop-opacity="0"/></radialGradient>
+    <linearGradient id="sw0" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#d9b469" stop-opacity=".5"/><stop offset="1" stop-color="#d9b469" stop-opacity="0"/></linearGradient></defs>
+    <path class="sweep" d="M200 200 L392 200 A192 192 0 0 0 340 68 Z" fill="url(#sw0)"/>
+    <circle cx="200" cy="200" r="34" fill="url(#g0)"/><circle cx="200" cy="200" r="12" fill="#0a0806" stroke="#f2d99a" stroke-width="2"/><circle cx="203" cy="198" r="3" fill="#f2d99a"/>
+  </svg>
+  <h1>داخل عين الملك</h1>
+  <p>خمس لحظات تريك كيف ترى العين، وكيف تستعد.</p>
+  <button class="skip" id="skip">ادخل مباشرة</button>
+</div>
+
+<header>
+  <span class="badge">عرض تجريبي · محاكاة</span>
+  <div class="logo"><svg viewBox="0 0 34 20" fill="none" stroke="#d9b469" stroke-width="1.3"><path d="M1 10C7 2 27 2 33 10 27 18 7 18 1 10Z"/><circle cx="17" cy="10" r="4"/><circle cx="17" cy="10" r="1.4" fill="#d9b469"/></svg>THE KING'S EYE</div>
+  <div class="langs" id="langs"><button data-l="ar" class="on">العربية</button><button data-l="en">EN</button><button data-l="ru">RU</button><button data-l="tr">TR</button></div><button class="skip" id="replay">إعادة الافتتاحية</button>
+</header>
+
+<main id="stage">
+  <div class="radar">
+    <svg id="radar" data-m="1" viewBox="0 0 400 400" role="img" aria-label="رادار العين">
+      <defs><radialGradient id="g1"><stop offset="0" stop-color="#f2d99a"/><stop offset="1" stop-color="#d9b469" stop-opacity="0"/></radialGradient>
+      <linearGradient id="sw1" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#d9b469" stop-opacity=".45"/><stop offset="1" stop-color="#d9b469" stop-opacity="0"/></linearGradient></defs>
+      <circle class="ring" cx="200" cy="200" r="60"/><circle class="ring" cx="200" cy="200" r="110"/><circle class="ring" cx="200" cy="200" r="160"/><circle class="ring" cx="200" cy="200" r="192"/>
+      <path class="sweep" d="M200 200 L392 200 A192 192 0 0 0 340 68 Z" fill="url(#sw1)"/>
+      <!-- cities -->
+      <g class="city" text-anchor="middle">
+        <text x="115" y="48">إسطنبول</text><text x="95" y="118">عمّان</text><text x="285" y="112">الكويت</text>
+        <text x="338" y="190">الدمام</text><text x="312" y="268">الدوحة</text><text x="70" y="262">جدة</text><text x="52" y="175">القاهرة</text><text x="200" y="244">الرياض</text>
+      </g>
+      <g class="dot"><circle cx="115" cy="56" r="2.5"/><circle cx="95" cy="126" r="2.5"/><circle cx="285" cy="120" r="2.5"/><circle cx="338" cy="198" r="2.5"/><circle cx="312" cy="276" r="2.5"/><circle cx="70" cy="270" r="3"/><circle cx="52" cy="183" r="3"/></g>
+      <!-- 1 watching -->
+      <g data-s="1"><circle class="pulse" cx="285" cy="120" r="6"/><circle class="pulse" cx="312" cy="276" r="6" style="animation-delay:.9s"/><circle class="pulse" cx="95" cy="126" r="6" style="animation-delay:1.8s"/></g>
+      <!-- 2 understands -->
+      <g data-s="2"><circle cx="200" cy="200" r="44" fill="none" stroke="#f2d99a" stroke-width="1.4"/><circle class="pulse" cx="200" cy="200" r="30"/></g>
+      <!-- 3 opportunity -->
+      <g data-s="3"><path class="route" d="M52 183 Q60 230 70 270"/><circle class="pulse" cx="52" cy="183" r="7"/><circle class="pulse" cx="70" cy="270" r="7" style="animation-delay:1s"/></g>
+      <!-- 4 coordinates -->
+      <g data-s="4"><path class="route" d="M70 270 Q130 250 200 200"/><circle cx="130" cy="244" r="4" fill="#8fb4d9"/><circle cx="165" cy="226" r="4" fill="#e0b45a"/><circle cx="200" cy="200" r="4" fill="#8fcf9f"/></g>
+      <!-- 5 accompanies -->
+      <g data-s="5"><path class="route" d="M70 270 Q200 330 312 276"/><circle class="pulse" cx="200" cy="304" r="8"/></g>
+      <circle cx="200" cy="200" r="30" fill="url(#g1)"/><circle cx="200" cy="200" r="10" fill="#0a0806" stroke="#f2d99a" stroke-width="2"/><circle cx="203" cy="198" r="2.8" fill="#f2d99a"/>
+    </svg>
+  </div>
+  <section class="panel" id="panel" aria-live="polite"></section>
+</main>
+
+<div id="final">
+  <h3>عين واحدة ترافق رحلتك</h3>
+  <p class="lead" style="margin:8px auto 18px">أنهيت الجولة. كل ما رأيته هنا محاكاة توضيحية؛ بياناتك الفعلية تظهر بعد التسجيل.</p>
+  <button class="btn gold" id="again" style="padding:13px 36px;font-size:18px">دع العين تتولى رحلتك</button>
+</div>
+
+<nav>
+  <div class="steps" id="steps"></div>
+  <div class="ctrl">
+    <button class="btn" id="next">التالي ←</button>
+    <button class="btn" id="prev">→ السابق</button>
+  </div>
+</nav>
+
+<script>
+var M=[
+{n:"01",t:"العين تراقب",m:"نرى ما قد يفوتك",l:"رادار هادئ يتابع الرحلة والطقس والمعلومات التشغيلية المتاحة من مصادر مرخّصة.",
+ p:'<div class="sim">مثال توضيحي</div><div class="row"><span>الطقس على المسار</span><span class="chip info">تقديري</span></div><div class="row"><span>حالة الرحلة</span><span class="chip ok">من المصدر · محدّث</span></div><div class="row"><span>قيود المطار</span><span class="chip warn">يحتاج تحققًا</span></div>',
+ d:"كل معلومة تظهر معها حالتها ومصدرها. ما لا نعرفه نقوله: «غير معروف، يحتاج تحققًا»."},
+{n:"02",t:"العين تفهمك",m:"رحلتك لها طابعها الخاص",l:"تراعي غرض الرحلة والخصوصية وراحة المسافرين وما تذكره أنت من تفضيلات، لا أكثر.",
+ p:'<div class="sim">مثال توضيحي</div><div class="tags"><span>غرض الرحلة</span><span>خصوصية عالية</span><span>عدد المسافرين</span><span>الأمتعة</span><span>الضيافة</span><span>الاستقبال الأرضي</span></div><p class="sub" style="margin:12px 0 0">نحفظ فقط ما تصرّح به بنفسك.</p>',
+ d:"لا نستنتج معلومات حساسة عنك، ولا نكشف تفاصيلك للمشغّل إلا بقدر ما يلزم للحصول على عرض."},
+{n:"03",t:"العين تكتشف الفرص",m:"الفرصة المناسبة، في الوقت المناسب",l:"حين تظهر فرصة مدعومة بمعلومات حقيقية، تعرضها مع سبب ملاءمتها، ولا تدّعي التوافر قبل التحقق.",
+ p:'<div class="sim">مثال توضيحي · ليس عرضًا فعليًا</div><div class="big">القاهرة ← جدة الليلة</div><div class="sub">الإقلاع المتوقع 20:30 · حتى 7 ضيوف</div><div class="row"><span>التوافر</span><span class="chip warn">تبدو متاحة حسب آخر تحديث</span></div><div class="sub">التأكيد النهائي من المشغّل.</div><button class="cta">اطلب عرضًا</button>',
+ d:"نعرض وجهتك وتوقيتك أولًا، وطراز الطائرة معلومة داعمة. لا عدّاد وهمي ولا ندرة مصطنعة."},
+{n:"04",t:"العين تنسّق الرحلة",m:"من الطائرة إلى وجهتك",l:"الطائرة والطقس والنقل الأرضي وكل تفصيل يحتاج تنسيقًا، لكل منها حالة واضحة.",
+ p:'<div class="sim">مثال توضيحي</div><div class="row"><span>الطائرة</span><span class="chip warn">بانتظار تأكيد المشغّل</span></div><div class="row"><span>الطقس</span><span class="chip info">تقديري</span></div><div class="row"><span>النقل الأرضي</span><span class="chip ok">مسودة جاهزة لاعتمادك</span></div><p class="sub" style="margin:10px 0 0">لا شيء يُنفَّذ قبل موافقة الإنسان.</p>',
+ d:"العين تقترح وتجهّز، والمنسّق البشري يعتمد. لا تواصل تلقائي مع أي جهة."},
+{n:"05",t:"العين ترافقك",m:"عين واحدة ترافق رحلتك",l:"«ملف الرحلة الحي»: بيانات رحلتك الفعلية بعد التسجيل، وللزائر تجربة توضيحية موسومة بوضوح.",
+ p:'<div class="sim">للزائر: تجربة توضيحية · للمسجَّل: بياناتك الفعلية</div><div class="phone"><span class="sub">رحلتي</span><b>JED → DXB</b><span class="sub">12 Oct 2026 · 10:30</span><div class="row" style="font-size:12px"><span>الحالة</span><span class="chip ok">محاكاة</span></div></div>',
+ d:"الملف الحي يجمع الجدول الزمني والتنبيهات الهادئة والبدائل في مكان واحد."}
+];
+var i=0,$=function(id){return document.getElementById(id)};
+var steps=$("steps");
+var lang="ar";function C(){return T[lang]}function U(){return UI[lang]}
+function build(){steps.innerHTML="";C().forEach(function(x,k){var b=document.createElement("button");b.innerHTML="<small>"+x.n+"</small><span>"+x.t+"</span>";b.onclick=function(){go(k)};steps.appendChild(b)})}
+function go(k){
+  i=Math.max(0,Math.min(M.length-1,k));var x=C()[i];
+  $("radar").setAttribute("data-m",i+1);
+  $("panel").innerHTML='<div class="fade"><div class="eyebrow">'+x.n+' / 05</div><h2>'+x.t+'</h2><p class="msg">«'+x.m+'»</p><p class="lead">'+x.l+'</p><div class="card">'+x.p+'<button class="more" id="mb">'+U().mo+'</button><p class="detail" id="dt">'+x.d+'</p></div></div>';
+  $("mb").onclick=function(){$("dt").classList.toggle("open")};
+  Array.prototype.forEach.call(steps.children,function(b,j){b.className=j===i?"on":""});
+  $("prev").disabled=i===0;
+  var last=i===M.length-1;$("next").textContent=last?U().fin:U().nx;
+  $("stage").style.display="grid";$("final").style.display="none";
+}
+$("next").onclick=function(){if(i===M.length-1){$("stage").style.display="none";$("final").style.display="block"}else go(i+1)};
+$("prev").onclick=function(){go(i-1)};
+$("again").onclick=function(){go(0)};
+document.addEventListener("keydown",function(e){if(e.key==="ArrowLeft")$("next").click();if(e.key==="ArrowRight")$("prev").click()});
+function hide(){$("intro").classList.add("off")}
+$("skip").onclick=hide;
+$("replay").onclick=function(){$("intro").classList.remove("off");clearTimeout(t);t=setTimeout(hide,4200)};
+var t=setTimeout(hide,4200);
+var S=function(s){return '<div class="sim">'+s+'</div>'},R=function(a,c,b){return '<div class="row"><span>'+a+'</span><span class="chip '+c+'">'+b+'</span></div>'},G=function(a){return '<div class="tags">'+a.map(function(x){return '<span>'+x+'</span>'}).join('')+'</div>'},Sb=function(s,st){return '<p class="sub" style="margin:'+(st||'10px 0 0')+'">'+s+'</p>'},Ph=function(a,b,c,d){return '<div class="phone"><span class="sub">'+a+'</span><b>JED → DXB</b><span class="sub">12 Oct 2026 · 10:30</span><div class="row" style="font-size:12px"><span>'+b+'</span><span class="chip ok">'+c+'</span></div></div>'},Op=function(c,t,s,r1,r2,r3,cta){return '<div class="big">'+t+'</div><div class="sub">'+s+'</div>'+r1+'<div class="sub">'+r2+'</div><button class="cta">'+cta+'</button>'};
+var T={ar:M,
+en:[
+{n:"01",t:"The Eye watches",m:"We see what you might miss",l:"A calm radar follows the flight, the weather and the operational information available from licensed sources.",p:S("Illustrative example")+R("Weather along the route","info","Estimated")+R("Flight status","ok","From source · updated")+R("Airport restrictions","warn","Needs verification"),d:"Every item shows its status and source. What we don't know, we say: “Unknown — requires verification.”"},
+{n:"02",t:"The Eye understands you",m:"Your journey has its own character",l:"It considers the trip's purpose, privacy, passenger comfort and the preferences you share — nothing more.",p:S("Illustrative example")+G(["Trip purpose","High privacy","Passengers","Baggage","Catering","Ground reception"])+Sb("We only keep what you tell us yourself.","12px 0 0"),d:"We never infer sensitive information about you, and share details with an operator only as needed to obtain a quote."},
+{n:"03",t:"The Eye finds opportunities",m:"The right opportunity, at the right time",l:"When an opportunity backed by real information appears, it shows why it fits, without claiming availability before verification.",p:S("Illustrative example · not a live offer")+Op(0,"Cairo → Jeddah tonight","Expected departure 20:30 · up to 7 guests",R("Availability","warn","Appears available per latest update"),"Final confirmation comes from the operator.",0,"Request a quote"),d:"We lead with your destination and timing; the aircraft type is supporting detail. No fake countdowns or artificial scarcity."},
+{n:"04",t:"The Eye coordinates the trip",m:"From the aircraft to your destination",l:"The aircraft, weather, ground transport and every detail that needs coordination, each with a clear status.",p:S("Illustrative example")+R("Aircraft","warn","Awaiting operator confirmation")+R("Weather","info","Estimated")+R("Ground transport","ok","Draft ready for your approval")+Sb("Nothing is executed before human approval."),d:"The Eye proposes and prepares; a human coordinator approves. No automatic contact with any party."},
+{n:"05",t:"The Eye accompanies you",m:"One eye, with you throughout",l:"The “Live Journey File”: your actual trip data once registered, and a clearly labelled demo for visitors.",p:S("Visitors: demo · Registered: your actual data")+Ph("My Journey","Status","Simulation"),d:"The live file brings the timeline, calm alerts and alternatives into one place."}],
+ru:[
+{n:"01",t:"Око наблюдает",m:"Мы видим то, что можно упустить",l:"Спокойный радар следит за рейсом, погодой и доступной операционной информацией из лицензированных источников.",p:S("Иллюстративный пример")+R("Погода на маршруте","info","Оценка")+R("Статус рейса","ok","Из источника · обновлено")+R("Ограничения аэропорта","warn","Требует проверки"),d:"У каждого пункта есть статус и источник. Чего мы не знаем, о том говорим прямо: «Неизвестно — требует проверки»."},
+{n:"02",t:"Око понимает вас",m:"У вашего путешествия свой характер",l:"Учитывает цель поездки, конфиденциальность, комфорт пассажиров и ваши пожелания — и ничего сверх этого.",p:S("Иллюстративный пример")+G(["Цель поездки","Высокая конфиденциальность","Пассажиры","Багаж","Питание","Встреча на земле"])+Sb("Мы сохраняем только то, что вы сообщили сами.","12px 0 0"),d:"Мы не делаем выводов о чувствительных данных и передаём оператору лишь то, что нужно для расчёта."},
+{n:"03",t:"Око находит возможности",m:"Нужная возможность в нужный момент",l:"Когда появляется возможность, подтверждённая реальными данными, Око показывает, почему она подходит, и не заявляет о доступности до проверки.",p:S("Иллюстративный пример · не реальное предложение")+Op(0,"Каир → Джидда сегодня вечером","Вылет ожидается в 20:30 · до 7 гостей",R("Доступность","warn","Судя по последнему обновлению, доступно"),"Окончательное подтверждение даёт оператор.",0,"Запросить предложение"),d:"Сначала направление и время, тип самолёта — вспомогательная деталь. Никаких фальшивых таймеров и искусственного дефицита."},
+{n:"04",t:"Око координирует поездку",m:"От самолёта до пункта назначения",l:"Самолёт, погода, наземный транспорт и каждая деталь, требующая согласования, — с понятным статусом.",p:S("Иллюстративный пример")+R("Самолёт","warn","Ожидает подтверждения оператора")+R("Погода","info","Оценка")+R("Наземный транспорт","ok","Черновик ждёт вашего одобрения")+Sb("Ничто не выполняется без одобрения человека."),d:"Око предлагает и готовит, координатор-человек утверждает. Никаких автоматических контактов."},
+{n:"05",t:"Око сопровождает вас",m:"Одно Око рядом на всём пути",l:"«Живой файл поездки»: ваши реальные данные после регистрации и чётко помеченная демо-версия для гостей.",p:S("Гостям: демо · Зарегистрированным: ваши данные")+Ph("Моя поездка","Статус","Симуляция"),d:"Живой файл собирает расписание, спокойные уведомления и альтернативы в одном месте."}],
+tr:[
+{n:"01",t:"Göz izler",m:"Gözden kaçabilecekleri biz görürüz",l:"Sakin bir radar; uçuşu, havayı ve lisanslı kaynaklardan erişilebilen operasyonel bilgileri takip eder.",p:S("Örnek gösterim")+R("Güzergâh hava durumu","info","Tahmini")+R("Uçuş durumu","ok","Kaynaktan · güncel")+R("Havalimanı kısıtları","warn","Doğrulama gerekli"),d:"Her bilginin durumu ve kaynağı görünür. Bilmediğimizi açıkça söyleriz: “Bilinmiyor — doğrulama gerekli.”"},
+{n:"02",t:"Göz sizi anlar",m:"Yolculuğunuzun kendine özgü bir karakteri var",l:"Seyahatin amacını, gizliliği, yolcu konforunu ve paylaştığınız tercihleri dikkate alır; fazlasını değil.",p:S("Örnek gösterim")+G(["Seyahat amacı","Yüksek gizlilik","Yolcular","Bagaj","İkram","Yer karşılama"])+Sb("Yalnızca sizin belirttiklerinizi saklarız.","12px 0 0"),d:"Hassas bilgileri tahmin etmeyiz; operatörle yalnızca teklif almak için gerekenleri paylaşırız."},
+{n:"03",t:"Göz fırsatları bulur",m:"Doğru fırsat, doğru zamanda",l:"Gerçek bilgiyle desteklenen bir fırsat çıktığında, neden uygun olduğunu gösterir; doğrulanmadan müsaitlik iddia etmez.",p:S("Örnek gösterim · canlı teklif değildir")+Op(0,"Kahire → Cidde bu akşam","Tahmini kalkış 20:30 · en fazla 7 misafir",R("Müsaitlik","warn","Son güncellemeye göre müsait görünüyor"),"Nihai onay operatörden gelir.",0,"Teklif iste"),d:"Önce varış ve zaman gelir; uçak tipi destekleyici bilgidir. Sahte geri sayım ya da yapay kıtlık yoktur."},
+{n:"04",t:"Göz yolculuğu koordine eder",m:"Uçaktan varış noktanıza",l:"Uçak, hava, yer ulaşımı ve koordinasyon gerektiren her ayrıntı; her biri net bir durumla.",p:S("Örnek gösterim")+R("Uçak","warn","Operatör onayı bekleniyor")+R("Hava durumu","info","Tahmini")+R("Yer ulaşımı","ok","Taslak onayınıza hazır")+Sb("İnsan onayı olmadan hiçbir şey yürütülmez."),d:"Göz önerir ve hazırlar; insan koordinatör onaylar. Hiçbir tarafla otomatik iletişim kurulmaz."},
+{n:"05",t:"Göz size eşlik eder",m:"Tek göz, yolculuğunuz boyunca yanınızda",l:"“Canlı Yolculuk Dosyası”: kayıttan sonra gerçek seyahat verileriniz, ziyaretçiler için açıkça etiketli bir demo.",p:S("Ziyaretçi: demo · Kayıtlı: gerçek verileriniz")+Ph("Yolculuğum","Durum","Simülasyon"),d:"Canlı dosya zaman çizelgesini, sakin bildirimleri ve alternatifleri tek yerde toplar."}]};
+var UI={
+ar:{b:"عرض تجريبي · محاكاة",rp:"إعادة الافتتاحية",sk:"ادخل مباشرة",ih:"داخل عين الملك",ip:"خمس لحظات تريك كيف ترى العين، وكيف تستعد.",fh:"عين واحدة ترافق رحلتك",fp:"أنهيت الجولة. كل ما رأيته هنا محاكاة توضيحية؛ بياناتك الفعلية تظهر بعد التسجيل.",cta:"دع العين تتولى رحلتك",nx:"التالي ←",fin:"أنهِ الجولة",pv:"→ السابق",mo:"اعرف المزيد",ci:["إسطنبول","عمّان","الكويت","الدمام","الدوحة","جدة","القاهرة","الرياض"],ti:"داخل عين الملك — THE KING'S EYE"},
+en:{b:"Demo · Simulation",rp:"Replay intro",sk:"Enter now",ih:"Inside the King's Eye",ip:"Five moments showing how the Eye sees, and how it prepares.",fh:"One eye, with you throughout",fp:"Tour complete. Everything here is an illustrative simulation; your actual data appears after registration.",cta:"Let the Eye take over your journey",nx:"Next →",fin:"Finish tour",pv:"← Back",mo:"Learn more",ci:["Istanbul","Amman","Kuwait","Dammam","Doha","Jeddah","Cairo","Riyadh"],ti:"Inside the King's Eye — THE KING'S EYE"},
+ru:{b:"Демо · Симуляция",rp:"Повторить вступление",sk:"Войти",ih:"Внутри Ока Короля",ip:"Пять моментов о том, как Око видит и как готовится.",fh:"Одно Око рядом на всём пути",fp:"Тур завершён. Всё здесь — иллюстративная симуляция; ваши реальные данные появятся после регистрации.",cta:"Позвольте Оку взять ваше путешествие на себя",nx:"Далее →",fin:"Завершить тур",pv:"← Назад",mo:"Подробнее",ci:["Стамбул","Амман","Кувейт","Даммам","Доха","Джидда","Каир","Эр-Рияд"],ti:"Внутри Ока Короля — THE KING'S EYE"},
+tr:{b:"Demo · Simülasyon",rp:"Girişi tekrar oynat",sk:"Doğrudan gir",ih:"Kralın Gözü'nün İçinde",ip:"Gözün nasıl gördüğünü ve nasıl hazırlandığını gösteren beş an.",fh:"Tek göz, yolculuğunuz boyunca yanınızda",fp:"Tur tamamlandı. Buradaki her şey örnek bir simülasyondur; gerçek verileriniz kayıttan sonra görünür.",cta:"Yolculuğunuzu Göz'e bırakın",nx:"İleri →",fin:"Turu bitir",pv:"← Geri",mo:"Daha fazla",ci:["İstanbul","Amman","Kuveyt","Dammam","Doha","Cidde","Kahire","Riyad"],ti:"Kralın Gözü'nün İçinde — THE KING'S EYE"}};
+function q(s,v){document.querySelector(s).textContent=v}
+function setLang(l){lang=l;var u=U(),h=document.documentElement;h.lang=l;h.dir=l==="ar"?"rtl":"ltr";document.title=u.ti;
+q(".badge",u.b);q("#replay",u.rp);q("#skip",u.sk);q("#intro h1",u.ih);q("#intro p",u.ip);q("#final h3",u.fh);q("#final p",u.fp);q("#again",u.cta);q("#prev",u.pv);
+document.querySelectorAll(".city text").forEach(function(e,k){e.textContent=u.ci[k]});
+document.querySelectorAll("#langs button").forEach(function(b){b.className=b.dataset.l===l?"on":""});
+build();go(i)}
+document.querySelectorAll("#langs button").forEach(function(b){b.onclick=function(){setLang(b.dataset.l)}});
+var qs=location.search.match(/lang=(ar|en|ru|tr)/);setLang(qs?qs[1]:"ar");
+</script>
+</body>
+</html>
