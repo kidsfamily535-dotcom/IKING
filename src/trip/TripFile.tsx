@@ -1,4 +1,6 @@
-import {useMemo,useState} from 'react';
+import {useEffect,useMemo,useState} from 'react';
+import {sb} from '../lib/supabase';
+import TripReal from './TripReal';
 import './trip.css';
 import HoldRing from '../Hold';
 import StatusChip,{type ChipKind} from '../StatusChip';
@@ -13,7 +15,14 @@ const NODES:Node[]=[
  {id:'wx',time:'09:00',kind:'estimate',dec:'wx'},{id:'land',time:'09:35',kind:'estimate'},{id:'car2',time:'09:50',kind:'unknown',dec:'car'},{id:'event',time:'11:00',kind:'sim'}];
 const hm=()=>new Date().toTimeString().slice(0,5);
 type Entry={k:'noticed'|'prepared'|'approved';text:string;at?:string};
+// بدون جلسة: المحاكاة الموسومة كما هي. مع جلسة: بيانات العميل الفعلية للقراءة فقط (TripReal).
 export default function TripFile(){
+ const [authed,setAuthed]=useState<boolean|null>(null);
+ useEffect(()=>{sb.auth.getSession().then(({data:{session}})=>setAuthed(!!session),()=>setAuthed(false))},[]);
+ if(authed===null)return <div className="tf"><LangSwitch/></div>;
+ return authed?<TripReal/>:<TripSim/>;
+}
+function TripSim(){
  const t=useTripCopy();
  const [open,setOpen]=useState<Record<string,boolean>>({});
  const [plan,setPlan]=useState<'a'|'b'|'c'|''>('');
@@ -33,6 +42,7 @@ export default function TripFile(){
  return <div className="tf">
   <LangSwitch/>
   <header className="tf-top"><a className="tf-back" href="/">{t('back')}</a><span className="tf-sim">{t('sim')}</span></header>
+  <p className="tf-sub" style={{maxWidth:1100,margin:'0 auto 14px'}}>{t('sim.in')} <a className="tf-back" href="/?view=watch">{t('sim.in.l')}</a></p>
   <main className="tf-main">
    <section className="tf-head"><p className="tf-eye">{t('route')}</p><h1>{t('title')}</h1><p className="tf-sub">{t('sub')}</p>
     <div className="tf-brief" role="note"><b>{t('brief.t')}</b><ul><li>{t('brief.wx')}</li><li>{t('brief.car')}</li><li className={waiting?'w':''}>{waiting?t('brief.wait',{n:waiting}):t('brief.none')}</li></ul></div>

@@ -4,6 +4,7 @@
 .sc-confirmed{border-color:var(--t-accent);color:var(--t-accent-hi)}
 .sc-estimate{border-color:color-mix(in srgb,var(--t-accent) 53%,transparent);color:var(--t-ink)}
 .sc-sim{border-style:dashed;color:#d9cdb0}
+.sc-given{border-color:var(--t-accent-lo);color:var(--t-ink)}
 .sc-unknown{border-color:var(--t-accent-lo);color:#b9ad92}
 .rt-tl{list-style:none;margin:10px 0 4px;padding:0;display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:0;width:100%;grid-column:1/-1;flex-basis:100%}
 .rt-tl li{position:relative;display:flex;flex-direction:column;align-items:center;gap:6px;text-align:center;font:400 12px/1.35 Tajawal,system-ui,sans-serif;color:#b9ad92;padding:0 2px;list-style:none;border:0;background:none;min-height:0}

@@ -28,7 +28,25 @@ const ar:D={
 'l.1':'توقعات الطقس عند الهبوط (محاكاة).','l.2':'حسبتُ موعد السيارة من هامش 60 دقيقة (تقدير).','l.3':'جهّزتُ مسودتين تنتظران اعتمادك.',
 'l.a':'اعتمدتَ خطة الطقس: {x}.','l.b':'اعتمدتَ مسودة طلب السيارة من المطار.',
 'human':'تحدث مع فريقنا','human.msg':'وصل طلبك إلى فريقنا، وسيصلك رد خلال [مدة حقيقية]. (محاكاة: لم يُرسل شيء.)',
-'at':'الساعة {t}','back':'الرئيسية'
+'at':'الساعة {t}','back':'الرئيسية',
+'chip.given':'من إدخالك','real.pill':'بياناتك الفعلية · للقراءة فقط','real.load':'جارٍ قراءة رحلتك…','real.fail':'تعذّرت قراءة رحلتك الآن. لا نعرف حالتها حتى تنجح القراءة.','real.retry':'أعد المحاولة',
+'real.none':'لا توجد رحلة مسجّلة باسمك بعد.','real.add':'أضف رحلتك أو عدّلها','real.ro':'هذه الصفحة للقراءة فقط: لا تُرسل شيئًا ولا تغيّر شيئًا. لطلب سيارة أو تعديل، استخدم صفحة المراقبة.',
+'sim.in':'سجّل دخولك لترى رحلتك الفعلية بدل هذه المحاكاة.','sim.in.l':'تسجيل الدخول',
+'rb.wx':'الطقس عند الهبوط ({a}): {w}','rb.wx.no':'الطقس عند الهبوط: لا رصد حديث متاح، فهو مجهول الآن.','rb.wx.fail':'الطقس عند الهبوط: تعذّرت القراءة.',
+'rb.car':'السيارة إلى المطار: {s}','rb.al.on':'تنبيهات الطقس: وافقتَ عليها.','rb.al.off':'تنبيهات الطقس: لم توافق عليها.','rb.al.nolive':' والإرسال التلقائي غير مفعّل حتى الآن.','rb.al.fail':'تنبيهات الطقس: تعذّرت القراءة.',
+'s.none':'لا طلب','s.REQUESTED':'طلبتَها وينتظر فريقنا','s.EXECUTED':'رتّبها فريقنا','s.UNAVAILABLE':'تعذّر ترتيبها','s.fail':'تعذّرت القراءة',
+'r.car1.none':'لم يُطلب نقل إلى المطار لهذه الرحلة.','r.car2.none':'لم يُطلب نقل من المطار لهذه الرحلة.',
+'r.car.REQUESTED':'طلبتَ سيارة، وينتظر فريقنا مراجعتها. الموعد الذي ذكرتَه {t}. لم تُؤكَّد بعد.','r.car.EXECUTED':'رتّب فريقنا السيارة. الموعد {t}.','r.car.UNAVAILABLE':'تعذّر ترتيب هذه السيارة.',
+'r.car.note':' ملاحظة الفريق: {n}','r.car.fail':'تعذّرت قراءة طلبات النقل الآن، فلا نعرف حالتها.',
+'rs.nodata':'لا يوجد سجل لهذا العنصر. لم يُتحقق منه، ولا وقت تحقق له.','rs.car.REQUESTED':'المصدر: طلبك المسجّل عندنا. لم يؤكده فريقنا بعد.','rs.car.EXECUTED':'المصدر: سجّله فريقنا بعد مراجعته. لا يتضمن العرض وقت التحقق.','rs.car.UNAVAILABLE':'المصدر: سجلّ فريقنا. لم يتحقق ترتيبها.','rs.fail':'تعذّرت قراءة المصدر الآن.',
+'r.fly':'موعد الإقلاع الذي أدخلتَه أنت. لم يؤكده مشغّل.','r.fly.none':'لم تُدخل موعدًا للإقلاع، فهو مجهول.','rs.fly':'المصدر: إدخالك أنت بتاريخ {t}. لا تأكيد من مشغّل.',
+'r.wx':'رصد رسمي لمطار {a} قبل {n} دقيقة: {c}{w}. هذا رصد حالي وليس توقعًا، والقرار للمشغّل والطاقم.','r.wx.no':'لا رصد حديث لمطار {a}، فالطقس مجهول الآن.','r.wx.fail':'تعذّرت قراءة الطقس الآن.',
+'rs.wx':'المصدر: آخر رصد رسمي مخزّن (METAR)، عمره {n} دقيقة. رصد لا توقع.','rs.wx.no':'لا رصد حديث، فلا مصدر ولا وقت تحقق.',
+'wc.VFR':'رؤية جيدة','wc.MVFR':'رؤية حدّية','wc.IFR':'رؤية منخفضة','wc.LIFR':'رؤية منخفضة جدًا','wc.none':'الفئة غير محددة','wc.wind':'، رياح {k} عقدة',
+'r.land':'وقت الوصول {t} حسب خطة اليوم المسجّلة، وهو تقدير.','r.land.none':'لا وقت وصول معروف: لا خطة يوم مسجّلة لهذه الرحلة.','rs.land.ESTIMATED':'المصدر: خطة اليوم، حساب مقدّر من زمن رحلة ومسافة.','rs.land.SOURCE':'المصدر: خطة اليوم، بوقت مأخوذ من مصدر الحدث.',
+'r.event':'{ti}: وصولك المطلوب {t} (توقيت الوجهة).','r.event.none':'لم تُضف موعد اجتماع لهذه الوجهة.','rs.event':'المصدر: مهمة أضفتَها أنت، ولا تحقق من أي جهة.',
+'plan.t':'خطة اليوم','plan.demo':'تجريبية','plan.ret':'العودة المقدّرة {t}','plan.leg':'{a} ← {b}','m.COMFORTABLE':'هامش مريح','m.TIGHT':'هامش ضيق','m.INSUFFICIENT':'هامش غير كافٍ','m.UNKNOWN':'هامش مجهول',
+'rl.wx':'قرأتُ آخر رصد رسمي لمطار {a}.','rl.car':'سجلّ السيارة {d} حالته: {s}.','rl.plan':'وجدتُ خطة يوم مسجّلة لهذا التاريخ: {m}.','rl.d.TO_AIRPORT':'إلى المطار','rl.d.FROM_AIRPORT':'من المطار','rl.none':'لا شيء مسجّل بعد.'
 };
 const en:D={
 'title':'Your trip file','sub':'Door to door. I watch, I prepare, you approve.','route':'Riyadh → Jeddah',
@@ -56,6 +74,24 @@ const en:D={
 'l.1':'Weather outlook at landing (simulation).','l.2':'Computed the car pickup from a 60-minute buffer (estimate).','l.3':'Prepared two drafts waiting for your approval.',
 'l.a':'You approved the weather plan: {x}.','l.b':'You approved the draft car request from the airport.',
 'human':'Talk to our team','human.msg':'Your request reached our team, and you will hear back within [a real time]. (Simulation: nothing was sent.)',
-'at':'at {t}','back':'Home'
+'at':'at {t}','back':'Home',
+'chip.given':'You entered','real.pill':'Your real data · read only','real.load':'Reading your trip…','real.fail':'We could not read your trip right now. Its status is unknown until the read succeeds.','real.retry':'Try again',
+'real.none':'No trip is saved under your name yet.','real.add':'Add or edit your trip','real.ro':'This page is read only: it sends nothing and changes nothing. To request a car or change something, use the watch page.',
+'sim.in':'Sign in to see your actual trip instead of this simulation.','sim.in.l':'Sign in',
+'rb.wx':'Weather at landing ({a}): {w}','rb.wx.no':'Weather at landing: no recent observation, so it is unknown right now.','rb.wx.fail':'Weather at landing: the read failed.',
+'rb.car':'Car to the airport: {s}','rb.al.on':'Weather alerts: you opted in.','rb.al.off':'Weather alerts: you have not opted in.','rb.al.nolive':' Automatic sending is not live yet.','rb.al.fail':'Weather alerts: the read failed.',
+'s.none':'no request','s.REQUESTED':'you requested it, our team is reviewing','s.EXECUTED':'arranged by our team','s.UNAVAILABLE':'could not be arranged','s.fail':'read failed',
+'r.car1.none':'No transfer to the airport was requested for this trip.','r.car2.none':'No transfer from the airport was requested for this trip.',
+'r.car.REQUESTED':'You requested a car and our team is reviewing it. The time you gave is {t}. Not confirmed yet.','r.car.EXECUTED':'Our team arranged the car. Time {t}.','r.car.UNAVAILABLE':'This car could not be arranged.',
+'r.car.note':' Team note: {n}','r.car.fail':'We could not read transfer requests right now, so their status is unknown.',
+'rs.nodata':'There is no record for this item. It has not been verified and has no verification time.','rs.car.REQUESTED':'Source: your request on file. Our team has not confirmed it yet.','rs.car.EXECUTED':'Source: recorded by our team after review. The view carries no verification time.','rs.car.UNAVAILABLE':'Source: our team’s record. It was not arranged.','rs.fail':'The source could not be read right now.',
+'r.fly':'The departure time you entered yourself. No operator has confirmed it.','r.fly.none':'You have not entered a departure time, so it is unknown.','rs.fly':'Source: your own entry on {t}. No operator confirmation.',
+'r.wx':'Official observation for {a}, {n} minutes ago: {c}{w}. This is a current observation, not a forecast, and the decision belongs to the operator and crew.','r.wx.no':'No recent observation for {a}, so the weather is unknown right now.','r.wx.fail':'The weather could not be read right now.',
+'rs.wx':'Source: latest stored official observation (METAR), {n} minutes old. An observation, not a forecast.','rs.wx.no':'No recent observation, so no source and no verification time.',
+'wc.VFR':'good visibility','wc.MVFR':'marginal visibility','wc.IFR':'low visibility','wc.LIFR':'very low visibility','wc.none':'category not set','wc.wind':', wind {k} kt',
+'r.land':'Arrival {t} from your saved day plan, an estimate.','r.land.none':'No known arrival time: there is no saved day plan for this trip.','rs.land.ESTIMATED':'Source: day plan, an estimate from flight time and distance.','rs.land.SOURCE':'Source: day plan, with a time taken from the event’s source.',
+'r.event':'{ti}: your required arrival is {t} (destination time).','r.event.none':'You have not added a meeting for this destination.','rs.event':'Source: a mission you added yourself, not verified by anyone.',
+'plan.t':'Day plan','plan.demo':'demo','plan.ret':'Estimated return {t}','plan.leg':'{a} → {b}','m.COMFORTABLE':'comfortable margin','m.TIGHT':'tight margin','m.INSUFFICIENT':'insufficient margin','m.UNKNOWN':'unknown margin',
+'rl.wx':'I read the latest official observation for {a}.','rl.car':'The {d} car record has status: {s}.','rl.plan':'I found a saved day plan for this date: {m}.','rl.d.TO_AIRPORT':'to the airport','rl.d.FROM_AIRPORT':'from the airport','rl.none':'Nothing recorded yet.'
 };
 export const useTripCopy=()=>{const {lang}=useI18n();const D=lang==='ar'?ar:en;return (k:string,v?:Record<string,string|number>)=>{let s=D[k]??en[k]??k;if(v)for(const x in v)s=s.split(`{${x}}`).join(String(v[x]));return s}};
