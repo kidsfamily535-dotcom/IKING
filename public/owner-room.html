@@ -87,6 +87,16 @@ section.block{margin-bottom:40px}
 .log .note{color:#D8D1C0}
 .log .note b{font-weight:600;color:var(--ivory)}
 .routine{color:var(--muted);font-size:.85rem;padding-top:10px}
+
+/* التدفق الحي */
+.feed{list-style:none;margin:0;padding:0}
+.fi{display:grid;grid-template-columns:64px 1fr;gap:14px;padding:14px 0;border-top:1px solid var(--line)}
+.fi:first-child{border-top:0;padding-top:4px}
+.fi .lv{font-size:.78rem;border:1px solid var(--line);border-radius:999px;padding:1px 10px;text-align:center;align-self:start;color:var(--muted)}
+.fi.inst .lv{border-color:var(--gold);color:var(--gold)}
+.fi h3{font-size:.98rem;font-weight:600;margin:0 0 4px}
+.fi .meta{margin-bottom:4px}
+.fnote{color:var(--muted);font-size:.85rem;padding-top:10px}
 </style>
 </head>
 <body>
@@ -109,6 +119,11 @@ section.block{margin-bottom:40px}
       <section class="block">
         <h2>تنتظر قرارك</h2>
         <div id="signals"></div>
+      </section>
+      <section class="block">
+        <h2>كل ما رصدته العين<span class="chip" id="feedCount"></span></h2>
+        <ul class="feed" id="feed"></ul>
+        <div class="fnote" id="feedNote"></div>
       </section>
     </div>
 
@@ -145,6 +160,7 @@ section.block{margin-bottom:40px}
 var URL_='https://yiklciblxwymcxxszkty.supabase.co';
 var KEY='sb_publishable_RS0irv5OzcD1Z2VHLD-gzQ_4-wYez8_'; // مفتاح عام مسموح بوجوده في المتصفح
 var FN=URL_+'/functions/v1/owner-room';
+var FEED=URL_+'/functions/v1/owner-feed';
 var sb=supabase.createClient(URL_,KEY,{auth:{persistSession:true,autoRefreshToken:true,detectSessionInUrl:true}});
 var $=function(id){return document.getElementById(id)};
 
@@ -257,10 +273,10 @@ async function viewEnroll(){
 }
 
 /* ---------- الاتصال بالدالة ---------- */
-async function call(body){
+async function call(body,endpoint){
   var s=(await sb.auth.getSession()).data.session;
   if(!s){viewLogin();return {status:401,j:{}}}
-  var res=await fetch(FN,{method:'POST',headers:{'Content-Type':'application/json',Authorization:'Bearer '+s.access_token,apikey:KEY},body:JSON.stringify(body)});
+  var res=await fetch(endpoint||FN,{method:'POST',headers:{'Content-Type':'application/json',Authorization:'Bearer '+s.access_token,apikey:KEY},body:JSON.stringify(body)});
   var j={};try{j=await res.json()}catch(e){}
   if(res.status===401){await sb.auth.signOut();viewLogin()}
   else if(res.status===403&&j.error==='mfa_required'){afterLogin()}
@@ -286,7 +302,7 @@ async function refresh(){
     if(r.status===403&&r.j.error==='mfa_required')return;
     $('statement').textContent='تعذّر تحميل الغرفة.';$('substate').textContent='السبب: '+(r.j.error||('http_'+r.status));return;
   }
-  data=r.j;render();
+  data=r.j;render();loadFeed();
 }
 
 function render(){
@@ -373,6 +389,39 @@ function renderLog(){
   if(!items.length)ul.appendChild(h('li',null,[h('span'),h('span',{class:'empty',text:'لا أحداث بعد.'})]));
   $('routine').textContent=routine?'وراء هذا السجل '+routine+' عملية روتينية للمحرك لا تحتاج انتباهك.':'';
 }
+
+/* ---------- التدفق الحي: كل إشارة وكل احتمال صيد يصل فور رصده ---------- */
+var KIND={DEMAND_SIGNAL:'إشارة طلب',HYPOTHESIS:'فرضية مهمة',AIRPORT_PRESSURE:'ضغط مطار (استنتاج)'};
+var FSTATUS={NEW:'جديدة',IN_REVIEW:'قيد التحقق',MONITORING:'تحت المتابعة',OBSERVING:'تحت المراقبة',TESTING:'قيد الاختبار',SUPPORTED:'مدعومة بأدلة',PROMOTED:'ارتقت لفرصة',SURGE:'ارتفاع غير معتاد'};
+async function loadFeed(){
+  var ul=$('feed');
+  var r=await call({limit:80},FEED);
+  clear(ul);
+  if(r.status!==200||!r.j.ok){
+    $('feedCount').textContent='';$('feedNote').textContent='';
+    ul.appendChild(h('li',{class:'empty',text:'تعذّر تحميل التدفق ('+(r.j.error||('http_'+r.status))+'). ده لا يعني أن لا إشارات.'}));
+    return;
+  }
+  var items=r.j.items||[];
+  $('feedCount').textContent=r.j.instant+' فوري · '+r.j.live+' حي';
+  if(!items.length)ul.appendChild(h('li',{class:'empty',text:'لا شيء مرصود الآن. العين تواصل المراقبة.'}));
+  items.forEach(function(it){
+    var inst=it.level==='INSTANT';
+    var weak=it.kind==='DEMAND_SIGNAL'&&/^[CDE]$/.test(it.grade||'');
+    var meta=[KIND[it.kind]||it.kind];
+    if(it.grade)meta.push('درجة '+it.grade);
+    if(FSTATUS[it.status])meta.push(FSTATUS[it.status]);
+    if(it.source_name)meta.push('المصدر: '+it.source_name);
+    if(it.happened_at)meta.push(fmt(it.happened_at));
+    var kids=[h('h3',{text:it.title||'بدون عنوان'}),h('div',{class:'meta'},meta.map(function(t){return h('span',{text:t})}))];
+    if(weak||it.kind==='AIRPORT_PRESSURE')kids.push(h('div',{class:'flag',text:'إشارة أو استنتاج، وليست طلبًا مؤكدًا.'}));
+    if(it.note)kids.push(h('div',{class:'meta',text:String(it.note).slice(0,200)}));
+    if(it.source_url&&/^https?:\/\//i.test(it.source_url))kids.push(h('div',{class:'meta'},[h('a',{href:it.source_url,target:'_blank',rel:'noopener noreferrer',text:'افتح المصدر'})]));
+    ul.appendChild(h('li',{class:'fi'+(inst?' inst':'')},[h('div',{class:'lv',text:inst?'فوري':'حي'}),h('div',null,kids)]));
+  });
+  $('feedNote').textContent='كل إشارة تظهر هنا فور رصدها بدرجتها ومصدرها، ولا شيء يُخفى. لم يُرسل شيء لأي جهة.';
+}
+setInterval(function(){if(!room.hidden&&!document.hidden)loadFeed()},60000);
 
 /* ---------- أدوات الوكيل ---------- */
 function showOut(t){var o=$('agentOut');o.hidden=false;o.textContent=t}
