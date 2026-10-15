@@ -134,6 +134,18 @@ section.block h2{color:var(--gold);font-size:.9rem;letter-spacing:.06em;margin-b
 #gate>div{background:var(--panel);border-radius:12px;padding:32px}
 @media (max-width:900px){.kpis{grid-template-columns:repeat(2,1fr)}.bar{margin:0 -18px;padding:12px 18px}section.block{padding:20px}}
 @media (prefers-reduced-motion:reduce){.btn,.btn::before{transition:none}}
+
+/* بطاقات الطلب: تحت المراقبة ← فرصة ← متطابقة */
+.dc{padding:18px 0;border-top:1px solid var(--line)}
+.dc:first-of-type{border-top:0;padding-top:4px}
+.dc h3{font-size:1.02rem;font-weight:600;margin:0 0 6px}
+.dc .miss{color:var(--warn);font-size:.88rem;margin-bottom:10px}
+.dc .st{display:inline-block;border-radius:999px;padding:1px 10px;font-size:.78rem;border:1px solid var(--line);color:var(--muted);margin-inline-end:8px}
+.dc .st.q{border-color:var(--gold);color:var(--gold)}.dc .st.m{border-color:var(--ok);color:var(--ok)}
+.dcform{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px;margin:0 0 18px}
+.dcform input,.dcform select,.dcform textarea{background:var(--navy);border:1px solid var(--line);border-radius:12px;padding:8px 12px;font-size:.9rem;color:var(--ivory);width:100%;direction:rtl}
+.dcform .wide{grid-column:1/-1}
+@media (max-width:600px){.dcform{grid-template-columns:1fr}}
 </style>
 </head>
 <body>
@@ -162,6 +174,12 @@ section.block h2{color:var(--gold);font-size:.9rem;letter-spacing:.06em;margin-b
       <section class="block">
         <h2>تنتظر قرارك</h2>
         <div id="signals"></div>
+      </section>
+      <section class="block" id="cardsBlock">
+        <h2>تحت المراقبة والفرص<span class="chip" id="cardsCount"></span></h2>
+        <div class="fnote" id="cardsNote"></div>
+        <div id="cardsNew"></div>
+        <div id="cards"></div>
       </section>
       <section class="block">
         <h2>كل ما رصدته العين<span class="chip" id="feedCount"></span></h2>
@@ -371,7 +389,7 @@ function render(){
   st.appendChild(document.createTextNode(pending.length?'العين تعمل، وعندك '+plural(pending.length)+' تنتظر قرارك.':'العين تعمل، ولا شيء ينتظر قرارك الآن.'));
   st.appendChild(h('span',{class:'eye'+(data.contact_locked?'':' off'),'aria-hidden':'true'}));
   $('substate').textContent=data.contact_locked?'التواصل الخارجي مقفول. أي رسالة تبقى مسودة حتى تعتمدها.':'تنبيه: قفل التواصل الخارجي غير مفعّل. راجع الإعدادات قبل أي شيء.';
-  renderSignals();renderAgent();renderSafety();renderLog();loadControl();
+  renderSignals();renderAgent();renderSafety();renderLog();loadControl();loadCards();renderCardForm();
 }
 
 function renderSignals(){
@@ -633,6 +651,100 @@ async function loadFeed(){
   $('feedNote').textContent='كل إشارة تظهر هنا فور رصدها بدرجتها ومصدرها، ولا شيء يُخفى. لم يُرسل شيء لأي جهة.';
 }
 setInterval(function(){if(!room.hidden&&!document.hidden)loadFeed()},60000);
+
+
+/* ---------- بطاقات الطلب: تحت المراقبة ← فرصة ← متطابقة ----------
+   القاعدة الذهبية في قاعدة البيانات نفسها. الشاشة تعرض فقط وتنادي دوال الموظفين،
+   وأي رفض من القاعدة يظهر كما هو بالعربي. لا شيء يُرسل لأي جهة. */
+var CST={WATCHING:'تحت المراقبة',QUALIFIED:'فرصة مؤهلة',MATCHED:'متطابقة'};
+var MISS={signal:'إشارة',signal_grade_too_weak:'درجة الإشارة أضعف من C',reason:'السبب',origin:'الانطلاق',destination:'الوجهة',route_same_airport:'الانطلاق والوجهة نفس المطار',window:'نافذة الوقت',window_invalid:'نافذة الوقت غير صحيحة',expired:'انتهت صلاحيتها'};
+var CREJ={not_watching:'البطاقة لم تعد تحت المراقبة.',golden_rule_not_met:'الشروط ناقصة، فلم تُرقَّ.',forbidden:'للموظفين فقط.'};
+function cardRej(j){
+  if(!j)return 'تعذّر التنفيذ.';
+  var m=(j.missing||[]).map(function(k){return MISS[k]||k});
+  return (CREJ[j.reason]||('رُفض: '+(j.reason||'غير معروف')))+(m.length?' الناقص: '+m.join('، ')+'.':'');
+}
+async function cardCall(btn,name,args,okText){
+  btn.disabled=true;
+  var r=await rpc(name,args);
+  btn.disabled=false;
+  if(r.error){alert(errText(r.error));return false}
+  if(r.data&&r.data.ok===false){alert(cardRej(r.data));loadCards();return false}
+  loadCards();return true;
+}
+async function loadCards(){
+  var box=$('cards');if(!box)return;
+  var r=await sb.from('demand_cards').select('id,signal_id,reason,origin_code,destination_code,window_start,window_end,est_pax,status,opportunity_id,expires_at,updated_at').in('status',['WATCHING','QUALIFIED','MATCHED']).order('updated_at',{ascending:false}).limit(60);
+  if(r.error){clear(box);box.appendChild(h('div',{class:'empty',text:'تعذّر تحميل البطاقات. ده لا يعني أن لا بطاقات.'}));return}
+  var cards=r.data||[];
+  var miss={};
+  await Promise.all(cards.filter(function(c){return c.status==='WATCHING'}).map(async function(c){
+    var m=await rpc('demand_card_missing',{p_id:c.id});miss[c.id]=Array.isArray(m.data)?m.data:null;
+  }));
+  var opps=[];
+  if(cards.some(function(c){return c.status==='QUALIFIED'})){
+    var o=await sb.from('opportunities').select('id,origin_code,destination_code,status,expires_at').neq('status','EXPIRED').gt('expires_at',new Date().toISOString()).order('created_at',{ascending:false}).limit(30);
+    opps=(o.data||[]);
+  }
+  renderCards(cards,miss,opps);
+}
+function renderCards(cards,miss,opps){
+  var box=$('cards');clear(box);
+  $('cardsCount').textContent=cards.length?String(cards.length):'';
+  $('cardsNote').textContent='البطاقة لا تصير فرصة إلا بإشارة بدرجة C فأعلى وسبب ومسار ونافذة وقت. القاعدة نفسها ترفض غير ذلك. لم يُرسل شيء لأي جهة.';
+  if(!cards.length)box.appendChild(h('div',{class:'empty',text:'لا بطاقات حاليًا.'}));
+  cards.forEach(function(c){
+    var route=(c.origin_code&&c.destination_code)?c.origin_code+' ← '+c.destination_code:'المسار غير محدد';
+    var win=(c.window_start&&c.window_end)?fmtDay(c.window_start)+' إلى '+fmtDay(c.window_end):'النافذة غير محددة';
+    var meta=[route,win];
+    if(c.est_pax)meta.push(c.est_pax+' ركاب (تقدير)');
+    var kids=[
+      h('h3',null,[h('span',{class:'st'+(c.status==='QUALIFIED'?' q':c.status==='MATCHED'?' m':''),text:CST[c.status]||c.status}),document.createTextNode(c.reason||'بدون سبب بعد')]),
+      h('div',{class:'meta'},meta.map(function(t){return h('span',{text:t})}))
+    ];
+    var m=miss[c.id];
+    if(c.status==='WATCHING'&&m&&m.length)kids.push(h('div',{class:'miss',text:'الناقص: '+m.map(function(k){return MISS[k]||k}).join('، ')}));
+    var acts=h('div',{class:'acts'});
+    if(c.status==='WATCHING'){
+      acts.appendChild(h('button',{class:'btn small',type:'button',text:'رقّي لفرصة',onclick:function(ev){cardCall(ev.target,'staff_promote_demand_card',{p_id:c.id})}}));
+    }
+    if(c.status==='QUALIFIED'){
+      var sel=h('select',{'aria-label':'اختر فرصة مفعّلة'},[h('option',{value:'',text:'اختر فرصة مفعّلة'})].concat(opps.map(function(o){return h('option',{value:o.id,text:(o.origin_code||'?')+' ← '+(o.destination_code||'?')+' · '+fmt(o.expires_at)})})));
+      acts.appendChild(sel);
+      acts.appendChild(h('button',{class:'btn small',type:'button',text:'طابق',onclick:function(ev){
+        if(!sel.value){alert('اختر فرصة مفعّلة أولًا. لو لا توجد فرصة، تنتظر البطاقة ظهور طائرة.');return}
+        cardCall(ev.target,'staff_match_demand_card',{p_id:c.id,p_opportunity_id:sel.value});
+      }}));
+    }
+    if(c.status!=='MATCHED'){
+      acts.appendChild(h('button',{class:'btn quiet small',type:'button',text:'ارفض',onclick:function(ev){
+        var why=prompt('سبب الرفض (مطلوب):');
+        if(!why||!why.trim())return;
+        cardCall(ev.target,'staff_dismiss_demand_card',{p_id:c.id,p_reason:why.trim()});
+      }}));
+    }
+    kids.push(acts);
+    box.appendChild(h('article',{class:'dc'},kids));
+  });
+}
+async function renderCardForm(){
+  var box=$('cardsNew');if(!box||box.firstChild)return;
+  var r=await sb.from('demand_signals').select('id,title,grade').in('status',['NEW','IN_REVIEW','MONITORING']).order('created_at',{ascending:false}).limit(40);
+  var sigs=r.data||[];
+  var sig=h('select',{class:'wide','aria-label':'الإشارة'},[h('option',{value:'',text:'اختر الإشارة'})].concat(sigs.map(function(x){return h('option',{value:x.id,text:'['+x.grade+'] '+(x.title||'بدون عنوان').slice(0,70)})})));
+  var reason=h('textarea',{class:'wide',rows:'2',placeholder:'السبب: لماذا قد يحتاج أحد طائرة؟'});
+  var o=h('input',{placeholder:'من (مثل RUH)',maxlength:'4',style:'direction:ltr;text-align:left'});
+  var d=h('input',{placeholder:'إلى (مثل DXB)',maxlength:'4',style:'direction:ltr;text-align:left'});
+  var f=h('input',{type:'date','aria-label':'من تاريخ'});
+  var t=h('input',{type:'date','aria-label':'إلى تاريخ'});
+  var pax=h('input',{type:'number',min:'1',placeholder:'عدد الركاب (تقدير، اختياري)'});
+  var save=h('button',{class:'btn small',type:'button',text:'أضف تحت المراقبة',onclick:async function(ev){
+    if(!sig.value){alert('اختر إشارة أولًا. البطاقة لازم تستند لإشارة.');return}
+    var args={p_signal_id:sig.value,p_hypothesis_id:null,p_reason:reason.value.trim()||null,p_origin:o.value.trim().toUpperCase()||null,p_dest:d.value.trim().toUpperCase()||null,p_from:f.value||null,p_to:t.value||null,p_pax:pax.value?parseInt(pax.value,10):null};
+    if(await cardCall(ev.target,'staff_create_demand_card',args)){sig.value='';reason.value='';o.value='';d.value='';f.value='';t.value='';pax.value=''}
+  }});
+  box.appendChild(h('div',{class:'dcform'},[sig,reason,o,d,f,t,h('div',{class:'wide'},[pax]),h('div',{class:'wide'},[save])]));
+}
 
 /* ---------- أدوات الوكيل ---------- */
 function showOut(t){var o=$('agentOut');o.hidden=false;o.textContent=t}
