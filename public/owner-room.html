@@ -217,6 +217,16 @@ section.block h2{color:var(--gold);font-size:.9rem;letter-spacing:.06em;margin-b
       </section>
 
       <section class="block">
+        <h2>Hermes — بوابة النماذج<span class="chip">تجريبي</span></h2>
+        <p class="muted" style="margin:0 0 10px">مسودات واقتراحات فقط. لا تُرسل أي أسماء أو أرقام اتصال أو بيانات هوية. الدالة تحجبها تلقائيًا، والتشغيل مقفول من العلم <b>hermes_enabled</b>.</p>
+        <div class="tools">
+          <button class="btn quiet small" id="btnHModels">قائمة النماذج</button>
+          <button class="btn quiet small" id="btnHTest">تجربة: كلمات اصطياد دبي↔الرياض</button>
+        </div>
+        <div class="out" id="hermesOut" hidden></div>
+      </section>
+
+      <section class="block">
         <h2>الأمان</h2>
         <div id="safety"></div>
       </section>
@@ -745,6 +755,28 @@ async function renderCardForm(){
   }});
   box.appendChild(h('div',{class:'dcform'},[sig,reason,o,d,f,t,h('div',{class:'wide'},[pax]),h('div',{class:'wide'},[save])]));
 }
+
+/* ---------- Hermes (بوابة نماذج، مسودات فقط) ---------- */
+var HERM=URL_+'/functions/v1/hermes-call';
+function showH(t){var o=$('hermesOut');o.hidden=false;o.textContent=t}
+async function hermesModels(){
+  showH('جارٍ جلب قائمة النماذج…');
+  var r=await call({action:'models'},HERM),j=r.j;
+  if(r.status!==200){showH('تعذّر: '+(j.status||j.error||r.status)+(j.error&&j.status?'\n'+j.error:''));return}
+  var txt;try{txt=JSON.stringify(j.models,null,1)}catch(e){txt='غير قابل للعرض'}
+  showH('حالة: '+(j.status||'؟')+'\n'+txt.slice(0,3500));
+}
+async function hermesTest(){
+  showH('جارٍ التجربة (حتى 30 ثانية)…');
+  var q='أعطني 10 كلمات مفتاحية وعبارات بحث لاصطياد طلب الطيران الخاص على خط دبي (DXB) والرياض (RUH)، مصنّفة حسب النوع: فعاليات، مؤتمرات، وفود أعمال، مواسم سفر، مناقصات عامة. بدون أسماء أشخاص.';
+  var r=await call({purpose:'owner_room_test_dxb_ruh_keywords',prompt:q,max_tokens:400},HERM),j=r.j;
+  if(r.status!==200){
+    var why={DISABLED:'مقفول: علم hermes_enabled مطفأ',DAILY_CAP:'وصلت للسقف اليومي',BLOCKED_PRIVACY:'اتحجب بفلتر الخصوصية',NOT_CONFIGURED:'ناقص إعداد: '+(j.error||''),TEMPORARY_ERROR:'خطأ مؤقت من المزوّد',UNKNOWN:'رد فاضي'}[j.status];
+    showH('لم تتم التجربة: '+(why||j.status||j.error||r.status));return}
+  showH(['نوع المعلومة: مقترح من الذكاء الاصطناعي (AI_INFERRED)، مش حقيقة تشغيلية','النموذج: '+(j.model||'؟'),'','النتيجة:',j.content||'','','الاستهلاك: '+JSON.stringify(j.usage||{})].join('\n'));
+}
+$('btnHModels').addEventListener('click',hermesModels);
+$('btnHTest').addEventListener('click',hermesTest);
 
 /* ---------- أدوات الوكيل ---------- */
 function showOut(t){var o=$('agentOut');o.hidden=false;o.textContent=t}
