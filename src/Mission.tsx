@@ -5,7 +5,7 @@ import {sb} from './lib/supabase';
 import {useI18n,airportName} from './i18n';
 import {Switch,Toggle} from './cabin/Switch';
 import {PriorityChips} from './Guardian';
-import {missionStatus} from './data/guardian';
+import {missionStatus,purposeNudge} from './data/guardian';
 import type {Airport,Mission as M,MissionPurpose,Priority,RouteWx} from './data/types';
 // «مهمتي»: العميل يدخل بمهمة (اجتماع، عائلة، مناسبة) لا بطلب طائرة. لا طائرة ولا حجز ولا مشغّل هنا.
 // الحقيقي: طقس مطار الوجهة الرسمي (دالة عامة للقراءة فقط، يراه الزائر قبل أي بريد)، والمهمة المحفوظة (customer_missions، صفوف العميل فقط)،
@@ -63,6 +63,7 @@ export default function Mission(){
  return <section className="ms" aria-live="polite"><h2>{t('ms.h')}</h2>{!cur&&!pv&&!sent&&<p className="lead">{t('ms.sub')}</p>}
   {sent?<><h3>{t('ms.sentH')}</h3><p className="dim">{t('ms.sentB',{e:sent})}</p></>
   :cur?<><h3>{head(cur)}</h3>{sub(cur)}{Status}
+    {purposeNudge(cur.purpose,cur.priority)&&<p className="dim sm">{t('ms.nudge.'+purposeNudge(cur.purpose,cur.priority))}</p>}
     <div className="blk"><span className="lb">{t('pr.q')}</span><PriorityChips value={cur.priority} onChange={savePri}/><small className="dim sm">{t('pr.note')}</small>{err&&<p className="er" role="alert">{err}</p>}</div>
     {ms.length>1&&<div className="blk"><span className="lb">{t('ms.mine')}</span><div className="chips">{ms.map((x,i)=><button key={x.id} type="button" className={i===sel?'on':''} onClick={()=>setSel(i)}>{head(x)}</button>)}</div></div>}
     <div className="act"><Switch small label={t('ms.add')} onActivate={()=>{setAdding(true);setF(EMPTY);setErr('')}}/><Switch small label={t('ms.remove')} onActivate={()=>del(cur.id)}/></div></>

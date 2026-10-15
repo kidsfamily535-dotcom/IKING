@@ -1,4 +1,4 @@
-import type {Companion,Priority,RouteWx} from './types';
+import type {Companion,MissionPurpose,Priority,RouteWx} from './types';
 // «الحارس الأمين»: قواعد حتمية تحوّل الطقس الحالي + من يسافر معك إلى اقتراح واحد قصير. لا ذكاء غامض هنا.
 // الحدود الصادقة: (1) نستعمل الرصد الحالي CURRENT فقط، وهو الطقس الآن لا وقت الوصول، فالصياغة شرطية («لو بقي كذلك»).
 // (2) الاقتراح لا يُنفَّذ ولا يُرسَل. (3) لا نقول إن الجو آمن للطيران ولا إن الرحلة ستتأخر: هذا قرار المشغّل والطاقم.
@@ -25,6 +25,9 @@ export function guardianTips(wx:RouteWx[]|null,companions:Companion[]):Tip[]{
 
 // «إيش الأهم لك»: خيار واحد يقوله العميل بنفسه. يُحفظ ويُعرض فقط، ولا نستنتج منه شيئًا عن العميل.
 export const PRIORITIES:Priority[]=['EARLY','PRIVACY','COMFORT','NO_WAIT'];
+// «ما يناسب نوع المهمة»: تلميح واحد ثابت يظهر فقط حين يحدد العميل نوع المهمة ولم يحدد «الأهم لك» بعد.
+// لا نستنتج شيئًا ولا نفترض أولوية نيابة عنه: نذكّره بالخيار فقط. وبمجرد اختياره يختفي التلميح.
+export const purposeNudge=(p:MissionPurpose|null,pr:Priority|null):MissionPurpose|null=>p&&!pr?p:null;
 export const isPriority=(v:unknown):v is Priority=>typeof v==='string'&&(PRIORITIES as string[]).includes(v);
 // سطر حالة الرحلة: حتمي من آخر رصد رسمي CURRENT فقط (طقس المطار وقت آخر رصد، لا وقت الوصول).
 // «ما يستحق الانتباه» له تعريف واحد (concern) يقرأ منه سطر الحالة وبطاقة الحارس معًا، حتى لا يقول أحدهما «لا شيء» والآخر يحذّر.
