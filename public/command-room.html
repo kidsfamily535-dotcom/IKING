@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>غرفة القيادة — THE KING'S EYE</title>
+<style>
+:root{--bg:#171721;--s1:#1e1e2a;--s2:#272735;--line:rgba(237,237,243,.14);--ink:#ededf3;--mut:#c3c3cc;--gold:#c9a45c;--onacc:#171721;--glow:rgba(201,164,92,.32);color-scheme:dark;
+box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+@media (prefers-color-scheme:light){:root:not([data-theme="dark"]){--bg:#f4f0e6;--s1:#fffdf7;--s2:#ece6d6;--line:rgba(23,23,33,.14);--ink:#171721;--mut:#5a5a68;--gold:#8f6b1f;--onacc:#fffdf7;--glow:rgba(143,107,31,.28);color-scheme:light}}
+:root[data-theme="light"]{--bg:#f4f0e6;--s1:#fffdf7;--s2:#ece6d6;--line:rgba(23,23,33,.14);--ink:#171721;--mut:#5a5a68;--gold:#8f6b1f;--onacc:#fffdf7;--glow:rgba(143,107,31,.28);color-scheme:light}
+html{scroll-padding-top:env(safe-area-inset-top,0px)}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:Inter,"Segoe UI",Tahoma,"Noto Naskh Arabic",sans-serif;font-weight:400;line-height:1.5}
+.wrap{max-width:1200px;margin:0 auto;padding:24px 16px 56px}
+header{display:flex;justify-content:space-between;align-items:center;gap:16px;flex-wrap:wrap;padding-bottom:24px}
+.brand{font-size:12px;letter-spacing:.22em;color:var(--gold);font-weight:480}
+h1{margin:4px 0 0;font-size:32px;font-weight:480;letter-spacing:.015em;line-height:1.15}
+.eyes{display:flex;gap:8px;flex-wrap:wrap}
+.eye{display:flex;align-items:center;gap:8px;font-size:12px;color:var(--mut);border:1px solid var(--line);border-radius:40px;padding:6px 14px}
+.dot{width:6px;height:6px;border-radius:50%;background:var(--ink);box-shadow:0 0 10px 1px var(--glow)}.dot.w{background:transparent;border:1.5px solid var(--ink);box-shadow:none}.dot.o{background:var(--mut);opacity:.5;box-shadow:none}
+.demo{margin:0 0 24px;font-size:12px;color:var(--mut)}
+.kpis{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin:0 0 40px}
+.k{background:var(--s1);border-radius:12px;padding:24px}
+.k b{display:block;font-size:42px;font-weight:360;letter-spacing:.01em;line-height:1.15}
+.k span{font-size:14px;color:var(--mut)}
+.grid{display:grid;grid-template-columns:1.5fr 1fr;gap:24px}
+h2{font-size:14px;font-weight:480;color:var(--mut);letter-spacing:.04em;margin:0 0 16px}
+.card{background:var(--s1);border-radius:12px;padding:32px}
+.now{position:relative;overflow:hidden;padding:40px 32px;background:radial-gradient(ellipse 90% 70% at 50% 130%,var(--glow),transparent 70%),var(--s1)}
+.now::after{content:"";position:absolute;inset-inline:0;bottom:0;height:1px;background:linear-gradient(90deg,transparent,var(--gold),transparent);opacity:.7}
+.tag{display:inline-block;font-size:12px;padding:4px 12px;border-radius:40px;border:1px solid var(--line);color:var(--mut);margin-inline-end:6px}
+.tag.t3{color:var(--ink);border-color:var(--ink)}
+.route{font-size:36px;margin:16px 0 4px;font-weight:360;letter-spacing:.015em;line-height:1.2}
+.meta{color:var(--mut);font-size:14px}
+.why{margin:24px 0 8px;padding:16px;border-radius:12px;background:rgba(0,0,0,.18);font-size:14px}
+.why i{font-style:normal;color:var(--gold)}
+.btns{display:flex;gap:12px;flex-wrap:wrap;margin-top:24px}
+button{position:relative;overflow:hidden;font:inherit;cursor:pointer;border-radius:40px;padding:13px 30px;border:1px solid var(--line);background:rgba(237,237,243,.06);color:var(--ink);backdrop-filter:blur(12px);transition:transform .25s,box-shadow .25s,border-color .25s}
+button::before{content:"";position:absolute;top:0;bottom:0;width:60%;left:-80%;background:linear-gradient(100deg,transparent,rgba(255,255,255,.28),transparent);transform:skewX(-20deg);transition:left .7s}
+button:hover::before{left:130%}
+button:hover{transform:translateY(-1px);border-color:var(--ink)}
+button.p{background:linear-gradient(180deg,color-mix(in srgb,var(--gold) 82%,#fff),var(--gold));border-color:var(--gold);color:var(--onacc);font-weight:480;box-shadow:0 0 0 1px rgba(255,255,255,.12) inset,0 8px 28px -6px var(--glow)}
+button.p:hover{box-shadow:0 0 0 1px rgba(255,255,255,.2) inset,0 10px 36px -4px var(--glow)}
+button.g{background:transparent;color:var(--mut)}
+button:focus-visible{outline:2px solid var(--gold);outline-offset:3px}
+.q{display:flex;justify-content:space-between;gap:12px;align-items:center;padding:14px 0;border-top:1px solid var(--line);font-size:14px}
+.q:first-of-type{border-top:0;padding-top:0}
+.log{width:100%;border-collapse:collapse;font-size:14px}
+.log td{padding:12px 8px;border-top:1px solid var(--line);color:var(--mut)}
+.log td:nth-child(3){color:var(--ink)}
+.empty{color:var(--mut);text-align:center;padding:32px 0}
+.side>.card+.card{margin-top:24px}
+.ov{overflow-x:auto}
+section.card{margin-top:24px}
+@media(max-width:760px){.kpis{grid-template-columns:repeat(2,1fr)}.grid{grid-template-columns:1fr}.card,.now{padding:20px}.route{font-size:28px}}
+@media(prefers-reduced-motion:reduce){button,button::before{transition:none}}
+</style>
+</head>
+<body>
+<div class="wrap">
+<header>
+  <div><div class="brand">THE KING'S EYE</div><h1>غرفة القيادة</h1></div>
+  <div class="eyes" aria-label="حالة العيون">
+    <span class="eye"><i class="dot"></i>عين المشغّل</span>
+    <span class="eye"><i class="dot"></i>عين الصياد</span>
+    <span class="eye"><i class="dot w"></i>عين العميل</span>
+    <span class="eye"><i class="dot o"></i>عين السكرتير</span>
+  </div>
+</header>
+<p class="demo">نموذج تصميم ببيانات تجريبية — لا يتصل بقاعدة البيانات، ولا يرسل ولا يحجز شيئًا.</p>
+
+<section class="kpis" aria-label="مؤشرات اليوم">
+  <div class="k"><b id="kPend">3</b><span>بانتظار قرارك</span></div>
+  <div class="k"><b id="kOk">0</b><span>اعتمدتَها اليوم</span></div>
+  <div class="k"><b id="kNo">0</b><span>رفضتَها اليوم</span></div>
+  <div class="k"><b>2</b><span>فرص قيد المتابعة</span></div>
+</section>
+
+<div class="grid">
+  <main>
+    <h2>قرار واحد الآن</h2>
+    <div class="card now" id="now"></div>
+    <div class="card" style="margin-top:24px">
+      <h2>بعده في الطابور</h2>
+      <div id="queue"></div>
+    </div>
+  </main>
+  <aside class="side">
+    <div class="card">
+      <h2>العيون تعمل</h2>
+      <div class="q"><span>إشارة طلب جديدة (تصنيف B)</span><span class="tag">للمراجعة</span></div>
+      <div class="q"><span>توافر ينتهي خلال ساعة</span><span class="tag">تنبيه</span></div>
+      <div class="q"><span>رد مشغّل مسجّل</span><span class="tag">اليوم</span></div>
+    </div>
+    <div class="card">
+      <h2>الصلاحيات</h2>
+      <div class="q"><span>قراءة وتحديث داخلي</span><span>تلقائي</span></div>
+      <div class="q"><span>حجز فندق / مواصلات</span><span>تنبيه</span></div>
+      <div class="q"><span>حجز طائرة، دفع، إرسال</span><span style="color:var(--gold)">بموافقتك فقط</span></div>
+    </div>
+  </aside>
+</div>
+
+<section class="card ov">
+  <h2>سجل العمليات</h2>
+  <table class="log"><tbody id="log">
+    <tr><td>10:15</td><td>عين الصياد</td><td>تحديث بطاقة فرصة</td><td>تلقائي</td></tr>
+  </tbody></table>
+</section>
+</div>
+
+<script>
+var items=[
+ {t:3,tl:"المستوى 3 — بموافقتك",act:"إرسال مسودة رسالة إلى مشغّل",route:"الرياض ← جدة",meta:"الخميس 20:30 · حتى 7 ضيوف",why:"السبب: طلب صريح من عميل، والتوافر «بانتظار تأكيد المشغّل».",src:"المصدر: طلب العميل · السعر: غير معروف، يحتاج تحققًا"},
+ {t:3,tl:"المستوى 3 — بموافقتك",act:"عرض فرصة على عميل",route:"القاهرة ← جدة",meta:"الليلة · الإقلاع بعد نحو ساعتين",why:"السبب: توافر وصل من مشغّل قبل 20 دقيقة وتاريخ العميل يتوافق.",src:"المصدر: مشغّل (مسجّل بيدك) · تقديري"},
+ {t:2,tl:"المستوى 2 — تنبيه",act:"ترتيب نقل أرضي",route:"مطار الرياض ← الفندق",meta:"صباح الأحد",why:"السبب: جزء من رحلة معتمدة سابقًا.",src:"المصدر: ملف الرحلة · تقديري"}
+];
+var okN=0,noN=0,logEl=document.getElementById('log');
+function esc(s){return String(s).replace(/[&<>]/g,function(c){return{'&':'&amp;','<':'&lt;','>':'&gt;'}[c]})}
+function render(){
+ var now=document.getElementById('now'),q=document.getElementById('queue');
+ document.getElementById('kPend').textContent=items.length;
+ if(!items.length){now.innerHTML='<div class="empty">لا قرارات الآن. العيون تواصل العمل وستنبّهك عند الحاجة.</div>';q.innerHTML='<div class="empty">الطابور فارغ</div>';return}
+ var a=items[0];
+ now.innerHTML='<span class="tag t'+a.t+'">'+a.tl+'</span><span class="tag">تقديري</span>'+
+ '<div class="meta" style="margin-top:8px">'+esc(a.act)+'</div><div class="route">'+esc(a.route)+'</div><div class="meta">'+esc(a.meta)+'</div>'+
+ '<div class="why"><i>◆</i> '+esc(a.why)+'<br><span class="meta">'+esc(a.src)+'</span></div>'+
+ '<div class="btns"><button class="p" onclick="dec(1)">موافقة</button><button onclick="dec(2)">تعديل</button><button class="g" onclick="dec(0)">رفض + سبب</button></div>';
+ var rest=items.slice(1);
+ q.innerHTML=rest.length?rest.map(function(x){return '<div class="q"><span>'+esc(x.act)+' — '+esc(x.route)+'</span><span class="tag t'+x.t+'">م'+x.t+'</span></div>'}).join(''):'<div class="empty">لا شيء بعده</div>';
+}
+function dec(k){
+ var a=items.shift(),r=document.createElement('tr'),n=new Date(),h=n.getHours()+':'+('0'+n.getMinutes()).slice(-2);
+ var st=k==1?'<td style="color:var(--ink)">معتمد</td>':k==2?'<td>قيد التعديل</td>':'<td>مرفوض</td>';
+ if(k==1){okN++;document.getElementById('kOk').textContent=okN}
+ if(k==0){noN++;document.getElementById('kNo').textContent=noN}
+ r.innerHTML='<td>'+h+'</td><td>أنت</td><td>'+esc(a.act)+'</td>'+st;
+ logEl.insertBefore(r,logEl.firstChild);
+ if(k==2)items.push(a);
+ render();
+}
+render();
+</script>
+</body>
+</html>
