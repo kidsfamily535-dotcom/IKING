@@ -176,6 +176,14 @@ section.block h2{color:var(--gold);font-size:.9rem;letter-spacing:.06em;margin-b
         <div id="control"></div>
       </section>
       <section class="block">
+        <h2>تعليماتك للوكيل<span class="chip" id="dirCount"></span></h2>
+        <div id="directives"></div>
+      </section>
+      <section class="block">
+        <h2>ساعات الهدوء</h2>
+        <div id="prefs"></div>
+      </section>
+      <section class="block">
         <h2>نبض الوكيل<span class="chip" id="healthCount"></span></h2>
         <div id="health"></div>
       </section>
@@ -459,6 +467,54 @@ async function loadControl(){
   ]);
   renderControl(res[0],res[1]);renderHealth(res[2]);renderInbox(res[3]);
   renderKpis(res);
+  loadDirectives();
+}
+var SCOPES=[['GENERAL','عامة'],['HUNTER','الصياد'],['CUSTOMER','العميل'],['SECRETARY','السكرتير'],['OPERATOR','المشغّل']];
+var DSTATE={ACTIVE:'لم يستلمها الوكيل بعد',ACKED:'استلمها الوكيل',DONE:'نُفّذت'};
+async function loadDirectives(){
+  var res=await Promise.all([
+    sb.from('owner_directives').select('id,body,scope,status,created_at,expires_at,ack_note').in('status',['ACTIVE','ACKED']).order('created_at',{ascending:false}).limit(20),
+    sb.from('owner_prefs').select('quiet_from,quiet_to,tz').eq('id',1).maybeSingle()
+  ]);
+  renderDirectives(res[0]);renderPrefs(res[1]);
+}
+function renderDirectives(r){
+  var box=$('directives');clear(box);$('dirCount').textContent='';
+  var body=h('input',{type:'text',maxlength:'500',placeholder:'اكتب تعليمة قصيرة للوكيل','aria-label':'تعليمة'});
+  var sc=h('select',{'aria-label':'النطاق'},SCOPES.map(function(q){return h('option',{value:q[0],text:q[1]})}));
+  var days=h('select',{'aria-label':'المدة'},[['1','يوم'],['3','3 أيام'],['7','أسبوع'],['30','شهر']].map(function(q){return h('option',{value:q[0],text:q[1],selected:q[0]==='7'?'selected':null})}));
+  box.appendChild(h('div',{class:'acts'},[body,sc,days,h('button',{class:'btn small',type:'button',text:'أرسل',onclick:async function(ev){
+    if(body.value.trim().length<3){alert('اكتب تعليمة أطول.');return}
+    ev.target.disabled=true;
+    var x=await rpc('owner_send_directive',{p_body:body.value,p_scope:sc.value,p_days:parseInt(days.value,10)});
+    if(x.error){ev.target.disabled=false;alert(errText(x.error));return}
+    loadDirectives();
+  }})]));
+  box.appendChild(h('div',{class:'fnote',text:'التعليمة معلومة للوكيل فقط. لا تفتح قفل التواصل ولا تتجاوز بوابات الموافقة.'}));
+  if(r.error){box.appendChild(h('div',{class:'empty',text:'تعذّر قراءة التعليمات.'}));return}
+  var rows=r.data||[];$('dirCount').textContent=rows.length?String(rows.length):'';
+  rows.forEach(function(d){
+    var sn=(SCOPES.filter(function(q){return q[0]===d.scope})[0]||[0,d.scope])[1];
+    box.appendChild(h('div',{class:'kv'},[
+      h('span',{text:d.body}),
+      h('span',null,[h('span',{class:'chip',text:sn+' · '+(DSTATE[d.status]||d.status)}),h('button',{class:'btn quiet small',type:'button',text:'إلغاء',onclick:async function(ev){
+        ev.target.disabled=true;var x=await rpc('owner_cancel_directive',{p_id:d.id});
+        if(x.error){ev.target.disabled=false;alert(errText(x.error));return}
+        loadDirectives();
+      }})])
+    ]));
+  });
+}
+function renderPrefs(r){
+  var box=$('prefs');clear(box);
+  if(r.error||!r.data){box.appendChild(h('div',{class:'empty',text:'تعذّر قراءة الإعدادات.'}));return}
+  function hrs(v){var o=[];for(var i=0;i<24;i++)o.push(h('option',{value:String(i),text:i+':00',selected:i===v?'selected':null}));return h('select',null,o)}
+  var f=hrs(r.data.quiet_from),t=hrs(r.data.quiet_to);
+  box.appendChild(h('div',{class:'acts'},[h('span',{text:'من'}),f,h('span',{text:'إلى'}),t,h('button',{class:'btn quiet small',type:'button',text:'حفظ',onclick:async function(ev){
+    ev.target.disabled=true;var x=await rpc('owner_set_prefs',{p_from:parseInt(f.value,10),p_to:parseInt(t.value,10)});
+    ev.target.disabled=false;if(x.error){alert(errText(x.error));return}loadDirectives();
+  }})]));
+  box.appendChild(h('div',{class:'fnote',text:'بتوقيت '+r.data.tz+'. التنبيهات العادية تتأجّل في هذه الساعات. العاجلة (تصعيد، إيقاف الوكيل) والملخص اليومي لا تتأجّل.'}));
 }
 function renderKpis(res){
   var box=$('kpis');clear(box);
