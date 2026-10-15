@@ -146,6 +146,27 @@ section.block h2{color:var(--gold);font-size:.9rem;letter-spacing:.06em;margin-b
 .dcform input,.dcform select,.dcform textarea{background:var(--navy);border:1px solid var(--line);border-radius:12px;padding:8px 12px;font-size:.9rem;color:var(--ivory);width:100%;direction:rtl}
 .dcform .wide{grid-column:1/-1}
 @media (max-width:600px){.dcform{grid-template-columns:1fr}}
+
+/* مركز التحكم: تعليمات المالك */
+#dirBlock{border:1px solid var(--gold);box-shadow:0 0 40px -18px var(--glow)}
+.dirform textarea{width:100%;min-height:84px;resize:vertical;background:var(--navy);border:1px solid var(--line);border-radius:12px;padding:12px 16px;font-size:1rem;color:var(--ivory);line-height:1.7}
+.dirform .acts{margin-top:10px}
+.dirform .cnt{color:var(--muted);font-size:.8rem;margin-inline-start:auto}
+.scopes{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:8px;margin:12px 0 0}
+.scopebtn{background:var(--navy);border:1px solid var(--line);border-radius:12px;padding:10px 12px;text-align:start;cursor:pointer;color:var(--ivory)}
+.scopebtn[aria-pressed=true]{border-color:var(--gold);box-shadow:0 0 0 1px var(--gold) inset}
+.scopebtn b{display:block;font-size:.95rem}.scopebtn span{display:block;color:var(--muted);font-size:.78rem;line-height:1.5}
+.scopebtn em{font-style:normal;font-size:.74rem;color:var(--warn)}.scopebtn em.live{color:var(--ok)}
+.dir{padding:16px 0;border-top:1px solid var(--line)}
+.dir p{margin:0 0 8px;font-size:1rem}
+.dir .ack{color:var(--ok);font-size:.88rem;margin-bottom:8px}
+.dirh{margin-top:22px;color:var(--muted);font-size:.85rem}
+
+.sub2{margin-top:30px}
+.askans{background:var(--navy);border-radius:12px;padding:14px 16px;margin:10px 0;white-space:pre-wrap;word-break:break-word;line-height:1.8;font-size:.95rem}
+.askq{margin-top:18px;padding-top:14px;border-top:1px solid var(--line)}
+.askq .q{font-weight:600;margin-bottom:6px}
+.askq .src{display:flex;flex-wrap:wrap;gap:6px 14px;font-size:.85rem;margin-top:6px}
 </style>
 </head>
 <body>
@@ -167,6 +188,12 @@ section.block h2{color:var(--gold);font-size:.9rem;letter-spacing:.06em;margin-b
 
   <div class="grid">
     <div>
+      <section class="block" id="dirBlock">
+        <h2>مركز التحكم: اسأل الوكيل وأعطِه تعليماتك</h2>
+        <div id="ask"></div>
+        <h2 class="sub2">تعليماتك السارية<span class="chip" id="dirCount"></span></h2>
+        <div id="directives"></div>
+      </section>
       <section class="block">
         <h2>صندوق القرارات<span class="chip" id="inboxCount"></span></h2>
         <div id="inbox"></div>
@@ -192,10 +219,6 @@ section.block h2{color:var(--gold);font-size:.9rem;letter-spacing:.06em;margin-b
       <section class="block">
         <h2>التحكم في الوكيل</h2>
         <div id="control"></div>
-      </section>
-      <section class="block">
-        <h2>تعليماتك للوكيل<span class="chip" id="dirCount"></span></h2>
-        <div id="directives"></div>
       </section>
       <section class="block">
         <h2>ساعات الهدوء</h2>
@@ -389,7 +412,7 @@ function render(){
   st.appendChild(document.createTextNode(pending.length?'العين تعمل، وعندك '+plural(pending.length)+' تنتظر قرارك.':'العين تعمل، ولا شيء ينتظر قرارك الآن.'));
   st.appendChild(h('span',{class:'eye'+(data.contact_locked?'':' off'),'aria-hidden':'true'}));
   $('substate').textContent=data.contact_locked?'التواصل الخارجي مقفول. أي رسالة تبقى مسودة حتى تعتمدها.':'تنبيه: قفل التواصل الخارجي غير مفعّل. راجع الإعدادات قبل أي شيء.';
-  renderSignals();renderAgent();renderSafety();renderLog();loadControl();loadCards();renderCardForm();
+  renderSignals();renderAgent();renderSafety();renderLog();loadControl();loadCards();renderCardForm();loadResearch();
 }
 
 function renderSignals(){
@@ -487,42 +510,67 @@ async function loadControl(){
   renderKpis(res);
   loadDirectives();
 }
-var SCOPES=[['GENERAL','عامة'],['HUNTER','الصياد'],['CUSTOMER','العميل'],['SECRETARY','السكرتير'],['OPERATOR','المشغّل']];
-var DSTATE={ACTIVE:'لم يستلمها الوكيل بعد',ACKED:'استلمها الوكيل',DONE:'نُفّذت'};
+var SCOPES=[['GENERAL','عامة','توجيه عام لكل الوكلاء'],['HUNTER','الصياد','ما يركّز عليه الصياد'],['CUSTOMER','العميل','طريقة التعامل مع العملاء'],['SECRETARY','السكرتير','الملخصات والتنبيهات لك'],['OPERATOR','المشغّل','التعامل مع المشغّلين']];
+/* أي نطاق مربوط فعلًا بسلوك الوكيل. غير ذلك تبقى التعليمة مسجّلة ومعلومة للوكيل فقط.
+   عدّل هذه القائمة فقط بعد نشر ربط حقيقي (الصياد: hunt-broker v1.24 جاهز ولم يُنشر بعد). */
+var LIVE_SCOPES=[];
+var DSTATE={ACTIVE:'لم يستلمها الوكيل بعد',ACKED:'استلمها الوكيل',DONE:'نُفّذت',CANCELLED:'أُلغيت',EXPIRED:'انتهت مدتها'};
 async function loadDirectives(){
   var res=await Promise.all([
-    sb.from('owner_directives').select('id,body,scope,status,created_at,expires_at,ack_note').in('status',['ACTIVE','ACKED']).order('created_at',{ascending:false}).limit(20),
+    sb.from('owner_directives').select('id,body,scope,status,created_at,expires_at,acked_at,ack_note').in('status',['ACTIVE','ACKED','DONE','CANCELLED','EXPIRED']).order('created_at',{ascending:false}).limit(40),
     sb.from('owner_prefs').select('quiet_from,quiet_to,tz').eq('id',1).maybeSingle()
   ]);
   renderDirectives(res[0]);renderPrefs(res[1]);
 }
+function scopeName(c){return (SCOPES.filter(function(q){return q[0]===c})[0]||[0,c])[1]}
 function renderDirectives(r){
   var box=$('directives');clear(box);$('dirCount').textContent='';
-  var body=h('input',{type:'text',maxlength:'500',placeholder:'اكتب تعليمة قصيرة للوكيل','aria-label':'تعليمة'});
-  var sc=h('select',{'aria-label':'النطاق'},SCOPES.map(function(q){return h('option',{value:q[0],text:q[1]})}));
-  var days=h('select',{'aria-label':'المدة'},[['1','يوم'],['3','3 أيام'],['7','أسبوع'],['30','شهر']].map(function(q){return h('option',{value:q[0],text:q[1],selected:q[0]==='7'?'selected':null})}));
-  box.appendChild(h('div',{class:'acts'},[body,sc,days,h('button',{class:'btn small',type:'button',text:'أرسل',onclick:async function(ev){
+  var chosen='GENERAL';
+  var body=h('textarea',{maxlength:'500',placeholder:'اكتب للوكيل ما تريده بجملة واضحة. مثال: ركّز هذا الأسبوع على الرياض ودبي.','aria-label':'تعليمة'});
+  var cnt=h('span',{class:'cnt',text:'0/500'});
+  body.addEventListener('input',function(){cnt.textContent=body.value.length+'/500'});
+  var btns=SCOPES.map(function(q){
+    var live=LIVE_SCOPES.indexOf(q[0])>=0;
+    var b=h('button',{class:'scopebtn',type:'button','aria-pressed':q[0]===chosen?'true':'false'},[
+      h('b',{text:q[1]}),h('span',{text:q[2]}),h('em',{class:live?'live':'',text:live?'يؤثر على سلوك الوكيل':'مسجّلة، لم تُربط بسلوك بعد'})]);
+    b.addEventListener('click',function(){chosen=q[0];btns.forEach(function(x){x.setAttribute('aria-pressed',x===b?'true':'false')})});
+    return b;
+  });
+  var days=h('select',{'aria-label':'المدة'},[['1','يوم'],['3','3 أيام'],['7','أسبوع'],['30','شهر']].map(function(q){return h('option',{value:q[0],text:'تسري '+q[1]})}));
+  days.value='7';
+  var send=h('button',{class:'btn',type:'button',text:'أرسل التعليمة',onclick:async function(ev){
     if(body.value.trim().length<3){alert('اكتب تعليمة أطول.');return}
     ev.target.disabled=true;
-    var x=await rpc('owner_send_directive',{p_body:body.value,p_scope:sc.value,p_days:parseInt(days.value,10)});
+    var x=await rpc('owner_send_directive',{p_body:body.value,p_scope:chosen,p_days:parseInt(days.value,10)});
     if(x.error){ev.target.disabled=false;alert(errText(x.error));return}
     loadDirectives();
-  }})]));
-  box.appendChild(h('div',{class:'fnote',text:'التعليمة معلومة للوكيل فقط. لا تفتح قفل التواصل ولا تتجاوز بوابات الموافقة.'}));
-  if(r.error){box.appendChild(h('div',{class:'empty',text:'تعذّر قراءة التعليمات.'}));return}
-  var rows=r.data||[];$('dirCount').textContent=rows.length?String(rows.length):'';
-  rows.forEach(function(d){
-    var sn=(SCOPES.filter(function(q){return q[0]===d.scope})[0]||[0,d.scope])[1];
-    box.appendChild(h('div',{class:'kv'},[
-      h('span',{text:d.body}),
-      h('span',null,[h('span',{class:'chip',text:sn+' · '+(DSTATE[d.status]||d.status)}),h('button',{class:'btn quiet small',type:'button',text:'إلغاء',onclick:async function(ev){
-        ev.target.disabled=true;var x=await rpc('owner_cancel_directive',{p_id:d.id});
-        if(x.error){ev.target.disabled=false;alert(errText(x.error));return}
-        loadDirectives();
-      }})])
-    ]));
+  }});
+  box.appendChild(h('div',{class:'dirform'},[body,h('div',{class:'scopes'},btns),h('div',{class:'acts'},[days,send,cnt])]));
+  box.appendChild(h('div',{class:'fnote',text:'التعليمة توجيه للوكيل فقط. لا تفتح قفل التواصل ولا تتجاوز بوابات الموافقة، ومنها ما لا يتغير بأي تعليمة.'}));
+  if(r.error){box.appendChild(h('div',{class:'empty',text:'تعذّر قراءة التعليمات. ده لا يعني أن لا تعليمات.'}));return}
+  var rows=r.data||[];
+  var act=rows.filter(function(d){return d.status==='ACTIVE'||d.status==='ACKED'});
+  var old=rows.filter(function(d){return !(d.status==='ACTIVE'||d.status==='ACKED')}).slice(0,8);
+  $('dirCount').textContent=act.length?String(act.length):'';
+  if(!act.length)box.appendChild(h('div',{class:'empty',text:'لا تعليمات سارية. الوكيل يعمل بإعداداته العادية.'}));
+  act.forEach(function(d){
+    var kids=[h('p',{text:d.body}),h('div',{class:'meta'},[
+      h('span',{class:'chip',text:scopeName(d.scope)}),h('span',{text:DSTATE[d.status]||d.status}),
+      h('span',{text:'أُرسلت '+fmt(d.created_at)}),d.expires_at?h('span',{text:'تسري حتى '+fmtDay(d.expires_at)}):null])];
+    if(d.ack_note)kids.push(h('div',{class:'ack',text:'رد الوكيل: '+d.ack_note}));
+    kids.push(h('div',{class:'acts'},[h('button',{class:'btn quiet small',type:'button',text:'إلغاء',onclick:async function(ev){
+      ev.target.disabled=true;var x=await rpc('owner_cancel_directive',{p_id:d.id});
+      if(x.error){ev.target.disabled=false;alert(errText(x.error));return}
+      loadDirectives();
+    }})]));
+    box.appendChild(h('article',{class:'dir'},kids));
   });
+  if(old.length){
+    box.appendChild(h('div',{class:'dirh',text:'آخر ما انتهى'}));
+    old.forEach(function(d){box.appendChild(h('div',{class:'kv'},[h('span',{text:d.body.slice(0,90)}),h('span',{text:scopeName(d.scope)+' · '+(DSTATE[d.status]||d.status)})]))});
+  }
 }
+
 function renderPrefs(r){
   var box=$('prefs');clear(box);
   if(r.error||!r.data){box.appendChild(h('div',{class:'empty',text:'تعذّر قراءة الإعدادات.'}));return}
@@ -744,6 +792,49 @@ async function renderCardForm(){
     if(await cardCall(ev.target,'staff_create_demand_card',args)){sig.value='';reason.value='';o.value='';d.value='';f.value='';t.value='';pax.value=''}
   }});
   box.appendChild(h('div',{class:'dcform'},[sig,reason,o,d,f,t,h('div',{class:'wide'},[pax]),h('div',{class:'wide'},[save])]));
+}
+
+
+/* ---------- اسأل الوكيل: سؤال حر يرجع بجواب ومصادر. لا يتصل بأحد ولا يغيّر شيئًا ---------- */
+var RESEARCH=URL_+'/functions/v1/owner-research';
+var RERR={agent_not_running:'الوكيل موقوف الآن. استأنفه أولًا.',daily_cap_reached:'وصلت للحد اليومي للأسئلة. جرّب غدًا.',no_model_configured:'لا يوجد نموذج بحث مفعّل.',question_too_short:'اكتب سؤالًا أطول.',question_too_long:'السؤال أطول من 500 حرف.',forbidden:'للمالك فقط.'};
+function researchItem(row){
+  var kids=[h('div',{class:'q',text:row.question}),h('div',{class:'meta'},[h('span',{text:fmt(row.created_at)}),h('span',{text:'استنتاج الوكيل من مصادر ويب، وليس حقيقة مؤكدة'})])];
+  if(row.status==='DONE'){
+    kids.push(h('div',{class:'askans',text:row.answer||''}));
+    var src=(row.sources||[]).filter(function(x){return x&&/^https:\/\//i.test(x.url||'')});
+    if(src.length)kids.push(h('div',{class:'src'},src.map(function(x){return h('a',{href:x.url,target:'_blank',rel:'noopener noreferrer',text:x.title||'مصدر'})})));
+    else kids.push(h('div',{class:'flag',text:'لا مصادر مرفقة، فاعتبر الجواب غير موثّق.'}));
+  }else kids.push(h('div',{class:'flag',text:row.status==='UNAVAILABLE'?'تعذّر: '+(RERR[row.note]||row.note||'غير متاح'):'فشل التنفيذ، لم يصل جواب.'}));
+  return h('article',{class:'askq'},kids);
+}
+async function loadResearch(){
+  var box=$('ask');if(!box)return;
+  var list=box.querySelector('.asklist');if(!list){return renderAsk()}
+  var r=await sb.from('owner_research').select('id,question,status,answer,sources,note,created_at').order('created_at',{ascending:false}).limit(6);
+  clear(list);
+  if(r.error){list.appendChild(h('div',{class:'empty',text:'تعذّر قراءة الأسئلة السابقة.'}));return}
+  if(!(r.data||[]).length)list.appendChild(h('div',{class:'empty',text:'لا أسئلة بعد.'}));
+  (r.data||[]).forEach(function(row){list.appendChild(researchItem(row))});
+}
+function renderAsk(){
+  var box=$('ask');clear(box);
+  var q=h('textarea',{maxlength:'500',placeholder:'اطلب من الوكيل أن يبحث. مثال: ابحث عن وفود رسمية متوقعة في الرياض الأسبوع القادم وارجعلي بالمصادر.','aria-label':'اسأل الوكيل'});
+  var out=h('div',{class:'msg',role:'status','aria-live':'polite'});
+  var go=h('button',{class:'btn',type:'button',text:'ابحث وارجعلي',onclick:async function(){
+    var text=q.value.trim();
+    if(text.length<3){out.textContent='اكتب سؤالًا أطول.';return}
+    go.disabled=true;out.className='msg';out.textContent='الوكيل يبحث الآن، قد يستغرق نصف دقيقة…';
+    var r=await call({question:text},RESEARCH);
+    go.disabled=false;
+    if(r.status===200&&r.j.ok){q.value='';out.textContent='';loadResearch();return}
+    out.textContent=RERR[r.j.reason]||RERR[r.j.error]||('تعذّر البحث ('+(r.j.reason||r.j.error||('http_'+r.status))+').');
+  }});
+  box.appendChild(h('div',{class:'dirform'},[q,h('div',{class:'acts'},[go])]));
+  box.appendChild(out);
+  box.appendChild(h('div',{class:'fnote',text:'الوكيل يبحث ويلخّص فقط. لا يتصل بأي جهة ولا يغيّر أي سجل، ولو لم يجد شيئًا يقول غير معروف. حد أقصى 15 سؤالًا في اليوم.'}));
+  box.appendChild(h('div',{class:'asklist'}));
+  loadResearch();
 }
 
 /* ---------- أدوات الوكيل ---------- */
