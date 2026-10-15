@@ -10,8 +10,8 @@
 <link href="https://fonts.googleapis.com/css2?family=Amiri:wght@400;700&family=IBM+Plex+Sans+Arabic:wght@400;500;600&display=swap" rel="stylesheet">
 <style>
 :root{
-  --navy:#0A1422; --panel:#0F1C2F; --line:#1E3048; --ivory:#F1E9D8; --muted:#9AA7B8;
-  --gold:#C7A35A; --ok:#7FB3A6; --warn:#D69A55; --bad:#C97A6B;
+  --navy:#171721; --panel:#1e1e2a; --line:rgba(237,237,243,.14); --ivory:#ededf3; --muted:#c3c3cc;
+  --gold:#c9a45c; --glow:rgba(201,164,92,.34); --ok:#8fbfb0; --warn:#d9a463; --bad:#d8847a;
   --serif:'Amiri','Noto Naskh Arabic',serif; --sans:'IBM Plex Sans Arabic','Segoe UI',Tahoma,sans-serif;
 }
 *{box-sizing:border-box}
@@ -97,6 +97,43 @@ section.block{margin-bottom:40px}
 .fi h3{font-size:.98rem;font-weight:600;margin:0 0 4px}
 .fi .meta{margin-bottom:4px}
 .fnote{color:var(--muted);font-size:.85rem;padding-top:10px}
+
+/* ===== غرفة القيادة: ستايل Mercury + أزرار سينمائية ===== */
+html{color-scheme:dark}
+#room{max-width:1200px}
+.bar{position:sticky;top:0;z-index:5;background:rgba(23,23,33,.78);backdrop-filter:saturate(160%) blur(16px);margin:0 -28px;padding:14px 28px;border-bottom:1px solid var(--line)}
+.brand{letter-spacing:.14em}
+.statement{max-width:none;text-align:center;padding:72px 24px 56px;margin:24px 0 20px;border-radius:20px;position:relative;overflow:hidden;
+ background:radial-gradient(ellipse 85% 95% at 50% 135%,var(--glow),transparent 70%),linear-gradient(#10101a,#171721)}
+.statement::after{content:"";position:absolute;inset-inline:0;bottom:0;height:1px;background:linear-gradient(90deg,transparent,var(--gold),transparent)}
+.statement p{font-weight:400;text-shadow:0 0 50px var(--glow)}
+.statement p.sub{max-width:620px;margin-inline:auto}
+.eye{box-shadow:0 0 14px 2px var(--glow)}
+.kpis{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin:0 0 32px}
+.kpi{background:var(--panel);border-radius:12px;padding:22px}
+.kpi b{display:block;font-family:var(--serif);font-weight:400;font-size:2.4rem;line-height:1.15}
+.kpi span{color:var(--muted);font-size:.9rem}
+.grid{gap:24px}
+section.block{background:var(--panel);border-radius:12px;padding:28px;margin-bottom:24px}
+section.block h2{color:var(--gold);font-size:.9rem;letter-spacing:.06em;margin-bottom:18px}
+.sig{border-top-color:var(--line)}
+.out{background:var(--navy);border:0;border-radius:12px}
+.chip{border-radius:40px}
+.btn{position:relative;overflow:hidden;border-radius:40px;padding:12px 28px;border:1px solid var(--gold);
+ background:linear-gradient(180deg,color-mix(in srgb,var(--gold) 80%,#fff),var(--gold));color:#1A1405;font-weight:600;
+ box-shadow:0 0 0 1px rgba(255,255,255,.12) inset,0 8px 26px -8px var(--glow);transition:transform .25s,box-shadow .25s,border-color .25s}
+.btn::before{content:"";position:absolute;top:0;bottom:0;width:60%;left:-80%;background:linear-gradient(100deg,transparent,rgba(255,255,255,.3),transparent);transform:skewX(-20deg);transition:left .7s;pointer-events:none}
+.btn:hover:not(:disabled)::before{left:130%}
+.btn:hover:not(:disabled){transform:translateY(-1px);box-shadow:0 0 0 1px rgba(255,255,255,.2) inset,0 10px 34px -6px var(--glow)}
+.btn.quiet{background:rgba(237,237,243,.06);color:var(--ivory);border:1px solid var(--line);box-shadow:none;backdrop-filter:blur(10px)}
+.btn.quiet:hover:not(:disabled){border-color:var(--ivory)}
+.btn.small{padding:8px 18px}
+.acts input,.acts select{background:var(--navy);border:1px solid var(--line);border-radius:40px;padding:8px 16px;font-size:.9rem;color:var(--ivory)}
+.acts select{flex:0 0 auto}
+.field input{background:var(--navy);border-radius:12px}
+#gate>div{background:var(--panel);border-radius:12px;padding:32px}
+@media (max-width:900px){.kpis{grid-template-columns:repeat(2,1fr)}.bar{margin:0 -18px;padding:12px 18px}section.block{padding:20px}}
+@media (prefers-reduced-motion:reduce){.btn,.btn::before{transition:none}}
 </style>
 </head>
 <body>
@@ -113,6 +150,8 @@ section.block{margin-bottom:40px}
     <p id="statement"></p>
     <p class="sub" id="substate"></p>
   </section>
+
+  <section class="kpis" id="kpis" aria-label="مؤشرات اليوم"></section>
 
   <div class="grid">
     <div>
@@ -419,6 +458,18 @@ async function loadControl(){
     rpc('agent_spend_today'),rpc('agent_health'),rpc('owner_inbox')
   ]);
   renderControl(res[0],res[1]);renderHealth(res[2]);renderInbox(res[3]);
+  renderKpis(res);
+}
+function renderKpis(res){
+  var box=$('kpis');clear(box);
+  function k(v,l){return h('div',{class:'kpi'},[h('b',{text:v}),h('span',{text:l})])}
+  var ib=res[3],hl=res[2],c=res[0],sp=res[1];
+  box.appendChild(k(ib&&!ib.error&&Array.isArray(ib.data)?String(ib.data.length):'؟','تنتظر قرارك'));
+  var ok=hl&&!hl.error&&Array.isArray(hl.data)?hl.data.filter(function(x){return x.state==='OK'}).length+' / '+hl.data.length:'؟';
+  box.appendChild(k(ok,'مهام سليمة'));
+  var spend=sp&&!sp.error&&sp.data!=null?Number(sp.data).toFixed(2)+'$':'؟';
+  box.appendChild(k(spend,'صرف الصيد اليوم (تقديري)'));
+  box.appendChild(k(c&&c.data?(c.data.mode==='PAUSED'?'موقوف':'يعمل'):'؟','حالة الوكيل'));
 }
 function renderControl(c,sp){
   var box=$('control');clear(box);
