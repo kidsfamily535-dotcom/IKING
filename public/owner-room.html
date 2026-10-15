@@ -117,6 +117,10 @@ section.block{margin-bottom:40px}
   <div class="grid">
     <div>
       <section class="block">
+        <h2>صندوق القرارات<span class="chip" id="inboxCount"></span></h2>
+        <div id="inbox"></div>
+      </section>
+      <section class="block">
         <h2>تنتظر قرارك</h2>
         <div id="signals"></div>
       </section>
@@ -128,6 +132,14 @@ section.block{margin-bottom:40px}
     </div>
 
     <aside>
+      <section class="block">
+        <h2>التحكم في الوكيل</h2>
+        <div id="control"></div>
+      </section>
+      <section class="block">
+        <h2>نبض الوكيل<span class="chip" id="healthCount"></span></h2>
+        <div id="health"></div>
+      </section>
       <section class="block">
         <h2>الوكيل</h2>
         <div id="agent"></div>
@@ -312,7 +324,7 @@ function render(){
   st.appendChild(document.createTextNode(pending.length?'العين تعمل، وعندك '+plural(pending.length)+' تنتظر قرارك.':'العين تعمل، ولا شيء ينتظر قرارك الآن.'));
   st.appendChild(h('span',{class:'eye'+(data.contact_locked?'':' off'),'aria-hidden':'true'}));
   $('substate').textContent=data.contact_locked?'التواصل الخارجي مقفول. أي رسالة تبقى مسودة حتى تعتمدها.':'تنبيه: قفل التواصل الخارجي غير مفعّل. راجع الإعدادات قبل أي شيء.';
-  renderSignals();renderAgent();renderSafety();renderLog();
+  renderSignals();renderAgent();renderSafety();renderLog();loadControl();
 }
 
 function renderSignals(){
@@ -388,6 +400,98 @@ function renderLog(){
   });
   if(!items.length)ul.appendChild(h('li',null,[h('span'),h('span',{class:'empty',text:'لا أحداث بعد.'})]));
   $('routine').textContent=routine?'وراء هذا السجل '+routine+' عملية روتينية للمحرك لا تحتاج انتباهك.':'';
+}
+
+/* ---------- لوحة التحكم: صندوق القرارات + إيقاف الوكيل + نبض الوكيل ---------- */
+var REASONS=[['PRICE','السعر'],['TIMING','التوقيت'],['NOT_RELEVANT','غير مهم'],['NEED_INFO','أحتاج معلومات'],['RISK','مخاطرة'],['OTHER','سبب آخر']];
+var KINDS={SIGNAL:'إشارة',DRAFT:'مسودة رسالة',ESCALATION:'تصعيد',PROPOSAL:'اقتراح المساعد',REQUEST:'طلب عميل'};
+var HSTATE={OK:'سليم',STALE:'متأخر',FAILED:'فشل',NEVER_RAN:'لم يعمل بعد',OFF:'متوقف',PAUSED:'موقوف مؤقتًا'};
+var ERRS={mfa_required:'يلزم كود المصادقة.',reason_required:'اختر سبب الرفض.',over_budget:'تجاوز السقف اليومي. ارفع السقف أولًا.',admin_only:'للمالك فقط.',already_decided:'تم البت فيها من قبل.'};
+function errText(e){var m=(e&&e.message)||'';for(var k in ERRS)if(m.indexOf(k)>=0)return ERRS[k];return 'تعذّر التنفيذ: '+m.slice(0,100)}
+async function rpc(name,args){
+  var r=await sb.rpc(name,args||{});
+  if(r.error&&/mfa_required/.test(r.error.message||''))afterLogin();
+  return r;
+}
+async function loadControl(){
+  var res=await Promise.all([
+    sb.from('agent_control').select('mode,reason,changed_at,daily_budget_usd').eq('id',1).maybeSingle(),
+    rpc('agent_spend_today'),rpc('agent_health'),rpc('owner_inbox')
+  ]);
+  renderControl(res[0],res[1]);renderHealth(res[2]);renderInbox(res[3]);
+}
+function renderControl(c,sp){
+  var box=$('control');clear(box);
+  if(c.error||!c.data){box.appendChild(h('div',{class:'empty',text:'تعذّر قراءة حالة الوكيل. هذا لا يعني أنه متوقف.'}));return}
+  var paused=c.data.mode==='PAUSED';
+  box.appendChild(kv('الوضع',paused?'موقوف مؤقتًا':'يعمل',paused?'bad':'ok'));
+  if(paused&&c.data.reason)box.appendChild(h('div',{class:'out',text:'السبب: '+c.data.reason}));
+  var spend=sp&&!sp.error&&sp.data!=null?Number(sp.data):null;
+  box.appendChild(kv('صرف الصيد اليوم (تقديري)',spend==null?'غير معروف':(spend.toFixed(2)+' من '+Number(c.data.daily_budget_usd).toFixed(2)+' دولار'),spend!=null&&spend>=Number(c.data.daily_budget_usd)*0.8?'warn':''));
+  var tools=h('div',{class:'tools'});
+  if(paused){
+    tools.appendChild(h('button',{class:'btn small',type:'button',text:'استئناف الوكيل',onclick:async function(ev){
+      ev.target.disabled=true;var r=await rpc('agent_resume');
+      if(r.error){ev.target.disabled=false;alert(errText(r.error));return}
+      loadControl();
+    }}));
+  }else{
+    tools.appendChild(h('button',{class:'btn quiet small',type:'button',text:'إيقاف الوكيل مؤقتًا',onclick:async function(ev){
+      if(!confirm('سيتوقف الصيد والمتابعة والتنبيهات. تستمر فقط مهام انتهاء التوافر والتنظيف. متأكد؟'))return;
+      ev.target.disabled=true;var r=await rpc('agent_pause',{p_reason:'owner'});
+      if(r.error){ev.target.disabled=false;alert(errText(r.error));return}
+      loadControl();
+    }}));
+  }
+  box.appendChild(tools);
+}
+function renderHealth(r){
+  var box=$('health');clear(box);$('healthCount').textContent='';
+  if(r.error||!Array.isArray(r.data)){box.appendChild(h('div',{class:'empty',text:'تعذّر قراءة نبض الوكيل. هذا لا يعني أن كل شيء سليم.'}));return}
+  var rows=r.data,ok=rows.filter(function(x){return x.state==='OK'}).length;
+  $('healthCount').textContent=ok+' من '+rows.length+' سليمة';
+  var bad=rows.filter(function(x){return x.state!=='OK'});
+  if(!bad.length){box.appendChild(h('div',{class:'empty',text:'كل المهام تعمل في موعدها.'}));return}
+  bad.forEach(function(x){
+    var cls=x.state==='FAILED'||x.state==='STALE'?'bad':(x.state==='OFF'||x.state==='PAUSED'?'warn':'');
+    box.appendChild(kv(x.jobname,(HSTATE[x.state]||x.state)+(x.last_proof_at?' · آخر دليل '+fmt(x.last_proof_at):''),cls));
+  });
+  box.appendChild(h('div',{class:'fnote',text:'«سليم» يعني وصل دليل حديث على التنفيذ. بعض المهام دليلها جدولة فقط، لأن نتيجتها لا تُسجَّل بعد.'}));
+}
+function renderInbox(r){
+  var box=$('inbox');clear(box);$('inboxCount').textContent='';
+  if(r.error||!Array.isArray(r.data)){box.appendChild(h('div',{class:'empty',text:'تعذّر تحميل الصندوق ('+errText(r.error).slice(0,60)+'). هذا لا يعني أنه فارغ.'}));return}
+  var sig=r.data.filter(function(x){return x.kind==='SIGNAL'}).length;
+  var items=r.data.filter(function(x){return x.kind!=='SIGNAL'});
+  $('inboxCount').textContent=items.length+(sig?' + '+sig+' إشارة':'');
+  if(!items.length){box.appendChild(h('div',{class:'empty',text:sig?'لا شيء غير الإشارات، وتجدها في «تنتظر قرارك» تحت.':'لا قرارات الآن. الوكيل يعمل ويتواصل معك عند الحاجة.'}));return}
+  items.forEach(function(it){
+    var meta=[KINDS[it.kind]||it.kind];
+    if(it.created_at)meta.push(fmt(it.created_at));
+    if(it.expires_at)meta.push('ينتهي '+fmt(it.expires_at));
+    var kids=[h('h3',{text:it.title||'بدون عنوان'}),it.detail?h('p',{class:'ev',text:it.detail}):null,h('div',{class:'meta'},meta.map(function(t){return h('span',{text:t})}))];
+    var acts=h('div',{class:'acts'});
+    function send(dec,reason,btn){
+      btn.disabled=true;
+      rpc('owner_decide',{p_kind:it.kind,p_id:it.id,p_decision:dec,p_reason_code:reason||null,p_note:null}).then(function(x){
+        if(x.error){btn.disabled=false;alert(errText(x.error));return}
+        loadControl();
+      });
+    }
+    if(it.kind==='DRAFT'){
+      var sel=h('select',{'aria-label':'سبب الرفض'},[h('option',{value:'',text:'سبب الرفض'})].concat(REASONS.map(function(q){return h('option',{value:q[0],text:q[1]})})));
+      acts.appendChild(h('button',{class:'btn small',type:'button',text:'اعتماد المسودة',onclick:function(ev){send('APPROVE',null,ev.target)}}));
+      acts.appendChild(h('button',{class:'btn quiet small',type:'button',text:'رفض',onclick:function(ev){if(!sel.value){alert(ERRS.reason_required);return}send('REJECT',sel.value,ev.target)}}));
+      acts.appendChild(sel);
+      kids.push(h('div',{class:'meta',text:'الاعتماد لا يرسل شيئًا. التواصل الخارجي يبقى مقفولًا حتى تفتحه أنت.'}));
+    }else if(it.kind==='ESCALATION'){
+      acts.appendChild(h('button',{class:'btn small',type:'button',text:'تم الحل',onclick:function(ev){send('RESOLVE',null,ev.target)}}));
+    }else{
+      kids.push(h('div',{class:'meta',text:'يُعالَج من شاشة الوسيط (مسار الموافقات الثلاث).'}));
+    }
+    kids.push(acts);
+    box.appendChild(h('article',{class:'sig'},[h('div',{class:'grade',text:'●'}),h('div',null,kids)]));
+  });
 }
 
 /* ---------- التدفق الحي: كل إشارة وكل احتمال صيد يصل فور رصده ---------- */
