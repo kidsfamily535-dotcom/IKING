@@ -180,6 +180,11 @@ section.block h2{color:var(--gold);font-size:.9rem;letter-spacing:.06em;margin-b
         <h2>تنتظر قرارك</h2>
         <div id="signals"></div>
       </section>
+      <section class="block" id="queueBlock">
+        <h2>طابور موافقة الصيد<span class="chip" id="queueCount"></span></h2>
+        <p class="muted" style="margin:0 0 10px">اقتراحات جاية من مصادر خارجية (XPOZ وغيره). ولا واحدة بتدخل قائمة الإشارات إلا بموافقتك، وبدرجة D وثقة منخفضة، ومن غير أي تواصل.</p>
+        <div id="queue"></div>
+      </section>
       <section class="block" id="cardsBlock">
         <h2>تحت المراقبة والفرص<span class="chip" id="cardsCount"></span></h2>
         <div class="fnote" id="cardsNote"></div>
@@ -504,6 +509,42 @@ async function rpc(name,args){
   if(r.error&&/mfa_required/.test(r.error.message||''))afterLogin();
   return r;
 }
+
+/* ---------- طابور موافقة الصيد (بوابة الموافقة) ---------- */
+var QSRC={XPOZ:'XPOZ (منشورات عامة)',APIFY:'Apify',NEWS:'أخبار',TED:'مناقصات TED',BROKER:'الصياد',MANUAL:'يدوي'};
+async function loadQueue(){
+  var box=$('queue');if(!box)return;
+  var r=await rpc('owner_queue_list',{p_status:'PENDING',p_limit:40});
+  clear(box);$('queueCount').textContent='';
+  if(r.error){box.appendChild(h('div',{class:'empty',text:'تعذّر قراءة الطابور. هذا لا يعني أنه فاضي.'}));return}
+  var rows=r.data||[];
+  if(!rows.length){box.appendChild(h('div',{class:'empty',text:'مفيش اقتراحات منتظرة. ده مش دليل إن مفيش طلب، المصادر الخارجية متوقفة أو ما رجعتش بجديد.'}));return}
+  $('queueCount').textContent=String(rows.length);
+  rows.forEach(function(q){
+    var p=q.proposed||{};
+    var link=/^https:\/\//.test(String(p.source_url||''))?h('a',{href:p.source_url,target:'_blank',rel:'noopener noreferrer',text:'فتح المصدر'}):null;
+    var card=h('div',{class:'kv',style:'display:block'},[
+      h('div',null,[h('span',{class:'chip',text:(QSRC[q.source]||q.source)+' · درجة '+(p.grade||'D')}),' ',h('strong',{text:String(p.title||'بدون عنوان').slice(0,200)})]),
+      h('div',{class:'fnote',text:String(p.evidence||'').slice(0,420)}),
+      h('div',{class:'fnote',text:'يسقط تلقائيًا: '+fmt(q.expires_at)+(q.run_label?' | '+q.run_label:'')}),
+      h('div',{class:'acts'},[
+        link,
+        h('button',{class:'btn small',type:'button',text:'اعتماد كإشارة ضعيفة',onclick:async function(ev){
+          if(!confirm('تسجيلها كإشارة درجة D وثقة منخفضة، من غير أي تواصل؟'))return;
+          ev.target.disabled=true;var x=await rpc('owner_queue_decide',{p_id:q.id,p_decision:'APPROVE',p_note:null});
+          if(x.error){ev.target.disabled=false;alert(errText(x.error));return}
+          loadQueue();
+        }}),
+        h('button',{class:'btn quiet small',type:'button',text:'رفض',onclick:async function(ev){
+          ev.target.disabled=true;var x=await rpc('owner_queue_decide',{p_id:q.id,p_decision:'REJECT',p_note:null});
+          if(x.error){ev.target.disabled=false;alert(errText(x.error));return}
+          loadQueue();
+        }})
+      ])
+    ]);
+    box.appendChild(card);
+  });
+}
 async function loadControl(){
   var res=await Promise.all([
     sb.from('agent_control').select('mode,reason,changed_at,daily_budget_usd').eq('id',1).maybeSingle(),
@@ -513,6 +554,7 @@ async function loadControl(){
   renderKpis(res);
   loadDirectives();
   loadSwitches();
+  loadQueue();
 }
 var SCOPES=[['GENERAL','عامة'],['HUNTER','الصياد'],['CUSTOMER','العميل'],['SECRETARY','السكرتير'],['OPERATOR','المشغّل']];
 var DSTATE={ACTIVE:'لم يستلمها الوكيل بعد',ACKED:'استلمها الوكيل',DONE:'نُفّذت'};
