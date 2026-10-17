@@ -214,6 +214,13 @@ section.block h2{color:var(--gold);font-size:.9rem;letter-spacing:.06em;margin-b
         <div class="tools" id="runTools"></div>
         <div class="out" id="runOut" hidden></div>
       </section>
+      <section class="block" id="cmdBlock">
+        <h2>اكتب أمر للوكيل<span class="chip" id="cmdCount"></span></h2>
+        <p class="muted" style="margin:0 0 10px">اكتب بحث بسيط، مثال: "ابحث عن مؤتمرات الاستثمار في الرياض" أو "أخبار زيارات وفود في أبوظبي". النتيجة بتروح لطابور الموافقة وماتتسجّلش إلا بقرارك. مفيش تواصل مع أي حد، ولينكدإن والأشخاص ممنوعين.</p>
+        <div id="cmdBox"></div>
+        <div class="out" id="cmdOut" hidden></div>
+        <div id="cmdList"></div>
+      </section>
       <section class="block">
         <h2>تعليماتك للوكيل<span class="chip" id="dirCount"></span></h2>
         <div id="directives"></div>
@@ -545,6 +552,41 @@ async function loadQueue(){
     box.appendChild(card);
   });
 }
+
+/* ---------- صندوق الأوامر (منفّذ الأوامر) ---------- */
+var CSTATE={RECEIVED:'استُلم',DONE:'تم',PARTIAL:'تم جزئيًا',FAILED:'فشل (مجهول، مش معناه مفيش طلب)',BLOCKED:'متوقف بقاعدة',NO_TOOL_MATCHED:'ما فهمتش الأمر'};
+var CTOOL={xpoz_search:'XPOZ (X وReddit)',apify_search:'بحث الويب (Apify)',news_scan:'أخبار الصحف'};
+function cmdSummary(j){
+  var r=j.result||{},pl=j.plan||{},out=[];
+  out.push('الحالة: '+(CSTATE[j.status]||j.status));
+  if(pl.tool)out.push('الأداة: '+(CTOOL[pl.tool]||pl.tool)+' | الاستعلام: '+(pl.query||'')+(pl.planner==='hermes'?' | الاختيار: اقتراح نموذج (تقدير)':' | الاختيار: قواعد ثابتة'));
+  if(r.note)out.push(r.note);
+  if(r.queued_for_review!=null)out.push('اتحطّ في الطابور: '+r.queued_for_review+' | اتلاقى: '+(r.found||0));
+  return out.join('\n');
+}
+async function loadCommands(){
+  var box=$('cmdList');if(!box)return;
+  var r=await rpc('owner_command_list',{p_limit:8});
+  clear(box);$('cmdCount').textContent='';
+  if(r.error||!r.data)return;
+  r.data.forEach(function(c){
+    box.appendChild(h('div',{class:'kv'},[h('span',{text:String(c.body||'').slice(0,120)}),h('span',{class:'chip',text:(CSTATE[c.status]||c.status)+' · '+fmt(c.created_at)})]));
+  });
+}
+function initCommandBox(){
+  var box=$('cmdBox');if(!box||box.firstChild)return;
+  var inp=h('input',{type:'text',maxlength:'500',placeholder:'مثال: ابحث عن معارض الطيران في الخليج','aria-label':'أمر'});
+  var go=h('button',{class:'btn small',type:'button',text:'نفّذ',onclick:async function(){
+    var t=inp.value.trim();if(t.length<2){alert('اكتب أمر أطول.');return}
+    go.disabled=true;var o=$('cmdOut');o.hidden=false;o.textContent='جارٍ التنفيذ… (قد يأخذ حتى دقيقتين)';
+    var r=await call({text:t},URL_+'/functions/v1/owner-command'),j=r.j||{};
+    go.disabled=false;
+    if(r.status===403&&j.error==='mfa_required'){o.textContent='يلزم كود المصادقة.';afterLogin();return}
+    if(!j.status){o.textContent='تعذّر التنفيذ: '+(j.error||r.status);return}
+    o.textContent=cmdSummary(j);inp.value='';loadQueue();loadCommands();
+  }});
+  box.appendChild(h('div',{class:'acts'},[inp,go]));
+}
 async function loadControl(){
   var res=await Promise.all([
     sb.from('agent_control').select('mode,reason,changed_at,daily_budget_usd').eq('id',1).maybeSingle(),
@@ -555,6 +597,8 @@ async function loadControl(){
   loadDirectives();
   loadSwitches();
   loadQueue();
+  initCommandBox();
+  loadCommands();
 }
 var SCOPES=[['GENERAL','عامة'],['HUNTER','الصياد'],['CUSTOMER','العميل'],['SECRETARY','السكرتير'],['OPERATOR','المشغّل']];
 var DSTATE={ACTIVE:'لم يستلمها الوكيل بعد',ACKED:'استلمها الوكيل',DONE:'نُفّذت'};
