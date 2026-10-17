@@ -146,6 +146,11 @@ section.block h2{color:var(--gold);font-size:.9rem;letter-spacing:.06em;margin-b
 .dcform input,.dcform select,.dcform textarea{background:var(--navy);border:1px solid var(--line);border-radius:12px;padding:8px 12px;font-size:.9rem;color:var(--ivory);width:100%;direction:rtl}
 .dcform .wide{grid-column:1/-1}
 @media (max-width:600px){.dcform{grid-template-columns:1fr}}
+
+.swrow{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:8px 0;border-bottom:1px solid var(--line)}
+.swrow .nm{display:flex;flex-direction:column;gap:2px;min-width:0}
+.swrow .nm small{opacity:.7;font-size:.78rem;word-break:break-word}
+.swgrp{margin:14px 0 4px;font-size:.82rem;letter-spacing:.02em;opacity:.8}
 </style>
 </head>
 <body>
@@ -192,6 +197,17 @@ section.block h2{color:var(--gold);font-size:.9rem;letter-spacing:.06em;margin-b
       <section class="block">
         <h2>التحكم في الوكيل</h2>
         <div id="control"></div>
+      </section>
+      <section class="block">
+        <h2>لوحة المفاتيح<span class="chip" id="swCount"></span></h2>
+        <p class="muted" style="margin:0 0 10px">كل عين ومصدر ومهمة بمفتاح تشغيل وإيقاف من هنا. كل تغيير يتسجّل. مهام الأمان والانتهاء والتنظيف محمية ولا تُقفل.</p>
+        <div id="switches"></div>
+      </section>
+      <section class="block">
+        <h2>تشغيل يدوي</h2>
+        <p class="muted" style="margin:0 0 10px">كله تجريبي: يرجّع اللي كان هيتسجّل من غير ما يكتب شيء ومن غير أي تواصل مع أي جهة.</p>
+        <div class="tools" id="runTools"></div>
+        <div class="out" id="runOut" hidden></div>
       </section>
       <section class="block">
         <h2>تعليماتك للوكيل<span class="chip" id="dirCount"></span></h2>
@@ -481,7 +497,7 @@ function renderLog(){
 var REASONS=[['PRICE','السعر'],['TIMING','التوقيت'],['NOT_RELEVANT','غير مهم'],['NEED_INFO','أحتاج معلومات'],['RISK','مخاطرة'],['OTHER','سبب آخر']];
 var KINDS={SIGNAL:'إشارة',DRAFT:'مسودة رسالة',ESCALATION:'تصعيد',PROPOSAL:'اقتراح المساعد',REQUEST:'طلب عميل'};
 var HSTATE={OK:'سليم',STALE:'متأخر',FAILED:'فشل',NEVER_RAN:'لم يعمل بعد',OFF:'متوقف',PAUSED:'موقوف مؤقتًا'};
-var ERRS={mfa_required:'يلزم كود المصادقة.',reason_required:'اختر سبب الرفض.',over_budget:'تجاوز السقف اليومي. ارفع السقف أولًا.',admin_only:'للمالك فقط.',already_decided:'تم البت فيها من قبل.'};
+var ERRS={mfa_required:'يلزم كود المصادقة.',reason_required:'اختر سبب الرفض.',over_budget:'تجاوز السقف اليومي. ارفع السقف أولًا.',admin_only:'للمالك فقط.',already_decided:'تم البت فيها من قبل.',protected_job:'مهمة أمان أو انتهاء أو تنظيف، محمية ولا تُقفل.',agent_paused_resume_first:'الوكيل موقوف. استأنفه أولًا.',locked_by_owner_rule:'قفل التواصل التلقائي يتغيّر بقرارك الصريح فقط، مش من هنا.',not_switchable:'هذا المفتاح غير قابل للتغيير من هنا.',unknown_job:'مهمة غير معروفة.'};
 function errText(e){var m=(e&&e.message)||'';for(var k in ERRS)if(m.indexOf(k)>=0)return ERRS[k];return 'تعذّر التنفيذ: '+m.slice(0,100)}
 async function rpc(name,args){
   var r=await sb.rpc(name,args||{});
@@ -496,6 +512,7 @@ async function loadControl(){
   renderControl(res[0],res[1]);renderHealth(res[2]);renderInbox(res[3]);
   renderKpis(res);
   loadDirectives();
+  loadSwitches();
 }
 var SCOPES=[['GENERAL','عامة'],['HUNTER','الصياد'],['CUSTOMER','العميل'],['SECRETARY','السكرتير'],['OPERATOR','المشغّل']];
 var DSTATE={ACTIVE:'لم يستلمها الوكيل بعد',ACKED:'استلمها الوكيل',DONE:'نُفّذت'};
@@ -777,6 +794,97 @@ async function hermesTest(){
 }
 $('btnHModels').addEventListener('click',hermesModels);
 $('btnHTest').addEventListener('click',hermesTest);
+
+
+/* ---------- لوحة المفاتيح + التشغيل اليدوي ---------- */
+var SWFLAGS={hermes_enabled:'Hermes — بوابة النماذج',xpoz_enabled:'XPOZ — إشارات عامة من السوشيال',apify_enabled:'Apify — جمع من صفحات الويب العامة'};
+var swMode='RUN';
+function jobGroup(n){
+  if(/^hunt-/.test(n))return 'الصيادون';
+  if(/^(eye-|secretary-|trip-alerts)/.test(n))return 'العيون والمتابعة والتنبيهات';
+  if(/^(weather-|aircraft-|infer-|demand-wikidata)/.test(n))return 'بيانات حية';
+  return 'أخرى';
+}
+function swRow(title,sub,on,locked,onToggle){
+  var btn=locked?h('span',{class:'chip',text:'محمي'}):h('button',{class:'btn small'+(on?'':' quiet'),type:'button',text:on?'يعمل — اضغط للإيقاف':'متوقف — اضغط للتشغيل',onclick:async function(ev){ev.target.disabled=true;await onToggle(!on);}});
+  return h('div',{class:'swrow'},[h('div',{class:'nm'},[h('span',{text:title}),sub?h('small',{text:sub}):null]),btn]);
+}
+async function loadSwitches(){
+  var box=$('switches');if(!box)return;
+  var r=await rpc('owner_controls');
+  clear(box);$('swCount').textContent='';
+  if(r.error||!r.data){box.appendChild(h('div',{class:'empty',text:'تعذّر قراءة المفاتيح. هذا لا يعني أنها كلها شغالة أو واقفة.'}));return}
+  var d=r.data;swMode=d.mode;
+  if(d.mode==='PAUSED')box.appendChild(h('div',{class:'out',text:'الوكيل موقوف بالكامل الآن. ما تقدرش تشغّل أي مفتاح قبل الاستئناف.'}));
+  box.appendChild(h('div',{class:'swgrp',text:'المصادر والنماذج'}));
+  (d.flags||[]).forEach(function(f){
+    if(f.key==='auto_contact_locked'){
+      box.appendChild(h('div',{class:'swrow'},[h('div',{class:'nm'},[h('span',{text:'قفل التواصل التلقائي'}),h('small',{text:f.value?'مقفول: لا تواصل تلقائي مع أي عميل أو شريك أو مشغّل':'مفتوح'})]),h('span',{class:'chip',text:f.value?'مقفول بقرارك':'مفتوح'})]));
+      return;
+    }
+    if(!f.switchable)return;
+    box.appendChild(swRow(SWFLAGS[f.key]||f.key,f.note?String(f.note).slice(0,110):'',!!f.value,false,async function(v){
+      if(v&&!confirm('تشغيل هذا المصدر؟ يشتغل تجريبي وبسقف يومي ومن غير أي تواصل مع أحد.'))return loadSwitches();
+      var x=await rpc('owner_flag_set',{p_key:f.key,p_value:v,p_reason:'owner_room'});
+      if(x.error)alert(errText(x.error));
+      loadSwitches();
+    }));
+  });
+  var jobs=d.jobs||[],groups={},order=['الصيادون','العيون والمتابعة والتنبيهات','بيانات حية','أخرى'];
+  jobs.filter(function(j){return !j.protected}).forEach(function(j){var g=jobGroup(j.jobname);(groups[g]=groups[g]||[]).push(j)});
+  var on=jobs.filter(function(j){return j.active}).length;$('swCount').textContent=on+' من '+jobs.length+' تعمل';
+  order.forEach(function(g){
+    if(!groups[g])return;
+    box.appendChild(h('div',{class:'swgrp',text:g}));
+    groups[g].forEach(function(j){
+      var st=HSTATE[j.state]||j.state;
+      box.appendChild(swRow(j.jobname,'الحالة: '+st+' | الجدول: '+j.schedule,!!j.active,false,async function(v){
+        var x=await rpc('owner_job_set',{p_jobname:j.jobname,p_active:v,p_reason:'owner_room'});
+        if(x.error)alert(errText(x.error));
+        loadSwitches();loadControl();
+      }));
+    });
+  });
+  var pr=jobs.filter(function(j){return j.protected}).map(function(j){return j.jobname});
+  if(pr.length)box.appendChild(h('div',{class:'out',text:'مهام محمية (انتهاء التوافر والعروض، تنظيف الخصوصية، حارس الميزانية): '+pr.join('، ')}));
+}
+function showRun(t){var o=$('runOut');o.hidden=false;o.textContent=t}
+function sumRun(j){
+  var keys=['status','hunter_status','note','ok','error'],out=[];
+  keys.forEach(function(k){if(j[k]!=null&&typeof j[k]!=='object')out.push(k+': '+j[k])});
+  if(j.counts)out.push('counts: '+JSON.stringify(j.counts));
+  if(Array.isArray(j.items))out.push('عدد النتائج: '+j.items.length);
+  if(j.wrote_anything===false)out.push('لم يُكتب شيء');
+  var raw='';try{raw=JSON.stringify(j).slice(0,900)}catch(e){}
+  return out.join('\n')+(out.length?'\n\n':'')+'الرد الخام (مقتطف):\n'+raw;
+}
+async function runNow(label,endpoint,body){
+  if(swMode==='PAUSED'){showRun('الوكيل موقوف. استأنفه أولًا.');return}
+  showRun('جارٍ التشغيل التجريبي: '+label+' (قد يستغرق حتى دقيقتين)…');
+  var r=await call(body,URL_+'/functions/v1/'+endpoint);
+  showRun(label+' — HTTP '+r.status+'\n'+sumRun(r.j||{}));
+}
+async function checkSources(){
+  showRun('جارٍ اختبار المصادر…');
+  var r=await call({},URL_+'/functions/v1/check-sources'),j=r.j||{};
+  if(r.status!==200){showRun('تعذّر الاختبار: '+(j.error||r.status));return}
+  var L=['نتيجة اختبار المصادر (لا تظهر المفاتيح أبدًا):'];
+  ['xpoz','apify'].forEach(function(k){
+    var x=(j.results||{})[k]||{};
+    var v={ACCEPTED:'المزوّد قبل المفتاح',REJECTED_KEY:'المزوّد رفض المفتاح',ERROR:'خطأ أو لا رد: غير معروف',NO_SECRET_WITH_THESE_NAMES:'ما لقيتش سرّ بالأسماء المعروفة'}[x.verdict]||x.verdict||'غير معروف';
+    L.push(k.toUpperCase()+': '+v+(x.secret_name?' | اسم السرّ: '+x.secret_name:'')+(x.http?' | HTTP '+x.http:'')+(x.plan?' | الخطة: '+x.plan:''));
+  });
+  L.push('',j.note||'');showRun(L.join('\n'));
+}
+(function buildRunTools(){
+  var box=$('runTools');if(!box)return;
+  box.appendChild(h('button',{class:'btn small',type:'button',text:'اختبر المصادر (XPOZ وApify)',onclick:checkSources}));
+  [['RFQ','مناقصات وطلبات'],['EVENTS','فعاليات'],['CORP','شركات'],['DEALS','صفقات'],['EXEC','تنفيذيون'],['PROJECTS','مشاريع'],['INVEST','استثمار']].forEach(function(g){
+    box.appendChild(h('button',{class:'btn quiet small',type:'button',text:'صيد: '+g[1],onclick:function(){runNow(g[1],'hunt-broker',{mode:'run',dry_run:true,group:g[0],per:1})}}));
+  });
+  box.appendChild(h('button',{class:'btn quiet small',type:'button',text:'أخبار',onclick:function(){runNow('أخبار','hunt-news',{dry_run:true,days:3})}}));
+  box.appendChild(h('button',{class:'btn quiet small',type:'button',text:'مناقصات TED',onclick:function(){runNow('TED','hunt-ted',{dry_run:true,days:60,limit:50})}}));
+})();
 
 /* ---------- أدوات الوكيل ---------- */
 function showOut(t){var o=$('agentOut');o.hidden=false;o.textContent=t}
