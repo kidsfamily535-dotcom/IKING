@@ -8,7 +8,7 @@ import Room from './Room';
 import Show from './Show';
 import Mission from './Mission';
 import {Switch} from './cabin/Switch';
-import HomeEye from './cabin/HomeEye';
+import CinemaHome from './cinema/CinemaHome';
 import HoldRing from './Hold';
 import OperatorValue from './OperatorValue';
 import Scene from './eye/Scene';
@@ -102,18 +102,9 @@ export default function App(){
  const staff=role==='admin',table=op.filter(o=>o.status==='ACTIVATION_PENDING');
  const live=op.find(o=>o.availability==='CONFIRMED');
  return <>
-  <div className="pill">{real?t('pill.live'):t('pill.demo')}</div><LangSwitch/>
-  <section className="hero hx"><div className="hx-stage"><HomeEye onGo={i=>{location.href='?view=cabin&to='+i}}/></div>
-   <div className="hx-copy"><p className="hx-mark">{t('hero.eyebrow')}</p>
-   <h1 className="hx-h">{t('hero.sub1')}</h1><p className="hx-lead">{t('hero.lead')}</p>
-   <div className="hx-sw">
-    {!real&&<Switch primary label={lang==='ar'?'افتح عينك':'Open your eye'} sub={lang==='ar'?'جرّب رحلتك مع العين':'Plan a trip with the Eye'} onActivate={()=>{location.href='?view=cabin'}}/>}
-    <div className="ln"><Switch small label={({ar:'استكشف العين',en:'Explore the Eye',ru:'Исследуйте Око',tr:'Gözü keşfedin'} as Record<string,string>)[lang]||'Explore the Eye'} onActivate={()=>{location.href='/inside-the-kings-eye.html?lang='+lang}}/></div>
-   </div>
-   {staffMode&&<><div className="roles" style={{marginTop:22}} role="group" aria-label={t('hero.pick.aria')}>{(['admin','operator','customer'] as Role[]).map(r=><button key={r} className={role===r?'':'g'} onClick={()=>{setRole(r);setTimeout(()=>document.getElementById('room')?.scrollIntoView({behavior:'smooth'}),50)}}>{t('role.'+r)}</button>)}</div><div className="mono" style={{marginTop:14,opacity:.6}}>{t('hero.demoaccess')}</div></>}
-   {login&&!real&&<SignIn onDone={(r,pl?:Lang)=>{useRealApi();setReal(true);setRole(r);setLogin(false);if(pl&&!hasStoredLang())setLang(pl,false)}}/>}
-   </div>
-  </section>
+  {(role||staffMode)&&<div className="pill">{real?t('pill.live'):t('pill.demo')}</div>}<LangSwitch/>
+  <CinemaHome real={real} lang={lang}/>
+  {(staffMode||(login&&!real))&&<section className="cn-after">{staffMode&&<><div className="roles" style={{marginTop:22}} role="group" aria-label={t('hero.pick.aria')}>{(['admin','operator','customer'] as Role[]).map(r=><button key={r} className={role===r?'':'g'} onClick={()=>{setRole(r);setTimeout(()=>document.getElementById('room')?.scrollIntoView({behavior:'smooth'}),50)}}>{t('role.'+r)}</button>)}</div><div className="mono" style={{marginTop:14,opacity:.6}}>{t('hero.demoaccess')}</div></>}{login&&!real&&<SignIn onDone={(r,pl?:Lang)=>{useRealApi();setReal(true);setRole(r);setLogin(false);if(pl&&!hasStoredLang())setLang(pl,false)}}/>}</section>}
   {!role&&stage!=='home'&&<div id="guest" className="cbx">
    {stage==='doors'&&<section className="doors"><h2>{t('d.q')}</h2><div className="dr">{([['explore','d.explore'],['try','d.try'],['mine','d.mine']] as const).map(([k,l])=><Switch key={k} label={t(l)} sub={t(l+'.s')} onActivate={()=>go(k)}/>)}</div></section>}
    {stage==='explore'&&<><p className="ms-tour">{t('ms.tour')}</p><Scene mode="customer" real={false} airports={ap} onState={setSt}/><Mission/><section className="doors" style={{minHeight:0}}><Switch primary label={t('d.tryit')} onActivate={()=>go('try')}/><button className="g" onClick={()=>go('home')}>{t('d.back')}</button></section></>}
