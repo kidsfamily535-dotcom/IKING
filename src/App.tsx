@@ -101,6 +101,8 @@ export default function App(){
  const run=async()=>{setSay('');setSay(await api.runPass(setSt))};
  const staff=role==='admin',table=op.filter(o=>o.status==='ACTIVATION_PENDING');
  const live=op.find(o=>o.availability==='CONFIRMED');
+ // العميل بعد الدخول: غرفته وحدها بروح الصفحة الافتتاحية، بلا افتتاحية ولا جولة فوقها (إلا إن فتح «ما تستطيعه العين»)
+ if(role==='customer'&&stage!=='explore')return <Room airports={ap} real={real}/>;
  return <>
   {(role||staffMode)&&<div className="pill">{real?t('pill.live'):t('pill.demo')}</div>}<LangSwitch/>
   <CinemaHome real={real} lang={lang}/>

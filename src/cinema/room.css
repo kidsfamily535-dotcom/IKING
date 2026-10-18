@@ -1,0 +1,63 @@
+/* غرفة العميل «رحلتي». تستعير عالم الصفحة الافتتاحية (.cn) وتعيد تلوين ما بداخلها دون المساس بوظائفه.
+   كل القواعد بالبادئة .rm-cn كي لا تتأثر بقية التطبيق. */
+.rm.rm-cn{--ink:#f4efe4;--gold:#d9bf86;--dim:#c4b894;--line:rgba(217,191,134,.2);--blue:#9bb8d6;--t-ink:#f4efe4;--t-accent:#d9bf86;--t-surf:#0b111c;
+ color-scheme:dark;display:block;min-height:100vh;min-height:100svh;max-width:none;margin:0;padding:0;gap:0;text-align:start;align-items:stretch;justify-content:flex-start;
+ font:300 18px/1.7 Tajawal,'Inter',system-ui,sans-serif;color:var(--ink)}
+.rm-cn *,.rm-cn *::before,.rm-cn *::after{box-sizing:border-box}
+.rm-cn .rq-bg{filter:brightness(.7) saturate(1.1)}
+.rm-cn .cn-shade{position:fixed;background:radial-gradient(110% 80% at 50% 60%,rgba(2,4,10,.3) 0,rgba(2,4,10,.86) 100%)}
+.rm-cn .cn-grain{position:fixed}
+.rm-top{display:flex;align-items:center;justify-content:space-between;gap:18px;padding:64px clamp(18px,4vw,48px) 0}
+.rm-top .rq-brand{white-space:nowrap}
+.rm-prog{display:flex;gap:6px;list-style:none;margin:0;padding:0}
+.rm.rm-cn .rm-prog button{width:clamp(22px,5vw,38px);height:22px;min-width:0;padding:0;border:0;background:none;border-radius:0;display:grid;align-items:center;cursor:pointer;box-shadow:none}
+.rm.rm-cn .rm-prog button::before{content:'';height:2px;background:rgba(217,191,134,.25);transition:background .6s}
+.rm.rm-cn .rm-prog button.on::before{background:var(--gold)}
+.rm.rm-cn .rm-prog button:focus-visible{outline:2px solid var(--champ);outline-offset:2px}
+.rm-main{max-width:680px;margin:0 auto;padding:clamp(24px,8vh,96px) 22px 150px}
+.rm-cn .chip{display:inline-block;margin:0 0 18px;font-size:13px;color:#e8cf94;border:1px solid rgba(217,191,134,.4);border-radius:99px;padding:3px 14px}
+.rm.rm-cn .pg{display:grid;justify-items:start;gap:18px;width:100%;animation:cnIn .9s ease both}
+.rm.rm-cn .pg>.gl{color:var(--gold);width:48px;height:48px;opacity:.95}
+.rm.rm-cn .big{margin:0;font:500 clamp(40px,7vw,74px)/1.14 'Cormorant Garamond',Georgia,serif;letter-spacing:0;color:var(--champ);overflow-wrap:anywhere}
+.rm.ar.rm-cn .big{font:700 clamp(38px,6.4vw,68px)/1.25 Amiri,serif}
+.rm.rm-cn .rt{margin:-4px 0 0;font-size:clamp(20px,3vw,26px);color:var(--gold)}
+.rm.rm-cn .dim{color:var(--dim);margin:0;max-width:40em}.rm.rm-cn .sm{font-size:15px}
+.rm.rm-cn ul{width:100%;gap:0;margin-top:6px}
+.rm.rm-cn li{padding:14px 0;border-bottom:1px solid var(--line);color:#e3d9bd}.rm.rm-cn li:first-child{border-top:1px solid var(--line)}
+.rm.rm-cn li b{color:var(--champ);font-weight:400}
+.rm.rm-cn .tp{color:#efe6cf;font-size:21px}.rm.rm-cn .tp.on{color:var(--gold)}
+/* الأزرار: الأساسي ذهبي، و«g» حدّ ذهبي رفيع. تبقى المعاني كما هي (المختار = ذهبي). */
+.rm.rm-cn button{font:500 16px/1 Tajawal,'Inter',system-ui,sans-serif;min-height:46px;padding:0 24px;border-radius:99px;cursor:pointer;letter-spacing:.02em;
+ color:#16110a;background:linear-gradient(180deg,#f3e2b0,#c9a862 58%,#a98a4e);border:1px solid #f0dca6;box-shadow:0 10px 26px -10px rgba(0,0,0,.7);transition:transform .4s cubic-bezier(.2,.7,.2,1),background .4s,color .4s,border-color .4s}
+.rm.rm-cn button.g{color:var(--champ);background:rgba(2,4,10,.38);border:1px solid rgba(217,191,134,.42);box-shadow:none}
+.rm.rm-cn button.g:hover:not(:disabled){border-color:var(--gold);background:rgba(2,4,10,.6)}
+.rm.rm-cn button:disabled{opacity:.4;cursor:default}
+.rm.rm-cn button:focus-visible{outline:2px solid var(--champ);outline-offset:3px}
+.rm.rm-cn button.sm{min-height:38px;padding:0 16px;font-size:14px}
+.rm.rm-cn .tp,.rm.rm-cn li.mm button{all:unset}
+.rm.rm-cn .tp{cursor:pointer;color:#efe6cf;font:400 21px/1.5 Tajawal,sans-serif}.rm.rm-cn .tp.on{color:var(--gold)}.rm.rm-cn .tp:focus-visible{outline:2px solid var(--champ);outline-offset:3px}
+.rm.rm-cn li.mm button{cursor:pointer;min-height:38px;padding:0 16px;border-radius:99px;border:1px solid rgba(217,191,134,.42);color:var(--champ);font:500 14px/38px Tajawal,sans-serif}
+.rm.rm-cn .act{display:flex;flex-wrap:wrap;gap:10px;align-items:center;justify-content:flex-start;margin-top:8px}
+/* حقول الإدخال: خط سفلي ذهبي كما في شاشة الطلب */
+.rm.rm-cn input:not([type=checkbox]),.rm.rm-cn select{width:100%;background:none;border:0;border-bottom:1px solid rgba(217,191,134,.45);border-radius:0;padding:10px 2px;min-height:46px;color:var(--ink);font:inherit;font-size:19px;outline:none;transition:border-color .4s}
+.rm.rm-cn input:focus,.rm.rm-cn select:focus{border-bottom-color:var(--champ)}
+.rm.rm-cn select option{background:#0b111c;color:var(--ink)}
+.rm.rm-cn label{color:var(--gold);font-size:15px}
+.rm.rm-cn input[type=datetime-local],.rm.rm-cn input[type=date]{color-scheme:dark}
+.rm.rm-cn .f2{display:grid;gap:14px}
+.rm.rm-cn .add{max-width:520px}
+.rm.rm-cn .nt{border:0;border-inline-start:1px solid var(--gold);border-radius:0;background:none;padding:2px 14px;color:#e3d9bd;font-size:16px}
+.rm.rm-cn .nt.e{border-inline-start-color:#9bb8d6}
+.rm.rm-cn .card{background:none;border:0;border-top:1px solid var(--line);border-radius:0;padding:18px 0 0}
+.rm.rm-cn .mono{font:400 13px/1.6 'JetBrains Mono',monospace;color:var(--gold);letter-spacing:.06em}
+.rm.rm-cn .badge{border-color:rgba(217,191,134,.4);color:var(--gold);background:none}.rm.rm-cn .badge.u{border-color:rgba(196,184,148,.35);color:var(--dim)}
+/* التنقل بين اللحظات: رجوع هادئ وزر متابعة ذهبي، ثابتان أسفل الشاشة */
+.rm.rm-cn .nv{position:fixed;inset-inline:0;bottom:0;z-index:6;width:auto;margin:0;display:flex;align-items:center;justify-content:space-between;gap:14px;padding:18px clamp(18px,4vw,48px) calc(18px + env(safe-area-inset-bottom,0px));background:linear-gradient(180deg,transparent,rgba(2,4,10,.86) 55%)}
+.rm.rm-cn .nv>button.g{border-color:transparent;background:none;color:var(--gold);padding:0 6px}
+.rm.rm-cn .nv>button:not(.g){min-width:150px;min-height:54px;font-size:18px}
+.rm-nm{flex:1;text-align:center;color:var(--dim);font-size:15px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+/* ما يأتي من المكوّنات الداخلية (طلباتي، ملفي) يرث الألوان من المتغيرات أعلاه */
+.rm.rm-cn .pf select,.rm.rm-cn .pf input{border-bottom-color:rgba(217,191,134,.45)}
+.rm.rm-cn .pf-h,.rm.rm-cn .pf-sec{color:var(--gold)}
+@media(max-width:560px){.rm-main{padding-top:20px}.rm.rm-cn .nv>button:not(.g){min-width:130px}}
+@media(prefers-reduced-motion:reduce){.rm.rm-cn .pg,.rm-cn .rq-bg{animation:none!important}}
