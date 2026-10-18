@@ -7,6 +7,9 @@ import Glyph from './Glyph';
 import Requests,{useMyRequests,reqNav} from './Requests';
 import Profile,{profNav} from './Profile';
 import Guardian,{CompanionChips} from './Guardian';
+import LangSwitch from './LangSwitch';
+import './cinema/cinema.css';import './cinema/request.css';import './cinema/room.css';
+const BRAND:Record<string,string>={ar:'عين الملك',en:'The King’s Eye',ru:'Око Короля',tr:'Kralın Gözü'};
 const LOC={ar:'ar-EG',en:'en-GB',tr:'tr-TR',ru:'ru-RU'} as const;
 const SAMPLE:MyTrip={id:'sim',origin:'RUH',destination:'JED',departureAt:null,createdAt:'',companions:[],priority:null};
 const NAME={now:'room.n0',wx:'room.n1',trips:'room.n2',mem:'j.mem.title'} as const;
@@ -14,7 +17,7 @@ type Page=keyof typeof NAME|'req'|'prof';
 // شاشة العميل بعد الدخول: لحظة واحدة في كل مرة، بنفس لغة الجولة. لا شيء هنا محاكاة إلا حين تكون real=false (وتُعلَّم بذلك).
 // الطقس والرحلات من القاعدة الحقيقية فقط. وما لا نعرفه نقول إننا لا نعرفه، وتنبيهات الرحلة غير مفعّلة ولا نوحي بغير ذلك.
 export default function Room({airports,real}:{airports:Airport[];real:boolean}){
- const {t,lang}=useI18n();
+ const {t,lang,dir}=useI18n();
  const [trips,setTrips]=useState<MyTrip[]|null>(real?null:[SAMPLE]),[loadErr,setLoadErr]=useState(false),[sel,setSel]=useState(0),[pg,setPg]=useState(0),[adding,setAdding]=useState(false);
  const [wx,setWx]=useState<RouteWx[]|null>(null),[wxErr,setWxErr]=useState(false);
  const [mem,setMem]=useState<MemoryItem[]>([]),[ed,setEd]=useState<string|null>(null),[val,setVal]=useState('');
@@ -51,7 +54,12 @@ export default function Room({airports,real}:{airports:Airport[];real:boolean}){
   const det=cur?[r.windKt!=null?t('wx.wind',{d:dirTxt(r.windDir)??'',k:r.windKt}):'',r.vis?t('wx.vis',{v:r.vis+' SM'}):'',r.ageMin!=null?t('wx.age',{n:r.ageMin}):''].filter(Boolean).join(' · '):'';
   return <li key={r.leg}><span>{t('wx.'+r.leg)} · {nm(r.code)}</span><b>{cur?t(r.cat?'wx.cat.'+r.cat:'wx.cat.none'):t('wx.unknown')}</b><span className={`badge${cur?'':' u'}`}>{cur?t('b.live'):t('b.waiting')}</span>{det&&<small>{det}</small>}</li>};
  const memV=(m:MemoryItem)=>m.value??t('memv.'+m.key);
- return <section className="rm" aria-live="polite">
+ return <div className={`rm rm-cn cn${lang==='ar'?' ar':''}`} dir={dir} lang={lang}>
+  <div className="rq-bg" aria-hidden="true"/><div className="cn-shade" aria-hidden="true"/><div className="cn-grain" aria-hidden="true"/>
+  <LangSwitch/>
+  <header className="rm-top"><span className="rq-brand">{BRAND[lang]||BRAND.en}</span>
+   <span className="rm-prog">{pages.map((p,i)=><button key={p} className={i<=pi?'on':''} aria-label={pageName(p)} aria-current={i===pi?'step':undefined} onClick={()=>setPg(i)}/>)}</span></header>
+  <main className="rm-main" aria-live="polite">
   {!real&&<span className="chip">{t('show.demo')}</span>}
   <div className="pg" key={page}>
    {page==='now'&&(cur?<><Glyph k="plane" s={64}/><h2 className="big">{t('room.trip',{d:nm(cur.destination)})}</h2><p className="rt">{route(cur)}</p>
@@ -74,10 +82,10 @@ export default function Room({airports,real}:{airports:Airport[];real:boolean}){
    {page==='mem'&&<><Glyph k="lock" s={56}/><h2 className="big">{t('j.mem.title')}</h2>
     <ul>{mem.map(m=><li className="mm" key={m.key}><span>{t('mem.'+m.key)}</span>{ed===m.key?<><input aria-label={t('mem.'+m.key)} value={val} onChange={e=>setVal(e.target.value)}/><button className="g sm" onClick={async()=>{await api.saveMemory(m.key,val);setMem(await api.listMemory());setEd(null)}}>{t('j.save')}</button></>:<><b>{memV(m)}</b><button className="g sm" onClick={()=>{setEd(m.key);setVal(memV(m))}}>{t('j.edit')}</button></>}</li>)}</ul>
     <p className="dim sm">{t('j.mem.note')}</p></>}
-  </div>
+  </div></main>
   <nav className="nv" aria-label={t('room.trips')}>
    <button className="g" disabled={pi===0} onClick={()=>setPg(pi-1)}>{t('d.back')}</button>
-   <span className="dots">{pages.map((p,i)=><button key={p} className={i===pi?'on':''} aria-label={pageName(p)} aria-current={i===pi} onClick={()=>setPg(i)}/>)}</span>
+   <span className="rm-nm">{pageName(page)}</span>
    <button disabled={pi===pages.length-1} onClick={()=>setPg(pi+1)}>{t('show.next')}</button>
-  </nav></section>;
+  </nav></div>;
 }
