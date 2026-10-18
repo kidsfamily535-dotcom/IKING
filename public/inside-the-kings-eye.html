@@ -9,19 +9,20 @@
 <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Amiri:wght@400;700&family=Cormorant+Garamond:ital,wght@0,500;1,400&family=Tajawal:wght@300;500&display=swap" rel="stylesheet">
 <style>
-:root{--void:#02040a;--gold:#d9bf86;--champ:#f6ebc9;--ink:#f4efe4}
+:root{--void:#02040a;--gold:#d9bf86;--champ:#f6ebc9;--ink:#f4efe4;--dim:#c9bd9c;--line:rgba(217,191,134,.22)}
 *{box-sizing:border-box;margin:0}
 html{scroll-snap-type:y proximity;background:var(--void);-webkit-text-size-adjust:100%}
 body{color:var(--ink);font:300 18px/1.7 Tajawal,system-ui,sans-serif;overflow-x:hidden}
 /* الكاميرا: صورة واحدة ثابتة تتحرك فوق الخليج مع كل فصل */
 .cam{position:fixed;inset:0;z-index:-3;overflow:hidden;background:var(--void)}
-.cam img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:50% 78%;filter:brightness(.78) saturate(1.1);transform-origin:50% 60%;transform:scale(1);transition:transform 2.6s cubic-bezier(.45,0,.15,1),transform-origin 2.6s cubic-bezier(.45,0,.15,1)}
-body[data-c="1"] .cam img{transform-origin:56% 74%;transform:scale(1.5)}
-body[data-c="2"] .cam img{transform-origin:47% 74%;transform:scale(2.1)}
-body[data-c="3"] .cam img{transform-origin:62% 74%;transform:scale(2.1)}
-body[data-c="4"] .cam img{transform-origin:50% 70%;transform:scale(1.2)}
-body[data-c="5"] .cam img{transform-origin:50% 78%;transform:scale(1)}
-.shade{position:fixed;inset:0;z-index:-2;pointer-events:none;background:radial-gradient(110% 85% at 50% 62%,rgba(2,4,10,.15) 0,rgba(2,4,10,.82) 100%),linear-gradient(180deg,rgba(2,4,10,.5),transparent 30%,transparent 62%,rgba(2,4,10,.72))}
+.cam img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:50% 78%;filter:brightness(.72) saturate(1.1);transform-origin:50% 60%;transform:scale(1);transition:transform 2.6s cubic-bezier(.45,0,.15,1),transform-origin 2.6s cubic-bezier(.45,0,.15,1)}
+body[data-c="1"] .cam img{transform-origin:56% 74%;transform:scale(1.45)}
+body[data-c="2"] .cam img{transform-origin:47% 74%;transform:scale(1.9)}
+body[data-c="3"] .cam img{transform-origin:62% 74%;transform:scale(1.6)}
+body[data-c="4"] .cam img{transform-origin:40% 70%;transform:scale(2.2)}
+body[data-c="5"] .cam img{transform-origin:50% 70%;transform:scale(1.2)}
+body[data-c="6"] .cam img{transform-origin:50% 78%;transform:scale(1)}
+.shade{position:fixed;inset:0;z-index:-2;pointer-events:none;background:radial-gradient(110% 85% at 50% 62%,rgba(2,4,10,.25) 0,rgba(2,4,10,.86) 100%),linear-gradient(180deg,rgba(2,4,10,.55),transparent 30%,transparent 60%,rgba(2,4,10,.75))}
 .grain{position:fixed;inset:0;z-index:-1;pointer-events:none;opacity:.08;mix-blend-mode:overlay;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='180' height='180'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='180' height='180' filter='url(%23n)'/%3E%3C/svg%3E")}
 header{position:fixed;inset:0 0 auto 0;z-index:10;display:flex;justify-content:space-between;align-items:center;gap:12px;padding:18px clamp(16px,4vw,44px);pointer-events:none}
 header>*{pointer-events:auto}
@@ -32,26 +33,52 @@ button:focus-visible,a:focus-visible{outline:2px solid var(--champ);outline-offs
 .nav{position:fixed;inset-inline-end:clamp(14px,2.4vw,34px);top:50%;transform:translateY(-50%);z-index:10;display:flex;flex-direction:column;gap:16px;list-style:none;padding:0}
 .nav a{display:block;width:3px;height:30px;background:rgba(217,191,134,.28);transition:background .6s,height .6s}.nav a.on{background:var(--gold);height:46px}
 section{min-height:100vh;min-height:100svh;scroll-snap-align:center;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:96px 28px 64px}
-.mo{width:clamp(150px,22vw,230px);height:auto;margin-bottom:clamp(14px,3vh,30px);overflow:visible}
+.mo{width:clamp(130px,18vw,200px);height:auto;margin-bottom:clamp(12px,2.6vh,26px);overflow:visible}
 .mo *{vector-effect:non-scaling-stroke}
-.t{font:500 clamp(40px,7vw,96px)/1.12 'Cormorant Garamond',Georgia,serif;color:var(--champ);background:linear-gradient(180deg,#fff7de,#ecd496 50%,#b8985a);-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;padding:.05em .08em .25em;filter:drop-shadow(0 6px 30px rgba(0,0,0,.6))}
-.l{margin-top:clamp(2px,1vh,12px);font:italic 400 clamp(19px,2.4vw,32px)/1.5 'Cormorant Garamond',Georgia,serif;color:#e3d3a8;text-shadow:0 2px 18px rgba(0,0,0,.75);max-width:28em}
-[dir=rtl] .t{font:700 clamp(46px,9vw,120px)/1.15 Amiri,serif;letter-spacing:0}[dir=rtl] .l{font:400 clamp(22px,2.8vw,38px)/1.6 Amiri,serif;font-style:normal}
+.t{font:500 clamp(36px,6vw,84px)/1.14 'Cormorant Garamond',Georgia,serif;color:var(--champ);background:linear-gradient(180deg,#fff7de,#ecd496 50%,#b8985a);-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;padding:.05em .08em .25em;filter:drop-shadow(0 6px 30px rgba(0,0,0,.6));max-width:16em}
+.l{margin-top:clamp(2px,1vh,10px);font:italic 400 clamp(18px,2.1vw,28px)/1.55 'Cormorant Garamond',Georgia,serif;color:#e3d3a8;text-shadow:0 2px 18px rgba(0,0,0,.8);max-width:30em}
+[dir=rtl] .t{font:700 clamp(40px,7.4vw,96px)/1.2 Amiri,serif;letter-spacing:0}[dir=rtl] .l{font:400 clamp(21px,2.5vw,34px)/1.65 Amiri,serif;font-style:normal}
 /* ظهور كل فصل مرة واحدة عند دخوله */
-.mo,.t,.l,.cta{opacity:0;transform:translateY(14px);transition:opacity 1.4s ease,transform 1.4s ease}
-section.in .mo{opacity:1;transform:none;transition-delay:.5s}section.in .t{opacity:1;transform:none;transition-delay:.9s}section.in .l{opacity:1;transform:none;transition-delay:1.4s}section.in .cta{opacity:1;transform:none;transition-delay:1.7s}
+.mo,.t,.l,.cta,.body{opacity:0;transform:translateY(14px);transition:opacity 1.4s ease,transform 1.4s ease}
+section.in .mo{opacity:1;transform:none;transition-delay:.5s}section.in .t{opacity:1;transform:none;transition-delay:.9s}section.in .l{opacity:1;transform:none;transition-delay:1.4s}section.in .cta,section.in .body{opacity:1;transform:none;transition-delay:1.8s}
+.body{width:100%;max-width:640px;margin-top:clamp(22px,4vh,40px);text-align:start}
 .cta{display:flex;flex-wrap:wrap;gap:14px 26px;justify-content:center;align-items:center;margin-top:clamp(24px,5vh,48px)}
-.btn{display:inline-flex;align-items:center;justify-content:center;min-height:56px;padding:0 44px;border-radius:99px;text-decoration:none;font:500 18px/1 Tajawal,sans-serif;transition:transform .5s,box-shadow .5s}
+.btn{display:inline-flex;align-items:center;justify-content:center;min-height:56px;padding:0 40px;border-radius:99px;text-decoration:none;font:500 18px/1 Tajawal,sans-serif;transition:transform .5s,box-shadow .5s}
 .btn.main{color:#16110a;background:linear-gradient(180deg,#f3e2b0,#c9a862 58%,#a98a4e);border:1px solid #f0dca6;box-shadow:0 18px 44px -10px rgba(0,0,0,.7),0 0 56px rgba(217,191,134,.24),inset 0 1px 0 rgba(255,255,255,.55)}.btn.main:hover{transform:translateY(-2px);box-shadow:0 24px 54px -10px #000,0 0 80px rgba(217,191,134,.4),inset 0 1px 0 rgba(255,255,255,.6)}
 .btn.quiet{color:var(--champ);border:1px solid rgba(217,191,134,.42);background:rgba(2,4,10,.4);backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px)}
+.btn.text{min-height:44px;padding:0 14px;color:var(--gold);font-size:16px}
 /* رسوم الفصول */
 .g{fill:none;stroke:var(--gold);stroke-width:1.3}.gf{fill:var(--gold)}
 .sweep{transform-origin:100px 100px;animation:sw 7s linear infinite}@keyframes sw{to{transform:rotate(360deg)}}
 .pu{transform-box:fill-box;transform-origin:center;animation:pu 3.4s ease-out infinite}@keyframes pu{from{transform:scale(.4);opacity:.9}to{transform:scale(3);opacity:0}}
 .dr{stroke-dasharray:400;stroke-dashoffset:400}section.in .dr{animation:dr 3s ease .8s forwards}@keyframes dr{to{stroke-dashoffset:0}}
 .dt{opacity:0}section.in .dt{animation:cnIn 1s ease forwards}@keyframes cnIn{to{opacity:1}}
-@media(max-width:560px){.brand{font-size:18px}.brand svg{width:26px}.langs button{min-width:36px;padding:0 9px}header{padding-top:14px}}
-@media(prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}.mo,.t,.l,.cta,.dt{opacity:1!important;transform:none!important}.dr{stroke-dashoffset:0}.cam img{transform:none!important}}
+/* اختيار المهمة: أكثر من مهمة ممكن، والنص تحتها يتغيّر لأن ما تراقبه العين يتغيّر */
+.chips{display:flex;flex-wrap:wrap;gap:8px;justify-content:center}
+.chips button{min-height:46px;padding:0 22px;border-radius:99px;border:1px solid rgba(217,191,134,.4);background:rgba(2,4,10,.4);color:#e3d3a8;font:500 16px Tajawal,sans-serif;cursor:pointer;transition:background .4s,color .4s,border-color .4s}
+.chips button[aria-pressed=true]{background:rgba(217,191,134,.2);border-color:var(--gold);color:var(--champ)}
+.ms{list-style:none;padding:0;margin-top:20px;min-height:6em}
+.ms li{padding:14px 0;border-bottom:1px solid var(--line);font-size:18px;color:#ece2c6;animation:cnIn .7s ease both;opacity:0}.ms li:first-child{border-top:1px solid var(--line)}
+.ms li b{color:var(--gold);font-weight:500;margin-inline-end:10px}
+.ms .hint{border:0;color:var(--dim);font-size:16px;text-align:center}
+.note{margin-top:14px;color:var(--dim);font-size:15.5px;text-align:center}
+/* الفريق في عين واحدة، والقواعد */
+.rows{list-style:none;padding:0}
+.rows li{display:flex;flex-wrap:wrap;gap:2px 18px;align-items:baseline;padding:15px 0;border-bottom:1px solid var(--line);font-size:18px;color:#e3d9bd}.rows li:first-child{border-top:1px solid var(--line)}
+.rows li b{flex:0 0 12em;color:var(--gold);font-weight:500}
+.rows.plain li{display:block}
+/* بطاقة «مراقبة رحلتك» توضيحية */
+.dos{border:1px solid rgba(217,191,134,.4);background:rgba(2,4,10,.55);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);padding:22px clamp(18px,4vw,34px) 24px;text-align:start}
+.dos .k{display:flex;justify-content:space-between;gap:12px;font:400 12px/1.4 'JetBrains Mono',ui-monospace,monospace;color:var(--gold);letter-spacing:.08em;direction:ltr}
+.dos .rt{display:flex;align-items:center;gap:14px;margin:22px 0 6px}
+.dos .c{font:500 44px/1 'Cormorant Garamond',Georgia,serif;color:var(--champ);direction:ltr}.dos small{display:block;font:300 14px/1.4 Tajawal,sans-serif;color:var(--dim);direction:inherit}
+.dos .ln{flex:1;height:0;border-top:1px dashed rgba(217,191,134,.6)}
+.dos .st{display:flex;align-items:center;gap:10px;margin:18px 0 14px;color:var(--champ);font-size:18px}
+.dos .st i{width:8px;height:8px;border-radius:50%;background:var(--gold);box-shadow:0 0 0 0 rgba(217,191,134,.6);animation:ping 2.6s ease-out infinite}@keyframes ping{to{box-shadow:0 0 0 12px rgba(217,191,134,0)}}
+.dos p{border-inline-start:1px solid var(--gold);padding:2px 14px;font-size:17px;color:#ece2c6}
+.cap{margin-top:12px;color:var(--dim);font-size:14px;text-align:center}
+@media(max-width:560px){.brand{font-size:18px}.brand svg{width:26px}.langs button{min-width:36px;padding:0 9px}header{padding-top:14px}.rows li b{flex-basis:100%}.dos .c{font-size:36px}.nav{display:none}}
+@media(prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}.mo,.t,.l,.cta,.dt,.body,.ms li{opacity:1!important;transform:none!important}.dr{stroke-dashoffset:0}.cam img{transform:none!important}}
 </style>
 </head>
 <body data-c="0">
@@ -62,30 +89,80 @@ section.in .mo{opacity:1;transform:none;transition-delay:.5s}section.in .t{opaci
 </header>
 <ul class="nav" id="nav" aria-hidden="true"></ul>
 <main id="m">
+<!-- 0 العين تراقب رحلتك -->
 <section id="s0"><svg class="mo" viewBox="0 0 200 200" aria-hidden="true"><circle class="g" cx="100" cy="100" r="30" opacity=".7"/><circle class="g" cx="100" cy="100" r="62" opacity=".5"/><circle class="g" cx="100" cy="100" r="94" opacity=".35"/><path class="sweep" d="M100 100L194 100A94 94 0 0 0 167 33Z" fill="#d9bf86" fill-opacity=".22"/><circle class="gf" cx="100" cy="100" r="3"/><circle class="pu g" cx="146" cy="62" r="5"/><circle class="gf" cx="146" cy="62" r="2.4"/><circle class="pu g" style="animation-delay:1.4s" cx="58" cy="128" r="5"/><circle class="gf" cx="58" cy="128" r="2.4"/></svg><h2 class="t"></h2><p class="l"></p></section>
-<section id="s1"><svg class="mo" viewBox="0 0 200 200" aria-hidden="true"><path class="g dr" d="M10 150C60 150 70 60 100 60S150 150 190 90"/><circle class="gf dt" style="animation-delay:1.2s" cx="38" cy="140" r="3.5"/><circle class="gf dt" style="animation-delay:1.9s" cx="82" cy="75" r="3.5"/><circle class="gf dt" style="animation-delay:2.6s" cx="128" cy="112" r="3.5"/><circle class="gf dt" style="animation-delay:3.3s" cx="186" cy="92" r="3.5"/></svg><h2 class="t"></h2><p class="l"></p></section>
-<section id="s2"><svg class="mo" viewBox="0 0 200 200" aria-hidden="true"><path class="g dr" d="M14 150Q90 20 176 70"/><path class="g dt" style="animation-delay:3s" d="M176 56l14 14-14 14-14-14z"/><circle class="pu g" cx="176" cy="70" r="8"/><circle class="gf" cx="14" cy="150" r="3.5"/></svg><h2 class="t"></h2><p class="l"></p></section>
-<section id="s3"><svg class="mo" viewBox="0 0 200 200" aria-hidden="true"><path class="g dr" d="M10 40Q90 40 100 100"/><path class="g dr" style="animation-delay:.3s" d="M190 40Q110 40 100 100"/><path class="g dr" d="M100 190V100"/><circle class="g dt" style="animation-delay:3s" cx="100" cy="100" r="16"/><circle class="gf dt" style="animation-delay:3s" cx="100" cy="100" r="4"/></svg><h2 class="t"></h2><p class="l"></p></section>
-<section id="s4"><svg class="mo" viewBox="0 0 40 24" aria-hidden="true"><path class="g" d="M2 12C9 2 31 2 38 12 31 22 9 22 2 12Z"/><circle class="gf" cx="20" cy="12" r="4.6"/><circle cx="20" cy="12" r="1.8" fill="#02040a"/><circle class="pu g" cx="20" cy="12" r="5"/></svg><h2 class="t"></h2><p class="l"></p></section>
-<section id="s5"><h2 class="t"></h2><div class="cta"><a class="btn main" id="go" href="/?view=cabin"></a><a class="btn quiet" id="bk" href="/"></a></div></section>
+<!-- 1 أخبر العين برحلتك -->
+<section id="s1"><svg class="mo" viewBox="0 0 200 200" aria-hidden="true"><path class="g dr" d="M14 150Q90 20 186 90"/><circle class="gf dt" style="animation-delay:.9s" cx="14" cy="150" r="4"/><circle class="gf dt" style="animation-delay:3.4s" cx="186" cy="90" r="4"/><path class="g dt" style="animation-delay:3.6s" d="M100 150v12M94 156h12" opacity=".0"/></svg><h2 class="t"></h2><p class="l"></p></section>
+<!-- 2 العين تفهم مهمتك -->
+<section id="s2"><h2 class="t"></h2><p class="l"></p>
+ <div class="body"><div class="chips" id="ch" role="group"></div><ul class="ms" id="ms" aria-live="polite"></ul><p class="note" id="mn"></p></div></section>
+<!-- 3 فريق كامل في عين واحدة -->
+<section id="s3"><h2 class="t"></h2><p class="l"></p><div class="body"><ul class="rows" id="tm"></ul></div></section>
+<!-- 4 تتكلم حين يكون لها سبب -->
+<section id="s4"><h2 class="t"></h2><p class="l"></p>
+ <div class="body"><div class="dos" role="img" id="dos"><div class="k"><span>THE KING’S EYE</span><span id="dk"></span></div>
+  <div class="rt"><div><div class="c">JED</div><small id="da"></small></div><span class="ln" aria-hidden="true"></span><div style="text-align:end"><div class="c">LHR</div><small id="db"></small></div></div>
+  <div class="st"><i aria-hidden="true"></i><span id="ds"></span></div><p id="dm"></p></div><p class="cap" id="dc"></p></div></section>
+<!-- 5 لا تقول ما لا تعرف -->
+<section id="s5"><svg class="mo" viewBox="0 0 40 24" aria-hidden="true"><path class="g" d="M2 12C9 2 31 2 38 12 31 22 9 22 2 12Z"/><circle class="gf" cx="20" cy="12" r="4.6"/><circle cx="20" cy="12" r="1.8" fill="#02040a"/><circle class="pu g" cx="20" cy="12" r="5"/></svg><h2 class="t"></h2><div class="body"><ul class="rows plain" id="rl"></ul></div></section>
+<!-- 6 القرار لك -->
+<section id="s6"><h2 class="t"></h2><div class="cta"><a class="btn main" id="go" href="/?view=watch"></a><a class="btn quiet" id="ask" href="/?view=cabin"></a><a class="btn text" id="bk" href="/"></a></div></section>
 </main>
 <script>
 var X={
-ar:{n:'عين الملك',c:[['العين تراقب','«نرى ما قد يفوتك»'],['العين تفهمك','«رحلتك لها طابعها الخاص»'],['العين تكتشف الفرص','«الفرصة المناسبة، في الوقت المناسب»'],['العين تنسّق الرحلة','«من الطائرة إلى وجهتك»'],['العين ترافقك','«عين واحدة ترافق رحلتك»']],end:'القرار لك دائمًا',go:'افتح عينك',bk:'الرئيسية'},
-en:{n:'The King’s Eye',c:[['The Eye watches','“We see what you might miss”'],['The Eye understands you','“Your journey has its own character”'],['The Eye finds opportunities','“The right opportunity, at the right time”'],['The Eye coordinates the trip','“From the aircraft to your destination”'],['The Eye accompanies you','“One eye, with you throughout”']],end:'The decision is always yours',go:'Open your eye',bk:'Home'},
-ru:{n:'Око Короля',c:[['Око наблюдает','«Мы видим то, что можно упустить»'],['Око понимает вас','«У вашего путешествия свой характер»'],['Око находит возможности','«Нужная возможность в нужный момент»'],['Око координирует поездку','«От самолёта до пункта назначения»'],['Око сопровождает вас','«Одно Око рядом на всём пути»']],end:'Решение всегда за вами',go:'Откройте око',bk:'Главная'},
-tr:{n:'Kralın Gözü',c:[['Göz izler','“Gözden kaçabilecekleri biz görürüz”'],['Göz sizi anlar','“Yolculuğunuzun kendine özgü bir karakteri var”'],['Göz fırsatları bulur','“Doğru fırsat, doğru zamanda”'],['Göz yolculuğu koordine eder','“Uçaktan varış noktanıza”'],['Göz size eşlik eder','“Tek göz, yolculuğunuz boyunca yanınızda”']],end:'Karar her zaman sizin',go:'Gözünüzü açın',bk:'Ana sayfa'}};
-var $=function(i){return document.getElementById(i)},secs=[].slice.call(document.querySelectorAll('section'));
+ar:{n:'عين الملك',
+ s:[['العين تراقب رحلتك','أخبرها برحلتك، وتعرف هي ما يستحق انتباهك.'],['أخبر العين برحلتك','مسار وتاريخ، وسؤال واحد على الأكثر. ويمكنك تخطيه.'],['العين تفهم مهمة رحلتك','الرحلة نفسها، لكن المراقبة تتغيّر. اختر مهمة أو أكثر.'],['فريق كامل في عين واحدة','ولا تنفّذ شيئًا إلا بموافقتك.'],['تتكلم حين يكون لها سبب','لا مع كل تحديث. فقط حين يؤثر شيء في رحلتك.']],
+ m:[['عمل','تحمي موعد اجتماعك، وتراقب ما يغيّر وقت وصولك.'],['عائلة','تُبقي الرحلة هادئة، وتراقب الانتظار والتنقلات وما اخترتَ أن تشاركه من احتياجات.'],['فعالية','توصلك في الوقت المناسب، وتراقب توقيت الفعالية ووقت الانتقال والقيود التشغيلية.'],['علاج','تنسّق مع من يعتني بك، وتراقب التغييرات والترتيبات الأرضية التي زوّدتها بها. ولا تقرّر أبدًا صلاحية أحد للطيران.'],['عاجلة','تتحرك بأقصى سرعة واقعية، وتراقب أقرب الخيارات القابلة للتنفيذ والتوافر المؤكد، وتستدعي إنسانًا بسرعة.']],
+ hint:'اختر مهمة لترى ما الذي تراقبه العين.',mn:'إن لم تذكر سبب السفر، تعمل العين بما لديها دون افتراض.',
+ tm:[['تدير وقتك','تقرأ مواعيدك وتنبّهك إلى التعارض'],['تربط الأطراف','الفندق والسيارة والمشغّل في خطة واحدة'],['تعرف السفر','تقارن الوقت والراحة والتكلفة'],['تتذكر ما تخبرها به','تفضيلاتك وحدها، وأنت من يعدّلها'],['تحفظ خصوصيتك','لا تشارك شيئًا دون إذنك']],
+ dk:'مراقبة رحلتك',da:'جدة',db:'لندن',ds:'رحلتك تحت المراقبة',dm:'«أنا أراقب رحلتك. إذا ظهر تغيير مهم أو فرصة تستحق النظر، سأوضح لك ما نعرفه وما أقترحه، قبل اتخاذ أي خطوة نيابةً عنك.»',dc:'نموذج تصميم توضيحي؛ لا يعرض حالة رحلة حقيقية.',
+ h5:'العين لا تقول ما لا تعرف',rl:['لا تقول «كل شيء آمن» لمجرد أن المصادر صامتة.','لا تطرح طائرة خاصة إلا حين تنفعك فعلًا، بعد التحقق ومراجعة إنسان.','وإن لم تناسبك، تستمر المراقبة كما هي.'],
+ end:'القرار لك دائمًا',go:'راقب رحلتك مجانًا',ask:'اطلب رحلة',bk:'الرئيسية'},
+en:{n:'The King’s Eye',
+ s:[['The Eye watches your journey','Tell it about your trip. It knows what deserves your attention.'],['Tell the Eye your trip','A route and a date, and one question at most. You can skip it.'],['The Eye understands your mission','Same journey, different watch. Choose one mission, or several.'],['A whole team in one eye','It never acts without your approval.'],['It speaks when it has a reason','Not on every update. Only when something affects your journey.']],
+ m:[['Business','Protects your meeting. Watches what changes your arrival time.'],['Family','Keeps the trip easy. Watches waiting, transfers and the needs you choose to share.'],['Event','Gets you there on time. Watches event timing, travel time and operational limits.'],['Medical','Coordinates with those caring for you. Watches the changes and ground arrangements you gave it. It never judges anyone’s fitness to fly.'],['Urgent','Moves as fast as is real. Watches the nearest workable options and confirmed availability, and brings in a person quickly.']],
+ hint:'Pick a mission to see what the Eye watches.',mn:'If you don’t say why you’re travelling, the Eye works with what it has and assumes nothing.',
+ tm:[['Manages your time','Reads your calendar and flags clashes'],['Connects everyone','Hotel, car and operator in one plan'],['Knows travel','Compares time, comfort and cost'],['Remembers what you tell it','Only your own preferences, and you edit them'],['Keeps your privacy','Shares nothing without your permission']],
+ dk:'YOUR JOURNEY WATCH',da:'Jeddah',db:'London',ds:'Your journey is under watch',dm:'“I’m watching your journey. If something important changes, or an opportunity is worth considering, I’ll tell you what we know and what I suggest, before I do anything on your behalf.”',dc:'Illustrative design. Not a real flight status.',
+ h5:'The Eye never says what it doesn’t know',rl:['It never says “all clear” just because sources are silent.','A private aircraft is raised only when it truly helps, after verification and a person’s review.','If it doesn’t suit you, the watching simply continues.'],
+ end:'The decision is always yours',go:'Watch my trip free',ask:'Request a flight',bk:'Home'},
+ru:{n:'Око Короля',
+ s:[['Око следит за вашей поездкой','Расскажите о поездке. Око поймёт, что заслуживает вашего внимания.'],['Расскажите Оку о поездке','Маршрут и дата, и не больше одного вопроса. Его можно пропустить.'],['Око понимает цель поездки','Та же поездка, но иное наблюдение. Выберите одну цель или несколько.'],['Целая команда в одном Оке','Оно ничего не делает без вашего согласия.'],['Око говорит, когда есть причина','Не при каждом обновлении. Только когда что-то влияет на вашу поездку.']],
+ m:[['Работа','Бережёт время встречи. Следит за тем, что меняет время вашего прибытия.'],['Семья','Делает поездку спокойной. Следит за ожиданием, трансферами и теми потребностями, о которых вы решили сообщить.'],['Событие','Приводит вовремя. Следит за временем события, дорогой и операционными ограничениями.'],['Лечение','Согласует с теми, кто о вас заботится. Следит за изменениями и наземной организацией, о которых вы сообщили. Око никогда не решает, можно ли кому-то лететь.'],['Срочно','Двигается так быстро, как это реально. Следит за ближайшими осуществимыми вариантами и подтверждённой доступностью и быстро подключает человека.']],
+ hint:'Выберите цель, чтобы увидеть, за чем следит Око.',mn:'Если вы не указали причину поездки, Око работает с тем, что есть, и ничего не додумывает.',
+ tm:[['Управляет временем','Читает календарь и отмечает конфликты'],['Соединяет всех','Отель, авто и оператор в одном плане'],['Знает путешествия','Сравнивает время, комфорт и стоимость'],['Помнит то, что вы сказали','Только ваши предпочтения, и вы можете их менять'],['Хранит приватность','Ничем не делится без вашего разрешения']],
+ dk:'НАБЛЮДЕНИЕ ЗА ПОЕЗДКОЙ',da:'Джидда',db:'Лондон',ds:'Ваша поездка под наблюдением',dm:'«Я слежу за вашей поездкой. Если произойдёт что-то важное или появится возможность, достойная внимания, я объясню, что нам известно и что я предлагаю, прежде чем что-либо делать от вашего имени.»',dc:'Иллюстративный макет. Это не статус реального рейса.',
+ h5:'Око не говорит того, чего не знает',rl:['Оно не говорит «всё в порядке» только потому, что источники молчат.','Частный самолёт предлагается лишь тогда, когда он действительно полезен, после проверки и просмотра человеком.','Если не подходит, наблюдение просто продолжается.'],
+ end:'Решение всегда за вами',go:'Следить за поездкой бесплатно',ask:'Запросить рейс',bk:'Главная'},
+tr:{n:'Kralın Gözü',
+ s:[['Göz yolculuğunuzu izler','Ona yolculuğunuzu anlatın. Dikkatinizi neyin hak ettiğini o bilir.'],['Göze yolculuğunuzu anlatın','Bir rota ve bir tarih, en fazla bir soru. İsterseniz atlayın.'],['Göz yolculuğunuzun amacını anlar','Aynı yolculuk, farklı bir izleme. Bir amaç ya da birkaçını seçin.'],['Tek gözde tam bir ekip','Onayınız olmadan hiçbir şey yapmaz.'],['Bir nedeni olduğunda konuşur','Her güncellemede değil. Yalnızca yolculuğunuzu etkileyen bir şey olduğunda.']],
+ m:[['İş','Toplantınızı korur. Varış saatinizi değiştirenleri izler.'],['Aile','Yolculuğu rahat tutar. Bekleme, transferler ve paylaşmayı seçtiğiniz ihtiyaçları izler.'],['Etkinlik','Zamanında ulaştırır. Etkinlik saatini, yol süresini ve operasyonel kısıtları izler.'],['Tedavi','Sizinle ilgilenenlerle eşgüdüm sağlar. Verdiğiniz değişiklikleri ve yer düzenlemelerini izler. Kimsenin uçmaya uygunluğuna asla kendisi karar vermez.'],['Acil','Gerçekçi olduğu kadar hızlı hareket eder. En yakın uygulanabilir seçenekleri ve doğrulanmış müsaitliği izler, hızla bir insanı devreye alır.']],
+ hint:'Göz’ün neyi izlediğini görmek için bir amaç seçin.',mn:'Yolculuk nedenini söylemezseniz Göz elindekiyle çalışır ve hiçbir şey varsaymaz.',
+ tm:[['Zamanınızı yönetir','Takviminizi okur, çakışmaları bildirir'],['Herkesi bağlar','Otel, araç ve operatör tek planda'],['Seyahati bilir','Süre, konfor ve maliyeti karşılaştırır'],['Söylediklerinizi hatırlar','Yalnızca kendi tercihleriniz, onları siz düzenlersiniz'],['Gizliliğinizi korur','İzniniz olmadan hiçbir şey paylaşmaz']],
+ dk:'YOLCULUK İZLEME',da:'Cidde',db:'Londra',ds:'Yolculuğunuz izleniyor',dm:'“Yolculuğunuzu izliyorum. Önemli bir değişiklik olursa ya da değerlendirmeye değer bir fırsat çıkarsa, sizin adınıza bir adım atmadan önce neyi bildiğimizi ve ne önerdiğimi anlatırım.”',dc:'Gösterim amaçlı tasarım. Gerçek bir uçuş durumu değildir.',
+ h5:'Göz bilmediğini söylemez',rl:['Kaynaklar sessiz diye “her şey yolunda” demez.','Özel uçak yalnızca gerçekten yararlı olduğunda, doğrulama ve bir insanın incelemesinden sonra gündeme gelir.','Size uymazsa izleme olduğu gibi sürer.'],
+ end:'Karar her zaman sizin',go:'Yolculuğumu ücretsiz izle',ask:'Uçuş talep et',bk:'Ana sayfa'}};
+var $=function(i){return document.getElementById(i)},secs=[].slice.call(document.querySelectorAll('section')),pick={};
 var L=(new URLSearchParams(location.search).get('lang'));try{L=X[L]?L:(X[localStorage.getItem('iking_lang')]?localStorage.getItem('iking_lang'):'ar')}catch(e){L=X[L]?L:'ar'}
+function el(tag,txt,cls){var e=document.createElement(tag);if(txt!=null)e.textContent=txt;if(cls)e.className=cls;return e}
+function missions(){var d=X[L],ms=$('ms');ms.textContent='';var any=false;
+ d.m.forEach(function(m,i){if(pick[i]){any=true;var li=el('li');li.appendChild(el('b',m[0]));li.appendChild(document.createTextNode(m[1]));ms.appendChild(li)}});
+ if(!any)ms.appendChild(el('li',d.hint,'hint'));
+ [].forEach.call($('ch').children,function(b,i){b.setAttribute('aria-pressed',!!pick[i])})}
 function apply(l){L=l;var d=X[l];document.documentElement.lang=l;document.documentElement.dir=l==='ar'?'rtl':'ltr';document.title=d.n+' — THE KING\'S EYE';$('bt').textContent=d.n;
- secs.slice(0,5).forEach(function(s,i){s.querySelector('.t').textContent=d.c[i][0];s.querySelector('.l').textContent=d.c[i][1]});
- secs[5].querySelector('.t').textContent=d.end;$('go').textContent=d.go;$('bk').textContent=d.bk;
+ [0,1,2,3,4].forEach(function(i){secs[i].querySelector('.t').textContent=d.s[i][0];secs[i].querySelector('.l').textContent=d.s[i][1]});
+ var c=$('ch');c.textContent='';c.setAttribute('aria-label',d.s[2][0]);d.m.forEach(function(m,i){var b=el('button',m[0]);b.type='button';b.onclick=function(){pick[i]=!pick[i];missions()};c.appendChild(b)});
+ missions();$('mn').textContent=d.mn;
+ var tm=$('tm');tm.textContent='';d.tm.forEach(function(r){var li=el('li');li.appendChild(el('b',r[0]));li.appendChild(document.createTextNode(r[1]));tm.appendChild(li)});
+ $('dk').textContent=d.dk;$('da').textContent=d.da;$('db').textContent=d.db;$('ds').textContent=d.ds;$('dm').textContent=d.dm;$('dc').textContent=d.dc;$('dos').setAttribute('aria-label',d.dc);
+ secs[5].querySelector('.t').textContent=d.h5;var rl=$('rl');rl.textContent='';d.rl.forEach(function(r){rl.appendChild(el('li',r))});
+ secs[6].querySelector('.t').textContent=d.end;$('go').textContent=d.go;$('ask').textContent=d.ask;$('bk').textContent=d.bk;
  [].forEach.call($('langs').children,function(b){b.setAttribute('aria-pressed',b.dataset.l===l)});
  try{localStorage.setItem('iking_lang',l)}catch(e){}}
 $('langs').onclick=function(e){var l=e.target.dataset&&e.target.dataset.l;if(l)apply(l)};
 secs.forEach(function(s,i){var a=document.createElement('li'),k=document.createElement('a');k.href='#s'+i;a.appendChild(k);$('nav').appendChild(a)});
 var dots=[].slice.call($('nav').querySelectorAll('a'));
-var io=new IntersectionObserver(function(es){es.forEach(function(e){if(e.isIntersecting){var i=secs.indexOf(e.target);e.target.classList.add('in');document.body.dataset.c=i;dots.forEach(function(d,j){d.classList.toggle('on',j===i)})}})},{threshold:.55});
+var io=new IntersectionObserver(function(es){es.forEach(function(e){if(e.isIntersecting){var i=secs.indexOf(e.target);e.target.classList.add('in');document.body.dataset.c=i;dots.forEach(function(d,j){d.classList.toggle('on',j===i)})}})},{threshold:.4});
 secs.forEach(function(s){io.observe(s)});
 apply(L);
 </script>
