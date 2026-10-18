@@ -1,0 +1,45 @@
+/* «راقب رحلتك»: نفس عالم الصفحة الافتتاحية (خليج ليلي، ذهب، عناوين كبيرة). المنطق والبيانات كما هي، والأنماط بالبادئة .wt-cn. */
+.wt.wt.wt-cn{--t-ink:#f4efe4;--t-accent:#d9bf86;--t-accent-hi:#f6ebc9;--t-accent-lo:#a98a4e;--t-night:#02040a;--t-surf:#0b111c;--n1:#02040a;--n2:#02040a;--glow:#d9bf86;--ink:#f4efe4;--dim:#c9bd9c;--ln:rgba(217,191,134,.22);--warn:#f0b29a;--champ:#f6ebc9;
+ background:#02040a;font:300 18px/1.7 Tajawal,'Inter',system-ui,sans-serif}
+.wt.wt.wt-cn .rq-bg{filter:brightness(.62) saturate(1.1)}
+.wt.wt.wt-cn .rq-bg,.wt.wt.wt-cn .cn-shade,.wt.wt.wt-cn .cn-grain{position:fixed}
+.wt.wt.wt-cn .cn-shade{background:radial-gradient(110% 80% at 50% 50%,rgba(2,4,10,.3),rgba(2,4,10,.9))}
+.wt.wt.wt-cn .wrap{position:relative;max-width:660px}
+.wt.wt.wt-cn header{padding-top:12px}
+.wt.wt.wt-cn .mark{font:500 clamp(22px,2.4vw,30px)/1 'Cormorant Garamond',Georgia,serif;letter-spacing:0;color:var(--glow)}
+.wt-cn.ar .mark{font:700 clamp(24px,2.6vw,32px)/1 Amiri,serif}
+.wt.wt.wt-cn .wr{margin-top:8px}
+.wt.wt.wt-cn h1{margin:6px 0 0;font:500 clamp(40px,7vw,68px)/1.14 'Cormorant Garamond',Georgia,serif;letter-spacing:0;color:var(--champ)}
+.wt-cn.ar h1{font:700 clamp(38px,6.6vw,64px)/1.25 Amiri,serif}
+.wt.wt.wt-cn h2{font:500 20px/1.4 Tajawal,sans-serif;color:var(--glow);margin-bottom:4px}
+.wt.wt.wt-cn .lead{font-size:clamp(19px,2.6vw,22px);color:#eadfc3}
+.wt.wt.wt-cn .dim{color:var(--dim)}
+/* الحقول: خط سفلي ذهبي كما في شاشة الطلب */
+.wt.wt.wt-cn label{color:var(--glow);font-size:15px}
+.wt.wt.wt-cn select,.wt.wt.wt-cn input[type=datetime-local],.wt.wt.wt-cn input[type=email]{background:none;border:0;border-bottom:1px solid rgba(217,191,134,.45);border-radius:0;padding:8px 2px;min-height:48px;color:var(--ink);font-size:19px;outline:none;transition:border-color .4s;color-scheme:dark}
+.wt.wt.wt-cn select:focus,.wt.wt.wt-cn input:focus{border-bottom-color:var(--champ)}
+.wt.wt.wt-cn select option{background:#0b111c;color:var(--ink)}
+.wt.wt.wt-cn .est{color:#e3d9bd}.wt-cn .est em{color:var(--glow);border-color:rgba(217,191,134,.4)}
+/* الطقس والبدائل: خطوط رفيعة بلا صناديق */
+.wt.wt.wt-cn .wxl li{border-top-color:var(--ln)}
+.wt.wt.wt-cn .wxl .k{color:var(--glow)}.wt-cn .wxl b{font-size:20px;color:#efe6cf}.wt-cn .wxl b.w{color:var(--warn)}
+.wt.wt.wt-cn .alt{background:none;border-inline-start:1px solid var(--glow);color:#e3d9bd}
+.wt.wt.wt-cn .keep{border-top-color:var(--ln)}
+.wt.wt.wt-cn .does p{color:#d8ccb0}
+/* الأزرار الرقيقة: حدّ ذهبي رفيع وحبة دائرية */
+.wt.wt.wt-cn .chips button{border-radius:99px;border-color:rgba(217,191,134,.42);color:var(--champ);background:none}
+.wt.wt.wt-cn .chips button.on{background:rgba(217,191,134,.18);border-color:var(--glow);color:var(--champ)}
+.wt.wt.wt-cn button.sw{background:rgba(2,4,10,.45);-webkit-backdrop-filter:blur(8px);backdrop-filter:blur(8px)}
+.wt.wt.wt-cn button.sw.primary{background:rgba(217,191,134,.12)}
+.wt.wt.wt-cn .tg{color:#d8ccb0}
+.wt.wt.wt-cn .arc .code{font-family:'Cormorant Garamond',Georgia,serif}
+.wt.wt.wt-cn :focus-visible{outline-color:var(--champ)}
+@media(prefers-reduced-motion:reduce){.wt-cn .rq-bg{animation:none!important}}
+
+.wt.wt.wt-cn .wrap{padding-top:0}
+.wt.wt.wt-cn header{padding-top:max(52px,env(safe-area-inset-top))}
+.wt.wt.wt-cn .wr{width:min(100%,36dvh,360px);margin:0 auto}
+.wt.wt.wt-cn main{display:block;text-align:start}
+.wt.wt.wt-cn h1{margin-top:14px}
+.wt.wt.wt-cn .est{margin:2px 0}
+@media(max-width:480px){.wt.wt.wt-cn header{padding-top:max(56px,env(safe-area-inset-top))}}
