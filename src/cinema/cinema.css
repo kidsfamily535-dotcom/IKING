@@ -31,3 +31,6 @@
 @keyframes cnPush{from{transform:scale(1)}to{transform:scale(1.08)}}
 @media(max-width:560px){.cn-btn{min-height:54px;padding:0 36px}.cn-copy{padding-top:clamp(120px,20vh,190px)}.cn-par{inset:-8px}}
 @media(prefers-reduced-motion:reduce){.cn *,.cn{animation:none!important;transition:none!important}.cn-mark,.cn .cn-title,.cn .cn-line,.cn-cta{opacity:1!important;filter:none!important}.cn-lid{display:none}}
+/* مبدّل اللغة فوق الخلفية الداكنة: زجاج داكن بدل الشرائح الفاتحة */
+:root:has(.cn) .lang button{background:rgba(2,4,10,.55);color:#e3d3a8;border-color:rgba(217,191,134,.4);-webkit-backdrop-filter:blur(8px);backdrop-filter:blur(8px)}
+:root:has(.cn) .lang button.on{background:#d9bf86;color:#171717;border-color:#d9bf86}
