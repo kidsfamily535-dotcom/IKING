@@ -17,3 +17,10 @@ export function useMedia(cat:string):Media|null{
  useEffect(()=>{let on=true;load().then(x=>on&&setM(x));return()=>{on=false}},[]);
  return m[REP[cat]]??null;
 }
+
+// كل الفئات الخمس دفعة واحدة (مراجع نوع الطائرة وليست توافرًا)
+export function useFleet():Record<string,Media|null>{
+ const [m,setM]=useState<Record<string,Media>>({});
+ useEffect(()=>{let on=true;load().then(x=>on&&setM(x));return()=>{on=false}},[]);
+ return Object.fromEntries(Object.keys(REP).map(k=>[k,m[REP[k]]??null]));
+}
