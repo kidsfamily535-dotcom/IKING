@@ -49,6 +49,10 @@ html:not(:lang(ar)) h1{font:500 clamp(32px,6vw,48px)/1.15 'Cormorant Garamond',G
 .live{display:flex;align-items:center;gap:8px;color:var(--sig);font-size:15px}.live i{width:7px;height:7px;border-radius:50%;background:var(--sig);animation:p 1.8s ease-in-out infinite}
 @keyframes p{50%{opacity:.35}}
 .tl{list-style:none;padding:0;width:100%;text-align:start}.tl li{padding:11px 0;border-bottom:1px solid var(--line);color:#e3d9bd;font-size:17px;display:flex;justify-content:space-between;gap:12px}.tl li:first-child{border-top:1px solid var(--line)}.tl li span{color:var(--gold);white-space:nowrap}
+details.more{width:100%;border-top:1px solid var(--line);padding-top:4px}details.more summary{cursor:pointer;list-style:none;padding:10px 0;color:var(--gold);font-size:16px;display:flex;justify-content:space-between;align-items:center}details.more summary::-webkit-details-marker{display:none}details.more summary::after{content:"+";font-size:22px;line-height:1}details.more[open] summary::after{content:"−"}
+.eyec{width:100%;background:rgba(2,4,10,.5);backdrop-filter:blur(8px);border:1px solid var(--line);border-radius:18px;padding:14px 18px 6px;text-align:start;animation:in .5s ease both}.eyec>b{font:700 24px/1.3 Amiri,serif;color:var(--champ)}html:not(:lang(ar)) .eyec>b{font:500 25px/1.3 'Cormorant Garamond',serif}
+.cap{margin-top:12px;color:var(--gold);font-size:14.5px}.lim{margin-top:10px;font-size:14.5px;color:var(--dim);border-inline-start:1px solid var(--line);padding-inline-start:12px}.lim.sp{color:#e6c36a;border-inline-start-color:#e6c36a}
+.fx{list-style:none;padding:0;margin-top:8px;display:grid;gap:6px;font-size:14.5px;color:var(--dim);text-align:start}.fx b{font-weight:500;color:var(--champ)}.opt:disabled{opacity:.35;cursor:default}.tabs{margin-top:2px}@media(max-width:560px){.tabs{display:grid;grid-template-columns:1fr 1fr}.tabs .opt{padding:8px 10px;text-align:center;line-height:1.3}}
 button:focus-visible,a:focus-visible{outline:2px solid var(--champ);outline-offset:3px}
 @media(max-width:560px){body{font-size:17px}.brand{font-size:20px}.prog{max-width:130px}.opt b{font-size:18px}.go,.q{padding:0 26px}}
 @media(prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
@@ -63,32 +67,33 @@ button:focus-visible,a:focus-visible{outline:2px solid var(--champ);outline-offs
  <p class="demo" id="demo"></p>
  <section class="ui" id="ui" aria-live="polite"></section>
 </main>
+<script src="/missions.js"></script>
 <script>
 (function(){
 var X={
 ar:{n:'عين الملك',demo:'نموذج توضيحي · لا بيانات رحلة حقيقية',from:'الرياض',to:'لندن',arr:'←',
- q0:'ما مهمّة رحلتك؟',m:['اجتماع','عائلة','فعالية','عاجلة'],start:'ابدأ',
+ q0:'ما مهمّة رحلتك؟',sub:'اختر حتى ثلاث مهام. العين تغيّر ما تراقبه وما تسألك عنه بحسب مهمتك.',watch:'ما تهتم به العين',ask:'ما قد تسألك عنه',cond:'ظروف تخص الرحلة',condsub:'تُضاف إلى المهمة ولا تغيّر سببها.',spec:'يُحوَّل هذا النوع إلى مسار متخصص مع مزوّد مؤهل، ولا يُعامَل كتشارتر عادي.',pri:'الرئيسية',ev4:'قد يتغير ما يمسّ هدف رحلتك.',start:'ابدأ',
  q1:'اخترتُ لك خيارين',oa:'الأبكر',da:'وصول 06:40 · قبل الموعد بثلاث ساعات',ob:'الأهدأ',db:'وصول 08:10 · وقت أوسع للراحة',pend:'بانتظار تأكيد المشغّل',ok:'اعتمد الطلب',safe:'لا يُرسل شيء قبل موافقتك.',
  q2:'ماذا أرتّب على الأرض؟',g:['سيارة عند الهبوط','استقبال في الصالة','غرفة جاهزة'],watch:'راقب رحلتي',
  fly:'الرحلة تحت المراقبة',ev:['قد يبطئ الانتقال إلى اجتماعك.','قد يطول انتظار العائلة عند الوصول.','قد يضيق وقتك قبل الفعالية.','قد يتأخر الوصول عن نافذتك.'],
  wx:'ضباب متوقع في لندن عند وصولك (تقدير)',car1:'أقدّم السيارة 30 دقيقة؟',car0:'أضيف سيارة تنتظرك؟',yes:'وافق',no:'اتركها كما هي',
  arrived:'وصلت.',meet:'الموعد 10:00. كل خطوة كانت بموافقتك.',tl:'ما رتّبته العين',t1:'الطلب',t2:'السيارة',t3:'الاستقبال',t4:'الغرفة',t5:'تقديم السيارة',real:'راقب رحلتك الحقيقية مجانًا',again:'من البداية'},
 en:{n:'The King’s Eye',demo:'Illustrative sample · no real flight data',from:'Riyadh',to:'London',arr:'→',
- q0:'What is this trip for?',m:['A meeting','Family','An event','Urgent'],start:'Begin',
+ q0:'What is this trip for?',sub:'Pick up to three. The Eye changes what it watches and what it asks, by your mission.',watch:'What the Eye focuses on',ask:'What it may ask you',cond:'Conditions of the trip',condsub:'They add to the mission and never change its reason.',spec:'This type goes to a specialised path with a qualified provider, not an ordinary charter.',pri:'Main',ev4:'Something may shift that matters to your trip’s goal.',start:'Begin',
  q1:'I picked two options',oa:'Earliest',da:'Arrive 06:40 · three hours before',ob:'Calmest',db:'Arrive 08:10 · more room to rest',pend:'Awaiting operator confirmation',ok:'Approve the request',safe:'Nothing is sent without your approval.',
  q2:'What shall I arrange on the ground?',g:['Car at landing','Lounge welcome','Room ready'],watch:'Watch my trip',
  fly:'Your trip is under watch',ev:['The transfer to your meeting may slow down.','The family’s wait on arrival may grow.','Your time before the event may tighten.','Arrival may slip past your window.'],
  wx:'Fog expected in London on arrival (estimate)',car1:'Bring the car forward 30 minutes?',car0:'Add a car waiting for you?',yes:'Approve',no:'Leave as is',
  arrived:'You’ve arrived.',meet:'Meeting at 10:00. Every step was yours to approve.',tl:'What the Eye arranged',t1:'Request',t2:'Car',t3:'Welcome',t4:'Room',t5:'Car moved up',real:'Watch your real trip, free',again:'Start over'},
 ru:{n:'Око Короля',demo:'Пример · не реальные данные рейса',from:'Эр-Рияд',to:'Лондон',arr:'→',
- q0:'Цель поездки?',m:['Встреча','Семья','Мероприятие','Срочно'],start:'Начать',
+ q0:'Цель поездки?',sub:'Выберите до трёх. Око меняет, за чем следит и о чём спрашивает, в зависимости от цели.',watch:'На чём сосредоточено Око',ask:'О чём оно может спросить',cond:'Условия поездки',condsub:'Дополняют цель, не меняя её.',spec:'Этот тип идёт по специальному маршруту через квалифицированного поставщика, а не как обычный чартер.',pri:'Основная',ev4:'Может измениться то, что важно для цели поездки.',start:'Начать',
  q1:'Я подобрал два варианта',oa:'Самый ранний',da:'Прибытие 06:40 · за три часа до встречи',ob:'Самый спокойный',db:'Прибытие 08:10 · больше времени',pend:'Ожидает подтверждения оператора',ok:'Утвердить запрос',safe:'Ничего не отправляется без вашего согласия.',
  q2:'Что организовать на земле?',g:['Авто после посадки','Встреча в салоне','Номер готов'],watch:'Следить за рейсом',
  fly:'Рейс под наблюдением',ev:['Дорога до встречи может замедлиться.','Ожидание семьи по прилёте может затянуться.','Времени до мероприятия может не хватить.','Прибытие может выйти за ваше окно.'],
  wx:'В Лондоне к вашему прибытию ожидается туман (оценка)',car1:'Подать авто на 30 минут раньше?',car0:'Добавить авто к прилёту?',yes:'Да',no:'Оставить',
  arrived:'Вы прибыли.',meet:'Встреча в 10:00. Каждый шаг — с вашего согласия.',tl:'Что организовало Око',t1:'Запрос',t2:'Авто',t3:'Встреча',t4:'Номер',t5:'Авто раньше',real:'Следить за настоящим рейсом',again:'Сначала'},
 tr:{n:'Kralın Gözü',demo:'Örnek · gerçek uçuş verisi değil',from:'Riyad',to:'Londra',arr:'→',
- q0:'Yolculuğun amacı?',m:['Toplantı','Aile','Etkinlik','Acil'],start:'Başla',
+ q0:'Yolculuğun amacı?',sub:'En fazla üç seçin. Göz, neye baktığını ve ne sorduğunu göreve göre değiştirir.',watch:'Gözün odaklandığı şeyler',ask:'Size sorabileceği',cond:'Yolculuk koşulları',condsub:'Göreve eklenir, nedenini değiştirmez.',spec:'Bu tür, sıradan çarter değil, nitelikli sağlayıcıyla özel bir yola gider.',pri:'Ana',ev4:'Yolculuğunuzun hedefini etkileyen bir şey değişebilir.',start:'Başla',
  q1:'İki seçenek seçtim',oa:'En erken',da:'Varış 06:40 · üç saat önce',ob:'En rahat',db:'Varış 08:10 · daha fazla zaman',pend:'Operatör onayı bekleniyor',ok:'Talebi onayla',safe:'Onayınız olmadan hiçbir şey gönderilmez.',
  q2:'Yerde neyi ayarlayayım?',g:['İnişte araç','Salonda karşılama','Oda hazır'],watch:'Uçuşumu izle',
  fly:'Uçuşunuz izleniyor',ev:['Toplantıya geçiş yavaşlayabilir.','Ailenin bekleyişi uzayabilir.','Etkinlik öncesi süreniz daralabilir.','Varış pencerenizi aşabilir.'],
@@ -96,7 +101,7 @@ tr:{n:'Kralın Gözü',demo:'Örnek · gerçek uçuş verisi değil',from:'Riyad
  arrived:'Vardınız.',meet:'Toplantı 10:00. Her adım sizin onayınızla.',tl:'Gözün ayarladıkları',t1:'Talep',t2:'Araç',t3:'Karşılama',t4:'Oda',t5:'Araç öne alındı',real:'Gerçek uçuşunuzu ücretsiz izleyin',again:'Baştan'}};
 var L=new URLSearchParams(location.search).get('lang'),$=function(i){return document.getElementById(i)};
 try{L=X[L]?L:(X[localStorage.getItem('iking_lang')]?localStorage.getItem('iking_lang'):'ar')}catch(e){L=X[L]?L:'ar'}
-var T,step=0,S={m:[],opt:-1,g:[],car:false},RM=matchMedia('(prefers-reduced-motion:reduce)').matches;
+var T,step=0,S={m:[],c:[],grp:'A',open:false,opt:-1,g:[],car:false},RM=matchMedia('(prefers-reduced-motion:reduce)').matches;
 var el=function(h){var d=document.createElement('div');d.innerHTML=h;return d.firstChild};
 function esc(s){return String(s).replace(/[&<>"]/g,function(c){return{'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]})}
 /* ===== الرادار: من ملف ikin-eye-radar، لكن الرحلة نفسها هي الطائرة الذهبية. الباقي نقاط هادئة بلا أسماء ===== */
@@ -133,19 +138,37 @@ var ui=$('ui');
 function show(html,cls){ui.className='ui'+(cls?' '+cls:'');ui.innerHTML=html;var b=ui.querySelector('[data-f]');if(b&&step>0)b.focus({preventScroll:true})}
 function bar(){var p=$('pg');p.innerHTML='';for(var i=0;i<5;i++){var l=document.createElement('li');if(i<=step)l.className='on';p.appendChild(l)}}
 function go(n){step=n;bar();[s0,s1,s2,s3,s4][n]()}
-function s0(){var h='<h1>'+T.q0+'</h1><div class="row">'+T.m.map(function(m,i){return'<button class="opt pill" data-m="'+i+'" aria-pressed="'+(S.m.indexOf(i)>-1)+'">'+m+'</button>'}).join('')+'</div><button class="go" id="n" '+(S.m.length?'':'disabled')+'>'+T.start+'</button>';
- show(h);ui.querySelectorAll('[data-m]').forEach(function(b){b.onclick=function(){var i=+b.dataset.m,k=S.m.indexOf(i);k>-1?S.m.splice(k,1):S.m.push(i);s0()}});$('n').onclick=function(){go(1)}}
+function MS(){return window.KE_MISSIONS||{groups:[],families:{},missions:[],traits:[]}}
+function Lx(o){return o?(o[L]||o.en||o.ar||''):''}
+function mById(id){return MS().missions.filter(function(m){return m.id===id})[0]}
+function tById(id){return MS().traits.filter(function(m){return m.id===id})[0]}
+function famsOf(){var f=[];S.m.forEach(function(i){var m=mById(i);if(m&&f.indexOf(m.f)<0)f.push(m.f)});S.c.forEach(function(i){var t=tById(i);if(t&&t.f&&f.indexOf(t.f)<0)f.push(t.f)});return f}
+function isSpec(){return S.m.some(function(i){return mById(i)&&mById(i).route})||S.c.some(function(i){return tById(i)&&tById(i).route})}
+function s0(){var D=MS(),F=D.families,P=S.m.length?mById(S.m[0]):null,g=S.grp||'A';
+ var sel=S.m.length>1?'<div class="row">'+S.m.map(function(i,k){return'<button class="opt pill" data-m="'+i+'" aria-pressed="true">'+(k===0?'<em>'+T.pri+'</em>&nbsp;':'')+esc(Lx(mById(i).n))+' ×</button>'}).join('')+'</div>':'';
+ var tabs='<div class="row tabs" role="radiogroup" aria-label="'+esc(T.q0)+'">'+D.groups.map(function(x){return'<button class="opt pill" role="radio" data-gr="'+x.id+'" aria-checked="'+(x.id===g)+'" aria-pressed="'+(x.id===g)+'">'+esc(Lx(x.n))+'</button>'}).join('')+'</div>';
+ var chips='<div class="row">'+D.missions.filter(function(m){return m.g===g}).map(function(m){var on=S.m.indexOf(m.id)>-1;return'<button class="opt pill" data-m="'+m.id+'" title="'+esc(Lx(m.d))+'" aria-pressed="'+on+'"'+(!on&&S.m.length>=3?' disabled':'')+'>'+esc(Lx(m.n))+'</button>'}).join('')+'</div>';
+ var card='';if(P){var fam=F[P.f];card='<div class="eyec"><b>'+esc(Lx(P.n))+'</b><p class="note">'+esc(Lx(P.d))+'</p><div class="cap">'+T.watch+'</div><p class="say">'+esc(Lx(fam.opt))+'</p><div class="cap">'+T.ask+'</div><p class="note" style="color:#e3d9bd">'+esc(Lx(fam.q))+'</p>'
+  +famsOf().filter(function(f){return F[f].limit&&f!=='cargo'}).map(function(f){return'<p class="lim">'+esc(Lx(F[f].limit))+'</p>'}).join('')+(isSpec()?'<p class="lim sp">'+T.spec+'</p>':'')+'</div>'}
+ var cond='<details class="more" id="mo"'+(S.open||S.c.length?' open':'')+'><summary>'+T.cond+(S.c.length?' · '+S.c.length:'')+'</summary><p class="note">'+T.condsub+'</p><div class="row">'+D.traits.map(function(x){return'<button class="opt pill" data-c="'+x.id+'" title="'+esc(Lx(x.e))+'" aria-pressed="'+(S.c.indexOf(x.id)>-1)+'">'+esc(Lx(x.n))+'</button>'}).join('')+'</div>'
+  +(S.c.length?'<ul class="fx">'+S.c.map(function(i){var x=tById(i);return'<li><b>'+esc(Lx(x.n))+'</b> '+esc(Lx(x.e))+'</li>'}).join('')+'</ul>':'')+'</details>';
+ show('<h1>'+T.q0+'</h1><p class="note">'+T.sub+'</p>'+sel+tabs+chips+card+cond+'<button class="go" id="n" '+(S.m.length?'':'disabled')+'>'+T.start+'</button>');
+ ui.querySelectorAll('[data-gr]').forEach(function(b){b.onclick=function(){S.grp=b.dataset.gr;s0()}});
+ ui.querySelectorAll('[data-m]').forEach(function(b){b.onclick=function(){var i=+b.dataset.m,k=S.m.indexOf(i);k>-1?S.m.splice(k,1):S.m.length<3&&S.m.push(i);s0()}});
+ ui.querySelectorAll('[data-c]').forEach(function(b){b.onclick=function(){var i=+b.dataset.c,k=S.c.indexOf(i);k>-1?S.c.splice(k,1):S.c.push(i);S.open=true;s0()}});
+ var mo=$('mo');if(mo)mo.addEventListener('toggle',function(){S.open=mo.open});
+ $('n').onclick=function(){go(1)}}
 function s1(){var o=[[T.oa,T.da],[T.ob,T.db]];show('<h1>'+T.q1+'</h1><div class="row">'+o.map(function(x,i){return'<button class="opt" data-o="'+i+'" aria-pressed="'+(S.opt===i)+'"><b>'+x[0]+'</b><small>'+x[1]+'</small><em>'+T.pend+'</em></button>'}).join('')+'</div><button class="go" id="n" '+(S.opt>-1?'':'disabled')+'>'+T.ok+'</button><p class="note">'+T.safe+'</p>');
  ui.querySelectorAll('[data-o]').forEach(function(b){b.onclick=function(){S.opt=+b.dataset.o;s1()}});$('n').onclick=function(){go(2)}}
 function s2(){show('<h1>'+T.q2+'</h1><div class="row">'+T.g.map(function(m,i){return'<button class="opt pill" data-g="'+i+'" aria-pressed="'+(S.g.indexOf(i)>-1)+'">'+m+'</button>'}).join('')+'</div><button class="go" id="n">'+T.watch+'</button><p class="note">'+T.safe+'</p>');
  ui.querySelectorAll('[data-g]').forEach(function(b){b.onclick=function(){var i=+b.dataset.g,k=S.g.indexOf(i);k>-1?S.g.splice(k,1):S.g.push(i);s2()}});$('n').onclick=function(){go(3)}}
 function s3(){show('<div class="live"><i></i>'+T.fly+'</div>');
- fly(.55,function(){var car=S.g.indexOf(0)>-1,m=S.m.length?S.m[0]:0;
-  show('<p class="say"><b style="font-weight:500;color:var(--champ)">'+T.wx+'</b><br>'+T.ev[m]+'</p><div class="row"><button class="go" id="y" data-f>'+(car?T.car1:T.car0)+'</button><button class="q" id="x">'+T.no+'</button></div>');
+ fly(.55,function(){var car=S.g.indexOf(0)>-1,P0=S.m.length?mById(S.m[0]):null,m=P0&&MS().families[P0.f]?MS().families[P0.f].ev:4;
+  show('<p class="say"><b style="font-weight:500;color:var(--champ)">'+T.wx+'</b><br>'+(T.ev[m]||T.ev4)+'</p><div class="row"><button class="go" id="y" data-f>'+(car?T.car1:T.car0)+'</button><button class="q" id="x">'+T.no+'</button></div>');
   var fin=function(yes){if(yes)S.car=true;show('<div class="live"><i></i>'+T.fly+'</div>');fly(1,function(){go(4)})};$('y').onclick=function(){fin(true)};$('x').onclick=function(){fin(false)}})}
 function s4(){var r=[[T.t1,S.opt>0?T.ob:T.oa]];S.g.forEach(function(i){r.push([[T.t2,T.t3,T.t4][i],'✓'])});if(S.car)r.push([T.t5,'✓']);
  show('<h1>'+T.arrived+'</h1><p class="say">'+T.meet+'</p><p class="note">'+T.tl+'</p><ul class="tl">'+r.map(function(x){return'<li>'+esc(x[0])+'<span>'+esc(x[1])+'</span></li>'}).join('')+'</ul><div class="row"><a class="go" id="w" href="/?view=watch&lang='+L+'" data-f>'+T.real+'</a><button class="q" id="a">'+T.again+'</button></div>','c');
- $('a').onclick=function(){S={m:[],opt:-1,g:[],car:false};fly(0);go(0)}}
+ $('a').onclick=function(){S={m:[],c:[],grp:'A',open:false,opt:-1,g:[],car:false};fly(0);go(0)}}
 function apply(l){L=l;T=X[l];document.documentElement.lang=l;document.documentElement.dir=l==='ar'?'rtl':'ltr';document.title=T.n+' — THE KING\'S EYE';$('bt').textContent=T.n;$('demo').textContent=T.demo;$('c1').textContent=T.from;$('c2').textContent=T.to;
  [].forEach.call($('langs').children,function(b){b.setAttribute('aria-pressed',b.dataset.l===l)});try{localStorage.setItem('iking_lang',l)}catch(e){}
  if(step===3){/* أثناء الطيران: أعد الرسم فقط */}else go(step)}

@@ -62,3 +62,21 @@
 .rq-acst{font-style:normal;font-size:13.5px;color:#e6c36a;margin-top:2px}
 .rq-acpick{grid-area:p;font-size:15px;color:var(--gold)}
 @media(max-width:560px){.rq-ac{grid-template-columns:96px 1fr}}
+/* خطوة هدف الرحلة: نفس لغة الصفحة (زجاج داكن، ذهبي، أزرار بنهايات ناعمة)، وتحذير كهرماني للمسار المتخصص */
+.rq-chips button:disabled{opacity:.35;cursor:default}
+.rq-chips.rq-sel{margin:4px 0 6px}.rq-chips.rq-sel button{border-color:var(--gold);background:rgba(217,191,134,.16);color:var(--champ)}
+.rq-pri{font-style:normal;font-size:12.5px;color:#16110a;background:var(--gold);border-radius:99px;padding:1px 9px;margin-inline-end:8px}
+.rq-eye{margin:18px 0 6px;padding:16px 18px 6px;background:rgba(2,4,10,.46);-webkit-backdrop-filter:blur(8px);backdrop-filter:blur(8px);border:1px solid rgba(217,191,134,.28);border-radius:18px;animation:cnIn .6s ease both}
+.rq-eye>b{display:block;font:700 clamp(22px,3vw,28px)/1.3 Amiri,serif;color:var(--champ);font-weight:700}
+.rq:not(.ar) .rq-eye>b{font:500 clamp(22px,3vw,28px)/1.3 'Cormorant Garamond',Georgia,serif}
+.rq-eyed{margin:2px 0 0;font-size:15px;color:#cbbf9f}
+.rq-eyet{margin:8px 0 4px;font-size:17px;color:#eadfc3;border-inline-start:1px solid var(--gold);padding-inline-start:12px}
+.rq-eye .rq-cap{margin:16px 0 4px}
+.rq-lim{margin:10px 0 0;font-size:14.5px;color:#cbbf9f;border-inline-start:1px solid rgba(217,191,134,.4);padding-inline-start:12px}
+.rq-lim.sp{color:#e6c36a;border-inline-start-color:#e6c36a}
+.rq-more{margin:18px 0 0;border-top:1px solid rgba(217,191,134,.16);padding-top:6px}
+.rq-more summary{cursor:pointer;list-style:none;padding:12px 0;color:var(--gold);font-size:16px;display:flex;justify-content:space-between;align-items:center}
+.rq-more summary::-webkit-details-marker{display:none}.rq-more summary::after{content:"+";font-size:22px;line-height:1}.rq-more[open] summary::after{content:"−"}
+.rq-more summary:focus-visible{outline:2px solid var(--champ);outline-offset:3px}
+.rq-fx{list-style:none;margin:6px 0 0;padding:0;display:grid;gap:6px;font-size:14.5px;color:#cbbf9f}.rq-fx b{font-weight:500;color:var(--champ)}
+@media(max-width:560px){.rq-seg.g4{display:grid;grid-template-columns:1fr 1fr}.rq-seg.g4 button{min-height:52px;padding:6px 10px}}
