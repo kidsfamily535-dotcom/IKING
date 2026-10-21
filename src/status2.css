@@ -1,0 +1,6 @@
+.st-l{list-style:none;margin:14px 0;padding:0;display:grid;gap:10px;text-align:start}
+.st-l li{border:1px solid rgba(214,187,130,.28);border-radius:16px;background:rgba(10,8,5,.45);backdrop-filter:blur(6px)}
+.st-l summary{display:flex;flex-wrap:wrap;align-items:center;gap:10px;padding:14px 16px;cursor:pointer;min-height:44px}
+.st-l summary b{font-weight:500}.st-n{flex:1 1 90px;font-size:1.05rem}
+.st-seg{display:flex;gap:4px}.st-seg i{width:18px;height:6px;border-radius:3px;background:rgba(214,187,130,.22)}.st-seg i.o{background:#d6bb82}
+.st-l li.old{opacity:.7}.st-l details>p{margin:0;padding:0 16px 8px}.st-l .row{padding:8px 16px;gap:14px}
