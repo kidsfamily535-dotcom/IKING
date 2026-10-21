@@ -151,6 +151,24 @@ section.block h2{color:var(--gold);font-size:.9rem;letter-spacing:.06em;margin-b
 .swrow .nm{display:flex;flex-direction:column;gap:2px;min-width:0}
 .swrow .nm small{opacity:.7;font-size:.78rem;word-break:break-word}
 .swgrp{margin:14px 0 4px;font-size:.82rem;letter-spacing:.02em;opacity:.8}
+
+/* جاهزية المدن */
+.rghead{display:flex;flex-wrap:wrap;justify-content:space-between;align-items:center;gap:12px;margin-bottom:6px}
+.rghead h2{margin:0}
+.rgrow{display:grid;grid-template-columns:minmax(110px,1fr) 150px minmax(0,2fr);gap:14px;align-items:start;padding:16px 0;border-top:1px solid var(--line)}
+.rgrow:first-of-type{border-top:0}
+.rgrow h3{font-size:1.02rem;font-weight:600;margin:0 0 4px}
+.pips{display:flex;gap:5px;margin:4px 0 6px}
+.pips i{width:22px;height:8px;border-radius:4px;background:rgba(237,237,243,.14);display:block}
+.pips i.on{background:var(--ok)} .pips.w i.on{background:var(--warn)} .pips.b i.on{background:var(--bad)}
+.tag{display:inline-block;border-radius:999px;padding:1px 10px;font-size:.78rem;border:1px solid var(--line);color:var(--muted);margin-inline-end:6px}
+.tag.ok{border-color:var(--ok);color:var(--ok)} .tag.warn{border-color:var(--warn);color:var(--warn)} .tag.bad{border-color:var(--bad);color:var(--bad)}
+.rgsrc{color:var(--muted);font-size:.85rem;margin:6px 0 0}
+.rgprop{border:1px solid var(--warn);border-radius:12px;padding:16px 18px;margin:0 0 18px}
+.rgprop p{margin:0 0 10px}
+.btn.brk{border:1px solid var(--bad);color:var(--bad);background:transparent;box-shadow:none}
+.btn.brk:hover:not(:disabled){background:rgba(216,132,122,.12);border-color:var(--bad)}
+@media (max-width:700px){.rgrow{grid-template-columns:1fr}}
 </style>
 </head>
 <body>
@@ -169,6 +187,14 @@ section.block h2{color:var(--gold);font-size:.9rem;letter-spacing:.06em;margin-b
   </section>
 
   <section class="kpis" id="kpis" aria-label="مؤشرات اليوم"></section>
+
+  <section class="block" id="regionsBlock">
+    <div class="rghead"><h2>جاهزية المدن<span class="chip" id="rgCount"></span></h2><div id="breaker"></div></div>
+    <p class="muted" style="margin:0 0 14px">كل مدينة بمستواها من ٠ إلى ٤، ومعه المصدر ووقت التحقق. مستوى بلا مصدر رسمي أو مصدرين مستقلين لا يُرفع. اقتراحات الوكيل تنتظر اعتمادك، وكل تغيير يتسجّل.</p>
+    <div id="rgProps"></div>
+    <div id="rgList"></div>
+    <div id="rgForm"></div>
+  </section>
 
   <div class="grid">
     <div>
@@ -545,6 +571,96 @@ async function loadQueue(){
     box.appendChild(card);
   });
 }
+
+/* ---------- جاهزية المدن + قاطع الطوارئ ---------- */
+var RBASIS={OFFICIAL:'مصدر رسمي',TWO_INDEPENDENT:'مصدران مستقلان',OWNER:'بقرارك'};
+var RVER={CONFIRMED:'مؤكد',LIKELY:'مرجّح'};
+function pips(n){var cls=n>=3?'b':(n===2?'w':'');var b=h('div',{class:'pips '+cls,role:'img','aria-label':'المستوى '+n+' من 4'});for(var i=1;i<=4;i++)b.appendChild(h('i',{class:i<=n?'on':''}));return b}
+async function loadRegions(){
+  var res=await Promise.all([
+    sb.from('region_levels_current').select('region_code,region_name,level,verification,basis,source_note,verified_at,review_due_at,freshness,set_by_kind').order('level',{ascending:false}),
+    sb.from('region_level_changes').select('id,region_code,region_name,from_level,to_level,basis,reason,source_note,created_at').eq('status','PROPOSED').order('created_at',{ascending:false}),
+    sb.from('agent_control').select('mode').eq('id',1).maybeSingle()
+  ]);
+  renderBreaker(res[2]);renderRegionProps(res[1]);renderRegions(res[0]);
+}
+function renderBreaker(c){
+  var box=$('breaker');if(!box)return;clear(box);
+  if(c.error||!c.data){box.appendChild(h('span',{class:'warn',text:'تعذّر قراءة حالة القاطع.'}));return}
+  if(c.data.mode==='PAUSED'){
+    box.appendChild(h('span',{class:'tag bad',text:'القاطع مفتوح: الوكيل موقوف'}));
+    box.appendChild(h('button',{class:'btn small',type:'button',text:'أعد التشغيل',onclick:async function(ev){
+      ev.target.disabled=true;var r=await rpc('agent_resume');
+      if(r.error){ev.target.disabled=false;alert(errText(r.error));return}
+      loadControl();loadRegions();}}));
+  }else{
+    box.appendChild(h('button',{class:'btn quiet small brk',type:'button',text:'قاطع الطوارئ: أوقف الوكيل الآن',onclick:async function(ev){
+      if(!confirm('سيتوقف الصيد والمتابعة والتنبيهات فورًا. تستمر فقط مهام انتهاء التوافر والتنظيف. متأكد؟'))return;
+      ev.target.disabled=true;var r=await rpc('agent_pause',{p_reason:'قاطع الطوارئ من جاهزية المدن'});
+      if(r.error){ev.target.disabled=false;alert(errText(r.error));return}
+      loadControl();loadRegions();}}));
+  }
+}
+function renderRegionProps(r){
+  var box=$('rgProps');clear(box);
+  if(r.error){box.appendChild(h('div',{class:'empty',text:'تعذّر قراءة اقتراحات الوكيل. هذا لا يعني أنه لا توجد اقتراحات.'}));return}
+  (r.data||[]).forEach(function(c){
+    var card=h('div',{class:'rgprop'});
+    card.appendChild(h('p',{text:'اقتراح من الوكيل: '+(c.region_name||c.region_code)+' من المستوى '+(c.from_level==null?'؟':c.from_level)+' إلى '+c.to_level}));
+    card.appendChild(h('p',{class:'muted',text:c.reason||''}));
+    if(c.source_note)card.appendChild(h('p',{class:'rgsrc',text:'المصدر: '+c.source_note}));
+    var acts=h('div',{class:'acts'});
+    function dec(d){return async function(ev){
+      var msg=d==='APPROVE'?'اعتماد رفع '+(c.region_name||c.region_code)+' إلى المستوى '+c.to_level+'؟ يسري فورًا ويتسجّل باسمك.':'رفض هذا الاقتراح؟';
+      if(!confirm(msg))return;
+      ev.target.disabled=true;var x=await rpc('owner_decide_region_proposal',{p_change:c.id,p_decision:d});
+      if(x.error){ev.target.disabled=false;alert(errText(x.error));return}
+      loadRegions();loadControl();}}
+    acts.appendChild(h('button',{class:'btn small',type:'button',text:'اعتمد',onclick:dec('APPROVE')}));
+    acts.appendChild(h('button',{class:'btn quiet small',type:'button',text:'ارفض',onclick:dec('REJECT')}));
+    card.appendChild(acts);box.appendChild(card);
+  });
+}
+function renderRegions(r){
+  var box=$('rgList'),form=$('rgForm');clear(box);clear(form);$('rgCount').textContent='';
+  if(r.error||!Array.isArray(r.data)){box.appendChild(h('div',{class:'empty',text:'تعذّر قراءة مستويات المدن. هذا لا يعني أن كل شيء هادئ.'}));return}
+  if(!r.data.length){box.appendChild(h('div',{class:'empty',text:'لا توجد مدن مسجّلة بعد: المستوى غير معروف، ويحتاج تحققًا.'}));return}
+  $('rgCount').textContent=r.data.length+' مناطق';
+  r.data.forEach(function(x){
+    var stale=x.freshness==='STALE';
+    var left=h('div',null,[h('h3',{text:x.region_name||x.region_code}),h('div',{class:'muted',text:x.region_code})]);
+    var mid=h('div',null,[pips(x.level),h('div',{text:'المستوى '+x.level+' من 4'})]);
+    var tags=h('div',null,[
+      h('span',{class:'tag '+(x.verification==='CONFIRMED'?'ok':'warn'),text:RVER[x.verification]||x.verification}),
+      h('span',{class:'tag',text:RBASIS[x.basis]||x.basis}),
+      h('span',{class:'tag '+(stale?'bad':'ok'),text:stale?'غير محدّث: المراجعة فاتت':'محدّث'})]);
+    var right=h('div',null,[tags,
+      h('div',{class:'rgsrc',text:'تحقق: '+fmt(x.verified_at)+(x.review_due_at?' · المراجعة القادمة: '+fmt(x.review_due_at):' · بلا موعد مراجعة')}),
+      h('div',{class:'rgsrc',text:x.source_note||'لا يوجد مصدر مسجّل.'})]);
+    box.appendChild(h('div',{class:'rgrow'},[left,mid,right]));
+  });
+  var sel=h('select',{'aria-label':'المدينة'});r.data.forEach(function(x){sel.appendChild(h('option',{value:x.region_code,text:x.region_name||x.region_code}))});
+  var lv=h('select',{'aria-label':'المستوى'});for(var i=0;i<=4;i++)lv.appendChild(h('option',{value:String(i),text:'المستوى '+i}));
+  var why=h('input',{type:'text',maxlength:'300',placeholder:'السبب','aria-label':'السبب'});
+  var src=h('input',{type:'text',maxlength:'300',placeholder:'المصدر (رابط أو اسم الجهة)','aria-label':'المصدر'});
+  var hrs=h('input',{type:'number',min:'1',max:'168',placeholder:'ساعات للمراجعة','aria-label':'ساعات للمراجعة',style:'max-width:150px'});
+  var msg=h('div',{class:'msg'});
+  var go=h('button',{class:'btn small',type:'button',text:'اعتمد المستوى',onclick:async function(ev){
+    msg.className='msg';
+    if(!why.value.trim()||!src.value.trim()){msg.textContent='اكتب السبب والمصدر. مستوى بلا مصدر لا يُسجَّل.';return}
+    var name=sel.options[sel.selectedIndex].text,L=parseInt(lv.value,10);
+    if(!confirm('تغيير '+name+' إلى المستوى '+L+(L>=3?' (مستوى مرتفع: يتحرك به الوكيل فورًا)':'')+'؟ يسري فورًا ويتسجّل باسمك.'))return;
+    ev.target.disabled=true;
+    var x=await rpc('owner_set_region_level',{p_region:sel.value,p_name:name,p_level:L,p_reason:why.value.trim(),p_source:src.value.trim(),p_review_hours:hrs.value?parseInt(hrs.value,10):null});
+    ev.target.disabled=false;
+    if(x.error){msg.textContent=errText(x.error);return}
+    msg.className='msg ok';msg.textContent='تم تسجيل المستوى.';why.value='';src.value='';hrs.value='';loadRegions();}});
+  form.appendChild(h('h2',{text:'غيّر مستوى مدينة بنفسك',style:'margin-top:22px'}));
+  form.appendChild(h('div',{class:'acts'},[sel,lv,hrs]));
+  form.appendChild(h('div',{class:'acts',style:'margin-top:8px'},[why,src]));
+  form.appendChild(h('div',{class:'acts',style:'margin-top:10px'},[go]));
+  form.appendChild(msg);
+}
 async function loadControl(){
   var res=await Promise.all([
     sb.from('agent_control').select('mode,reason,changed_at,daily_budget_usd').eq('id',1).maybeSingle(),
@@ -555,6 +671,7 @@ async function loadControl(){
   loadDirectives();
   loadSwitches();
   loadQueue();
+  loadRegions();
 }
 var SCOPES=[['GENERAL','عامة'],['HUNTER','الصياد'],['CUSTOMER','العميل'],['SECRETARY','السكرتير'],['OPERATOR','المشغّل']];
 var DSTATE={ACTIVE:'لم يستلمها الوكيل بعد',ACKED:'استلمها الوكيل',DONE:'نُفّذت'};
