@@ -5,12 +5,12 @@ import './cinema.css';
 const IW=1920,IH=1088,PX=.5,PY=.78;
 const HUB:Record<string,[number,number]>={CAI:[.136,.592],JED:[.314,.805],RUH:[.459,.72],KWI:[.472,.589],DOH:[.518,.676],DXB:[.626,.72]};
 const ROUTES:[string,string][]=[['RUH','JED'],['DXB','RUH'],['JED','CAI'],['DOH','JED'],['KWI','DXB'],['CAI','KWI']];
-type T={name:string;line:string;open:string;more:string};
+type T={name:string;line:string;open:string;more:string;ask:string};
 const COPY:Record<string,T>={
- ar:{name:'عين الملك',line:'عينٌ تسبق رحلتك',open:'افتح عينك',more:'استكشف'},
- en:{name:'The King’s Eye',line:'An eye ahead of every journey',open:'Open your eye',more:'Explore'},
- ru:{name:'Око Короля',line:'Око, опережающее ваш путь',open:'Откройте око',more:'Исследовать'},
- tr:{name:'Kralın Gözü',line:'Yolculuğunuzdan önce gören göz',open:'Gözünüzü açın',more:'Keşfedin'}
+ ar:{name:'عين الملك',line:'عينٌ تسبق رحلتك',open:'افتح عينك',more:'استكشف',ask:'اسأل العين'},
+ en:{name:'The King’s Eye',line:'An eye ahead of every journey',open:'Open your eye',more:'Explore',ask:'Ask the Eye'},
+ ru:{name:'Око Короля',line:'Око, опережающее ваш путь',open:'Откройте око',more:'Исследовать',ask:'Спросить Глаз'},
+ tr:{name:'Kralın Gözü',line:'Yolculuğunuzdan önce gören göz',open:'Gözünüzü açın',more:'Keşfedin',ask:'Gözden sor'}
 };
 const calm=()=>typeof matchMedia==='function'&&matchMedia('(prefers-reduced-motion: reduce)').matches;
 const ease=(x:number)=>x<.5?2*x*x:1-Math.pow(-2*x+2,2)/2;
@@ -64,6 +64,7 @@ export default function CinemaHome({real,lang}:{real:boolean;lang:string}){
   </div>
   <div className="cn-cta">
    {!real&&<a className="cn-btn main" href="?view=cabin">{c.open}</a>}
+   <a className="cn-btn main" href="?view=eye">{c.ask}</a>
    <a className="cn-btn quiet" href={'/inside-the-kings-eye.html?lang='+lang}>{c.more}</a>
   </div>
   {lid&&<svg className="cn-lid" viewBox="0 0 100 100" preserveAspectRatio="none" aria-hidden="true">

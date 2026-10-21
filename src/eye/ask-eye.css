@@ -24,3 +24,5 @@
 .ae-next{margin:0;padding:12px 14px;border-radius:12px;background:color-mix(in srgb,var(--gold) 12%,transparent);border-inline-start:3px solid var(--gold)}
 .ae-gen{color:var(--dim);font-size:12.5px}
 @media (prefers-reduced-motion:reduce){.ae *{transition:none!important}}
+.ae-trap{position:absolute;inset-inline-start:-9999px;width:1px;height:1px;opacity:0}
+.ae-reg{display:inline-flex;align-items:center;justify-content:center;text-decoration:none;align-self:flex-start;min-height:48px;font-size:16px}
