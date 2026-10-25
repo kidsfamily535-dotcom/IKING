@@ -80,3 +80,25 @@
 .rq-more summary:focus-visible{outline:2px solid var(--champ);outline-offset:3px}
 .rq-fx{list-style:none;margin:6px 0 0;padding:0;display:grid;gap:6px;font-size:14.5px;color:#cbbf9f}.rq-fx b{font-weight:500;color:var(--champ)}
 @media(max-width:560px){.rq-seg.g4{display:grid;grid-template-columns:1fr 1fr}.rq-seg.g4 button{min-height:52px;padding:6px 10px}}
+
+/* ===== مرجع شاشة الحجز (feat/booking-ref): شريط علوي + لوحة زجاجية للنموذج + رادار على الجهة الأخرى ===== */
+.rq-top{padding:64px clamp(18px,4vw,48px) 14px;border-bottom:1px solid rgba(217,191,134,.14);background:linear-gradient(180deg,rgba(2,4,10,.7),rgba(2,4,10,0))}
+.rq-brand{display:flex;align-items:center;gap:12px}
+.rq-brand svg{width:44px;flex:none}
+.rq-brand span{display:flex;flex-direction:column;gap:5px}
+.rq-brand small{font:400 10px/1 Tajawal,'Inter',sans-serif;letter-spacing:.22em;color:#cbbf9f}
+.rq-wrap{max-width:1360px;grid-template-columns:minmax(0,1fr) minmax(0,600px);align-items:center}
+.rq-wrap>.rq-radar{margin-top:0;filter:drop-shadow(0 0 60px rgba(217,191,134,.16))}
+.rq-kicker{display:flex;align-items:center;gap:10px;color:var(--gold);font-size:16px;margin-bottom:6px}
+.rq-kicker::before{content:"";width:22px;height:2px;background:var(--gold);opacity:.7}
+.rq-sub{margin:-6px 0 22px;font-size:clamp(16px,1.7vw,20px);color:#e3d3a8}
+.rq-panel{padding:6px 22px 24px;border:1px solid rgba(217,191,134,.22);border-radius:26px;background:linear-gradient(180deg,rgba(10,16,24,.55),rgba(2,4,10,.55));-webkit-backdrop-filter:blur(14px);backdrop-filter:blur(14px);box-shadow:0 30px 80px -30px rgba(0,0,0,.8),inset 0 1px 0 rgba(255,255,255,.04)}
+.rq-panel .rq-seg{margin:16px 0 8px}
+.rq-panel .rq-seg button{min-height:52px;border-radius:18px;background:rgba(2,4,10,.4)}
+.rq-panel .rq-seg button[aria-checked="true"]{background:linear-gradient(180deg,rgba(243,226,176,.28),rgba(169,138,78,.22));box-shadow:0 0 28px rgba(217,191,134,.2)}
+.rq-panel .rq-city{border-radius:18px;padding:14px 18px}
+.rq-panel .rq-row{border:1px solid rgba(217,191,134,.22);border-radius:18px;padding:14px 18px;margin-top:10px;background:rgba(2,4,10,.4)}
+.rq-panel .rq-row .rq-in{border:0;text-align:end;font-size:19px}
+.rq-panel .rq-go{width:100%;margin-top:22px;min-height:60px;font-size:20px}
+.rq-hint{margin:14px 0 0;font-size:14px;color:#cbbf9f;text-align:center}
+@media(max-width:900px){.rq-wrap{display:flex}.rq-top{padding-top:56px}}
