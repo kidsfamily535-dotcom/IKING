@@ -82,7 +82,7 @@
 @media(max-width:560px){.rq-seg.g4{display:grid;grid-template-columns:1fr 1fr}.rq-seg.g4 button{min-height:52px;padding:6px 10px}}
 
 /* ===== مرجع شاشة الحجز (feat/booking-ref): شريط علوي + لوحة زجاجية للنموذج + رادار على الجهة الأخرى ===== */
-.rq-top{padding:22px clamp(18px,4vw,48px) 14px;border-bottom:1px solid rgba(217,191,134,.14);background:linear-gradient(180deg,rgba(2,4,10,.7),rgba(2,4,10,0))}
+.rq-top{padding:64px clamp(18px,4vw,48px) 14px;border-bottom:1px solid rgba(217,191,134,.14);background:linear-gradient(180deg,rgba(2,4,10,.7),rgba(2,4,10,0))}
 .rq-brand{display:flex;align-items:center;gap:12px}
 .rq-brand svg{width:44px;flex:none}
 .rq-brand span{display:flex;flex-direction:column;gap:5px}
