@@ -124,7 +124,7 @@ const L=(o?:Ln)=>o?(o[lang]||o.en||o.ar||''):'';
  return <div className={`rq cn${ar?' ar':''}`} dir={ar?'rtl':'ltr'} lang={lang}>
   <div className="rq-bg" aria-hidden="true"/><div className="cn-shade" aria-hidden="true"/><div className="cn-grain" aria-hidden="true"/>
   <LangSwitch/>
-  <TopBar active={3} name={c.name}/>
+  <TopBar active={3} name={c.name} bare/>
   <div className="rq-dots">{step<5&&<ol className="rq-prog" aria-label={`${[0,2,3,4].indexOf(step)+1}/4`}>{[0,2,3,4].map(i=><li key={i} className={i<=step?'on':''}/>)}</ol>}</div>
   <div className="rq-wrap">
   {radar}
