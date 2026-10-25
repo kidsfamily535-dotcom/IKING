@@ -1,5 +1,7 @@
 import {useEffect,useState} from 'react';
 import {useI18n,type Lang} from '../i18n';
+import Radar from '../cabin/Radar';
+import {HUBS,hub,dist,flightMin,rangeFor} from '../cabin/geo';
 import './imagehome.css';
 // الصفحة الرئيسية بحسب التصميم المعتمد: الأرض ليلًا (الخلفية العامة للموقع) + رادار الرياض والعين + «ما الذي سترى؟».
 type C={kick:string;h1:string;sub:string;cta:string;tag:string;demo:string;steps:string[];
@@ -32,6 +34,15 @@ const COPY:Record<Lang,C>={
   cards:[['Живой файл поездки','Ваша реальная поездка в одном месте.'],['Доступные самолёты','Умный выбор из проверенных мировых флотов.'],['Реальные возможности','Персональные подборки под вашу задачу и круг.'],['От двери до двери','Полная координация от вылета до прибытия.'],['Погода и условия','Актуальные данные и точные прогнозы по маршруту и месту назначения.']],
   live:'Для своих',more:'Больше, чем поездка',moreL:'Более широкий взгляд на мир возможностей.',note:'Демонстрационные данные (DEMONSTRATION): живой источник не подключён.',city:['Стамбул','Амман','Кувейт','Даммам','Доха','Джидда','Каир','Эр-Рияд']}
 };
+
+const NM:Record<'tr'|'ru',Record<string,string>>={
+ tr:{RUH:'Riyad',JED:'Cidde',DMM:'Dammam',MED:'Medine',DXB:'Dubai',AUH:'Abu Dabi',DOH:'Doha',KWI:'Kuveyt',BAH:'Bahreyn',MCT:'Maskat',CAI:'Kahire',AMM:'Amman',IST:'İstanbul',LON:'Londra',CDG:'Paris',GVA:'Cenevre',MXP:'Milano',NCE:'Nice'},
+ ru:{RUH:'Эр-Рияд',JED:'Джидда',DMM:'Даммам',MED:'Медина',DXB:'Дубай',AUH:'Абу-Даби',DOH:'Доха',KWI:'Кувейт',BAH:'Бахрейн',MCT:'Маскат',CAI:'Каир',AMM:'Амман',IST:'Стамбул',LON:'Лондон',CDG:'Париж',GVA:'Женева',MXP:'Милан',NCE:'Ницца'}};
+const RX:Record<Lang,{tap:string;go:string;km:string;h:string;m:string;est:string}>={
+ ar:{tap:'اضغط على وجهة لترى الطريق',go:'اطلب هذه الرحلة',km:'كم',h:'س',m:'د',est:'تقدير'},
+ en:{tap:'Tap a destination to see the route',go:'Request this trip',km:'km',h:'h',m:'min',est:'estimate'},
+ tr:{tap:'Rotayı görmek için bir varış seçin',go:'Bu yolculuğu talep et',km:'km',h:'sa',m:'dk',est:'tahmini'},
+ ru:{tap:'Выберите пункт назначения',go:'Запросить поездку',km:'км',h:'ч',m:'мин',est:'оценка'}};
 const LANGS:{l:Lang;n:string}[]=[{l:'ar',n:'العربية'},{l:'en',n:'English'},{l:'tr',n:'Türkçe'},{l:'ru',n:'Русский'}];
 const ICONS=['M12 12a4 4 0 100-8 4 4 0 000 8zM4 21c1-4.5 4-6.5 8-6.5s7 2 8 6.5','M12 2l2 7 7 4v2l-7-3-1 5 3 2v2l-4-2-4 2v-2l3-2-1-5-7 3v-2l7-4z','M12 20a8 8 0 100-16 8 8 0 000 16zM12 16a4 4 0 100-8 4 4 0 000 8z','M4 16V12l2-5h12l2 5v4M4 16h16M4 16v2h3v-2M17 16v2h3v-2','M12 16a4 4 0 100-8 4 4 0 000 8zM12 2v2M12 20v2M2 12h2M20 12h2'];
 const Ic=({d}:{d:string})=><svg className="ih-i" viewBox="0 0 24 24" aria-hidden="true"><path d={d}/></svg>;
@@ -39,7 +50,10 @@ const IMG=['/home/c4.jpg','/home/c4.jpg','/home/c3.jpg','/home/c2.jpg','/home/c1
 const calm=()=>typeof matchMedia==='function'&&matchMedia('(prefers-reduced-motion: reduce)').matches;
 
 export default function ImageHome({real}:{real:boolean}){
- const {lang,setLang}=useI18n(),c=COPY[lang]||COPY.en,[on,setOn]=useState(4);
+ const {lang,setLang}=useI18n(),c=COPY[lang]||COPY.en,[on,setOn]=useState(4),[to,setTo]=useState<string|null>('CAI'),[hov,setHov]=useState<string|null>(null);
+ const rx=RX[lang],nm=(i:string)=>{const h=hub(i);return lang==='ar'?h.ar:lang==='en'?h.en:NM[lang][i]||h.en};
+ const F=hub('RUH'),km=to?dist(F,hub(to)):null,mn=km?flightMin(km):0;
+ const hud=to&&km?`${nm('RUH')} ${lang==='ar'?'←':'→'} ${nm(to)} · ${(Math.round(km/10)*10).toLocaleString('en')} ${rx.km} · ${lang==='ar'?'نحو ':''}${Math.floor(mn/60)} ${rx.h} ${mn%60} ${rx.m} (${rx.est})`:rx.tap;
  useEffect(()=>{if(calm())return;const id=setInterval(()=>setOn(i=>(i+4)%5),2600);return()=>clearInterval(id)},[]);
  const ar=lang==='ar',P=c.city;
  return <div className={`ih${ar?' ih-ar':''}`}>
@@ -60,23 +74,10 @@ export default function ImageHome({real}:{real:boolean}){
       <p className="ih-tag">{c.tag}</p>
      </div>
     </div>
-    <svg className="ih-radar" viewBox="-30 -10 660 620" role="img" aria-label={c.city[7]}>
-     <defs>
-      <radialGradient id="ih-glow"><stop offset="0" stopColor="#fff1c4"/><stop offset=".4" stopColor="#eab85a" stopOpacity=".75"/><stop offset="1" stopColor="#eab85a" stopOpacity="0"/></radialGradient>
-      <radialGradient id="ih-iris" cx=".4" cy=".35" r=".8"><stop offset="0" stopColor="#fff0bd"/><stop offset=".55" stopColor="#e2ad52"/><stop offset="1" stopColor="#8a5f22"/></radialGradient>
-      <radialGradient id="ih-wg" gradientUnits="userSpaceOnUse" cx="300" cy="300" r="262"><stop offset="0" stopColor="#e8c880" stopOpacity=".32"/><stop offset="1" stopColor="#e8c880" stopOpacity=".03"/></radialGradient>
-     </defs>
-     <g fill="none" stroke="#e8c880"><circle cx="300" cy="300" r="262" opacity=".5"/><circle cx="300" cy="300" r="270" strokeWidth="6" strokeDasharray="1 11.86" opacity=".35"/><circle cx="300" cy="300" r="205" opacity=".2"/><circle cx="300" cy="300" r="150" opacity=".22"/><circle cx="300" cy="300" r="98" opacity=".28"/><circle cx="300" cy="300" r="56" opacity=".4"/></g>
-     <g className="ih-sweep"><path d="M300 300L562 300A262 262 0 0 0 431 73Z" fill="url(#ih-wg)"/><path d="M300 300L562 300" stroke="#f3e0b0" strokeOpacity=".55" fill="none"/></g>
-     <path d="M68 196Q175 218 300 300" fill="none" stroke="#e8c880" strokeWidth="1.5" opacity=".85"/>
-     <circle cx="68" cy="196" r="9" fill="none" stroke="#e8c880" opacity=".7"/><circle cx="68" cy="196" r="3.5" fill="#f3e0b0"/>
-     <g fill="#f7ead0" fontSize="19" fontFamily="Tajawal,sans-serif" textAnchor="middle">
-      {([[98,69,0,-17],[157,147,1,-17],[371,168,2,-17],[541,297,3,-15],[150,351,4,23],[24,433,5,23]] as number[][]).map(([x,y,i,dy])=><g key={i}><circle cx={x} cy={y} r="2.5" fill="#e8c880"/><text x={x} y={y+dy}>{P[i]}</text></g>)}
-      <text x="68" y="231" opacity=".8">{P[6]}</text>
-     </g>
-     <g className="ih-eye-g"><circle cx="300" cy="300" r="78" fill="url(#ih-glow)" opacity=".7"/><circle cx="300" cy="300" r="46" fill="none" stroke="#f3e0b0" strokeOpacity=".5"/><circle cx="300" cy="300" r="36" fill="url(#ih-iris)"/><circle cx="300" cy="300" r="13" fill="#0a0806"/><circle cx="305" cy="295" r="3.6" fill="#fff6dd"/></g>
-     <text x="300" y="372" fill="#f7ead0" fontSize="23" fontFamily="Tajawal,sans-serif" textAnchor="middle">{P[7]}</text>
-    </svg>
+    <div className="ih-radarbox">
+     <Radar hubs={HUBS} from="RUH" to={to} hover={hov} name={h=>nm(h.iata)} range={to?rangeFor(km):3000} blips={[]} scanning={false} plane={null} alt={null} hud={hud} aria={c.city[7]} kmUnit={rx.km} onHover={setHov} onPick={i=>{if(i!=='RUH')setTo(t=>t===i?null:i)}} onBlip={()=>{}}/>
+     {to&&<a className="ih-go" href={`?view=cabin&to=${to}`}>{rx.go}</a>}
+    </div>
    </div>
    <ol className="ih-steps" aria-label="Journey">{c.steps.map((s,i)=><li key={i} className={on===i?'ih-on':''}>{s}</li>)}</ol>
   </div>

@@ -1,4 +1,4 @@
-.ih{--bg:#070605;--gold:#e8c880;--gold2:#b8873b;--cream:#f7ead0;--mute:#a99c86;--line:rgba(232,200,128,.22);color:var(--cream);font-family:Tajawal,system-ui,sans-serif;line-height:1.5;font-size:16px}
+.ih{--t-ink:#f7ead0;--t-accent:#e8c880;--t-night:#070605;--t-surf:#14100b;--t-surf2:#2a1f12;--bg:#070605;--gold:#e8c880;--gold2:#b8873b;--cream:#f7ead0;--mute:#a99c86;--line:rgba(232,200,128,.22);color:var(--cream);font-family:Tajawal,system-ui,sans-serif;line-height:1.5;font-size:16px}
 .ih *{box-sizing:border-box;margin:0}
 .ih a,.ih button{font:inherit;color:inherit}
 .ih :focus-visible{outline:2px solid var(--gold);outline-offset:3px}
@@ -112,3 +112,16 @@ svg.ih-i{width:1em;height:1em;fill:none;stroke:currentColor;stroke-width:1.5;str
 .ih:not(.ih-ar) .ih-cta,.ih:not(.ih-ar) .ih-kicker,.ih:not(.ih-ar) .ih-banner h2{font-family:'Cormorant Garamond',Georgia,serif}
 .ih:not(.ih-ar) .ih-cta{font-size:1.7rem}
 .ih .ih-sub,.ih .ih-lead,.ih .ih-tag{text-wrap:balance}
+
+/* الرادار التفاعلي (نفس منطق صفحة الطلب) بشكل العين الجديد */
+.ih-radarbox{position:relative;width:100%;max-width:560px;justify-self:center}
+.ih .cr{filter:drop-shadow(0 0 22px rgba(232,170,80,.12))}
+.ih .cr-eye .ir{left:-27px;top:-27px;width:54px;height:54px;border:1px solid rgba(243,224,176,.55);background:radial-gradient(circle at 38% 34%,#fff0bd,#e2ad52 55%,#8a5f22);box-shadow:0 0 60px rgba(240,180,80,.55),0 0 18px rgba(255,226,160,.5)}
+.ih .cr-eye .ir i{width:18px;height:18px;background:#0a0806;box-shadow:5px -5px 0 -5px #fff6dd,0 0 0 2px rgba(10,8,6,.35)}
+.ih .cr-eye .rg{left:-27px;top:-27px;width:54px;height:54px}
+.ih .cr-n.on i,.ih .cr-n.hot i{background:#f3e0b0;box-shadow:0 0 16px 3px rgba(232,200,128,.7)}
+.ih .cr-n i{background:rgba(247,234,208,.75)}
+.ih .cr-l{color:#f7ead0}
+.ih .cr-hud{bottom:-1%;font-weight:500}
+.ih-go{display:block;width:fit-content;margin:10px auto 0;padding:10px 26px;border-radius:99px;background:linear-gradient(#f3e0b0,#c9a45e);color:#1b1206!important;text-decoration:none;font-weight:500;font-size:.95rem;box-shadow:0 10px 34px -10px rgba(240,170,80,.6)}
+.ih .ih-go:hover{filter:brightness(1.06)}
