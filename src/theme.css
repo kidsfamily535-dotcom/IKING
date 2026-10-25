@@ -70,3 +70,17 @@
 :root[data-theme="ivory"] .hero.hx{background:linear-gradient(rgba(8,10,18,.28),rgba(8,10,18,.72)),url(/earth-night.jpg) center 35%/cover no-repeat,#05070f}
 :root[data-theme="ivory"] .hero.hx .hx-sw .ln button.sw{background:linear-gradient(#26262499,#17171799);border-color:#c5a46d80;color:#f5f0e6}
 :root[data-theme="ivory"] .cb-rail li.now{color:#6b4f1f;font-weight:500}
+
+/* ========== الليل الذهبي (الافتراضي الجديد) + خلفية الأرض ليلًا في كل الشاشات ==========
+   الألوان شبه شفافة عمدًا: الأسطح تُظهر الأرض من خلفها بدل أن تغطيها بلون مصمت. */
+:root[data-theme="night"]{
+ --t-night:rgba(7,6,5,.58);--t-surf:rgba(18,14,10,.72);--t-surf2:rgba(30,23,15,.78);
+ --t-accent:#e0c27a;--t-accent-hi:#f3e0b0;--t-accent-lo:#a8843f;
+ --t-ink:#f7ead0;--t-deep:#14100b;--t-main:#28624c;
+ --t-paper1:#f3efe5;--t-paper2:#e3dcc6;--t-on-accent:#1b1206;--t-champagne:#e0c27a;
+ color-scheme:dark;
+}
+:root:not([data-theme="ivory"]){background:#05070f}
+:root:not([data-theme="ivory"]) body{background:transparent}
+:root:not([data-theme="ivory"]) body::before{content:"";position:fixed;inset:0;z-index:-1;pointer-events:none;
+ background:linear-gradient(rgba(5,6,8,.5),rgba(5,6,8,.74)),url(/bg-earth.jpg) center 40%/cover no-repeat}

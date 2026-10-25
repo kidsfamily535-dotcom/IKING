@@ -8,7 +8,7 @@ import Room from './Room';
 import Show from './Show';
 import Mission from './Mission';
 import {Switch} from './cabin/Switch';
-import CinemaHome from './cinema/CinemaHome';
+import ImageHome from './cinema/ImageHome';
 import HoldRing from './Hold';
 import OperatorValue from './OperatorValue';
 import Scene from './eye/Scene';
@@ -104,8 +104,7 @@ export default function App(){
  // العميل بعد الدخول: غرفته وحدها بروح الصفحة الافتتاحية، بلا افتتاحية ولا جولة فوقها (إلا إن فتح «ما تستطيعه العين»)
  if(role==='customer'&&stage!=='explore')return <Room airports={ap} real={real}/>;
  return <>
-  {(role||staffMode)&&<div className="pill">{real?t('pill.live'):t('pill.demo')}</div>}<LangSwitch/>
-  <CinemaHome real={real} lang={lang}/>
+  {(role||staffMode)&&<div className="pill">{real?t('pill.live'):t('pill.demo')}</div>}<ImageHome real={real}/>
   {(staffMode||(login&&!real))&&<section className="cn-after">{staffMode&&<><div className="roles" style={{marginTop:22}} role="group" aria-label={t('hero.pick.aria')}>{(['admin','operator','customer'] as Role[]).map(r=><button key={r} className={role===r?'':'g'} onClick={()=>{setRole(r);setTimeout(()=>document.getElementById('room')?.scrollIntoView({behavior:'smooth'}),50)}}>{t('role.'+r)}</button>)}</div><div className="mono" style={{marginTop:14,opacity:.6}}>{t('hero.demoaccess')}</div></>}{login&&!real&&<SignIn onDone={(r,pl?:Lang)=>{useRealApi();setReal(true);setRole(r);setLogin(false);if(pl&&!hasStoredLang())setLang(pl,false)}}/>}</section>}
   {!role&&stage!=='home'&&<div id="guest" className="cbx">
    {stage==='doors'&&<section className="doors"><h2>{t('d.q')}</h2><div className="dr">{([['explore','d.explore'],['try','d.try'],['mine','d.mine']] as const).map(([k,l])=><Switch key={k} label={t(l)} sub={t(l+'.s')} onActivate={()=>go(k)}/>)}</div></section>}
