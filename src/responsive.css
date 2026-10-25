@@ -1,0 +1,24 @@
+/* responsive layer (loaded last) */
+html{-webkit-text-size-adjust:100%;text-size-adjust:100%}
+body{overflow-x:hidden}
+img,video,svg,canvas,iframe{max-width:100%}
+button,a,[role=button]{touch-action:manipulation}
+input,select,textarea{max-width:100%;min-width:0}
+@media (hover:none) and (pointer:coarse){input,select,textarea{font-size:16px}}
+/* tablet band 561-979 */
+@media (min-width:561px) and (max-width:979px){
+ main{max-width:min(760px,100%);padding-left:max(28px,env(safe-area-inset-left,0px));padding-right:max(28px,env(safe-area-inset-right,0px))}
+ .dc-cards{grid-template-columns:repeat(2,1fr)}
+ .th-det dl{grid-template-columns:repeat(3,minmax(0,1fr))}
+}
+/* phones: keep content clear of notch and home bar */
+@media (max-width:560px){
+ main{padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
+ footer{padding-bottom:calc(50px + env(safe-area-inset-bottom,0px))}
+ .dc-cards,.parts{grid-template-columns:1fr 1fr}
+}
+@media (max-width:380px){.dc-cards,.f2,.parts{grid-template-columns:1fr}}
+/* very large screens */
+@media (min-width:1600px){main{max-width:900px}}
+/* landscape phones */
+@media (orientation:landscape) and (max-height:480px){.doors,.show,.rm{min-height:auto}}

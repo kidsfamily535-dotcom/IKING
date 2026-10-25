@@ -2,7 +2,7 @@
 <html lang="ar" dir="rtl">
 <head>
 <meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <meta name="robots" content="noindex, nofollow">
 <title>مركز القيادة — عين الملك</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -16,7 +16,7 @@
 }
 *{box-sizing:border-box}
 html{background:var(--navy);color:var(--ivory);font-family:var(--sans);font-size:16px;line-height:1.7}
-body{margin:0;min-height:100vh}
+body{margin:0;min-height:100vh;min-height:100dvh;overflow-x:hidden;-webkit-text-size-adjust:100%}
 button,input,textarea{font:inherit;color:inherit}
 :focus-visible{outline:2px solid var(--gold);outline-offset:3px}
 [hidden]{display:none!important}
@@ -169,6 +169,17 @@ section.block h2{color:var(--gold);font-size:.9rem;letter-spacing:.06em;margin-b
 .btn.brk{border:1px solid var(--bad);color:var(--bad);background:transparent;box-shadow:none}
 .btn.brk:hover:not(:disabled){background:rgba(216,132,122,.12);border-color:var(--bad)}
 @media (max-width:700px){.rgrow{grid-template-columns:1fr}}
+
+/* responsive pass: safe areas, wide content, touch, tablet */
+#room{padding-left:max(28px,env(safe-area-inset-left,0px));padding-right:max(28px,env(safe-area-inset-right,0px));padding-bottom:calc(64px + env(safe-area-inset-bottom,0px))}
+img,video,svg,canvas{max-width:100%}
+pre,code{overflow-x:auto;max-width:100%}
+.btn,button,select,input,textarea{max-width:100%}
+@media (max-width:900px){#room{padding-left:max(18px,env(safe-area-inset-left,0px));padding-right:max(18px,env(safe-area-inset-right,0px));padding-bottom:calc(48px + env(safe-area-inset-bottom,0px))}}
+@media (min-width:601px) and (max-width:1024px){.kpis{grid-template-columns:repeat(2,1fr)}.rgrow{grid-template-columns:1fr 1fr}}
+@media (max-width:600px){.kpis{grid-template-columns:1fr 1fr}.btn,button{min-height:44px}}
+@media (hover:none) and (pointer:coarse){.btn,button,select{min-height:44px}input,select,textarea{font-size:16px}}
+@media (min-width:1600px){#room{max-width:1360px}}
 </style>
 </head>
 <body>

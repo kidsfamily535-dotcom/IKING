@@ -1,5 +1,5 @@
 /* ملف الرحلة الحي: خلفية أردوازية، بطاقات عاجية للقراءة، ذهب شامبانيا. أهداف اللمس 44px فأكثر. */
-.tf{--n:#232a30;--s:#2b333a;--g:#D8B66A;--i:#F5ECDD;--p:#fbf8f1;--k:#1c1710;min-height:100vh;background:var(--n);color:var(--i);font:400 16px/1.8 Tajawal,system-ui,sans-serif;padding:72px 16px 48px}
+.tf{--n:#232a30;--s:#2b333a;--g:#D8B66A;--i:#F5ECDD;--p:#fbf8f1;--k:#1c1710;min-height:100vh;min-height:100dvh;background:var(--n);color:var(--i);font:400 16px/1.8 Tajawal,system-ui,sans-serif;padding:72px 16px 48px}
 .tf-top{max-width:1100px;margin:0 auto 18px;display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap}
 .tf-back{color:var(--g);min-height:44px;display:inline-flex;align-items:center;text-underline-offset:5px}
 .tf-sim{font-size:13px;color:var(--g);border:1px solid #D8B66A66;border-radius:10px;padding:4px 14px}
