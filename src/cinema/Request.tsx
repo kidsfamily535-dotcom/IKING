@@ -1,7 +1,7 @@
 import {useEffect,useMemo,useState} from 'react';
 import './cinema.css';import './request.css';
 import {useI18n} from '../i18n';
-import LangSwitch from '../LangSwitch';
+import LangSwitch from '../LangSwitch';import TopBar from './TopBar';import './discover.css';
 import {HUBS,hub,dist,flightMin,rangeFor} from '../cabin/geo';
 import {copy} from '../cabin/copy';
 import Radar from '../cabin/Radar';
@@ -124,8 +124,8 @@ const L=(o?:Ln)=>o?(o[lang]||o.en||o.ar||''):'';
  return <div className={`rq cn${ar?' ar':''}`} dir={ar?'rtl':'ltr'} lang={lang}>
   <div className="rq-bg" aria-hidden="true"/><div className="cn-shade" aria-hidden="true"/><div className="cn-grain" aria-hidden="true"/>
   <LangSwitch/>
-  <header className="rq-top"><a className="rq-brand" href="/"><svg viewBox="0 0 40 24" aria-hidden="true"><path d="M2 12C9 2 31 2 38 12 31 22 9 22 2 12Z" fill="none" stroke="#d9bf86" strokeWidth="1.2"/><circle cx="20" cy="12" r="4.6" fill="#d9bf86"/><circle cx="20" cy="12" r="1.8" fill="#02040a"/></svg><span>{c.name}<small>PRIVATE AVIATION INTELLIGENCE</small></span></a>
-   {step<5&&<ol className="rq-prog" aria-label={`${[0,2,3,4].indexOf(step)+1}/4`}>{[0,2,3,4].map(i=><li key={i} className={i<=step?'on':''}/>)}</ol>}</header>
+  <TopBar active={3} name={c.name}/>
+  <div className="rq-dots">{step<5&&<ol className="rq-prog" aria-label={`${[0,2,3,4].indexOf(step)+1}/4`}>{[0,2,3,4].map(i=><li key={i} className={i<=step?'on':''}/>)}</ol>}</div>
   <div className="rq-wrap">
   {radar}
   <main className="rq-main" key={step+'-'+(pick===null?'f':'p')}>
