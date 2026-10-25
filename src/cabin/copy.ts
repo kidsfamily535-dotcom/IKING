@@ -45,7 +45,7 @@ const ar={
 };
 type C=typeof ar;
 const en:C={
- brand:"The King's Eye",sim:'Demo · sample data',
+ brand:"Eye King",sim:'Demo · sample data',
  simFoot:'Demo. No real data and nothing is sent to any operator. Aircraft and times are examples; distances and durations are computed from coordinates.',
  phases:['Decision','Preparation','Flight','Ground','Arrival'],
  eye:{doors:'Waiting for a word from you',tracked:'Under my eye',ask:'Waiting for your destination',understand:'Understanding your trip',search:'Checking the market',found:'Found something worth a look',recommend:'Recommending one option',approve:'I need your approval',waiting:"Waiting for the operator's reply",confirmed:'Request confirmed',monitor:'Watching your trip',done:'Trip complete'},

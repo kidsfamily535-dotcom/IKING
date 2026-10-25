@@ -9,7 +9,7 @@ import Profile,{profNav} from './Profile';
 import Guardian,{CompanionChips} from './Guardian';
 import LangSwitch from './LangSwitch';
 import './cinema/cinema.css';import './cinema/request.css';import './cinema/room.css';
-const BRAND:Record<string,string>={ar:'عين الملك',en:'The King’s Eye',ru:'Око Короля',tr:'Kralın Gözü'};
+const BRAND:Record<string,string>={ar:'عين الملك',en:'Eye King',ru:'Око Короля',tr:'Kralın Gözü'};
 const LOC={ar:'ar-EG',en:'en-GB',tr:'tr-TR',ru:'ru-RU'} as const;
 const SAMPLE:MyTrip={id:'sim',origin:'RUH',destination:'JED',departureAt:null,createdAt:'',companions:[],priority:null};
 const NAME={now:'room.n0',wx:'room.n1',trips:'room.n2',mem:'j.mem.title'} as const;

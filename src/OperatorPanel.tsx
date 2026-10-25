@@ -5,11 +5,11 @@ import LangSwitch from './LangSwitch';
 import './opanel.css';
 // لوحة المشغّل الحقيقية (?view=panel): 4 تبويبات فوق قاعدة I KING. كل الصلاحيات من RLS والدوال، والواجهة لا تقرّر شيئًا حرجًا.
 const S={
-ar:{title:'لوحة المشغّل',in:'ادخل بالإيميل',email:'الإيميل',send:'ابعت رابط الدخول',sent:'الرابط وصل إيميلك. افتحه وارجع هنا.',out:'خروج',noop:'حسابك مش مفعّل كمشغّل لسه. كلّم فريق iKing.',
+ar:{title:'لوحة المشغّل',in:'ادخل بالإيميل',email:'الإيميل',send:'ابعت رابط الدخول',sent:'الرابط وصل إيميلك. افتحه وارجع هنا.',out:'خروج',noop:'حسابك مش مفعّل كمشغّل لسه. كلّم فريق Eye King.',
 tabs:['طائراتي','رحلاتي','الطلبات','الدفع'],sub:['طائراتك المسجّلة وحالة اعتمادها','رحلاتك المعروضة وحالة كل واحدة','طلبات مناسبة لطائراتك، بانتظار سعرك','طريقة استلام دفعتك والرحلات التي قبلها العملاء'],
 brandSub:'بوابة المشغّل',loginH:'ادخل إلى لوحتك',loginP:'اكتب إيميلك ونرسل لك رابط دخول. من غير كلمة سر.',another:'استخدم إيميلًا آخر',
 side:'الطلبات المناسبة تصلك. وفريقنا يراجع كل سعر قبل ما يشوفه العميل.',
-qTitle:'سعرك للمراجعة',qHow:'كيف يصل سعرك للعميل',qHow1:'تكتب سعرك الإجمالي وصلاحيته.',qHow2:'فريق iKing يراجعه ويؤكد التوفر معك.',qHow3:'بعد موافقته يظهر للعميل. اسم العميل يبقى عندنا.',
+qTitle:'سعرك للمراجعة',qHow:'كيف يصل سعرك للعميل',qHow1:'تكتب سعرك الإجمالي وصلاحيته.',qHow2:'فريق Eye King يراجعه ويؤكد التوفر معك.',qHow3:'بعد موافقته يظهر للعميل. اسم العميل يبقى عندنا.',
 qPick:'اختر طلبًا من القائمة لتسعّره.',qTrust:'السعر هنا للمراجعة. مش عرضًا نهائيًا للعميل.',noPhoto:'بدون صورة',seatsN:'مقاعد',
 add:'إضافة',save:'حفظ',edit:'تعديل',cancel:'إلغاء',
 model:'الطراز',maker:'الشركة المصنّعة',year:'سنة الصنع',pax:'عدد المقاعد',bag:'حد الأمتعة (كجم)',range:'المدى (ميل بحري)',layout:'التخطيط',amen:'المرافق (افصل بفاصلة)',apt:'متطلبات المطارات',lic:'رقم الترخيص / AOC',reg:'التسجيل (خاص، مش بيظهر للعملاء)',photos:'روابط صور حقيقية (https، افصل بفاصلة)',notes:'ملاحظات',
@@ -20,11 +20,11 @@ PENDING_VERIFICATION:'بانتظار التحقق',AVAILABLE:'متاحة',HELD:'
 noreq:'مفيش طلبات جديدة.',pax2:'ركّاب',offer:'رد بسعر',decline:'اعتذار',quoteP:'سعرك (USD)',hrs:'صالح لمدة (ساعات)',reason:'السبب (اختياري)',sendq:'ابعت السعر للمراجعة',sentq:'اتبعت. الفريق هيراجعه قبل ما يوصل للعميل.',
 paydet:'طريقة استلام الدفع',link:'رابط دفع',bank:'تحويل بنكي',linkF:'رابط الدفع (https)',bankF:'بيانات التحويل',warn:'ما تكتبش أرقام بطاقات. البيانات دي بتبان للفريق بس.',
 acc:'رحلات قبلها العميل',none:'مفيش رحلات مقبولة لسه.',got:'استلمت الدفع',ref:'رقم التحويل / الإيصال',conf:'تأكيد',waiting:'بانتظار تأكيد الفريق',done:'الفريق أكّد الدفع',pnote:'ضغطك على «استلمت الدفع» تسجيل منك، والفريق هو اللي يأكده.',err:'حصلت مشكلة'},
-en:{title:'Operator panel',in:'Sign in by email',email:'Email',send:'Send sign-in link',sent:'Link sent. Open it, then come back.',out:'Sign out',noop:'Your account is not an active operator yet. Contact the iKing team.',
+en:{title:'Operator panel',in:'Sign in by email',email:'Email',send:'Send sign-in link',sent:'Link sent. Open it, then come back.',out:'Sign out',noop:'Your account is not an active operator yet. Contact the Eye King team.',
 tabs:['My aircraft','My flights','Requests','Payment'],sub:['Your registered aircraft and their approval status','Your listed flights and the status of each','Requests that fit your aircraft, waiting for your price','How you get paid and the flights customers accepted'],
 brandSub:'Operator portal',loginH:'Open your panel',loginP:'Enter your email and we send a sign-in link. No password.',another:'Use another email',
 side:'Matching requests reach you. Our team reviews every price before a customer sees it.',
-qTitle:'Your price, for review',qHow:'How your price reaches the customer',qHow1:'You enter your total price and how long it holds.',qHow2:'The iKing team reviews it and confirms availability with you.',qHow3:'Only then does the customer see it. The customer name stays with us.',
+qTitle:'Your price, for review',qHow:'How your price reaches the customer',qHow1:'You enter your total price and how long it holds.',qHow2:'The Eye King team reviews it and confirms availability with you.',qHow3:'Only then does the customer see it. The customer name stays with us.',
 qPick:'Pick a request from the list to price it.',qTrust:'This price is for review. It is not a final offer to the customer.',noPhoto:'No photo',seatsN:'seats',
 add:'Add',save:'Save',edit:'Edit',cancel:'Cancel',
 model:'Model',maker:'Manufacturer',year:'Year built',pax:'Seats',bag:'Baggage limit (kg)',range:'Range (nm)',layout:'Layout',amen:'Amenities (comma separated)',apt:'Airport requirements',lic:'Licence / AOC no.',reg:'Registration (private, never shown to customers)',photos:'Real photo links (https, comma separated)',notes:'Notes',
@@ -46,7 +46,7 @@ const IC=[
  <path key="c" d="M4 5h16v11H8l-4 4zM8 9h8M8 12h5"/>,
  <path key="d" d="M3 7h18v12H3zM3 7l2-3h14l2 3M16 13h2"/>];
 const Ic=({i}:{i:number})=><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">{IC[i]}</svg>;
-const Brand=({T}:{T:Tx})=><div className="op-brand"><i aria-hidden="true"/><span><b>THE KING'S EYE</b><small>{T.brandSub}</small></span></div>;
+const Brand=({T}:{T:Tx})=><div className="op-brand"><i aria-hidden="true"/><span><b>EYE KING</b><small>{T.brandSub}</small></span></div>;
 export default function OperatorPanel(){
  const {lang,dir}=useI18n();const T:Tx=lang==='ar'?S.ar:S.en;
  const [ses,setSes]=useState<string|null|undefined>(undefined),[mail,setMail]=useState(''),[ok,setOk]=useState<boolean|null>(null),[tab,setTab]=useState(0),[err,setErr]=useState(''),[cnt,setCnt]=useState(0);

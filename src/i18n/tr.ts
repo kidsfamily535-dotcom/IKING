@@ -44,7 +44,7 @@ export const tur:Record<Key,string>={
 'hero.enter':'Göze gir','hero.pick.aria':'Demo rolünüzü seçin','hero.demoaccess':'DEMO ACCESS · gerçek giriş değil','hero.realLogin':'Gerçek giriş',
 'disc.title':'Göz izliyor','disc.lead':'Bir operatör onaylamadıkça hiçbir şey “müsait” sayılmaz.','disc.run':'Gözü çalıştır',
 'opp.title':'Fırsatlar','table.title':'Masada','table.empty':'Şu anda dikkatinizi gerektiren bir şey yok',
-'footer':"THE KING'S EYE · demo sürümü. Bir operatör onaylamadıkça hiçbir uçak “müsait” değildir.",
+'footer':"EYE KING · demo sürümü. Bir operatör onaylamadıkça hiçbir uçak “müsait” değildir.",
 'legal.privacy':"Gizlilik Politikası",
 'legal.disclaimer':"Sorumluluk Reddi",
 'legal.terms':"Kullanım Şartları",

@@ -42,7 +42,7 @@ function Apron({d,s}:{d:D;s:S}){
   {ORDER.map(k=>{const [x,y]=POS[k],on=s.on.includes(k);return <g key={k} className={`jx-sv${on?' on':''}`} transform={`translate(${x} ${y})`}>
    <circle r="17" className="jx-halo"/><circle r="7" className="jx-dot"/>
    <text y="34" textAnchor="middle">{d.sv[k]}</text></g>})}
-  <g className="jx-eye" style={{transform:`translate(${ex}px,${ey}px)`}} role="img" aria-label="The King’s Eye"><circle r="14"/><circle r="4"/></g>
+  <g className="jx-eye" style={{transform:`translate(${ex}px,${ey}px)`}} role="img" aria-label="Eye King"><circle r="14"/><circle r="4"/></g>
  </svg>;
 }
 export default function JetexCut(){
@@ -51,7 +51,7 @@ export default function JetexCut(){
  useEffect(()=>{const p=document.body.style.background;document.body.style.background='#F4F1E8';return()=>{document.body.style.background=p}},[]);
  const n=d.st.length,s=d.st[i],last=i===n-1,ok=done.includes(i),cur=lang==='ar'||lang==='ru'?lang:'en';
  return <main className="jx">
-  <header className="jx-bar"><span className="jx-mark">The King’s Eye <i>· Jetex</i></span>
+  <header className="jx-bar"><span className="jx-mark">Eye King <i>· Jetex</i></span>
    <div className="jx-tg" role="group">{SW.map(o=><button key={o.l} className={cur===o.l?'on':''} aria-pressed={cur===o.l} lang={o.l} onClick={()=>setLang(o.l)}>{o.label}</button>)}</div></header>
   <p className="jx-who">{d.head}<span className="jx-sim">{cp('badge.sim')}</span></p>
   <nav className="jx-steps" aria-label={d.head}>{d.st.map((x,k)=><button key={x.n} className={`jx-s${k===i?' on':''}${k<i?' past':''}`} aria-current={k===i} onClick={()=>setI(k)}><b>{x.code}</b><span>{x.n}</span></button>)}</nav>

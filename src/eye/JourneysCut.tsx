@@ -26,7 +26,7 @@ export default function JourneysCut(){
  const input=(ph:string,fn:()=>void)=><div className="jy-ask"><input value={q} onChange={e=>setQ(e.target.value)} onKeyDown={e=>{if(e.key==='Enter')fn()}} placeholder={ph} aria-label={ph}/><button className="jy-chip" onClick={fn}>أرسل</button></div>;
  const Q=['إلى أين وجهتك؟','متى؟','كم عدد المسافرين؟'];
  return <div className="jy" dir="rtl" lang="ar"><div className="app">
-  <div className="nav"><span className="mark">THE KING’S EYE</span><nav aria-label="التنقل">{NAV.map(([k,l])=><button key={k} aria-current={tab===k?'page':undefined} onClick={()=>go(k)}>{l}</button>)}</nav></div>
+  <div className="nav"><span className="mark">EYE KING</span><nav aria-label="التنقل">{NAV.map(([k,l])=><button key={k} aria-current={tab===k?'page':undefined} onClick={()=>go(k)}>{l}</button>)}</nav></div>
   <main>
   {tab==='home'&&<><p className="jy-sub" style={{margin:'10px 0 18px'}}>مساء الخير، محمد</p><Hero p={p}/>
    <section className="jy-sec" id="my-trips"><h2>رحلاتي</h2><p className="jy-sub">رحلتك القادمة وذكرى رحلاتك السابقة. وكل رحلة تُفتح بوصفها ذكرى.</p><div className="chips"><button className="jy-chip" onClick={()=>go('trips')}>افتح رحلاتي</button></div><div className="mem">{MEM.map(m=><button key={m[0]} className="m" style={{background:`linear-gradient(170deg,${m[2]})`}} onClick={()=>go('trips')}><b>{m[0]}</b><span>{m[1]}</span></button>)}</div></section>

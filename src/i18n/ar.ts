@@ -43,7 +43,7 @@ export const ar={
 'hero.enter':'ادخل إلى العين','hero.pick.aria':'اختر دورك التجريبي','hero.demoaccess':'DEMO ACCESS · ليس تسجيل دخول حقيقي','hero.realLogin':'دخول حقيقي',
 'disc.title':'العين ساهرة','disc.lead':'لا يُعدّ شيء «متاحًا» ما لم يؤكده مشغّل.','disc.run':'أطلِق العين',
 'opp.title':'الفرص','table.title':'بين يديك','table.empty':'لا شيء يستوجب انتباهك الآن',
-'footer':"THE KING'S EYE · نسخة تجريبية. ولا تُعدّ طائرة «متاحة» ما لم يؤكدها مشغّل.",
+'footer':"EYE KING · نسخة تجريبية. ولا تُعدّ طائرة «متاحة» ما لم يؤكدها مشغّل.",
 'legal.privacy':"سياسة الخصوصية",
 'legal.disclaimer':"إخلاء المسؤولية",
 'legal.terms':"شروط الاستخدام",

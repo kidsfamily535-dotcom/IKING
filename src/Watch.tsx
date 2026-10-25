@@ -100,7 +100,7 @@ export default function Watch(){
   {err&&<p className="er" role="alert">{err}</p>}
   <Switch primary busy={busy} disabled={authed===null} label={busy?c.starting:authed?c.start:c.see} onActivate={start}/></div>;
  return <div className="wt" dir={dir} lang={lang}><div className="wrap">
-  <header><span className="mark">{lang==='ar'?'عين الملك':'The King’s Eye'}</span><LangSwitch/></header>
+  <header><span className="mark">{lang==='ar'?'عين الملك':'Eye King'}</span><LangSwitch/></header>
   {sent?<main className="sent" aria-live="polite"><div className="wr"><WRadar ap={ap} a={ap.find(x=>x.iata===pv?.o)} b={ap.find(x=>x.iata===pv?.d)} nm={nm} warn={warnCodes}/></div><h1>{c.sentH}</h1><p className="lead">{c.sentB(sent)}</p><p className="dim">{c.sentN}</p></main>
   :cur?<main aria-live="polite"><div className="wr"><WRadar ap={ap} a={ap.find(x=>x.iata===cur.origin)} b={ap.find(x=>x.iata===cur.destination)} nm={nm} warn={warnCodes}/></div>
    <h1>{head}</h1><p className="dim">{when(cur.departureAt)}</p>

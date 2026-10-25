@@ -92,7 +92,7 @@ button.sw:focus-visible{outline:2px solid var(--cb-blue);outline-offset:3px}
 .wt.wt .wxl li{border-top:1px solid color-mix(in srgb,var(--t-ink) 9%,transparent)}
 @media(max-width:560px){.wt.wt .form .sw:not(.small){max-width:none;justify-self:stretch}}
 
-/* ===== هوية iKing على الصفحة الرئيسية ===== */
+/* ===== هوية Eye King على الصفحة الرئيسية ===== */
 /* الأساسي: ذهبي نحاسي مملوء بنص غامق وكرة عاجية بأيقونة العين. الثانويان: جرافيت بحدود بنية هادئة */
 :root{--eye:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 16'><path d='M1 8C4 3 8 1 12 1s8 2 11 7c-3 5-7 7-11 7S4 13 1 8z' fill='none' stroke='black' stroke-width='1.8'/><circle cx='12' cy='8' r='3.4' fill='black'/></svg>")}
 .hx-sw button.sw.primary{background:linear-gradient(var(--t-accent-hi),var(--t-accent) 55%,var(--t-accent-lo));border-color:var(--t-accent-hi);color:var(--t-night);box-shadow:0 12px 32px #00000066,inset 0 1px 0 #fff5,0 0 40px color-mix(in srgb,var(--t-accent) 15%,transparent)}

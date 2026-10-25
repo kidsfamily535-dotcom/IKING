@@ -1,4 +1,4 @@
-/* شارات الحالة وخط زمن الطلب (هوية iKing: أسود دافئ + ذهبي نحاسي + عاجي) */
+/* شارات الحالة وخط زمن الطلب (هوية Eye King: أسود دافئ + ذهبي نحاسي + عاجي) */
 .sc{display:inline-flex;align-items:center;gap:6px;min-height:28px;padding:2px 11px 2px 9px;border:1px solid var(--t-accent-lo);border-radius:999px;background:var(--t-surf);color:var(--t-ink);font:400 12.5px/1.2 Tajawal,system-ui,sans-serif;letter-spacing:.02em;white-space:nowrap}
 .sc svg{width:14px;height:14px;flex:none}
 .sc-confirmed{border-color:var(--t-accent);color:var(--t-accent-hi)}

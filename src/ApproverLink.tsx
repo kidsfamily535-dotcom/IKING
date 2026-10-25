@@ -14,7 +14,7 @@ type Sum={origin_code:string;origin_ar:string|null;origin_en:string|null;destina
 type View={state:'OPEN';approver_name:string|null;expires_at:string;summary:Sum}|{state:'ANSWERED';answer:'APPROVED'|'DECLINED';approver_name:string|null}|{state:'INVALID'|'EXPIRED'|'REVOKED'|'CLOSED'|'CHANGED'};
 type L='ar'|'en';
 const T:Record<L,Record<string,string>>={
-ar:{brand:'THE KING\'S EYE',desk:'موافقة رحلة',load:'جارٍ فتح العرض…',neterr:'تعذّر الاتصال. تحقّق من الشبكة ثم أعد المحاولة.',retry:'إعادة المحاولة',
+ar:{brand:'EYE KING',desk:'موافقة رحلة',load:'جارٍ فتح العرض…',neterr:'تعذّر الاتصال. تحقّق من الشبكة ثم أعد المحاولة.',retry:'إعادة المحاولة',
  INVALID:'هذا الرابط غير صالح',INVALID_s:'تأكد أنك فتحت الرابط كاملًا كما وصلك، أو اطلب رابطًا جديدًا ممن جهّز الرحلة.',
  EXPIRED:'انتهت صلاحية الرابط',EXPIRED_s:'اطلب رابطًا جديدًا ممن جهّز الرحلة إن كان العرض لا يزال يهمك.',
  REVOKED:'أُلغي هذا الرابط',REVOKED_s:'أصدر من جهّز الرحلة رابطًا أحدث. اطلب منه الرابط الجديد.',
@@ -26,7 +26,7 @@ ar:{brand:'THE KING\'S EYE',desk:'موافقة رحلة',load:'جارٍ فتح �
  yes:'أوافق',yesS:'نية حجز، بلا التزام نهائي',no:'لا يناسبني',noS:'يبقى العرض مفتوحًا لمن جهّزه',note:'ملاحظة (اختياري)',failed:'تعذّر تسجيل قرارك. لم يُحفظ شيء، حاول مرة أخرى.',
  okY:'سجّلنا موافقتك',okYs:'هذه نية حجز وليست حجزًا مؤكدًا حتى نؤكد التفاصيل مع المشغّل.',okN:'سجّلنا قرارك',okNs:'سنبلغ من جهّز الرحلة. شكرًا لوقتك.',
  doneY:'سبق أن وافقت على هذا العرض',doneN:'سبق أن سجّلت قرارك بشأن هذا العرض',expires:'ينتهي الرابط'},
-en:{brand:'THE KING\'S EYE',desk:'Trip approval',load:'Opening the offer…',neterr:'Could not connect. Check your network and try again.',retry:'Try again',
+en:{brand:'EYE KING',desk:'Trip approval',load:'Opening the offer…',neterr:'Could not connect. Check your network and try again.',retry:'Try again',
  INVALID:'This link is not valid',INVALID_s:'Make sure you opened the full link as it was sent, or ask the person who prepared the trip for a new one.',
  EXPIRED:'This link has expired',EXPIRED_s:'Ask the person who prepared the trip for a new link if the offer still matters to you.',
  REVOKED:'This link was cancelled',REVOKED_s:'A newer link was issued. Ask the person who prepared the trip for it.',
@@ -45,7 +45,7 @@ export default function ApproverLink(){
  const token=useMemo(readToken,[]);
  const [v,setV]=useState<View|null>(null),[neterr,setNeterr]=useState(false),[note,setNote]=useState('');
  const [busy,setBusy]=useState(false),[err,setErr]=useState(''),[done,setDone]=useState<'APPROVED'|'DECLINED'|null>(null);
- useEffect(()=>{document.title=`${t.desk} · THE KING'S EYE`;
+ useEffect(()=>{document.title=`${t.desk} · EYE KING`;
   for(const [n,c] of [['robots','noindex,nofollow'],['referrer','no-referrer']]){let m=document.querySelector(`meta[name=${n}]`);if(!m){m=document.createElement('meta');m.setAttribute('name',n);document.head.appendChild(m)}m.setAttribute('content',c)}},[t.desk]);
  const load=async()=>{setNeterr(false);setV(null);
   if(!/^[0-9a-f]{64}$/.test(token)){setV({state:'INVALID'});return}

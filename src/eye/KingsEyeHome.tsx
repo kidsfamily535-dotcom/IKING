@@ -28,7 +28,7 @@ export default function KingsEyeHome({real}:{real:boolean}){
  const n=(opp.length?1:0)+(reqs?1:0),tone:Tone=opp.length||reqs?'opp':'calm';
  const time=at.toLocaleTimeString(LOC[lang],{hour:'2-digit',minute:'2-digit'});
  return <section className="sec ke-home" aria-labelledby="ke-h">
-  <div className="mono">THE KING'S EYE · WATCHING</div>
+  <div className="mono">EYE KING · WATCHING</div>
   <EyeMark tone={tone} label/>
   <h2 id="ke-h" className="ke-greet">{cp('greet')}</h2>
   <p className="lead ke-sub">{n?cp('greet.sub'):cp('greet.none')} <Truth sim={!real}/></p>

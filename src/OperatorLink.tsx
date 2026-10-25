@@ -10,7 +10,7 @@ type Offer={aircraft_type:string;price:number;currency:string;includes_fees:bool
 type View={state:'OPEN';operator_name:string;expires_at:string;trip:Trip}|{state:'ANSWERED';answer:'OFFER'|'DECLINED';operator_name:string;answered_at:string;offer:Offer|null}|{state:'INVALID'|'EXPIRED'|'CLOSED'};
 type L='ar'|'en';
 const T:Record<L,Record<string,string>>={
-ar:{brand:'THE KING\'S EYE',desk:'مكتب المشغّل',load:'جارٍ فتح الطلب…',neterr:'تعذّر الاتصال. تحقّق من الشبكة ثم أعد المحاولة.',retry:'إعادة المحاولة',
+ar:{brand:'EYE KING',desk:'مكتب المشغّل',load:'جارٍ فتح الطلب…',neterr:'تعذّر الاتصال. تحقّق من الشبكة ثم أعد المحاولة.',retry:'إعادة المحاولة',
  INVALID:'هذا الرابط غير صالح',INVALID_s:'تأكد أنك فتحت الرابط كاملًا كما وصلك. إن استمرت المشكلة فاطلب رابطًا جديدًا من فريقنا.',
  EXPIRED:'انتهت صلاحية الرابط',EXPIRED_s:'اطلب من فريقنا رابطًا جديدًا إن كان الطلب لا يزال مهمًا لك.',
  CLOSED:'أُغلق هذا الطلب',CLOSED_s:'لم يعد الطلب مفتوحًا، ولا يلزمك أي إجراء. شكرًا لوقتك.',
@@ -26,7 +26,7 @@ ar:{brand:'THE KING\'S EYE',desk:'مكتب المشغّل',load:'جارٍ فتح
  failed:'تعذّر إرسال الرد. لم يُحفظ شيء، يمكنك المحاولة مرة أخرى.',
  sent:'وصل ردّك',sentO:'استلمنا عرضك. يراجعه فريقنا قبل أن يُبنى عليه أي شيء، وسنتواصل معك إن احتجنا إلى تأكيد.',sentD:'سجّلنا اعتذارك. شكرًا على سرعة ردك.',
  yours:'ما سجّلناه',valUntil:'صالح حتى',incl:'شامل الرسوم',excl:'لا يشمل بعض الرسوم',min:'د',expires:'ينتهي الرابط'},
-en:{brand:'THE KING\'S EYE',desk:'Operator desk',load:'Opening the request…',neterr:'Could not connect. Check your network and try again.',retry:'Try again',
+en:{brand:'EYE KING',desk:'Operator desk',load:'Opening the request…',neterr:'Could not connect. Check your network and try again.',retry:'Try again',
  INVALID:'This link is not valid',INVALID_s:'Make sure you opened the full link as it was sent. If it still fails, ask our team for a new one.',
  EXPIRED:'This link has expired',EXPIRED_s:'Ask our team for a new link if the request still matters to you.',
  CLOSED:'This request is closed',CLOSED_s:'The request is no longer open and nothing is needed from you. Thank you for your time.',
@@ -50,7 +50,7 @@ export default function OperatorLink(){
  const [v,setV]=useState<View|null>(null),[neterr,setNeterr]=useState(false);
  const [av,setAv]=useState<boolean|null>(null),[type,setType]=useState(''),[price,setPrice]=useState(''),[cur,setCur]=useState('USD'),[fees,setFees]=useState<boolean|null>(null),[hrs,setHrs]=useState('24'),[mins,setMins]=useState(''),[restr,setRestr]=useState(''),[why,setWhy]=useState('');
  const [step,setStep]=useState<'form'|'review'|'sent'>('form'),[err,setErr]=useState(''),[busy,setBusy]=useState(false),[sentAs,setSentAs]=useState<'OFFER'|'DECLINED'|null>(null);
- useEffect(()=>{document.title=`${t.desk} · THE KING'S EYE`;
+ useEffect(()=>{document.title=`${t.desk} · EYE KING`;
   for(const [n,c] of [['robots','noindex,nofollow'],['referrer','no-referrer']]){let m=document.querySelector(`meta[name=${n}]`);if(!m){m=document.createElement('meta');m.setAttribute('name',n);document.head.appendChild(m)}m.setAttribute('content',c)}},[t.desk]);
  const load=async()=>{setNeterr(false);setV(null);
   if(!/^[0-9a-f]{64}$/.test(token)){setV({state:'INVALID'});return}

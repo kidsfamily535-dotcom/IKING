@@ -9,7 +9,7 @@ type Leg={id:string;origin:string;destination:string|null;from:string;until:stri
 type View={state:'OPEN';operator_name:string;expires_at:string;airports:Ap[];models:string[];legs:Leg[]}|{state:'INVALID'|'EXPIRED'};
 type L='ar'|'en';
 const T:Record<L,Record<string,string>>={
-ar:{brand:'THE KING\'S EYE',desk:'مكتب المشغّل',load:'جارٍ فتح مكتبك…',neterr:'تعذّر الاتصال. تحقّق من الشبكة ثم أعد المحاولة.',retry:'إعادة المحاولة',
+ar:{brand:'EYE KING',desk:'مكتب المشغّل',load:'جارٍ فتح مكتبك…',neterr:'تعذّر الاتصال. تحقّق من الشبكة ثم أعد المحاولة.',retry:'إعادة المحاولة',
  INVALID:'هذا الرابط غير صالح',INVALID_s:'تأكد أنك فتحت الرابط كاملًا كما وصلك، أو اطلب رابطًا جديدًا من فريقنا.',EXPIRED:'انتهت صلاحية الرابط',EXPIRED_s:'اطلب من فريقنا رابطًا جديدًا.',
  hello:'مرحبًا',lead:'أضف هنا الرحلات الفاضية المتاحة لديك. يراجعها فريقنا ويتحقق منها معك قبل أن يُبنى عليها أي شيء، ولا يراها أي عميل قبل ذلك.',
  add:'إضافة رحلة فاضية',origin:'من',dest:'إلى',flex:'وجهة مرنة (أي وجهة)',pick:'اختر مطارًا',from:'بداية نافذة الإقلاع',until:'نهاية نافذة الإقلاع',model:'نوع الطائرة',seats:'عدد المقاعد',
@@ -19,7 +19,7 @@ ar:{brand:'THE KING\'S EYE',desk:'مكتب المشغّل',load:'جارٍ فتح
  failed:'تعذّر الإرسال. لم يُحفظ شيء، يمكنك المحاولة مرة أخرى.',limit:'بلغتَ حد الإضافة اليومي. حاول غدًا أو تواصل مع فريقنا.',
  mine:'رحلاتك',none:'لا رحلات مضافة بعد.',withdraw:'سحب',withdrawn:'سُحبت',any:'أي وجهة',
  RECEIVED:'استلمناها، بانتظار تحقق فريقنا',WITHDRAWN:'سُحبت',REJECTED:'لم نعتمدها',CONVERTED:'اعتُمدت',seatsN:'مقاعد',expires:'ينتهي الرابط',done:'وصلت رحلتك'},
-en:{brand:'THE KING\'S EYE',desk:'Operator desk',load:'Opening your desk…',neterr:'Could not connect. Check your network and try again.',retry:'Try again',
+en:{brand:'EYE KING',desk:'Operator desk',load:'Opening your desk…',neterr:'Could not connect. Check your network and try again.',retry:'Try again',
  INVALID:'This link is not valid',INVALID_s:'Make sure you opened the full link as it was sent, or ask our team for a new one.',EXPIRED:'This link has expired',EXPIRED_s:'Ask our team for a new link.',
  hello:'Welcome',lead:'Add the empty legs you have available. Our team reviews and verifies them with you before anything is built on them, and no customer sees them before that.',
  add:'Add an empty leg',origin:'From',dest:'To',flex:'Flexible destination (any)',pick:'Choose an airport',from:'Departure window starts',until:'Departure window ends',model:'Aircraft type',seats:'Seats',
@@ -36,7 +36,7 @@ export default function OperatorDesk(){
  const [v,setV]=useState<View|null>(null),[neterr,setNeterr]=useState(false);
  const [o,setO]=useState(''),[d,setD]=useState(''),[from,setFrom]=useState(''),[until,setUntil]=useState(''),[model,setModel]=useState(''),[seats,setSeats]=useState('4'),[price,setPrice]=useState(''),[cur,setCur]=useState('USD'),[notes,setNotes]=useState('');
  const [step,setStep]=useState<'form'|'review'>('form'),[err,setErr]=useState(''),[busy,setBusy]=useState(false),[ok,setOk]=useState(false);
- useEffect(()=>{document.title=`${t.desk} · THE KING'S EYE`;
+ useEffect(()=>{document.title=`${t.desk} · EYE KING`;
   for(const [n,c] of [['robots','noindex,nofollow'],['referrer','no-referrer']]){let m=document.querySelector(`meta[name=${n}]`);if(!m){m=document.createElement('meta');m.setAttribute('name',n);document.head.appendChild(m)}m.setAttribute('content',c)}},[t.desk]);
  const load=async()=>{setNeterr(false);
   if(!/^[0-9a-f]{64}$/.test(token)){setV({state:'INVALID'});return}

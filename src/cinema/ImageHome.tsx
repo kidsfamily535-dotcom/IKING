@@ -60,7 +60,7 @@ export default function ImageHome({real}:{real:boolean}){
   <div className="ih-hero">
    <header className="ih-top">
     <div className="ih-langs" role="group" aria-label="Language">{LANGS.map(o=><button key={o.l} type="button" className="ih-pill" aria-pressed={lang===o.l} lang={o.l} onClick={()=>setLang(o.l)}>{o.n}</button>)}</div>
-    <div className="ih-logo"><svg viewBox="0 0 48 30" fill="none" stroke="#e8c880" strokeWidth="1.6" aria-hidden="true"><path d="M3 15S11 3 24 3s21 12 21 12-8 12-21 12S3 15 3 15z"/><circle cx="24" cy="15" r="6.5"/><circle cx="24" cy="15" r="2.6" fill="#e8c880"/></svg><span dir="ltr">THE KING'S EYE</span></div>
+    <div className="ih-logo"><svg viewBox="0 0 48 30" fill="none" stroke="#e8c880" strokeWidth="1.6" aria-hidden="true"><path d="M3 15S11 3 24 3s21 12 21 12-8 12-21 12S3 15 3 15z"/><circle cx="24" cy="15" r="6.5"/><circle cx="24" cy="15" r="2.6" fill="#e8c880"/></svg><span dir="ltr">EYE KING</span></div>
     <span className="ih-pill ih-demo">{c.demo}</span>
    </header>
    <div className="ih-stage">

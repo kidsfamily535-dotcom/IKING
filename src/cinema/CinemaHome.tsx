@@ -8,7 +8,7 @@ const ROUTES:[string,string][]=[['RUH','JED'],['DXB','RUH'],['JED','CAI'],['DOH'
 type T={name:string;line:string;open:string;more:string};
 const COPY:Record<string,T>={
  ar:{name:'عين الملك',line:'عينٌ تسبق رحلتك',open:'افتح عينك',more:'استكشف'},
- en:{name:'The King’s Eye',line:'An eye ahead of every journey',open:'Open your eye',more:'Explore'},
+ en:{name:'Eye King',line:'An eye ahead of every journey',open:'Open your eye',more:'Explore'},
  ru:{name:'Око Короля',line:'Око, опережающее ваш путь',open:'Откройте око',more:'Исследовать'},
  tr:{name:'Kralın Gözü',line:'Yolculuğunuzdan önce gören göz',open:'Gözünüzü açın',more:'Keşfedin'}
 };

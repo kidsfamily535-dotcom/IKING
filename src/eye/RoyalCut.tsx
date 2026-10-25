@@ -30,7 +30,7 @@ export default function RoyalCut(){
  useEffect(()=>{const p=document.body.style.background;document.body.style.background='#ECEDEA';return()=>{document.body.style.background=p}},[]);
  const n=d.st.length,s=d.st[i],last=i===n-1,rec=!guest&&s.r,ok=done.includes(i);
  return <main className="rj">
-  <header className="rj-bar"><span className="rj-mark">The King’s Eye</span>
+  <header className="rj-bar"><span className="rj-mark">Eye King</span>
    <div className="rj-tg" role="group">
     <button className={guest?'':'on'} onClick={()=>setGuest(false)}>{d.op}</button><button className={guest?'on':''} onClick={()=>setGuest(true)}>{d.guest}</button>
     <button className={lang==='ar'?'on':''} onClick={()=>setLang('ar')} lang="ar">العربية</button><button className={lang!=='ar'?'on':''} onClick={()=>setLang('en')}>English</button></div></header>
@@ -38,7 +38,7 @@ export default function RoyalCut(){
   <div className="rj-th" role="group" style={{['--p' as string]:i/(n-1)}}>
    <span className="rj-ln"/><span className="rj-fill"/>
    {d.st.map((x,k)=><button key={x.n} className={`rj-n${k<i?' past':''}${k===i?' on':''}`} style={{['--p' as string]:k/(n-1)}} onClick={()=>setI(k)} aria-current={k===i} aria-label={x.n}><i/><span>{x.n}</span></button>)}
-   <span className="rj-eye" role="img" aria-label="The King’s Eye"><i/></span>
+   <span className="rj-eye" role="img" aria-label="Eye King"><i/></span>
   </div>
   <article className="rj-st" key={i} aria-live="polite">
    <h1>{s.t}</h1><p className="l">{s.l}</p>

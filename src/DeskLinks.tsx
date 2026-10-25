@@ -9,12 +9,12 @@ const X={ar:{h:'مكاتب المشغّلين',name:'اسم المشغّل',cont
   revoke:'إلغاء الرابط',revoked:'ملغى',opened:'فُتح',notOpened:'لم يُفتح بعد',exp:'ينتهي',err:'تعذّر التنفيذ',needName:'اكتب اسم المشغّل',empty:'لا مكاتب بعد.',
   sh:'رحلات فاضية وصلت من المشغّلين',sempty:'لا رحلات مستلَمة.',any:'أي وجهة',unknownModel:'نوع طائرة غير معروف في القاعدة',seats:'مقاعد',
   RECEIVED:'مستلَمة، بانتظار التحقق',WITHDRAWN:'سحبها المشغّل',REJECTED:'مرفوضة',CONVERTED:'معتمدة',
-  subj:'رابط مكتبك في THE KING\'S EYE',body:(u:string)=>`مرحبًا،\n\nهذا رابطك الخاص لإضافة رحلاتك الفاضية، بلا حاجة إلى حساب:\n${u}\n\nشكرًا لكم.`},
+  subj:'رابط مكتبك في EYE KING',body:(u:string)=>`مرحبًا،\n\nهذا رابطك الخاص لإضافة رحلاتك الفاضية، بلا حاجة إلى حساب:\n${u}\n\nشكرًا لكم.`},
  en:{h:'Operator desks',name:'Operator name',contact:'Email or phone (optional)',days:'Link lifetime',d:'d',issue:'Issue desk link',copy:'Copy link',copied:'Copied',mail:'Open email draft',once:'This link is shown only now. Use Revoke to cancel it.',
   revoke:'Revoke link',revoked:'Revoked',opened:'Opened',notOpened:'Not opened yet',exp:'Expires',err:'Could not complete',needName:'Enter the operator name',empty:'No desks yet.',
   sh:'Empty legs received from operators',sempty:'No legs received.',any:'Any destination',unknownModel:'Aircraft type not in our database',seats:'seats',
   RECEIVED:'Received, awaiting verification',WITHDRAWN:'Withdrawn by operator',REJECTED:'Rejected',CONVERTED:'Accepted',
-  subj:'Your desk link on THE KING\'S EYE',body:(u:string)=>`Hello,\n\nThis is your private link to add your empty legs, no account needed:\n${u}\n\nThank you.`}};
+  subj:'Your desk link on EYE KING',body:(u:string)=>`Hello,\n\nThis is your private link to add your empty legs, no account needed:\n${u}\n\nThank you.`}};
 export default function DeskLinks(){
  const {lang}=useI18n();const t=X[lang==='ar'?'ar':'en'];
  const [desks,setDesks]=useState<Desk[]|null>(null),[subs,setSubs]=useState<Sub[]|null>(null),[name,setName]=useState(''),[contact,setContact]=useState(''),[days,setDays]=useState('30');

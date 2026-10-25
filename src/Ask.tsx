@@ -62,7 +62,7 @@ export default function Ask(){
  const selF=(k:'origin_code'|'destination_code',lbl:string)=><label className="cb-row"><span>{lbl}</span><select value={f[k]??''} onChange={e=>setF({...f,[k]:e.target.value||null})}><option value="">…</option>{aps.length?aps.map(a=><option key={a.iata_code} value={a.iata_code}>{apName(a)}</option>):f[k]?<option value={f[k]!}>{f[k]}</option>:null}</select></label>;
  const said=(k:string)=>ev[k]?<small className="ak-said">{t('ask.said',{x:ev[k]})}</small>:null;
  return <div className="cb ak" data-phase={stage==='sent'?4:stage==='say'||stage==='reading'||stage==='ask'?0:2} dir={D} lang={lang}>
-  <header className="cb-top"><span className="cb-brand">THE KING'S EYE</span>
+  <header className="cb-top"><span className="cb-brand">EYE KING</span>
    <div className="cb-lang" role="group" aria-label="Language">{LANGS.map(l=><button key={l} type="button" lang={l} aria-pressed={lang===l} onClick={()=>setLang(l as Lang)}>{l.toUpperCase()}</button>)}</div></header>
   <div className="cb-grid"><section className="cb-panel" aria-live="polite"><div className="cb-body" key={stage}>
    <input className="ak-trap" tabIndex={-1} autoComplete="off" aria-hidden value={trap} onChange={e=>setTrap(e.target.value)} name="website"/>

@@ -98,7 +98,7 @@ export default function Cabin(){
  const status=(k:'inferred'|'unknown'|'estimated'|'pending'|'confirmed')=><span className={`cb-st ${k}`}>{c.found.st[k]}</span>;
  const stepsDone=(i:number)=>i===3?false:scan>i+0;
  return <div className="cb" data-phase={PHASE[stage]} data-stage={stage} dir={L==='ar'?'rtl':'ltr'} lang={L}>
-  <header className="cb-top"><span className="cb-brand"><Mark/><span className="cb-brand-t"><b>{c.brand}</b><small>THE KING'S EYE</small></span></span><span className="cb-sim">{c.sim}</span>
+  <header className="cb-top"><span className="cb-brand"><Mark/><span className="cb-brand-t"><b>{c.brand}</b><small>EYE KING</small></span></span><span className="cb-sim">{c.sim}</span>
    <div className="cb-lang" role="group" aria-label="Language">{LANGS.map(l=><button key={l} type="button" lang={l} aria-pressed={L===l} onClick={()=>setLang(l as Lang)}>{l.toUpperCase()}</button>)}</div></header>
   <div className="cb-grid">
    <nav className="cb-rail" aria-label={c.phases[PHASE[stage]]}><ol>{c.phases.map((p,i)=><li key={p} className={i<PHASE[stage]?'past':i===PHASE[stage]?'now':''} aria-current={i===PHASE[stage]?'step':undefined}><i/><span>{p}</span></li>)}</ol></nav>

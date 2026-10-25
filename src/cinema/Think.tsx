@@ -44,7 +44,7 @@ const T:Record<Lg,any>={
   on:{a:'خفيفة وسريعة',b:'متوسطة متوازنة',c:'واسعة الكابينة',d:'مرنة متعددة المحطات'},
   note:'هذه البصمة توجّه التوصيات في هذه التجربة فقط. واستخدامها في رحلات حقيقية يتطلب ربطها بمنظومة التحليل الفعلية.',
   end:'لقد رأيت ما تستطيعه العين. الآن، أخبرها بما تحتاج إليه.',cta:'ابدأ رحلتك'},
- en:{name:'The King’s Eye',sim:'Illustrative simulation — not real operational data',
+ en:{name:'Eye King',sim:'Illustrative simulation — not real operational data',
   h:'The Eye does not just look for an aircraft; it looks for the option that best fits the mission.',s:'Private aviation intelligence, from spotting the opportunity to accompanying the journey.',
   loop:['Watch','Understand','Verify','Propose','Ask approval','Follow','Learn'],
   ih:'Inside the Eye',ihs:'Six stages .. one decision',ihp:'Move between the stages to see how the Eye reaches its recommendation.',strip:['Airports','Opportunities','Aircraft movement','Weather'],stl:'illustrative',

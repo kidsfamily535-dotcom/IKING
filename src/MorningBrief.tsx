@@ -13,14 +13,14 @@ export default function MorningBrief(){
    api.demandCalendar(14).catch(()=>{failed.push('تقويم الطلب');return [] as CalendarEvent[]})]);
   setB({pending:o.filter(x=>x.status==='ACTIVATION_PENDING'),parked:p,events:c,failed});setAt(new Date().toLocaleTimeString('ar-EG',{hour:'2-digit',minute:'2-digit'}))};
  useEffect(()=>{load()},[]);
- if(!b)return <section className="sec"><div className="mono">THE KING'S EYE</div><h2>العين تستعرض الشبكة…</h2></section>;
+ if(!b)return <section className="sec"><div className="mono">EYE KING</div><h2>العين تستعرض الشبكة…</h2></section>;
  const hot=b.parked.filter(a=>a.related_demand_signals>0||a.open_explicit_requests>0);
  const soon=b.events.filter(e=>e.days_until<=14);
  const items:{c:string;t:string;d:string}[]=[];
  if(b.pending.length)items.push({c:'🟡',t:`${b.pending.length} فرصة بانتظار موافقتك`,d:'لن يُرسَل شيء إلى أي عميل قبل موافقتك.'});
  if(hot.length)items.push({c:'🟡',t:`${hot.length} طائرة رابضة تقترن بها إشارة طلب أو طلب عميل`,d:'وجودها على الأرض لا يعني أنها متاحة، والتأكيد من المشغّل وحده.'});
  if(soon.length)items.push({c:'🟢',t:`${soon.length} إشارة فعالية خلال 14 يومًا`,d:'إشارات محتملة من مصادر عامة، وليست طلبات مؤكدة.'});
- return <section className="sec"><div className="mono">THE KING'S EYE · WATCHING<span className="badge b">LIVE DATA</span></div>
+ return <section className="sec"><div className="mono">EYE KING · WATCHING<span className="badge b">LIVE DATA</span></div>
   <h2>صباح الخير</h2>
   <p className="lead" style={{margin:'0 0 8px'}}>استعرضتُ الشبكة. {items.length?`ثمّة ${items.length} أمور تستوجب انتباهك:`:'لا شيء يستوجب انتباهك في هذه اللحظة.'}</p>
   {items.map((i,k)=><div className="sg" key={k}><span>{i.c} <b style={{fontWeight:500}}>{i.t}</b></span><small>{i.d}</small></div>)}

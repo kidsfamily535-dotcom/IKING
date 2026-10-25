@@ -44,7 +44,7 @@ export const en:Record<Key,string>={
 'hero.enter':'Enter the Eye','hero.pick.aria':'Choose your demo role','hero.demoaccess':'DEMO ACCESS · not a real sign-in','hero.realLogin':'Real sign-in',
 'disc.title':'The Eye is watching','disc.lead':'Nothing counts as “available” until an operator confirms it.','disc.run':'Run the Eye',
 'opp.title':'Opportunities','table.title':'On the table','table.empty':'Nothing needs your attention right now',
-'footer':"THE KING'S EYE · demo version. No aircraft is “available” until an operator confirms it.",
+'footer':"EYE KING · demo version. No aircraft is “available” until an operator confirms it.",
 'legal.privacy':"Privacy Policy",
 'legal.disclaimer':"Disclaimer",
 'legal.terms':"Terms of Use",
