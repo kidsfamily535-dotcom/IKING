@@ -125,7 +125,7 @@ const L=(o?:Ln)=>o?(o[lang]||o.en||o.ar||''):'';
   <div className="rq-bg" aria-hidden="true"/><div className="cn-shade" aria-hidden="true"/><div className="cn-grain" aria-hidden="true"/>
   <LangSwitch/>
   <header className="rq-top"><a className="rq-brand" href="/"><svg viewBox="0 0 40 24" aria-hidden="true"><path d="M2 12C9 2 31 2 38 12 31 22 9 22 2 12Z" fill="none" stroke="#d9bf86" strokeWidth="1.2"/><circle cx="20" cy="12" r="4.6" fill="#d9bf86"/><circle cx="20" cy="12" r="1.8" fill="#02040a"/></svg><span>{c.name}<small>PRIVATE AVIATION INTELLIGENCE</small></span></a>
-   {step<5&&<ol className="rq-prog" aria-label={`${step+1}/5`}>{[0,1,2,3,4].map(i=><li key={i} className={i<=step?'on':''}/>)}</ol>}</header>
+   {step<5&&<ol className="rq-prog" aria-label={`${[0,2,3,4].indexOf(step)+1}/4`}>{[0,2,3,4].map(i=><li key={i} className={i<=step?'on':''}/>)}</ol>}</header>
   <div className="rq-wrap">
   {radar}
   <main className="rq-main" key={step+'-'+(pick===null?'f':'p')}>
@@ -149,33 +149,9 @@ const L=(o?:Ln)=>o?(o[lang]||o.en||o.ar||''):'';
      <button type="button" className="rq-x" aria-label={c.del} onClick={()=>setLegs(a=>a.filter((_,j)=>j!==k))}>×</button></div>)}
     {kind==='multi'&&legs.length<3&&<button type="button" className="rq-link" onClick={addLeg}>+ {c.addLeg}</button>}
     <div className="rq-row"><span id="rq-w">{c.who}</span><div className="rq-step" role="group" aria-labelledby="rq-w"><button type="button" aria-label="−" disabled={guests<=1} onClick={()=>setGuests(g=>Math.max(1,g-1))}>−</button><output>{guests}</output><button type="button" aria-label="+" disabled={guests>=19} onClick={()=>setGuests(g=>Math.min(19,g+1))}>+</button></div></div>
-    <button type="button" className="cn-btn main rq-go" disabled={!tripOk} onClick={()=>setStep(1)}>{c.next}</button>
+    <button type="button" className="cn-btn main rq-go" disabled={!tripOk} onClick={()=>setStep(2)}>{c.next}</button>
     </div>
     <p className="rq-hint">{c.hint0}</p>
-   </>}
-   {step===1&&<>
-    <p className="rq-route">{route} · {fmt(date)} · {guests}</p><h1 className="rq-h s">{c.ms_h}</h1><p className="rq-note first">{c.ms_sub}</p>
-    {ms.length>0&&<div className="rq-chips rq-sel" role="group" aria-label={c.ms_sel}>{ms.map((id,k)=><button key={id} type="button" aria-pressed="true" onClick={()=>togM(id)}>{k===0&&ms.length>1&&<i className="rq-pri">{c.ms_pri}</i>}{L(mOf(id)?.n)} ×</button>)}</div>}
-    {seg(GROUPS.map(g=>[g.id,L(g.n)] as [string,string]),grp,setGrp,c.ms_h,'g4')}
-    <div className="rq-chips" role="group" aria-label={L(GROUPS.find(g=>g.id===grp)?.n)}>{MISS.filter(m=>m.g===grp).map(m=><button key={m.id} type="button" aria-pressed={ms.includes(m.id)} disabled={!ms.includes(m.id)&&ms.length>=MAX_M} title={L(m.d)} onClick={()=>togM(m.id)}>{L(m.n)}</button>)}</div>
-    {prim&&<div className="rq-eye" aria-live="polite">
-     <b>{L(prim.n)}</b><p className="rq-eyed">{L(prim.d)}</p>
-     <div className="rq-cap">{c.ms_watch}</div><p className="rq-eyet">{L(FAMS[prim.f].opt)}</p>
-     {famIds.filter(f=>FAMS[f].limit&&f!=='cargo').map(f=><p key={f} className="rq-lim">{L(FAMS[f].limit)}</p>)}
-     {special&&<p className="rq-lim sp" role="note">{c.ms_spec}</p>}
-     <div className="rq-cap">{c.ms_ask}</div><label className="rq-row col"><span>{L(FAMS[prim.f].q)}</span><input className="rq-in" value={ans} maxLength={110} placeholder={c.ms_askph} onChange={e=>setAns(e.target.value)}/></label>
-    </div>}
-    <details className="rq-more" open={cd.length>0||undefined}><summary>{c.ms_cond}{cd.length>0&&` · ${cd.length}`}</summary>
-     <p className="rq-note first">{c.ms_cond_sub}</p>
-     <div className="rq-chips" role="group" aria-label={c.ms_cond}>{TRAITS.map(x=><button key={x.id} type="button" aria-pressed={cd.includes(x.id)} title={L(x.e)} onClick={()=>togC(x.id)}>{L(x.n)}</button>)}</div>
-     {cd.length>0&&<ul className="rq-fx">{cd.map(id=>{const x=tOf(id)!;return <li key={id}><b>{L(x.n)}</b> {L(x.e)}</li>})}</ul>}
-     {!prim&&cd.some(i=>tOf(i)?.route)&&<p className="rq-lim sp" role="note">{c.ms_spec}</p>}
-    </details>
-    <div className="rq-chips"><button type="button" aria-pressed={priv} onClick={()=>{setPriv(v=>!v);setMs([]);setAns('')}}>{c.ms_priv}</button></div>
-    <p className="rq-note">{c.ms_note}</p>
-    <button type="button" className="cn-btn main rq-go" onClick={()=>setStep(2)}>{c.next}</button>
-    <button type="button" className="rq-link" onClick={()=>setStep(2)}>{c.skip}</button>
-    <button type="button" className="rq-link" onClick={()=>setStep(0)}>{t('ask.back')}</button>
    </>}
    {step===2&&<>
     <p className="rq-route">{route} · {fmt(date)} · {guests}</p><h1 className="rq-h s">{c.h1}</h1><p className="rq-note first">{c.sub1}</p>
@@ -186,7 +162,7 @@ const L=(o?:Ln)=>o?(o[lang]||o.en||o.ar||''):'';
     <input className="rq-in" value={note} maxLength={200} placeholder={c.notePh} aria-label={c.notePh} onChange={e=>setNote(e.target.value)}/>
     <button type="button" className="cn-btn main rq-go" onClick={()=>setStep(3)}>{c.next}</button>
     <button type="button" className="rq-link" onClick={()=>setStep(3)}>{c.skip}</button>
-    <button type="button" className="rq-link" onClick={()=>setStep(1)}>{t('ask.back')}</button>
+    <button type="button" className="rq-link" onClick={()=>setStep(0)}>{t('ask.back')}</button>
    </>}
    {step===3&&<>
     <p className="rq-route">{route} · {fmt(date)} · {guests}</p><h1 className="rq-h s">{c.ap_h}</h1><p className="rq-note first">{c.ap_sub}</p>
