@@ -125,3 +125,10 @@ svg.ih-i{width:1em;height:1em;fill:none;stroke:currentColor;stroke-width:1.5;str
 .ih .cr-hud{bottom:-1%;font-weight:500}
 .ih-go{display:block;width:fit-content;margin:10px auto 0;padding:10px 26px;border-radius:99px;background:linear-gradient(#f3e0b0,#c9a45e);color:#1b1206!important;text-decoration:none;font-weight:500;font-size:.95rem;box-shadow:0 10px 34px -10px rgba(240,170,80,.6)}
 .ih .ih-go:hover{filter:brightness(1.06)}
+
+/* الزر الترويجي الوحيد لقدرات العين: هادئ ولا ينافس زر «اكتشف العين» */
+.ih .ih-think{display:inline-flex;align-items:center;gap:10px;margin-top:14px;min-height:46px;padding:0 24px;border-radius:99px;border:1px solid #c5a46d99;background:rgba(2,4,10,.38);-webkit-backdrop-filter:blur(8px);backdrop-filter:blur(8px);color:#f6ebc9;text-decoration:none;font:500 1.05rem/1 Tajawal,'Inter',sans-serif;transition:border-color .4s,background .4s,transform .4s}
+.ih .ih-think:hover{border-color:#e8c880;background:rgba(2,4,10,.6);transform:translateY(-1px)}
+.ih .ih-think:focus-visible{outline:2px solid #f6ebc9;outline-offset:4px}
+.ih .ih-think .ih-i{width:16px;height:16px;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+.ih-ar .ih-think .ih-i{transform:scaleX(-1)}
