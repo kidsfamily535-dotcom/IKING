@@ -3,6 +3,9 @@ import './cinema.css';import './request.css';import './discover.css';import './t
 import {useI18n} from '../i18n';
 import LangSwitch from '../LangSwitch';
 import TopBar from './TopBar';
+import Radar from '../cabin/Radar';
+import {HUBS} from '../cabin/geo';
+import {copy} from '../cabin/copy';
 // «شاهد كيف تفكر العين»: صفحة ترويجية واحدة لقدرات العين. محاكاة توضيحية بالكامل: لا بحث حقيقي ولا تحقق من مصدر ولا اتصال بمشغّل.
 // بصمة المهمة هنا توجّه ترتيب الخيارات التوضيحية فقط. لا أسماء طائرات ولا أسعار ولا توفر.
 type Lg='ar'|'en';
@@ -21,7 +24,7 @@ const T:Record<Lg,any>={
  ar:{name:'عين الملك',sim:'محاكاة توضيحية — ليست بيانات تشغيلية حقيقية',
   h:'العين لا تبحث عن طائرة فحسب؛ بل تبحث عن الخيار الأنسب للمهمة.',s:'ذكاء الطيران الخاص، من اكتشاف الفرصة إلى مرافقة الرحلة.',
   loop:['راقب','افهم','تحقّق','اقترح','اعرض للموافقة','تابع','تعلّم'],
-  ih:'داخل عقل العين',ihs:'انتقل بين المراحل لترى كيف تصل العين إلى توصيتها.',
+  ih:'داخل عقل العين',ihs:'ست مراحل .. قرار واحد',ihp:'انتقل بين المراحل لترى كيف تصل العين إلى توصيتها.',strip:['المطارات','الفرص','حركة الطائرات','الطقس'],stl:'توضيحي',
   f:['ما الذي تحاول العين تحقيقه','ما المعلومات التي تحتاج إليها','النتيجة المتوقعة','ما الذي لم يُحسم','الخطوة التالية'],
   st:[
    ['افهم المهمة',['تفهم سبب الرحلة لا وجهتها فقط: ما الذي يجعلها مهمة لك.','كلامك أنت: نوع المهمة، الموعد، عدد المسافرين، وما لا يمكن التفريط فيه.','ملخص مهمة واضح تقرّه بنفسك.','ما لم تقله بعد؛ لا تفترضه العين.','الانتقال إلى البحث بعد أن تؤكد أنت فهمها.']],
@@ -44,7 +47,7 @@ const T:Record<Lg,any>={
  en:{name:'The King’s Eye',sim:'Illustrative simulation — not real operational data',
   h:'The Eye does not just look for an aircraft; it looks for the option that best fits the mission.',s:'Private aviation intelligence, from spotting the opportunity to accompanying the journey.',
   loop:['Watch','Understand','Verify','Propose','Ask approval','Follow','Learn'],
-  ih:'Inside the Eye',ihs:'Move between the stages to see how the Eye reaches its recommendation.',
+  ih:'Inside the Eye',ihs:'Six stages .. one decision',ihp:'Move between the stages to see how the Eye reaches its recommendation.',strip:['Airports','Opportunities','Aircraft movement','Weather'],stl:'illustrative',
   f:['What the Eye is trying to achieve','What it needs to know','Expected outcome','What is not yet settled','Next step'],
   st:[
    ['Understand the mission',['It understands why you travel, not only where: what makes this trip matter to you.','Your own words: type of mission, date, number of travellers, and what cannot be compromised.','A clear mission summary that you confirm yourself.','Whatever you have not said; the Eye does not assume it.','Moving on to the search once you confirm it understood.']],
@@ -64,12 +67,14 @@ const T:Record<Lg,any>={
   on:{a:'Light and fast',b:'Balanced mid-size',c:'Wide cabin',d:'Flexible multi-stop'},
   note:'This signature guides recommendations in this experience only. Using it on real trips requires connecting it to the real analysis system.',
   end:'You have seen what the Eye can do. Now tell it what you need.',cta:'Start your trip'}};
+const IMG=['s1','s2','c3','s3','c4','c1'];
 const P=(i:number,v:number,n=7):[number,number]=>{const a=-Math.PI/2+i/n*2*Math.PI,r=22+v*66;return[100+r*Math.cos(a),100+r*Math.sin(a)]};
 export default function Think(){
- const {lang}=useI18n(),lg:Lg=lang==='ar'?'ar':'en',c=T[lg],ar=lang==='ar';
+ const {lang}=useI18n(),lg:Lg=lang==='ar'?'ar':'en',c=T[lg],ar=lang==='ar',rc=copy(lang);
  const [i,setI]=useState(0),[m,setM]=useState<Ms>('business'),[pr,setPr]=useState<Ax[]>(DEF.business);
  const pick=(k:Ms)=>{setM(k);setPr(DEF[k])};
  const tog=(a:Ax)=>setPr(p=>p.includes(a)?p.filter(x=>x!==a):p.length>=3?p:[...p,a]);
+ const nm=(x:string)=>{const h=HUBS.find(y=>y.iata===x);return h?(ar?h.ar:h.en):x};
  const rank=useMemo(()=>OPT.map((o,n)=>({...o,n,v:pr.reduce((t,a)=>t+o.s[a],0)})).sort((a,b)=>pr.length?b.v-a.v||a.n-b.n:a.n-b.n),[pr]);
  const mx=Math.max(1,pr.length*3);
  const pts=AX.map((a,n)=>P(n,pr.includes(a)?1:.12)),path='M'+pts.map(p=>p.map(x=>x.toFixed(1)).join(',')).join(' L')+' Z';
@@ -78,18 +83,27 @@ export default function Think(){
   <div className="rq-bg" aria-hidden="true"/><div className="cn-shade" aria-hidden="true"/><div className="cn-grain" aria-hidden="true"/>
   <LangSwitch/><TopBar active={1} name={c.name} bare/>
   <main className="dc-main">
-   <section className="th-hero">
-    <span className="th-badge">{c.sim}</span>
-    <h1>{c.h}</h1><p className="dc-s">{c.s}</p>
-    <ol className="th-loop" aria-label="loop">{c.loop.map((x:string)=><li key={x}>{x}</li>)}</ol>
-   </section>
-   <section className="th-in" aria-labelledby="th-ih">
-    <h2 id="th-ih">{c.ih}</h2><p className="th-sub">{c.ihs}</p>
-    <div className="th-rail" role="tablist" aria-label={c.ih}>{c.st.map((s:any,n:number)=><button key={n} type="button" role="tab" aria-selected={n===i} className={n===i?'on':n<i?'past':''} onClick={()=>setI(n)}><span>{String(n+1).padStart(2,'0')}</span><b>{s[0]}</b></button>)}</div>
-    <div className="th-panel" role="tabpanel" key={i}>
-     <h3><span>{String(i+1).padStart(2,'0')}</span>{st[0]}</h3>
-     <dl>{c.f.map((q:string,n:number)=><div key={n}><dt>{q}</dt><dd>{st[1][n]}</dd></div>)}</dl>
+   <section className="th-stage">
+    <div className="th-copy">
+     <span className="th-eye" aria-hidden="true"><svg viewBox="0 0 48 30" fill="none" stroke="currentColor" strokeWidth="1.6"><path d="M3 15S11 3 24 3s21 12 21 12-8 12-21 12S3 15 3 15z"/><circle cx="24" cy="15" r="6.5"/><circle cx="24" cy="15" r="2.6" fill="currentColor"/></svg></span>
+     <h1>{c.h}</h1><p className="dc-s">{c.s}</p>
+     <span className="th-badge">{c.sim}</span>
+     <ol className="th-loop" aria-label="loop">{c.loop.map((x:string)=><li key={x}>{x}</li>)}</ol>
     </div>
+    <div className="th-globe" aria-label={rc.gl.radar}>
+     <div className="th-earth" aria-hidden="true"/>
+     <Radar hubs={HUBS} from="RUH" to={null} hover={null} name={h=>nm(h.iata)} range={3000} blips={[]} scanning={true} plane={null} alt={null} hud="" aria={rc.gl.radar} kmUnit={rc.units.km} onHover={()=>{}} onPick={()=>{}} onBlip={()=>{}}/>
+    </div>
+    <aside className="th-side" aria-labelledby="th-ih">
+     <header><h2 id="th-ih">{c.ih}</h2><p>{c.ihs}</p></header>
+     <div className="th-list" role="tablist" aria-label={c.ih} title={c.ihp}>{c.st.map((x:any,n:number)=><button key={n} type="button" role="tab" aria-selected={n===i} className={n===i?'on':n<i?'past':''} onClick={()=>setI(n)}>
+      <span className="th-th" style={{backgroundImage:`url(/home/${IMG[n]}.jpg)`}}><b>{String(n+1).padStart(2,'0')}</b></span>
+      <span className="th-tx"><b>{x[0]}</b><em>{x[1][0]}</em></span><i aria-hidden="true"/></button>)}</div>
+    </aside>
+   </section>
+   <section className="th-det" role="tabpanel" key={i} aria-label={st[0]}>
+    <h3><span>{String(i+1).padStart(2,'0')}</span>{st[0]}</h3>
+    <dl>{c.f.map((q:string,n:number)=><div key={n}><dt>{q}</dt><dd>{st[1][n]}</dd></div>)}</dl>
    </section>
    <section className="th-ms" aria-labelledby="th-ms">
     <h2 id="th-ms"><small>MISSION SIGNATURE</small>{c.ms}</h2>
@@ -120,6 +134,6 @@ export default function Think(){
    </section>
    <section className="th-end"><p>{c.end}</p><a className="cn-btn main" href="?view=cabin">{c.cta}</a></section>
   </main>
-  <footer className="dc-foot"><span className="dc-dot"/>{c.sim}</footer>
+  <footer className="dc-foot th-foot"><span><span className="dc-dot"/>{c.sim}</span><ul>{c.strip.map((x:string)=><li key={x}><i/>{x}<small>{c.stl}</small></li>)}</ul></footer>
  </div>;
 }
