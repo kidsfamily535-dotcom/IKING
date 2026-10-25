@@ -24,7 +24,7 @@ export default function Discover(){
  const nm=(i:string)=>{const h=HUBS.find(x=>x.iata===i);return h?(ar?h.ar:h.en):i};
  return <div className={`dc cn${ar?' ar':''}`} dir={ar?'rtl':'ltr'} lang={lang}>
   <div className="rq-bg" aria-hidden="true"/><div className="cn-shade" aria-hidden="true"/><div className="cn-grain" aria-hidden="true"/>
-  <LangSwitch/><TopBar active={1} name={c.name}/>
+  <LangSwitch/><TopBar active={1} name={c.name} bare/>
   <main className="dc-main">
    <section className="dc-hero">
     <div className="dc-copy"><h1>{c.h}</h1><p className="dc-s">{c.s}</p><p className="dc-p">{c.p}</p><a className="cn-btn main" href="?view=cabin">{c.cta}</a></div>

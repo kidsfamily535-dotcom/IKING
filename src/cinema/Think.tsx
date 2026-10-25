@@ -76,7 +76,7 @@ export default function Think(){
  const st=c.st[i];
  return <div className={`dc th cn${ar?' ar':''}`} dir={ar?'rtl':'ltr'} lang={lang}>
   <div className="rq-bg" aria-hidden="true"/><div className="cn-shade" aria-hidden="true"/><div className="cn-grain" aria-hidden="true"/>
-  <LangSwitch/><TopBar active={1} name={c.name}/>
+  <LangSwitch/><TopBar active={1} name={c.name} bare/>
   <main className="dc-main">
    <section className="th-hero">
     <span className="th-badge">{c.sim}</span>
