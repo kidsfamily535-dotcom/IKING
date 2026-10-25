@@ -138,5 +138,5 @@ export default function App(){
      {staff&&<PolicyView/>}
     </section></>}
   </main></>}
-  <footer>{t('footer')}</footer></>;
+  <footer>{t('footer')}<nav className="legal"><a href="/legal.html#privacy">{t('legal.privacy')}</a><a href="/legal.html#disclaimer">{t('legal.disclaimer')}</a><a href="/legal.html#terms">{t('legal.terms')}</a></nav></footer></>;
 }
