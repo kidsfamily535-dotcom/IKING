@@ -24,6 +24,8 @@ export default function Ask(){
  const [name,setName]=useState(''),[ch,setCh]=useState<'whatsapp'|'phone'|'email'>('whatsapp'),[val,setVal]=useState(''),[ok,setOk]=useState(false),[trap,setTrap]=useState('');
  const box=useRef<HTMLTextAreaElement>(null);
  const Q=useMemo(()=>new URLSearchParams(location.search),[]);
+ // تعبئة مسبقة من ?say= (يأتي من نافذة رفيق): نملأ الحقل فقط ولا نرسل شيئًا تلقائيًا
+ useEffect(()=>{const s=Q.get('say');if(s)setDraft(s.slice(0,600))},[Q]);
  useEffect(()=>{let live=true;fetch(`${BASE}/functions/v1/submit-request`).then(r=>r.ok?r.json():null).then(j=>{if(live&&j?.airports)setAps(j.airports)}).catch(()=>{});return()=>{live=false}},[]);
  useEffect(()=>{if(stage==='say'||stage==='ask')box.current?.focus()},[stage]);
  const apName=(a:Ap)=>`${a.iata_code} · ${lang==='ar'?(a.name_ar||a.name_en):(a.name_en||a.name_ar)}`;
