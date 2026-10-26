@@ -132,3 +132,10 @@ svg.ih-i{width:1em;height:1em;fill:none;stroke:currentColor;stroke-width:1.5;str
 .ih .ih-think:focus-visible{outline:2px solid #f6ebc9;outline-offset:4px}
 .ih .ih-think .ih-i{width:16px;height:16px;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
 .ih-ar .ih-think .ih-i{transform:scaleX(-1)}
+
+/* بعد حذف العنوان الصغير والسطر الفرعي: العنوان في سطرين متمركزًا مع الرادار */
+.ih-copy h1{text-wrap:balance;max-width:9em}
+.ih-ar .ih-copy h1{max-width:6.4em}
+.ih-cta-wrap{margin-top:44px}
+/* ملاحظة المحاكاة: صغيرة وهادئة تحت الرادار وتبقى ظاهرة ما دامت البيانات محاكاة */
+.ih .ih-simnote{margin:8px 0 0;text-align:center;font-size:.72rem;letter-spacing:.04em;color:var(--gold);opacity:.55}
