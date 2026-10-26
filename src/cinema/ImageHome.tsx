@@ -43,7 +43,8 @@ const RX:Record<Lang,{tap:string;go:string;km:string;h:string;m:string;est:strin
  en:{tap:'Tap a destination to see the route',go:'Request this trip',km:'km',h:'h',m:'min',est:'estimate'},
  tr:{tap:'Rotayı görmek için bir varış seçin',go:'Bu yolculuğu talep et',km:'km',h:'sa',m:'dk',est:'tahmini'},
  ru:{tap:'Выберите пункт назначения',go:'Запросить поездку',km:'км',h:'ч',m:'мин',est:'оценка'}};
-const LANGS:{l:Lang;n:string}[]=[{l:'ar',n:'العربية'},{l:'en',n:'English'},{l:'tr',n:'Türkçe'},{l:'ru',n:'Русский'}];
+// التركية والروسية مجمّدتان مؤقتًا (النصوص محفوظة وتعود بإضافتهما هنا وفي ENABLED_LANGS داخل i18n)
+const LANGS:{l:Lang;n:string}[]=[{l:'ar',n:'العربية'},{l:'en',n:'English'}];
 const ICONS=['M12 12a4 4 0 100-8 4 4 0 000 8zM4 21c1-4.5 4-6.5 8-6.5s7 2 8 6.5','M12 2l2 7 7 4v2l-7-3-1 5 3 2v2l-4-2-4 2v-2l3-2-1-5-7 3v-2l7-4z','M12 20a8 8 0 100-16 8 8 0 000 16zM12 16a4 4 0 100-8 4 4 0 000 8z','M4 16V12l2-5h12l2 5v4M4 16h16M4 16v2h3v-2M17 16v2h3v-2','M12 16a4 4 0 100-8 4 4 0 000 8zM12 2v2M12 20v2M2 12h2M20 12h2'];
 const Ic=({d}:{d:string})=><svg className="ih-i" viewBox="0 0 24 24" aria-hidden="true"><path d={d}/></svg>;
 const IMG=['/home/c4.jpg','/home/c4.jpg','/home/c3.jpg','/home/c2.jpg','/home/c1.jpg'];
@@ -61,13 +62,10 @@ export default function ImageHome({real}:{real:boolean}){
    <header className="ih-top">
     <div className="ih-langs" role="group" aria-label="Language">{LANGS.map(o=><button key={o.l} type="button" className="ih-pill" aria-pressed={lang===o.l} lang={o.l} onClick={()=>setLang(o.l)}>{o.n}</button>)}</div>
     <div className="ih-logo"><svg viewBox="0 0 48 30" fill="none" stroke="#e8c880" strokeWidth="1.6" aria-hidden="true"><path d="M3 15S11 3 24 3s21 12 21 12-8 12-21 12S3 15 3 15z"/><circle cx="24" cy="15" r="6.5"/><circle cx="24" cy="15" r="2.6" fill="#e8c880"/></svg><span dir="ltr">EYE KING</span></div>
-    <span className="ih-pill ih-demo">{c.demo}</span>
    </header>
    <div className="ih-stage">
     <div className="ih-copy">
-     <p className="ih-kicker">{c.kick}</p>
      <h1>{c.h1}</h1>
-     <p className="ih-sub">{c.sub}</p>
      <div className="ih-cta-wrap">
       {!real?<a className="ih-cta" href="?view=cabin"><span className="ih-eye"><Ic d="M2 12s3.6-6.5 10-6.5S22 12 22 12s-3.6 6.5-10 6.5S2 12 2 12zM12 15.2a3.2 3.2 0 100-6.4 3.2 3.2 0 000 6.4z"/></span><span>{c.cta}</span><Ic d="M9 5l7 7-7 7"/></a>
        :<a className="ih-cta" href="?view=discover"><span className="ih-eye"><Ic d="M2 12s3.6-6.5 10-6.5S22 12 22 12s-3.6 6.5-10 6.5S2 12 2 12zM12 15.2a3.2 3.2 0 100-6.4 3.2 3.2 0 000 6.4z"/></span><span>{c.cta}</span><Ic d="M9 5l7 7-7 7"/></a>}
@@ -78,6 +76,7 @@ export default function ImageHome({real}:{real:boolean}){
     <div className="ih-radarbox">
      <Radar hubs={HUBS} from="RUH" to={to} hover={hov} name={h=>nm(h.iata)} range={to?rangeFor(km):3000} blips={[]} scanning={false} plane={null} alt={null} hud={hud} aria={c.city[7]} kmUnit={rx.km} onHover={setHov} onPick={i=>{if(i!=='RUH')setTo(t=>t===i?null:i)}} onBlip={()=>{}}/>
      {to&&<a className="ih-go" href={`?view=cabin&to=${to}`}>{rx.go}</a>}
+     <p className="ih-simnote">{c.demo}</p>
     </div>
    </div>
    <ol className="ih-steps" aria-label="Journey">{c.steps.map((s,i)=><li key={i} className={on===i?'ih-on':''}>{s}</li>)}</ol>

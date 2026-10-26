@@ -2,7 +2,10 @@ import {createContext,useCallback,useContext,useEffect,useMemo,useState,type Rea
 import {ar} from './ar';import {en} from './en';import {tur} from './tr';import {rus} from './ru';import {AIRPORT_L} from './airports';
 import type {Airport} from '../data/types';
 export type Lang='ar'|'en'|'tr'|'ru';
-export const LANGS:Lang[]=['ar','en','tr','ru'];
+export const ALL_LANGS:Lang[]=['ar','en','tr','ru'];
+// اللغات المفعّلة للزوار الآن. التركية والروسية مجمّدتان: ملفاتهما باقية، ولإعادتهما أضف 'tr' و'ru' هنا فقط.
+export const ENABLED_LANGS:Lang[]=['ar','en'];
+export const LANGS:Lang[]=ENABLED_LANGS;
 const D:Record<Lang,Record<string,string>>={ar,en,tr:tur,ru:rus};
 const KEY='iking_lang';
 export const isLang=(v:unknown):v is Lang=>typeof v==='string'&&(LANGS as string[]).includes(v);
