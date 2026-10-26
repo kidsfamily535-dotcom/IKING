@@ -1,0 +1,60 @@
+/* قسم رفيق: زجاج داكن وذهب هادئ، تطبع المحادثة حرفًا حرفًا، وتتوقف مع «تقليل الحركة» */
+.ih .rf{position:relative;padding:72px 44px 56px;border-top:1px solid var(--line);background:radial-gradient(900px 420px at 80% 0,rgba(232,170,80,.12),transparent 70%),linear-gradient(rgba(7,6,5,.78),rgba(7,6,5,.92));-webkit-backdrop-filter:blur(4px);backdrop-filter:blur(4px)}
+.ih .rf-in{display:grid;grid-template-columns:minmax(0,1fr) minmax(320px,520px);gap:48px;align-items:center;max-width:1200px;margin:0 auto}
+.ih .rf-badge{display:inline-block;border:1px solid var(--line);border-radius:99px;padding:4px 14px;font-size:.75rem;color:var(--gold)}
+.ih .rf h2{margin:14px 0 0;font-family:'Aref Ruqaa','Cormorant Garamond',serif;font-weight:700;font-size:clamp(3rem,6vw,5.2rem);line-height:1.1;color:#fbeed0;text-shadow:0 0 44px rgba(240,170,80,.35)}
+.ih:not(.ih-ar) .rf h2{font-family:'Cormorant Garamond',Georgia,serif;font-weight:600}
+.ih .rf-lead{margin:14px 0 0;max-width:34em;color:var(--cream);font-size:1.12rem;line-height:1.8;font-weight:300;text-wrap:balance}
+.ih .rf-cl{margin:26px 0 8px;font-size:.78rem;color:var(--mute);letter-spacing:.04em}
+.ih .rf-chips{display:flex;flex-wrap:wrap;gap:10px}
+.ih .rf-chips button{border:1px solid var(--line);border-radius:99px;padding:9px 18px;min-height:44px;background:rgba(0,0,0,.35);color:var(--cream);font-size:.92rem;cursor:pointer;transition:.3s}
+.ih .rf-chips button:hover{border-color:var(--gold)}
+.ih .rf-chips button[aria-pressed=true]{background:linear-gradient(#f0d9a0,#c9a45e);color:#1b1206;border-color:transparent;font-weight:500}
+.ih .rf-cta{display:inline-flex;align-items:center;gap:10px;margin-top:26px;min-height:50px;padding:0 28px;border-radius:99px;background:linear-gradient(100deg,#c9a45e,#f3e0b0 55%,#d8b66f);color:#1b1206;text-decoration:none;font-weight:500;font-size:1.02rem;box-shadow:0 14px 44px -14px rgba(240,170,80,.6);transition:transform .2s}
+.ih .rf-cta:hover{transform:translateY(-2px)}
+.ih .rf-ar{width:16px;height:16px;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+.ih-ar .rf-ar{transform:scaleX(-1)}
+.ih .rf-note{margin:16px 0 0;max-width:36em;font-size:.76rem;line-height:1.7;color:var(--mute)}
+
+.ih .rf-panel{position:relative;border:1px solid rgba(232,200,128,.4);border-radius:26px;background:linear-gradient(160deg,rgba(26,20,13,.85),rgba(8,6,4,.92));box-shadow:0 30px 90px -30px rgba(240,170,80,.35),inset 0 1px 0 rgba(255,255,255,.06);overflow:hidden}
+.ih .rf-head{display:flex;align-items:center;gap:12px;padding:16px 18px;border-bottom:1px solid var(--line)}
+.ih .rf-head b{display:block;font-size:1.05rem}
+.ih .rf-head small{display:block;color:var(--mute);font-size:.74rem}
+.ih .rf-av{position:relative;width:44px;height:44px;border-radius:50%;display:grid;place-items:center;color:#1b1206;background:radial-gradient(circle at 38% 34%,#fff0bd,#e2ad52 60%,#8a5f22);flex:none}
+.ih .rf-av svg{width:24px;height:16px;stroke:#1b1206}
+.ih .rf-av::after{content:"";position:absolute;inset:-4px;border-radius:50%;border:1px solid rgba(243,224,176,.55);animation:rf-ring 3.2s ease-out infinite}
+@keyframes rf-ring{from{transform:scale(.9);opacity:.9}to{transform:scale(1.5);opacity:0}}
+.ih .rf-demo{margin-inline-start:auto;border:1px solid var(--line);border-radius:99px;padding:3px 12px;font-size:.7rem;color:var(--gold);white-space:nowrap}
+.ih .rf-body{min-height:340px;padding:20px 18px 22px;display:flex;flex-direction:column;gap:14px;animation:rf-in .5s ease both}
+@keyframes rf-in{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
+.ih .rf-u{align-self:flex-end;max-width:86%;margin:0;padding:11px 16px;border-radius:18px 18px 4px 18px;background:rgba(232,200,128,.14);border:1px solid var(--line);font-size:.95rem;line-height:1.7}
+.ih-ar .rf-u{border-radius:18px 18px 18px 4px}
+.ih .rf-r{align-self:flex-start;max-width:94%;padding:14px 16px;border-radius:18px 18px 18px 4px;background:rgba(255,255,255,.04);border:1px solid var(--line)}
+.ih-ar .rf-r{border-radius:18px 18px 4px 18px}
+.ih .rf-r p{margin:0 0 8px;font-size:.93rem;line-height:1.85;color:var(--cream)}
+.ih .rf-r p:last-of-type{margin-bottom:0}
+.ih .rf-cur{display:inline-block;width:2px;height:1em;margin-inline-start:2px;vertical-align:-.15em;background:var(--gold);animation:rf-blink 1s steps(2) infinite}
+@keyframes rf-blink{50%{opacity:0}}
+.ih .rf-meta{display:flex;flex-wrap:wrap;gap:8px;margin-top:12px;animation:rf-in .5s ease both}
+.ih .rf-src,.ih .rf-hand{border-radius:99px;padding:4px 12px;font-size:.7rem;line-height:1.5}
+.ih .rf-src{border:1px solid var(--line);color:var(--mute)}
+.ih .rf-src em{font-style:normal;color:var(--gold)}
+.ih .rf-hand{border:1px solid #e8c880;color:#1b1206;background:linear-gradient(#f3e0b0,#c9a45e);font-weight:500}
+
+.ih .rf-b2b{display:grid;grid-template-columns:minmax(0,1.3fr) auto auto;gap:28px;align-items:center;max-width:1200px;margin:56px auto 0;padding:26px 30px;border:1px solid var(--line);border-radius:22px;background:rgba(255,255,255,.025)}
+.ih .rf-b2b h3{margin:0;font-family:'Aref Ruqaa','Cormorant Garamond',serif;font-size:1.7rem;color:#fbeed0}
+.ih:not(.ih-ar) .rf-b2b h3{font-family:'Cormorant Garamond',Georgia,serif}
+.ih .rf-b2b p{margin:6px 0 0;color:var(--mute);font-size:.88rem;line-height:1.7}
+.ih .rf-b2b ul{display:flex;flex-wrap:wrap;gap:8px;margin:0;padding:0;list-style:none;max-width:340px}
+.ih .rf-b2b li{border:1px solid var(--line);border-radius:99px;padding:5px 14px;font-size:.78rem;color:var(--cream)}
+.ih .rf-cta2{margin-top:0}
+
+/* زر رفيق العائم: يوصل الزائر لقسم رفيق من أي موضع في الصفحة */
+.ih .ih-rbtn{position:fixed;z-index:20;inset-inline-end:max(18px,env(safe-area-inset-right));bottom:max(18px,env(safe-area-inset-bottom));display:inline-flex;align-items:center;gap:10px;min-height:52px;padding:0 20px 0 8px;border:1px solid #c5a46d99;border-radius:99px;background:rgba(7,6,5,.78);-webkit-backdrop-filter:blur(10px);backdrop-filter:blur(10px);color:#f6ebc9;cursor:pointer;font:500 .98rem Tajawal,'Inter',sans-serif;box-shadow:0 12px 40px -12px rgba(240,170,80,.55);transition:transform .2s,border-color .3s}
+.ih .ih-rbtn:hover{transform:translateY(-2px);border-color:#e8c880}
+.ih .ih-rbtn .rf-av{width:36px;height:36px}
+.ih .ih-rbtn .rf-av svg{width:20px;height:13px}
+
+@media (max-width:1100px){.ih .rf-b2b{grid-template-columns:1fr}.ih .rf-b2b ul{max-width:none}}
+@media (max-width:860px){.ih .rf{padding:52px 20px 44px}.ih .rf-in{grid-template-columns:1fr;gap:30px}.ih .rf-body{min-height:300px}}
+@media (prefers-reduced-motion:reduce){.ih .rf-av::after,.ih .rf-cur{animation:none}.ih .rf-cur{display:none}}

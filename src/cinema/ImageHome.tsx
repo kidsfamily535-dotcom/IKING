@@ -2,6 +2,7 @@ import {useEffect,useState} from 'react';
 import {useI18n,type Lang} from '../i18n';
 import Radar from '../cabin/Radar';
 import {HUBS,hub,dist,flightMin,rangeFor} from '../cabin/geo';
+import Rafiq from './Rafiq';
 import './imagehome.css';
 // الصفحة الرئيسية بحسب التصميم المعتمد: الأرض ليلًا (الخلفية العامة للموقع) + رادار الرياض والعين + «ما الذي سترى؟».
 type C={say:string;sayGo:string;think:string;kick:string;h1:string;sub:string;cta:string;tag:string;demo:string;steps:string[];
@@ -84,6 +85,9 @@ export default function ImageHome({real}:{real:boolean}){
    </div>
    <ol className="ih-steps" aria-label="Journey">{c.steps.map((s,i)=><li key={i} className={on===i?'ih-on':''}>{s}</li>)}</ol>
   </div>
+
+  <Rafiq/>
+  <button type="button" className="ih-rbtn" onClick={()=>document.getElementById('rafiq')?.scrollIntoView({behavior:calm()?'auto':'smooth'})} aria-label={ar?'رفيق':'Rafiq'}><span className="rf-av"><svg viewBox="0 0 48 30" fill="none" stroke="#1b1206" strokeWidth="2" aria-hidden="true"><path d="M3 15S11 3 24 3s21 12 21 12-8 12-21 12S3 15 3 15z"/><circle cx="24" cy="15" r="6.5"/><circle cx="24" cy="15" r="2.6" fill="#1b1206"/></svg></span>{ar?'رفيق':'Rafiq'}</button>
 
   <div className="ih-lower">
    <section>
