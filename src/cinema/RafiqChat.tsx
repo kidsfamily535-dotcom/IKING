@@ -45,7 +45,7 @@ export default function RafiqChat(){
  const last=[...msgs].reverse().find(m=>m.who==='me')?.text??'';
  const formHref='?view=ask'+(last?'&say='+encodeURIComponent(last.slice(0,600)):'');
  return <div className={`rc${lang==='ar'?' rc-ar':''}`} dir={lang==='ar'?'rtl':'ltr'}>
-  {!open&&<button ref={btn} type="button" className="rc-fab" onClick={()=>setOpen(true)} aria-label={T.open} aria-haspopup="dialog"><Eye c="#1b1206"/></button>}
+  {!open&&<button ref={btn} type="button" className="rc-fab" onClick={()=>setOpen(true)} aria-label={T.open} aria-haspopup="dialog"><span className="rc-fab-t">{T.name}</span><span className="rc-fab-av"><Eye c="#1b1206"/></span></button>}
   {open&&<section className="rc-win" role="dialog" aria-modal="true" aria-label={T.name}>
    <header className="rc-head"><span className="rc-av"><Eye c="#1b1206"/></span><div><b>{T.name}</b><small>{T.role}</small></div>
     <button type="button" className="rc-x" onClick={close} aria-label={T.close}><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"/></svg></button></header>

@@ -1,9 +1,12 @@
 .rc{--gold:#e8c880;--gold2:#b8873b;--cream:#f7ead0;--mute:#a99c86;--line:rgba(232,200,128,.25);--bg:#0b0806;font-family:Tajawal,system-ui,sans-serif;color:var(--cream)}
 .rc *{box-sizing:border-box}
 .rc :focus-visible{outline:2px solid var(--gold);outline-offset:2px}
-.rc-fab{position:fixed;z-index:60;inset-inline-end:max(18px,env(safe-area-inset-right,0px));bottom:max(18px,env(safe-area-inset-bottom,0px));width:58px;height:58px;border-radius:50%;border:1px solid var(--gold);background:linear-gradient(135deg,var(--gold),var(--gold2));display:grid;place-items:center;cursor:pointer;box-shadow:0 8px 28px rgba(0,0,0,.55),0 0 0 6px rgba(232,200,128,.12)}
-.rc-fab svg{width:30px;height:20px}
-.rc-fab:hover{filter:brightness(1.08)}
+.rc-fab{position:fixed;z-index:60;inset-inline-end:max(18px,env(safe-area-inset-right,0px));bottom:max(18px,env(safe-area-inset-bottom,0px));display:flex;align-items:center;gap:12px;min-height:60px;padding:6px 8px 6px 20px;border-radius:99px;border:1px solid rgba(232,200,128,.5);background:rgba(12,9,6,.82);-webkit-backdrop-filter:blur(8px);backdrop-filter:blur(8px);color:var(--cream);font:inherit;font-size:1.02rem;cursor:pointer;box-shadow:0 10px 32px rgba(0,0,0,.55),0 0 0 4px rgba(232,200,128,.08)}
+.rc-ar .rc-fab{flex-direction:row-reverse}
+.rc-fab-av{position:relative;width:46px;height:46px;border-radius:50%;display:grid;place-items:center;background:radial-gradient(circle at 38% 34%,#fff0bd,#e2ad52 60%,#8a5f22);flex:none}
+.rc-fab svg{width:26px;height:17px}
+.rc-fab:hover{border-color:var(--gold)}
+@media (prefers-reduced-motion:no-preference){.rc-fab-av::after{content:"";position:absolute;inset:-4px;border-radius:50%;border:1px solid rgba(243,224,176,.55);animation:rc-ring 3.2s ease-out infinite}@keyframes rc-ring{from{transform:scale(.9);opacity:.9}to{transform:scale(1.4);opacity:0}}}
 .rc-win{position:fixed;z-index:70;inset-inline-end:max(18px,env(safe-area-inset-right,0px));bottom:max(18px,env(safe-area-inset-bottom,0px));width:min(390px,calc(100vw - 24px));height:min(600px,calc(100dvh - 36px));display:flex;flex-direction:column;background:var(--bg);border:1px solid var(--line);border-radius:18px;box-shadow:0 18px 60px rgba(0,0,0,.7);overflow:hidden}
 .rc-head{display:flex;align-items:center;gap:10px;padding:12px 14px;border-bottom:1px solid var(--line);background:#14100b}
 .rc-head div{flex:1;min-width:0}.rc-head b{display:block;font-size:1rem;color:var(--gold)}.rc-head small{color:var(--mute);font-size:.74rem}
