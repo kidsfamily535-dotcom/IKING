@@ -18,7 +18,7 @@ const QKEY:Record<string,string>={origin_code:'ask.q.origin',destination_code:'a
 const iso=(t:number)=>new Date(t).toISOString().slice(0,10);
 export default function Ask(){
  const {t,lang,setLang}=useI18n();
- const [stage,setStage]=useState<Stage>('say'),[lines,setLines]=useState<string[]>([]),[draft,setDraft]=useState('');
+ const [stage,setStage]=useState<Stage>('say'),[lines,setLines]=useState<string[]>([]),[draft,setDraft]=useState(()=>(new URLSearchParams(location.search).get('say')||'').slice(0,600));
  const [f,setF]=useState<F>(EMPTY),[ev,setEv]=useState<Record<string,string>>({}),[check,setCheck]=useState(false),[miss,setMiss]=useState<string[]>([]),[busy,setBusy]=useState('');
  const [aps,setAps]=useState<Ap[]>([]),[err,setErr]=useState('');
  const [name,setName]=useState(''),[ch,setCh]=useState<'whatsapp'|'phone'|'email'>('whatsapp'),[val,setVal]=useState(''),[ok,setOk]=useState(false),[trap,setTrap]=useState('');

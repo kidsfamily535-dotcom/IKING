@@ -139,3 +139,14 @@ svg.ih-i{width:1em;height:1em;fill:none;stroke:currentColor;stroke-width:1.5;str
 .ih-cta-wrap{margin-top:44px}
 /* ملاحظة المحاكاة: صغيرة وهادئة تحت الرادار وتبقى ظاهرة ما دامت البيانات محاكاة */
 .ih .ih-simnote{margin:8px 0 0;text-align:center;font-size:.72rem;letter-spacing:.04em;color:var(--gold);opacity:.55}
+
+/* مدخل الشات: «قل لي رحلتك بكلامك» تحت العنوان، يفتح المحادثة بالنص جاهزًا */
+.ih .ih-say{display:flex;align-items:center;gap:8px;margin-top:26px;width:min(100%,520px);padding:6px;border-radius:99px;border:1px solid #c5a46d99;background:rgba(2,4,10,.5);-webkit-backdrop-filter:blur(8px);backdrop-filter:blur(8px);transition:border-color .3s}
+.ih .ih-say:focus-within{border-color:#e8c880}
+.ih .ih-say input{flex:1;min-width:0;height:46px;padding:0 18px;border:0;outline:0;background:transparent;color:#f6ebc9;font:400 1.05rem Tajawal,'Inter',sans-serif}
+.ih .ih-say input::placeholder{color:#a99c86}
+.ih .ih-say button{display:inline-flex;align-items:center;gap:8px;height:46px;padding:0 22px;border:0;border-radius:99px;cursor:pointer;background:linear-gradient(#f3e0b0,#c9a45e);color:#1b1206;font:500 1rem Tajawal,'Inter',sans-serif}
+.ih-ar .ih-say button .ih-i{transform:scaleX(-1)}
+.ih .ih-say button .ih-i{width:16px;height:16px;stroke-width:2}
+.ih-cta-wrap{margin-top:30px}
+@media (max-width:860px){.ih .ih-say{margin-inline:auto}}
