@@ -2,6 +2,7 @@ import {useEffect,useState} from 'react';
 import {useI18n,type Lang} from '../i18n';
 import Radar from '../cabin/Radar';
 import {HUBS,hub,dist,flightMin,rangeFor} from '../cabin/geo';
+import RafiqChat from './RafiqChat';
 import './imagehome.css';
 // الصفحة الرئيسية بحسب التصميم المعتمد: الأرض ليلًا (الخلفية العامة للموقع) + رادار الرياض والعين + «ما الذي سترى؟».
 type C={think:string;kick:string;h1:string;sub:string;cta:string;tag:string;demo:string;steps:string[];
@@ -114,5 +115,6 @@ export default function ImageHome({real}:{real:boolean}){
    <div className="ih-banner"><h2>{c.more}</h2><p>{c.moreL}</p></div>
   </div>
   <p className="ih-note">{c.note}</p>
+  <RafiqChat/>
  </div>;
 }
