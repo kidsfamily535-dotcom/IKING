@@ -140,3 +140,7 @@ svg.ih-i{width:1em;height:1em;fill:none;stroke:currentColor;stroke-width:1.5;str
 /* ملاحظة المحاكاة: صغيرة وهادئة تحت الرادار وتبقى ظاهرة ما دامت البيانات محاكاة */
 .ih .ih-simnote{margin:8px 0 0;text-align:center;font-size:.72rem;letter-spacing:.04em;color:var(--gold);opacity:.55}
 .ih-world{margin-top:12px}
+.ih-pick{display:flex;flex-wrap:wrap;gap:8px;justify-content:center;margin-top:12px}
+.ih-find{margin:10px auto 0;max-width:320px}.ih-find input{width:100%;padding:10px 14px;border-radius:12px;border:1px solid var(--line);background:rgba(0,0,0,.45);color:var(--cream)}
+.ih-find ul{list-style:none;margin:6px 0 0;padding:0;max-height:220px;overflow:auto;border:1px solid var(--line);border-radius:12px;background:rgba(8,6,4,.92)}
+.ih-find li button{width:100%;text-align:start;padding:9px 14px;background:none;border:0;color:var(--cream);cursor:pointer;min-height:44px}.ih-find li button:hover{background:rgba(232,200,128,.1)}.ih-find li b{color:var(--gold);margin-inline-end:6px}
