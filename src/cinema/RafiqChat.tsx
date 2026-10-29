@@ -37,6 +37,7 @@ export default function RafiqChat(){
  const end=useRef<HTMLDivElement>(null),inp=useRef<HTMLInputElement>(null),btn=useRef<HTMLButtonElement>(null);
  useEffect(()=>{end.current?.scrollIntoView({block:'end'})},[msgs,busy,open]);
  useEffect(()=>{if(open)setTimeout(()=>inp.current?.focus(),50)},[open]);
+ useEffect(()=>{const h=(e:Event)=>{const t=(e as CustomEvent).detail;setOpen(true);if(typeof t==='string')setDraft(t.slice(0,300))};addEventListener('rafiq:open',h);return()=>removeEventListener('rafiq:open',h)},[]);
  useEffect(()=>{if(!open)return;const k=(e:KeyboardEvent)=>{if(e.key==='Escape')close()};addEventListener('keydown',k);return()=>removeEventListener('keydown',k)});
  // على الموبايل النافذة تغطي الشاشة: نوقف تمرير الصفحة خلفها
  useEffect(()=>{if(!open)return;const m=matchMedia('(max-width:560px)').matches;if(!m)return;const o=document.body.style.overflow;document.body.style.overflow='hidden';return()=>{document.body.style.overflow=o}},[open]);
