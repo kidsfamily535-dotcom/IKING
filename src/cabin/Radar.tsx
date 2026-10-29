@@ -7,7 +7,7 @@ export interface Blip{id:string;hub:string;dx:number;dy:number;sel:boolean;label
 interface Props{
  hubs:Hub[];from:string;to:string|null;hover:string|null;name:(h:Hub)=>string;
  range:number;blips:Blip[];scanning:boolean;plane:number|null;alt:string|null;hud:string;aria:string;
- warn?:string[];onHover:(i:string|null)=>void;onPick:(i:string)=>void;onBlip:(id:string)=>void;kmUnit:string;
+ warn?:string[];classes?:{km:number;label:string}[];onHover:(i:string|null)=>void;onPick:(i:string)=>void;onBlip:(id:string)=>void;kmUnit:string;
 }
 const N=56;
 const calm=()=>typeof matchMedia==='function'&&matchMedia('(prefers-reduced-motion: reduce)').matches;
@@ -37,6 +37,7 @@ export default function Radar(p:Props){
  const done=p.plane===null?route.length-1:Math.round(p.plane*N);
  const planeAt=route.length&&p.plane!==null?route[Math.min(done,N)]:null,prev=route.length&&p.plane!==null?route[Math.max(0,Math.min(done,N)-1)]:null,next=route.length&&p.plane!==null?route[Math.min(N,done+1)]:null;
  const hd=planeAt&&prev&&next?Math.atan2(next.x-prev.x,-(next.y-prev.y))*180/Math.PI:0;
+ const cls=useMemo(()=>(p.classes??[]).filter(k=>k.km<v.range&&rr(k.km,v.range)>=40),[p.classes,v.range]);
  // حلقات المسافة (أرقام حقيقية بالكيلومتر، نصف القطر مضغوط)
  const rings=useMemo(()=>{const o:number[]=[];let last=-99;for(const k of NICE){if(k>=v.range)break;const r=rr(k,v.range);if(r>=70&&r-last>=52){o.push(k);last=r}}return o},[v.range]);
  // أي الأسماء تظهر: الأهم أولًا، ومن غير تصادم
@@ -63,7 +64,8 @@ export default function Radar(p:Props){
   <svg viewBox="0 0 600 600" aria-hidden>
    <defs><radialGradient id="rdg" cx="50%" cy="50%" r="50%"><stop offset="0" stopColor="var(--t-surf2)" stopOpacity=".85"/><stop offset="1" stopColor="var(--t-night)" stopOpacity="0"/></radialGradient></defs>
    <circle cx="300" cy="300" r="286" fill="url(#rdg)"/>
-   {rings.map(k=><circle key={k} cx="300" cy="300" r={rr(k,v.range)} fill="none" stroke="var(--t-ink)" strokeOpacity=".12"/>)}
+   {!p.classes&&rings.map(k=><circle key={k} cx="300" cy="300" r={rr(k,v.range)} fill="none" stroke="var(--t-ink)" strokeOpacity=".12"/>)}
+   {cls.map(k=><circle key={'c'+k.km} cx="300" cy="300" r={rr(k.km,v.range)} fill="none" stroke="var(--t-accent)" strokeOpacity=".3" strokeDasharray="3 5"/>)}
    <circle cx="300" cy="300" r="270" fill="none" stroke="var(--t-ink)" strokeOpacity=".2"/>
    {Array.from({length:72},(_,i)=>{const a=i*5*Math.PI/180,m=i%6?3:9;return <line key={i} x1={300+270*Math.sin(a)} y1={300-270*Math.cos(a)} x2={300+(270-m)*Math.sin(a)} y2={300-(270-m)*Math.cos(a)} stroke="var(--t-ink)" strokeOpacity={i%6?.24:.5}/>})}
    <g className="cr-sweep">{Array.from({length:9},(_,k)=>{const a=(x:number)=>x*Math.PI/180,a1=-(k+1)*3.4,a2=-k*3.4;return <path key={k} d={`M300,300 L${300+270*Math.sin(a(a1))},${300-270*Math.cos(a(a1))} A270,270 0 0 1 ${300+270*Math.sin(a(a2))},${300-270*Math.cos(a(a2))} Z`} fill="var(--t-accent)" fillOpacity={.1*(1-k/9)}/>})}<line x1="300" y1="300" x2="300" y2="30" stroke="var(--t-accent)" strokeOpacity=".5"/></g>
@@ -74,7 +76,8 @@ export default function Radar(p:Props){
    {planeAt&&<g transform={`translate(${planeAt.x} ${planeAt.y}) rotate(${hd})`}><circle r="11" fill="var(--t-accent)" fillOpacity=".18"/><path d="M0,-8 L5.5,7 L0,3.5 L-5.5,7Z" fill="var(--t-ink)"/></g>}
    {p.alt&&dx&&<><circle cx={dx.x+18} cy={dx.y-14} r="9" fill="none" stroke="#e6c36a" strokeDasharray="2 3"/><line x1={dx.x} y1={dx.y} x2={dx.x+18} y2={dx.y-14} stroke="#e6c36a" strokeOpacity=".6"/></>}
   </svg>
-  {rings.map(k=><span key={'t'+k} className="cr-rl" style={{top:pct(300-rr(k,v.range))}}>{k.toLocaleString('en')} {p.kmUnit}</span>)}
+  {cls.map(k=><span key={'cl'+k.km} className="cr-rl" style={{top:pct(300-rr(k.km,v.range))}}>{k.label}</span>)}
+  {!p.classes&&rings.map(k=><span key={'t'+k} className="cr-rl" style={{top:pct(300-rr(k,v.range))}}>{k.toLocaleString('en')} {p.kmUnit}</span>)}
   {p.hubs.map(h=>{const q=P[h.iata];if(q.d>v.range*1.001)return null;const s=shown[h.iata],on=h.iata===p.from||h.iata===p.to,hot=h.iata===p.hover;
    return <button key={h.iata} type="button" className={`cr-n${p.warn?.includes(h.iata)?' warn':''}${on?' on':''}${hot?' hot':''}${h.iata===p.from?' org':''}`} style={{left:pct(q.x),top:pct(q.y)}} onClick={()=>p.onPick(h.iata)} aria-pressed={h.iata===p.to} aria-label={p.name(h)}>
     <i/>{s&&<span className={`cr-l ${s}`}>{p.name(h)}</span>}</button>})}

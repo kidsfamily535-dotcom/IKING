@@ -1,7 +1,7 @@
 import {useMemo,useState} from 'react';
 import {sb} from '../lib/supabase';
 import {useI18n,type Lang} from '../i18n';
-import {hub,dist,flightMin} from '../cabin/geo';
+import {hub,dist,flightMin,CLASS_RANGE} from '../cabin/geo';
 import './readiness.css';
 // قسم «جاهزية السفر» في الصفحة الرئيسية: ثلاثة أسئلة ← بطاقة معلومات صادقة (وضع رسمي + طقس) ← إشارة طلب يصرّح بها الزائر نفسه.
 // لا حجز ولا وعد بمقعد ولا طائرة. بيانات التواصل اختيارية وبموافقة صريحة.
@@ -33,7 +33,7 @@ const COPY:Record<'ar'|'en',C>={
   note:'This is information only, not a booking and not a promise of a seat or an aircraft. Availability is confirmed only by the operator, and the final decision rests with the operator and crew.',
   contactT:'Would you like someone from our team to contact you? (optional)',contactPh:'Your email or phone',consent:'I agree that the iKing team may contact me about this request only',send:'Send',sent:'Received. We will contact you only with the consent you gave.',again:'Start again',err:'Could not send right now, please try later.',busy:'Loading…',rate:'The service is busy; your card works but your request was not recorded.',
   city:{RUH:'Riyadh',JED:'Jeddah',DMM:'Dammam',DXB:'Dubai',DOH:'Doha',KWI:'Kuwait',CAI:'Cairo',AMM:'Amman',IST:'Istanbul',MCT:'Muscat',LHR:'London',GVA:'Geneva'}}};
-const acKey=(n:number,km:number)=>{const O=['light','mid','smid','large','xl'];let i=n<=5?0:n<=8?1:n<=10?2:n<=16?3:4;if(km>2800)i=Math.max(i,1);if(km>4500)i=Math.max(i,2);if(km>7000)i=Math.max(i,3);return O[i]};
+const acKey=(n:number,km:number)=>{const O=CLASS_RANGE.map(k=>k.k);let i=n<=5?0:n<=8?1:n<=10?2:n<=16?3:4;const need=CLASS_RANGE.findIndex(k=>km<=k.km);i=Math.max(i,need<0?CLASS_RANGE.length-1:need);return O[i]};
 const geoOf=(k:string)=>hub(k==='LHR'?'LON':k);
 const refParam=()=>{try{const r=new URLSearchParams(location.search).get('ref')||'';return /^[A-Za-z0-9_-]{1,24}$/.test(r)?r:null}catch{return null}};
 

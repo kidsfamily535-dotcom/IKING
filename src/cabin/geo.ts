@@ -20,7 +20,16 @@ export const HUBS:Hub[]=[
  {iata:'GVA',ar:'جنيف',en:'Geneva',lat:46.237,lon:6.1089,tz:'Europe/Zurich',pri:4},
  {iata:'MXP',ar:'ميلانو',en:'Milan',lat:45.6306,lon:8.7281,tz:'Europe/Rome',pri:9},
  {iata:'NCE',ar:'نيس',en:'Nice',lat:43.6584,lon:7.2159,tz:'Europe/Paris',pri:6},
+ {iata:'TEB',ar:'نيويورك',en:'New York',lat:40.8501,lon:-74.0608,tz:'America/New_York',pri:1},
+ {iata:'IAD',ar:'واشنطن',en:'Washington',lat:38.9445,lon:-77.4558,tz:'America/New_York',pri:5},
+ {iata:'OPF',ar:'ميامي',en:'Miami',lat:25.907,lon:-80.2784,tz:'America/New_York',pri:4},
+ {iata:'PWK',ar:'شيكاغو',en:'Chicago',lat:42.1142,lon:-87.9015,tz:'America/Chicago',pri:6},
+ {iata:'HOU',ar:'هيوستن',en:'Houston',lat:29.6454,lon:-95.2789,tz:'America/Chicago',pri:7},
+ {iata:'VNY',ar:'لوس أنجلوس',en:'Los Angeles',lat:34.2098,lon:-118.49,tz:'America/Los_Angeles',pri:3},
+ {iata:'LAS',ar:'لاس فيغاس',en:'Las Vegas',lat:36.084,lon:-115.1537,tz:'America/Los_Angeles',pri:8},
 ];
+// أقصى مدى تقريبي بلا توقف لكل فئة طائرة (كم). تقدير للتوجيه فقط، والمشغّل يؤكد المدى الفعلي لكل طائرة.
+export const CLASS_RANGE=[{k:'light',km:2800},{k:'mid',km:4500},{k:'smid',km:7000},{k:'large',km:11000},{k:'xl',km:14000}] as const;
 export const hub=(i:string):Hub=>HUBS.find(h=>h.iata===i)??HUBS[0];
 type LL={lat:number;lon:number};
 const RAD=Math.PI/180,ER=6371;

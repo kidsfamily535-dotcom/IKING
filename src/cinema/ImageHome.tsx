@@ -1,7 +1,7 @@
 import {useEffect,useState} from 'react';
 import {useI18n,type Lang} from '../i18n';
 import Radar from '../cabin/Radar';
-import {HUBS,hub,dist,flightMin,rangeFor} from '../cabin/geo';
+import {HUBS,hub,dist,flightMin,rangeFor,CLASS_RANGE} from '../cabin/geo';
 import RafiqChat from './RafiqChat';
 import Readiness from './Readiness';
 import './imagehome.css';
@@ -40,11 +40,12 @@ const COPY:Record<Lang,C>={
 const NM:Record<'tr'|'ru',Record<string,string>>={
  tr:{RUH:'Riyad',JED:'Cidde',DMM:'Dammam',MED:'Medine',DXB:'Dubai',AUH:'Abu Dabi',DOH:'Doha',KWI:'Kuveyt',BAH:'Bahreyn',MCT:'Maskat',CAI:'Kahire',AMM:'Amman',IST:'İstanbul',LON:'Londra',CDG:'Paris',GVA:'Cenevre',MXP:'Milano',NCE:'Nice'},
  ru:{RUH:'Эр-Рияд',JED:'Джидда',DMM:'Даммам',MED:'Медина',DXB:'Дубай',AUH:'Абу-Даби',DOH:'Доха',KWI:'Кувейт',BAH:'Бахрейн',MCT:'Маскат',CAI:'Каир',AMM:'Амман',IST:'Стамбул',LON:'Лондон',CDG:'Париж',GVA:'Женева',MXP:'Милан',NCE:'Ницца'}};
-const RX:Record<Lang,{tap:string;go:string;km:string;h:string;m:string;est:string}>={
- ar:{tap:'اضغط على وجهة لترى الطريق',go:'اطلب هذه الرحلة',km:'كم',h:'س',m:'د',est:'تقدير'},
- en:{tap:'Tap a destination to see the route',go:'Request this trip',km:'km',h:'h',m:'min',est:'estimate'},
- tr:{tap:'Rotayı görmek için bir varış seçin',go:'Bu yolculuğu talep et',km:'km',h:'sa',m:'dk',est:'tahmini'},
- ru:{tap:'Выберите пункт назначения',go:'Запросить поездку',km:'км',h:'ч',m:'мин',est:'оценка'}};
+const CL:Record<'ar'|'en',string[]>={ar:['خفيفة','متوسطة','متوسطة كبيرة','كبيرة','بعيدة المدى'],en:['Light','Midsize','Super-midsize','Large','Ultra-long']};
+const RX:Record<Lang,{tap:string;go:string;km:string;h:string;m:string;est:string;world:string;ringNote:string}>={
+ ar:{tap:'اضغط على وجهة لترى الطريق',go:'اطلب هذه الرحلة',km:'كم',h:'س',m:'د',est:'تقدير',world:'المدى العالمي',ringNote:'الحلقات تقدّر أقصى مدى بلا توقف لكل فئة طائرة. المشغّل يؤكد المدى الفعلي.'},
+ en:{tap:'Tap a destination to see the route',go:'Request this trip',km:'km',h:'h',m:'min',est:'estimate',world:'Global range',ringNote:'Rings estimate each aircraft class’s nonstop reach. The operator confirms the actual range.'},
+ tr:{tap:'Rotayı görmek için bir varış seçin',go:'Bu yolculuğu talep et',km:'km',h:'sa',m:'dk',est:'tahmini',world:'Global range',ringNote:''},
+ ru:{tap:'Выберите пункт назначения',go:'Запросить поездку',km:'км',h:'ч',m:'мин',est:'оценка',world:'Global range',ringNote:''}};
 // التركية والروسية مجمّدتان مؤقتًا (النصوص محفوظة وتعود بإضافتهما هنا وفي ENABLED_LANGS داخل i18n)
 const LANGS:{l:Lang;n:string}[]=[{l:'ar',n:'العربية'},{l:'en',n:'English'}];
 const ICONS=['M12 12a4 4 0 100-8 4 4 0 000 8zM4 21c1-4.5 4-6.5 8-6.5s7 2 8 6.5','M12 2l2 7 7 4v2l-7-3-1 5 3 2v2l-4-2-4 2v-2l3-2-1-5-7 3v-2l7-4z','M12 20a8 8 0 100-16 8 8 0 000 16zM12 16a4 4 0 100-8 4 4 0 000 8z','M4 16V12l2-5h12l2 5v4M4 16h16M4 16v2h3v-2M17 16v2h3v-2','M12 16a4 4 0 100-8 4 4 0 000 8zM12 2v2M12 20v2M2 12h2M20 12h2'];
@@ -53,7 +54,7 @@ const IMG=['/home/c4.jpg','/home/c4.jpg','/home/c3.jpg','/home/c2.jpg','/home/c1
 const calm=()=>typeof matchMedia==='function'&&matchMedia('(prefers-reduced-motion: reduce)').matches;
 
 export default function ImageHome({real}:{real:boolean}){
- const {lang,setLang}=useI18n(),c=COPY[lang]||COPY.en,[on,setOn]=useState(4),[to,setTo]=useState<string|null>('CAI'),[hov,setHov]=useState<string|null>(null);
+ const {lang,setLang}=useI18n(),c=COPY[lang]||COPY.en,[on,setOn]=useState(4),[to,setTo]=useState<string|null>('CAI'),[hov,setHov]=useState<string|null>(null),[world,setWorld]=useState(false);
  const rx=RX[lang],nm=(i:string)=>{const h=hub(i);return lang==='ar'?h.ar:lang==='en'?h.en:NM[lang][i]||h.en};
  const F=hub('RUH'),km=to?dist(F,hub(to)):null,mn=km?flightMin(km):0;
  const hud=to&&km?`${nm('RUH')} ${lang==='ar'?'←':'→'} ${nm(to)} · ${(Math.round(km/10)*10).toLocaleString('en')} ${rx.km} · ${lang==='ar'?'نحو ':''}${Math.floor(mn/60)} ${rx.h} ${mn%60} ${rx.m} (${rx.est})`:rx.tap;
@@ -76,7 +77,9 @@ export default function ImageHome({real}:{real:boolean}){
      </div>
     </div>
     <div className="ih-radarbox">
-     <Radar hubs={HUBS} from="RUH" to={to} hover={hov} name={h=>nm(h.iata)} range={to?rangeFor(km):3000} blips={[]} scanning={false} plane={null} alt={null} hud={hud} aria={c.city[7]} kmUnit={rx.km} onHover={setHov} onPick={i=>{if(i!=='RUH')setTo(t=>t===i?null:i)}} onBlip={()=>{}}/>
+     <Radar hubs={HUBS} from="RUH" to={to} hover={hov} name={h=>nm(h.iata)} range={world?15000:to?rangeFor(km):3000} classes={CLASS_RANGE.map((k,i)=>({km:k.km,label:(CL[lang as 'ar'|'en']||CL.en)[i]}))} blips={[]} scanning={false} plane={null} alt={null} hud={hud} aria={c.city[7]} kmUnit={rx.km} onHover={setHov} onPick={i=>{if(i!=='RUH')setTo(t=>t===i?null:i)}} onBlip={()=>{}}/>
+     <button type="button" className="ih-pill ih-world" aria-pressed={world} onClick={()=>setWorld(w=>!w)}>{rx.world}</button>
+     {world&&rx.ringNote&&<p className="ih-simnote">{rx.ringNote}</p>}
      {to&&<a className="ih-go" href={`?view=cabin&to=${to}`}>{rx.go}</a>}
      <p className="ih-simnote">{c.demo}</p>
     </div>
