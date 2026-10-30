@@ -85,7 +85,7 @@ export default function Request(){
  const addLeg=()=>setLegs(l=>l.length<3?[...l,{to:null,date:l.length?l[l.length-1].date:date}]:l);
  const fmt=(d:string)=>new Intl.DateTimeFormat(ar?'ar-u-nu-latn':lang,{day:'numeric',month:'long'}).format(new Date(d+'T12:00:00'));
  const looksTel=cv.trim()!==''&&!cv.includes('@'),isMail=MAIL.test(cv.trim()),isTel=TEL.test(cv.replace(/[\s\-()]/g,''));
- const tripOk=!!to&&!outside&&(kind!=='round'||retDate>=date)&&(kind!=='multi'||(legs.length>0&&legs.every(l=>l.to)));
+ const tripOk=!!to&&(kind!=='round'||retDate>=date)&&(kind!=='multi'||(legs.length>0&&legs.every(l=>l.to)));
  const ok=(isMail||isTel)&&agree;
 const L=(o?:Ln)=>o?(o[lang]||o.en||o.ar||''):'';
  const mOf=(id:number)=>MISS.find(x=>x.id===id),tOf=(id:number)=>TRAITS.find(x=>x.id===id);
@@ -151,7 +151,7 @@ const L=(o?:Ln)=>o?(o[lang]||o.en||o.ar||''):'';
     <div className="rq-route-row"><City label={c.from} value={from} onClick={()=>{setPick('from');setQ('')}}/>
      <button type="button" className="rq-swap" onClick={swap} disabled={!to} aria-label={c.swap}>⇄</button>
      <City label={c.to} value={to} onClick={()=>{setPick('to');setQ('')}}/></div>
-    {outside&&<p className="rq-note" role="alert">{c.no}</p>}
+    {outside&&<p className="rq-note" role="status">{ar?'أحد المطارات خارج قائمتنا المرجعية. سيراجعه فريقنا يدويًا قبل الرد عليك، ولا يُرسل شيء لأي مشغّل.':'One of the airports is outside our reference list. Our team will review it manually before replying; nothing is sent to any operator.'}</p>}
     <label className="rq-row"><span>{c.date}</span><input className="rq-in" type="date" value={date} min={iso(Date.now())} onChange={e=>e.target.value&&setDate(e.target.value)}/></label>
     {seg([['am',c.am],['noon',c.noon],['pm',c.pm],['flex',c.flex]],win,k=>setWin(k as Win),c.date)}
     {kind==='round'&&<label className="rq-row"><span>{c.ret}</span><input className="rq-in" type="date" value={retDate} min={date} onChange={e=>e.target.value&&setRetDate(e.target.value)}/></label>}

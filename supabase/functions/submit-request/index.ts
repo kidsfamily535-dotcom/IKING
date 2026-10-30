@@ -75,8 +75,10 @@ Deno.serve(async (req) => {
   const { data: aps, error: apErr } = await db.from('airports').select('iata_code').in('iata_code', [origin, dest])
   if (apErr) return json({ error: 'server_error' }, 500)
   const known = new Set((aps ?? []).map((a: any) => a.iata_code))
-  if (!known.has(origin)) return bad('origin_code')
-  if (!known.has(dest)) return bad('destination_code')
+  // مطار خارج الجدول المرجعي: الطلب يُقبل ويُعلَّم للمراجعة اليدوية (لا يُرسل لأي مشغّل). الشكل مفحوص أعلاه (3 حروف).
+  const unknown = [origin, dest].filter((c) => !known.has(c))
+  const needsReview = unknown.length > 0
+  const reviewReason = needsReview ? `airport_not_in_reference: ${unknown.join(',')}` : null
 
   const ip = (req.headers.get('x-forwarded-for') ?? '').split(',')[0].trim() || req.headers.get('cf-connecting-ip') || 'unknown'
   const ipHash = await sha(ip + '|trip_leads_v1|' + url)
@@ -95,6 +97,8 @@ Deno.serve(async (req) => {
     contact_name: name, contact_channel: channel, contact_value: value, origin_code: origin, destination_code: dest,
     travel_date: travel, return_date: ret, departure_period: period, passengers: pax, note, consent: true,
     source, referral_partner: partner, campaign, ip_hash: ipHash,
+    // الأعمدة تُرسل فقط عند الحاجة، فالطلبات العادية لا تتأثر لو لم تُطبَّق الـ migration بعد
+    ...(needsReview ? { needs_review: true, review_reason: reviewReason } : {}),
   }).select('id').single()
   if (insErr || !row) { console.error('insert_failed', insErr?.message); return json({ error: 'server_error' }, 500) }
 
@@ -111,6 +115,7 @@ Deno.serve(async (req) => {
       const html = `<div dir="rtl" style="font-family:system-ui,Tahoma,sans-serif;color:#111;line-height:1.8;max-width:600px">
 <h2 style="margin:0">THE KING'S EYE — طلب رحلة جديد</h2>
 <p style="color:#555;margin-top:4px">طلب حقيقي من نموذج العميل، مش محاكاة.</p>
+${needsReview ? `<p style="color:#b45309"><b>يحتاج مراجعة:</b> كود المطار (${esc(unknown.join(', '))}) غير موجود في الجدول المرجعي. تأكد منه قبل أي رد.</p>` : ''}
 <table cellpadding="6" style="border-collapse:collapse">
 <tr><td>المسار</td><td dir="ltr"><b>${esc(origin)} → ${esc(dest)}</b></td></tr>
 <tr><td>التاريخ</td><td dir="ltr">${esc(travel)}${ret ? ' ← عودة ' + esc(ret) : ''}</td></tr>
@@ -125,7 +130,7 @@ ${note ? `<tr><td>ملاحظة</td><td>${esc(note)}</td></tr>` : ''}
       const r = await fetch('https://api.resend.com/emails', {
         method: 'POST',
         headers: { Authorization: `Bearer ${key}`, 'Content-Type': 'application/json' },
-        body: JSON.stringify({ from: "King's Eye <onboarding@resend.dev>", to, subject: `طلب رحلة جديد: ${origin} → ${dest} (${pax} ركاب)`, html }),
+        body: JSON.stringify({ from: "King's Eye <onboarding@resend.dev>", to, subject: `${needsReview ? '[للمراجعة] ' : ''}طلب رحلة جديد: ${origin} → ${dest} (${pax} ركاب)`, html }),
       })
       if (r.ok) await db.from('trip_leads').update({ owner_notified_at: new Date().toISOString() }).eq('id', row.id)
       else console.error('email_failed', r.status)

@@ -170,13 +170,13 @@ const needW=[urlP('from'),urlP('to')].some(x=>x&&!HUBS.some(h=>h.iata===x)),[wai
      {stage==='approve'&&cur&&D&&<><h1>{c.appr.title}</h1><p className="cb-sub">{c.appr.body}</p>
       <ul className="cb-sum"><li>{nm(F)} {L==='ar'?'←':'→'} {nm(D)}</li><li>{when} · {c.opt.at(cur.t.dep,cur.t.arr)}</li><li>{guests} · {c.opt.cat[cur.cat]}</li></ul>
       <p className="cb-note">{t('ask.contactSub')}</p>
-      {outside?<p className="cb-note" role="alert">{t('ask.outside')}</p>:<>
+      {outside&&<p className="cb-note" role="status">{L==='ar'?'أحد المطارات خارج قائمتنا المرجعية. سيراجعه فريقنا يدويًا قبل الرد عليك، ولا يُرسل شيء لأي مشغّل.':'One of the airports is outside our reference list. Our team will review it manually before replying; nothing is sent to any operator.'}</p>}<>
       <label className="cb-row"><span>{t('ask.name')}</span><input className="ak-in" value={nm0} maxLength={80} autoComplete="name" onChange={e=>setNm0(e.target.value)}/></label>
       <div className="cb-row col"><div className="cb-seg" role="radiogroup" aria-label={t('ask.how')}>{(['whatsapp','phone','email'] as const).map(k=><button key={k} type="button" role="radio" aria-checked={ch===k} onClick={()=>{setCh(k);setCv('')}}>{t('ask.ch.'+k)}</button>)}</div></div>
       <label className="cb-row"><span>{t('ask.ch.'+ch)}</span><input className="ak-in" dir="ltr" inputMode={ch==='email'?'email':'tel'} value={cv} maxLength={120} autoComplete={ch==='email'?'email':'tel'} onChange={e=>setCv(e.target.value)} placeholder={ch==='email'?'name@example.com':'+9665XXXXXXXX'}/></label>
       <Toggle checked={agree} onChange={setAgree}>{t('ask.consent')}</Toggle>
       {sendErr&&<p className="cb-note" role="alert">{sendErr}</p>}
-      <button type="button" className="cb-cta" disabled={!contactOk||sent} onClick={sendReal}>{c.appr.send}</button>{!contactOk&&<p className="cb-hint">{t('ask.need')}</p>}</>}
+      <button type="button" className="cb-cta" disabled={!contactOk||sent} onClick={sendReal}>{c.appr.send}</button>{!contactOk&&<p className="cb-hint">{t('ask.need')}</p>}</>
       <button type="button" className="cb-link" onClick={()=>go('recommend')}>{c.appr.back}</button></>}
      {stage==='waiting'&&<><h1>{t('ask.sentT')}</h1><p className="cb-sub">{t('ask.sentBody')}</p><p className="cb-pend"><i aria-hidden/>{t('ask.sentSt')}</p>
       <button type="button" className="cb-ghost" onClick={()=>go('confirmed')}>{t('ask.seeDemo')}</button></>}
