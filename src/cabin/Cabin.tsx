@@ -47,6 +47,9 @@ export default function Cabin(){
   if(f&&!HUBS.some(h=>h.iata===f)){const h=searchHubs(wa,f,1)[0];if(h&&h.iata===f){add[f]=h;setFrom(f)}}
   if(t&&t!==(f||'RUH')&&!HUBS.some(h=>h.iata===t)){const h=searchHubs(wa,t,1)[0];if(h&&h.iata===t){add[t]=h;setTo(t);setStage('understand')}}
   if(Object.keys(add).length)setReg(r=>({...r,...add}))},[wa]);
+const needW=[urlP('from'),urlP('to')].some(x=>x&&!HUBS.some(h=>h.iata===x)),[waitOut,setWaitOut]=useState(false);
+ useEffect(()=>{if(!needW)return;const id=setTimeout(()=>setWaitOut(true),6000);return()=>clearTimeout(id)},[needW]);
+ const pending=needW&&!wa&&!waitOut;
  const register=(h:Hub)=>setReg(r=>r[h.iata]?r:{...r,[h.iata]:h});
  const go=(s:Stage)=>{setStage(s);window.scrollTo({top:0,behavior:'smooth'})};
  // الخيارات الثلاثة: الأنسب = مقصورة أعلى من الأدنى المناسب طلبًا للراحة، الأوفر = الأدنى المناسب، البديل = الأنسب بعد ساعة
@@ -110,6 +113,7 @@ export default function Cabin(){
  const when=new Intl.DateTimeFormat(L==='ar'?'ar-u-nu-latn':L,{day:'numeric',month:'long'}).format(new Date(date+'T12:00:00'));
  const status=(k:'inferred'|'unknown'|'estimated'|'pending'|'confirmed')=><span className={`cb-st ${k}`}>{c.found.st[k]}</span>;
  const stepsDone=(i:number)=>i===3?false:scan>i+0;
+ if(pending)return <div className="cb" data-phase="doors" data-stage="doors" dir={L==='ar'?'rtl':'ltr'} lang={L}><p className="cb-note" role="status">{L==='ar'?'جارٍ تجهيز رحلتك…':'Preparing your trip…'}</p></div>;
  return <div className="cb" data-phase={PHASE[stage]} data-stage={stage} dir={L==='ar'?'rtl':'ltr'} lang={L}>
   <header className="cb-top"><span className="cb-brand"><Mark/><span className="cb-brand-t"><b>{c.brand}</b><small>EYE KING</small></span></span><span className="cb-sim">{c.sim}</span>
    <div className="cb-lang" role="group" aria-label="Language">{LANGS.map(l=><button key={l} type="button" lang={l} aria-pressed={L===l} onClick={()=>setLang(l as Lang)}>{l.toUpperCase()}</button>)}</div></header>
