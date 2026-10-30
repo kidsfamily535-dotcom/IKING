@@ -20,12 +20,12 @@ const D:Record<'ar'|'en',L>={
   busy:'The service is temporarily unavailable. Please try again shortly.',limit:'You have reached the current limit. Please try again later.',err:'Could not send. Please try again.',
   human:'Nothing has been sent to anyone yet. If you would like a colleague to follow up, leave your contact details here.',form:'Leave your request for the team',src:'Source',stale:'review overdue',wait:'Rafiq is typing…',gen:'General information, not from an approved EYE KING source',jchip:'Manage my trip'}};
 // أزرار الرد السريع: كل زر يرسل جملة عادية للدالة rafiq-chat، ولا يغيّر أي حالة ولا يعد بشيء.
-const Q:Record<'ar'|'en',{trip:[string,string];price:[string,string];mgr:string;cap:string;when:[string,string][];pax:[string,string][];prio:[string,string][]}>={
- ar:{trip:['✈️ عايز أسافر','عايز أسافر بطائرة خاصة'],price:['💰 كام تكلفة؟','كام تكلفة رحلة بطائرة خاصة تقريبًا؟'],mgr:'🧑‍💼 كلّم مدير',cap:'🔎 العين هتعمل إيه ليك؟',
+const Q:Record<'ar'|'en',{trip:[string,string];price:[string,string];mgr:string;cap:string;ready:string;go:string;when:[string,string][];pax:[string,string][];prio:[string,string][]}>={
+ ar:{trip:['✈️ عايز أسافر','عايز أسافر بطائرة خاصة'],price:['💰 كام تكلفة؟','كام تكلفة رحلة بطائرة خاصة تقريبًا؟'],mgr:'🧑‍💼 كلّم مدير',cap:'🔎 العين هتعمل إيه ليك؟',ready:'تمام، فهمت رحلتك. الخطوة الجاية: اسمك وطريقة التواصل، وبعدها طلبك يتسلّم للعين.',go:'📨 سلّم طلبي للعين',
   when:[['النهارده','النهارده'],['بكرة','بكرة'],['الأسبوع ده','الأسبوع ده']],
   pax:[['1','عدد الركاب 1'],['2','عدد الركاب 2'],['3-5','عدد الركاب بين 3 و 5'],['6 أو أكتر','عدد الركاب 6 أو أكتر']],
   prio:[['الأسرع','الأهم عندي السرعة'],['الأريح','الأهم عندي الراحة'],['الأوفر','الأهم عندي التوفير']]},
- en:{trip:['✈️ I want to travel','I want to travel by private jet'],price:['💰 Rough cost?','Roughly how much does a private jet trip cost?'],mgr:'🧑‍💼 Talk to a manager',cap:'🔎 What will the Eye do for me?',
+ en:{trip:['✈️ I want to travel','I want to travel by private jet'],price:['💰 Rough cost?','Roughly how much does a private jet trip cost?'],mgr:'🧑‍💼 Talk to a manager',cap:'🔎 What will the Eye do for me?',ready:'Got your trip. Next step: your name and how to reach you, and then your request is handed to the Eye.',go:'📨 Hand my request to the Eye',
   when:[['Today','Today'],['Tomorrow','Tomorrow'],['This week','This week']],
   pax:[['1','Passengers: 1'],['2','Passengers: 2'],['3-5','Passengers: 3 to 5'],['6 or more','Passengers: 6 or more']],
   prio:[['Fastest','Most important to me is speed'],['Most comfortable','Most important to me is comfort'],['Best value','Most important to me is value']]}};
@@ -74,6 +74,8 @@ export default function RafiqChat(){
  const mine=msgs.filter(m=>m.who==='me'&&!m.local).map(m=>m.text).join(' ');
  const tripOn=RX.trip.test(mine);
  const stage:[string,string][]=msgs.length===0?[]:!tripOn?[]:!RX.when.test(mine)?QQ.when:!RX.pax.test(mine)?QQ.pax:!RX.prio.test(mine)?QQ.prio:[];
+ const ready=tripOn&&RX.when.test(mine)&&RX.pax.test(mine)&&RX.prio.test(mine);
+ const goHref='?view=ask&say='+encodeURIComponent(mine.slice(0,600));
  const lastIsJourney=msgs[msgs.length-1]?.journey===true;
  const last=[...msgs].reverse().find(m=>m.who==='me'&&!m.local)?.text??'';
  const formHref='?view=ask'+(last?'&say='+encodeURIComponent(last.slice(0,600)):'');
@@ -94,6 +96,7 @@ export default function RafiqChat(){
      {m.human&&<div className="rc-hand"><p>{T.human}</p><a href={formHref}>{T.form}</a></div>}
     </div>)}
     {busy&&<p className="rc-bub rc-rf rc-wait" role="status">{T.wait}</p>}
+    {!busy&&ready&&<div className="rc-bub rc-rf"><p>{QQ.ready}</p><a className="rc-go" href={goHref}>{QQ.go}</a></div>}
     {!busy&&<div className="rc-chips">
      {msgs.length===0&&<><button type="button" onClick={()=>send(QQ.trip[1])}>{QQ.trip[0]}</button><button type="button" onClick={()=>send(QQ.price[1])}>{QQ.price[0]}</button><button type="button" onClick={()=>runJourney()}>{T.jchip}</button></>}
      {stage.map(([l,say],i)=><button key={l+i} type="button" onClick={()=>send(say)}>{l}</button>)}
