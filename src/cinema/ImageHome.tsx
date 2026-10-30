@@ -4,7 +4,6 @@ import Radar from '../cabin/Radar';
 import {HUBS,hub,dist,flightMin,rangeFor,CLASS_RANGE,type Hub} from '../cabin/geo';
 import {useWorld,visibleHubs,searchHubs} from '../cabin/world';
 import RafiqChat from './RafiqChat';
-import Readiness from './Readiness';
 import './imagehome.css';
 // الصفحة الرئيسية بحسب التصميم المعتمد: الأرض ليلًا (الخلفية العامة للموقع) + رادار الرياض والعين + «ما الذي سترى؟».
 type C={think:string;kick:string;h1:string;sub:string;cta:string;tag:string;demo:string;steps:string[];
@@ -94,7 +93,6 @@ export default function ImageHome({real}:{real:boolean}){
    <ol className="ih-steps" aria-label="Journey">{c.steps.map((s,i)=><li key={i} className={on===i?'ih-on':''}>{s}</li>)}</ol>
   </div>
 
-  <Readiness/>
 
   <div className="ih-lower">
    <section>
