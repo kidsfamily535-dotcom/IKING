@@ -1,13 +1,13 @@
 import {useEffect,useState} from 'react';
 import {HUBS,dist,type Hub} from './geo';
 // قاعدة مطارات عالمية (OurAirports، بيانات عامة): الكبيرة والمتوسطة التي لها رمز IATA. تُحمَّل عند الحاجة فقط (public/world-airports.json).
-// [iata, name, municipality, lat, lon, country, tier(1 كبير|2 متوسط), icao]
-export type WA=[string,string,string,number,number,string,number,string];
+// [iata, name, municipality, lat, lon, country, tier(1 كبير|2 متوسط), icao, منطقة زمنية IANA]
+export type WA=[string,string,string,number,number,string,number,string,string];
 let cache:WA[]|null=null,pending:Promise<WA[]>|null=null;
 export const loadWorld=():Promise<WA[]>=>cache?Promise.resolve(cache):pending??(pending=fetch('/world-airports.json').then(r=>{if(!r.ok)throw new Error('world');return r.json()}).then((d:WA[])=>(cache=d)).catch(e=>{pending=null;throw e}));
 export const useWorld=()=>{const [w,setW]=useState<WA[]|null>(cache);useEffect(()=>{if(!cache)loadWorld().then(setW).catch(()=>{})},[]);return w};
 // أسماء المطارات خارج قائمتنا اليدوية تأتي بالإنجليزية حاليًا (ar=en)؛ تُراجَع وتُترجَم لاحقًا.
-export const waHub=(a:WA):Hub=>{const n=a[2]||a[1];return{iata:a[0],ar:n,en:n,lat:a[3],lon:a[4],tz:'',pri:6}};
+export const waHub=(a:WA):Hub=>{const n=a[2]||a[1];return{iata:a[0],ar:n,en:n,lat:a[3],lon:a[4],tz:a[8]||'UTC',pri:6}};
 const norm=(s:string)=>s.toLowerCase().normalize('NFD').replace(/[\u064B-\u065F\u0670\u0300-\u036f]/g,'').replace(/[إأآا]/g,'ا').replace(/ة/g,'ه').replace(/ى/g,'ي').trim();
 export function searchHubs(w:WA[]|null,q:string,max=8):Hub[]{
  const n=norm(q);if(n.length<2)return[];

@@ -3,6 +3,7 @@ import './cabin.css';import './royal.css';import '../ask.css';
 import {useI18n,LANGS,type Lang} from '../i18n';
 import {copy} from './copy';
 import {HUBS,hub,dist,flightMin,rangeFor,localToUtc,clock,clocksChange,type Hub} from './geo';
+import {useWorld,visibleHubs,searchHubs} from './world';
 import Radar,{type Blip} from './Radar';
 import {Spec,Thumb} from './CabinMedia';
 import {Toggle} from './Switch';
@@ -29,43 +30,55 @@ export default function Cabin(){
  useEffect(()=>{let live=true;fetch(`${BASE}/functions/v1/submit-request`).then(r=>r.ok?r.json():null).then(j=>{if(live&&j?.airports)setAps(j.airports.map((a:any)=>a.iata_code))}).catch(()=>{});return()=>{live=false}},[]);
  // الدخول من الصفحة الرئيسية: ?to=LON يفتح الكابينة وقد اختيرت الوجهة
  const init=(()=>{const q=new URLSearchParams(location.search).get('to');return q&&q!=='RUH'&&HUBS.some(h=>h.iata===q)?q:null})();
+ const urlP=(k:string)=>{const v=(new URLSearchParams(location.search).get(k)||'').toUpperCase();return /^[A-Z]{3}$/.test(v)?v:null};
  const [kind,setKind]=useState<'new'|'booked'>('new'),[q,setQ]=useState(''),[opName,setOpName]=useState(''),[bnotes,setBnotes]=useState('');
- const [stage,setStage]=useState<Stage>(init?'understand':'doors'),[from,setFrom]=useState('RUH'),[to,setTo]=useState<string|null>(init),[mode,setMode]=useState<'to'|'from'>('to');
+ const [stage,setStage]=useState<Stage>(init?'understand':'doors'),[from,setFrom]=useState(()=>{const f=urlP('from');return f&&HUBS.some(h=>h.iata===f)?f:'RUH'}),[to,setTo]=useState<string|null>(init),[mode,setMode]=useState<'to'|'from'>('to');
  const [guests,setGuests]=useState(2),[date,setDate]=useState(()=>iso(Date.now()+864e5)),[win,setWin]=useState<Win>('am');
  const [hover,setHover]=useState<string|null>(null),[opt,setOpt]=useState<Opt>('best'),[ev,setEv]=useState(false),[why,setWhy]=useState(false);
  const [scan,setScan]=useState(0),[prog,setProg]=useState(0),[note,setNote]=useState<Note>(null),[resolved,setResolved]=useState('');
- const nm=(h:Hub)=>L==='ar'?h.ar:h.en,F=hub(from),D=to?hub(to):null,km=D?dist(F,D):null;
+ const nm=(h:Hub)=>L==='ar'?h.ar:h.en;
+ const wa=useWorld(),[reg,setReg]=useState<Record<string,Hub>>({});
+ const H=(i:string):Hub=>reg[i]??hub(i);
+ const F=H(from),D=to?H(to):null,km=D?dist(F,D):null;
+ const vh=useMemo(()=>visibleHubs(wa,F,rangeFor(km),[D]),[wa,F,D,km]);
+ const hubOf=(i:string):Hub=>reg[i]??vh.find(h=>h.iata===i)??hub(i);
+ // روابط من الصفحة الرئيسية (?from=..&to=..) لمطارات خارج قائمتنا اليدوية تُحلّ بعد تحميل قاعدة المطارات
+ useEffect(()=>{if(!wa)return;const f=urlP('from'),t=urlP('to'),add:Record<string,Hub>={};
+  if(f&&!HUBS.some(h=>h.iata===f)){const h=searchHubs(wa,f,1)[0];if(h&&h.iata===f){add[f]=h;setFrom(f)}}
+  if(t&&t!==(f||'RUH')&&!HUBS.some(h=>h.iata===t)){const h=searchHubs(wa,t,1)[0];if(h&&h.iata===t){add[t]=h;setTo(t);setStage('understand')}}
+  if(Object.keys(add).length)setReg(r=>({...r,...add}))},[wa]);
+ const register=(h:Hub)=>setReg(r=>r[h.iata]?r:{...r,[h.iata]:h});
  const go=(s:Stage)=>{setStage(s);window.scrollTo({top:0,behavior:'smooth'})};
  // الخيارات الثلاثة: الأنسب = مقصورة أعلى من الأدنى المناسب طلبًا للراحة، الأوفر = الأدنى المناسب، البديل = الأنسب بعد ساعة
  const plan=useMemo(()=>{
   if(!D||km===null)return null;const f=fit(km,guests);if(!f.length)return null;
   const best=f.length>1?f[1]:f[0],value=f.length>1?f[0]:null,dur=flightMin(km);
   const depAt=(add:number)=>{const u=localToUtc(date,TIME[win],F.tz)+add*60000;return{dep:clock(u,F.tz,L),arr:clock(u+dur*60000,D.tz,L),u}};
-  const near=HUBS.filter(h=>h.iata!==from&&h.iata!==to).sort((a,b)=>dist(F,a)-dist(F,b));
+  const near=vh.filter(h=>h.iata!==from&&h.iata!==to).sort((a,b)=>dist(F,a)-dist(F,b));
   const opts:{id:Opt;cat:string;hub:string;off:[number,number];pos:number|null;t:ReturnType<typeof depAt>;desc:string}[]=[
    {id:'best',cat:best,hub:from,off:[26,-20],pos:null,t:depAt(0),desc:c.opt.bestD(guests,km<=CAP[best][1]*.85)},
    ...(value?[{id:'value' as Opt,cat:value,hub:near[1]?.iata??from,off:[-18,-18] as [number,number],pos:near[1]?flightMin(dist(near[1],F)):null,t:depAt(0),desc:c.opt.valueD}]:[]),
    {id:'alt',cat:best,hub:from,off:[-28,22],pos:null,t:depAt(60),desc:c.opt.altD(60)}];
   return{opts,dur,u:depAt(0).u,arrU:depAt(0).u+dur*60000};
- },[D?.iata,from,guests,date,win,L,km]);
+ },[D?.iata,from,guests,date,win,L,km,vh]);
  const cur=plan?.opts.find(o=>o.id===opt)??plan?.opts[0]??null;
  const big=D&&km!==null&&!plan;
  // الطائرات التمثيلية على الرادار: تظهر مع تقدّم البحث
  const blips:Blip[]=useMemo(()=>{
   if(kind==='booked'||!plan||!(stage==='search'||stage==='found'||stage==='recommend'))return[];
   const shownN=stage==='search'?Math.max(0,scan-1):99;
-  return plan.opts.slice(0,shownN).map(o=>({id:o.id,hub:o.hub,dx:o.off[0],dy:o.off[1],sel:stage!=='search'&&o.id===opt,posFrom:o.pos?from:undefined,label:`${c.aircraft.approx(nm(hub(o.hub)))} · ${c.aircraft.sim}`}));
- },[plan,stage,scan,opt,from,L,kind]);
+  return plan.opts.slice(0,shownN).map(o=>({id:o.id,hub:o.hub,dx:o.off[0],dy:o.off[1],sel:stage!=='search'&&o.id===opt,posFrom:o.pos?from:undefined,label:`${c.aircraft.approx(nm(hubOf(o.hub)))} · ${c.aircraft.sim}`}));
+ },[plan,stage,scan,opt,from,L,kind,vh]);
  // مؤقّتات الحالات
  useEffect(()=>{if(stage!=='search')return;setScan(0);let n=0;const id=setInterval(()=>{n++;setScan(n);if(n>=5){clearInterval(id);setTimeout(()=>go(kind==='booked'?'tracked':'found'),700)}},850);return()=>clearInterval(id)},[stage]);
  const pick=(i:string)=>{
-  if(stage!=='ask'&&stage!=='understand')return;
+  if(stage!=='ask'&&stage!=='understand')return;const ph=vh.find(h=>h.iata===i);if(ph)register(ph);
   if(mode==='from'){if(i===to)setTo(from);setFrom(i);setMode('to');return}
   if(i===from){setMode('from');return}
   setTo(i);setMode('to');setHover(null);if(stage==='ask')go('understand');
  };
- const sug=useMemo(()=>{const n=norm(q);return n?HUBS.filter(h=>h.iata!==from&&(norm(h.ar).includes(n)||norm(h.en).includes(n)||h.iata.toLowerCase()===n)).slice(0,6):[]},[q,from]);
- const choose=(i:string)=>{setQ('');setTo(i);setMode('to');setHover(null);go('understand')};
+ const sug=useMemo(()=>q.trim()?searchHubs(wa,q,6).filter(h=>h.iata!==from):[],[q,from,wa]);
+ const choose=(i:string,h?:Hub)=>{if(h)register(h);setQ('');setTo(i);setMode('to');setHover(null);go('understand')};
  const demo=()=>{setKind('new');setFrom('RUH');setTo('LON');setGuests(6);setDate(demoDate());setWin('am');setMode('to');go('understand')};
  const reset=()=>{setSent(false);setSendErr('');setTo(null);setFrom('RUH');setMode('to');setOpt('best');setEv(false);setWhy(false);setProg(0);setNote(null);setResolved('');setGuests(2);setKind('new');setQ('');setOpName('');setBnotes('');go('doors')};
  const contactOk=nm0.trim().length>=2&&(ch==='email'?/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(cv.trim()):/^\+?[0-9]{7,15}$/.test(cv.replace(/[\s\-()]/g,'')))&&agree;
@@ -87,10 +100,10 @@ export default function Cabin(){
  const alertH=D?nm(D):'';
  const durTxt=(m:number)=>m<60?`${m} ${c.units.m}`:`${Math.floor(m/60)} ${c.units.h} ${String(m%60).padStart(2,'0')} ${c.units.m}`;
  const hud=useMemo(()=>{
-  if(stage==='ask'){if(hover&&hover!==from){const h=hub(hover);return c.ask.read(nm(F),nm(h),km10(dist(F,h)),durTxt(flightMin(dist(F,h))))}return mode==='from'?c.ask.tapFrom:c.ask.tapTo}
+  if(stage==='ask'){if(hover&&hover!==from){const h=hubOf(hover);return c.ask.read(nm(F),nm(h),km10(dist(F,h)),durTxt(flightMin(dist(F,h))))}return mode==='from'?c.ask.tapFrom:c.ask.tapTo}
   if(note==='alert')return `${c.alt.alt} · ${L==='ar'?'لوتون':'Luton'}`;
   if(stage==='search')return c.search.say[Math.min(3,Math.max(0,scan-1))];
-  if((stage==='found'||stage==='recommend')&&cur)return `${c.aircraft.approx(nm(hub(cur.hub)))} · ${c.aircraft.sim}`;
+  if((stage==='found'||stage==='recommend')&&cur)return `${c.aircraft.approx(nm(hubOf(cur.hub)))} · ${c.aircraft.sim}`;
   if(D&&km!==null)return c.ask.read(nm(F),nm(D),km10(km),durTxt(flightMin(km)));
   return c.ask.here(nm(F));
  },[stage,hover,from,to,mode,scan,L,km,opt,plan,note]);
@@ -115,8 +128,8 @@ export default function Cabin(){
       <div className="cb-doors"><button type="button" className="cb-door" onClick={()=>{setKind('new');go('ask')}}><b>{c.doors.newT}</b><small>{c.doors.newS}</small></button>
        <button type="button" className="cb-door" onClick={()=>{setKind('booked');go('ask')}}><b>{c.doors.bookedT}</b><small>{c.doors.bookedS}</small></button></div></>}
      {stage==='ask'&&<><h1>{kind==='booked'?c.bk.ask:c.ask.title}</h1><p className="cb-sub">{kind==='booked'?c.bk.sub:c.ask.sub}</p>
-      <div className="cb-find"><label htmlFor="cbq">{c.find.label}</label><input id="cbq" value={q} placeholder={c.find.ph} autoComplete="off" onChange={e=>setQ(e.target.value)} onKeyDown={e=>{if(e.key==='Enter'&&sug[0])choose(sug[0].iata)}}/>
-       {q.trim()&&(sug.length?<div className="cb-sug">{sug.map(h=><button key={h.iata} type="button" onClick={()=>choose(h.iata)}>{nm(h)}</button>)}</div>:<p className="cb-note">{c.find.none}</p>)}</div>
+      <div className="cb-find"><label htmlFor="cbq">{c.find.label}</label><input id="cbq" value={q} placeholder={c.find.ph} autoComplete="off" onChange={e=>setQ(e.target.value)} onKeyDown={e=>{if(e.key==='Enter'&&sug[0])choose(sug[0].iata,sug[0])}}/>
+       {q.trim()&&(sug.length?<div className="cb-sug">{sug.map(h=><button key={h.iata} type="button" onClick={()=>choose(h.iata,h)}>{nm(h)}</button>)}</div>:<p className="cb-note">{c.find.none}</p>)}</div>
       {kind==='new'&&<button type="button" className="cb-ghost" onClick={demo}>{c.ask.demo}</button>}</>}
      {stage==='understand'&&D&&<><h1>{c.und.title(nm(F),nm(D))}</h1><p className="cb-sub">{kind==='booked'?c.bk.sub:c.und.sub}</p>
       {kind==='new'&&<div className="cb-row"><span id="gl">{c.und.guests}</span><div className="cb-step" role="group" aria-labelledby="gl"><button type="button" onClick={()=>setGuests(g=>Math.max(1,g-1))} aria-label="−" disabled={guests<=1}>−</button><output>{guests}</output><button type="button" onClick={()=>setGuests(g=>Math.min(20,g+1))} aria-label="+">+</button></div></div>}
@@ -179,7 +192,7 @@ export default function Cabin(){
     </div>
     <p className="cb-foot">{c.simFoot}</p>
    </section>
-   <div className="cb-stage"><Radar hubs={HUBS} from={from} to={to} hover={hover} name={nm} range={rangeFor(km)} blips={blips} scanning={stage==='search'}
+   <div className="cb-stage"><Radar hubs={vh} from={from} to={to} hover={hover} name={nm} range={rangeFor(km)} blips={blips} scanning={stage==='search'}
     plane={stage==='monitor'||stage==='done'?(stage==='done'?1:frac):null} alt={note==='alert'?(L==='ar'?c.alt.alt+' · لوتون':c.alt.alt+' · Luton'):null} hud={hud} aria={c.gl.radar} kmUnit={c.units.km}
     onHover={stage==='ask'||stage==='understand'?setHover:()=>{}} onPick={pick} onBlip={id=>setOpt(id as Opt)}/></div>
   </div>

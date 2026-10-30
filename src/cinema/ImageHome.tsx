@@ -61,8 +61,7 @@ export default function ImageHome({real}:{real:boolean}){
  const hubs=useMemo(()=>visibleHubs(wa,fromH,range,[toH]),[wa,fromH,toH,range]);
  const found=useMemo(()=>pk?searchHubs(wa,q):[],[wa,q,pk]);
  const choose=(h:Hub)=>{if(pk==='from'){setFromH(h);if(toH?.iata===h.iata)setToH(null)}else if(h.iata!==fromH.iata)setToH(h);setPk(null);setQ('')};
- const inCabin=!!toH&&HUBS.some(h=>h.iata===toH.iata)&&fromH.iata==='RUH';
- const goHref=toH?(inCabin?`?view=cabin&to=${toH.iata}`:`?view=ask&say=${encodeURIComponent(`${nmH(fromH)} → ${nmH(toH)}`)}`):'';
+ const goHref=toH?`?view=cabin&from=${fromH.iata}&to=${toH.iata}`:'';
  const hud=to&&km?`${nmH(fromH)} ${lang==='ar'?'←':'→'} ${nmH(toH!)} · ${(Math.round(km/10)*10).toLocaleString('en')} ${rx.km} · ${lang==='ar'?'نحو ':''}${Math.floor(mn/60)} ${rx.h} ${mn%60} ${rx.m} (${rx.est})`:rx.tap;
  useEffect(()=>{if(calm())return;const id=setInterval(()=>setOn(i=>(i+4)%5),2600);return()=>clearInterval(id)},[]);
  const ar=lang==='ar',P=c.city;
@@ -88,7 +87,7 @@ export default function ImageHome({real}:{real:boolean}){
      {pk&&<div className="ih-find"><input type="text" autoFocus value={q} onChange={e=>setQ(e.target.value)} placeholder={rx.find} aria-label={rx.find}/>{!wa&&<p className="ih-simnote">{rx.loading}</p>}{q.trim().length>=2&&<ul>{found.length?found.map(h=><li key={h.iata}><button type="button" onClick={()=>choose(h)}><b dir="ltr">{h.iata}</b> {nmH(h)}</button></li>):<li className="ih-simnote">{rx.none}</li>}</ul>}</div>}
      <button type="button" className="ih-pill ih-world" aria-pressed={world} onClick={()=>setWorld(w=>!w)}>{rx.world}</button>
      {world&&rx.ringNote&&<p className="ih-simnote">{rx.ringNote}</p>}
-     {toH&&<a className="ih-go" href={goHref}>{inCabin?rx.go:rx.ask}</a>}
+     {toH&&<a className="ih-go" href={goHref}>{rx.go}</a>}
      <p className="ih-simnote">{c.demo}</p>
     </div>
    </div>
