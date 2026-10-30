@@ -6,6 +6,7 @@ import TopBar from './TopBar';
 import Radar from '../cabin/Radar';
 import {HUBS} from '../cabin/geo';
 import {copy} from '../cabin/copy';
+import {STAGES,F} from './thinkStages';
 // «شاهد كيف تفكر العين»: صفحة ترويجية واحدة لقدرات العين. محاكاة توضيحية بالكامل: لا بحث حقيقي ولا تحقق من مصدر ولا اتصال بمشغّل.
 // بصمة المهمة هنا توجّه ترتيب الخيارات التوضيحية فقط. لا أسماء طائرات ولا أسعار ولا توفر.
 type Lg='ar'|'en';
@@ -25,14 +26,8 @@ const T:Record<Lg,any>={
   h:'العين لا تبحث عن طائرة فحسب؛ بل تبحث عن الخيار الأنسب للمهمة.',s:'ذكاء الطيران الخاص، من اكتشاف الفرصة إلى مرافقة الرحلة.',
   loop:['راقب','افهم','تحقّق','اقترح','اعرض للموافقة','تابع','تعلّم'],
   ih:'داخل عقل العين',ihs:'ست مراحل .. قرار واحد',ihp:'انتقل بين المراحل لترى كيف تصل العين إلى توصيتها.',strip:['المطارات','الفرص','حركة الطائرات','الطقس'],stl:'توضيحي',
-  f:['ما الذي تحاول العين تحقيقه','ما المعلومات التي تحتاج إليها','النتيجة المتوقعة','ما الذي لم يُحسم','الخطوة التالية'],
-  st:[
-   ['افهم المهمة',['تفهم سبب الرحلة لا وجهتها فقط: ما الذي يجعلها مهمة لك.','كلامك أنت: نوع المهمة، الموعد، عدد المسافرين، وما لا يمكن التفريط فيه.','ملخص مهمة واضح تقرّه بنفسك.','ما لم تقله بعد؛ لا تفترضه العين.','الانتقال إلى البحث بعد أن تؤكد أنت فهمها.']],
-   ['ابحث عن الخيارات',['ترشيح أنواع طائرات ومسارات تناسب المهمة، لا الأرخص ولا الأقرب فحسب.','المسار، والسعة، والأمتعة، وقيود التشغيل. ويتغير الترتيب بحسب بصمة مهمتك أدناه.','من ثلاثة إلى خمسة خيارات مع سبب ترشيح كل خيار.','التوفر الفعلي والسعر.','التحقق مما يمكن إثباته.']],
-   ['تحقق من المعلومات',['التفريق بين المؤكد والتقدير والمجهول.','مصدر كل معلومة ووقت التحقق منها.','كل معلومة بحالتها: مؤكد، تقدير، محاكاة، أو مجهول.','ما لم يؤكده المشغّل يبقى غير مؤكد.','بناء التوصية على المثبت فقط.']],
-   ['ابنِ التوصية',['توصية واحدة مفهومة مع بدائلها.','نتائج التحقق وأولوياتك.','توصية بأسبابها وبما تتنازل عنه.','القرار النهائي ليس للعين.','عرضها عليك.']],
-   ['اعرض القرار للموافقة',['ألا يتحرك شيء بلا إذنك.','موافقتك الصريحة، ومراجعة إنسان من الفريق.','مسودة طلب جاهزة، لا تُرسَل قبل موافقتك.','تأكيد المشغّل للتوفر والسعر.','تبدأ المتابعة بعد موافقتك.']],
-   ['تابع الرحلة',['البقاء منتبهة لما قد يتغير قبل الرحلة وأثناءها.','رحلة مؤكدة تُربط بمصادر الطقس والمطارات.','تنبيه فور أي تغيير يخصك، مع بديل مقترح بموافقتك.','لا مراقبة حقيقية قبل وجود رحلة مؤكدة.','تتعلم من النتيجة، ولا تحفظ إلا ما صرّحت به أنت.']]],
+  f:F.ar,
+  st:STAGES.ar,
   ms:'بصمة المهمة',msq:'ما الذي يجعل هذه الرحلة مهمة بالنسبة إليك؟',
   mt:{business:'أعمال واجتماعات',family:'رحلة عائلية',event:'مناسبة خاصة',urgent:'رحلة عاجلة',delegation:'وفد أو مجموعة تنفيذية',multi:'رحلة متعددة الوجهات',other:'مهمة أخرى'},
   mg:{business:'رحلة عمل',family:'رحلة عائلية',event:'مناسبة خاصة',urgent:'رحلة عاجلة',delegation:'وفد تنفيذي',multi:'رحلة متعددة الوجهات',other:'مهمة تحددها أنت'},
@@ -48,14 +43,8 @@ const T:Record<Lg,any>={
   h:'The Eye does not just look for an aircraft; it looks for the option that best fits the mission.',s:'Private aviation intelligence, from spotting the opportunity to accompanying the journey.',
   loop:['Watch','Understand','Verify','Propose','Ask approval','Follow','Learn'],
   ih:'Inside the Eye',ihs:'Six stages .. one decision',ihp:'Move between the stages to see how the Eye reaches its recommendation.',strip:['Airports','Opportunities','Aircraft movement','Weather'],stl:'illustrative',
-  f:['What the Eye is trying to achieve','What it needs to know','Expected outcome','What is not yet settled','Next step'],
-  st:[
-   ['Understand the mission',['It understands why you travel, not only where: what makes this trip matter to you.','Your own words: type of mission, date, number of travellers, and what cannot be compromised.','A clear mission summary that you confirm yourself.','Whatever you have not said; the Eye does not assume it.','Moving on to the search once you confirm it understood.']],
-   ['Search the options',['Shortlisting aircraft types and routes that fit the mission, not just the cheapest or the closest.','Route, capacity, baggage and operating limits. The ranking shifts with your mission signature below.','Three to five options, each with the reason it was picked.','Real availability and price.','Verifying what can be proven.']],
-   ['Verify the information',['Telling confirmed from estimated from unknown.','The source of each fact and when it was checked.','Each fact with its status: confirmed, estimate, simulation or unknown.','Anything the operator has not confirmed stays unconfirmed.','Building the recommendation only on what is verified.']],
-   ['Build the recommendation',['One understandable recommendation, with its alternatives.','The verification results and your priorities.','A recommendation with its reasons and what you trade off.','The final decision is not the Eye’s.','Presenting it to you.']],
-   ['Put the decision to you',['Nothing moves without your permission.','Your explicit approval and a review by a person on the team.','A ready draft request, not sent before you approve.','The operator’s confirmation of availability and price.','Follow-up begins after you approve.']],
-   ['Follow the journey',['Staying alert to what may change before and during the trip.','A confirmed trip tied to weather and airport sources.','An alert as soon as something that concerns you changes, with an alternative you approve.','No real monitoring until a confirmed trip exists.','Learning from the outcome, keeping only what you stated.']]],
+  f:F.en,
+  st:STAGES.en,
   ms:'Mission signature',msq:'What makes this trip matter to you?',
   mt:{business:'Business and meetings',family:'Family trip',event:'Special occasion',urgent:'Urgent trip',delegation:'Delegation or executive group',multi:'Multi-destination trip',other:'Another mission'},
   mg:{business:'Business trip',family:'Family trip',event:'Special occasion',urgent:'Urgent trip',delegation:'Executive delegation',multi:'Multi-destination trip',other:'A mission you define'},
