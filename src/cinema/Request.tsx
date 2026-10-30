@@ -2,7 +2,8 @@ import {useEffect,useMemo,useState} from 'react';
 import './cinema.css';import './request.css';
 import {useI18n} from '../i18n';
 import LangSwitch from '../LangSwitch';import TopBar from './TopBar';import './discover.css';
-import {HUBS,hub,dist,flightMin,rangeFor} from '../cabin/geo';
+import {HUBS,hub,dist,flightMin,rangeFor,type Hub} from '../cabin/geo';
+import {useWorld,visibleHubs,searchHubs} from '../cabin/world';
 import {copy} from '../cabin/copy';
 import Radar from '../cabin/Radar';
 import {useFleet} from '../cabin/media';
@@ -46,10 +47,13 @@ const MAX_M=3;
 const MAIL=/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/,TEL=/^\+?[0-9]{7,15}$/;
 const calm=()=>typeof matchMedia==='function'&&matchMedia('(prefers-reduced-motion: reduce)').matches;
 type Pick=null|'from'|'to'|number;
+const urlP=(k:string)=>{const v=(new URLSearchParams(location.search).get(k)||'').toUpperCase();return /^[A-Z]{3}$/.test(v)?v:null};
 export default function Request(){
  const {lang,t}=useI18n(),c=C[lang]||C.en,rc=copy(lang),ar=lang==='ar',arrow=ar?'←':'→';
- const nm=(i:string)=>{const h=HUBS.find(x=>x.iata===i);return h?(ar?h.ar:h.en):i};
- const [step,setStep]=useState(0),[kind,setKind]=useState<Kind>('one'),[from,setFrom]=useState('RUH'),[to,setTo]=useState<string|null>(null),[pick,setPick]=useState<Pick>(null),[q,setQ]=useState('');
+ const wl=useWorld(),[reg,setReg]=useState<Record<string,Hub>>({});
+ const nm=(i:string)=>{const h=reg[i]??HUBS.find(x=>x.iata===i);return h?(ar?h.ar:h.en):i};
+ const register=(h:Hub)=>setReg(r=>r[h.iata]?r:{...r,[h.iata]:h});
+ const [step,setStep]=useState(0),[kind,setKind]=useState<Kind>('one'),[from,setFrom]=useState(()=>{const f=urlP('from');return f&&HUBS.some(h=>h.iata===f)?f:'RUH'}),[to,setTo]=useState<string|null>(null),[pick,setPick]=useState<Pick>(null),[q,setQ]=useState('');
  const [date,setDate]=useState(()=>iso(Date.now()+864e5)),[retDate,setRetDate]=useState(()=>iso(Date.now()+864e5*4)),[win,setWin]=useState<Win>('am'),[guests,setGuests]=useState(2),[legs,setLegs]=useState<Leg[]>([]);
  const [fav,setFav]=useState(''),[cab,setCab]=useState<Cab>(''),[ext,setExt]=useState<string[]>([]),[note,setNote]=useState('');
  const [cv,setCv]=useState(''),[wa,setWa]=useState(false),[agree,setAgree]=useState(false),[err,setErr]=useState(''),[busy,setBusy]=useState(false),[aps,setAps]=useState<string[]>([]);
@@ -57,20 +61,26 @@ export default function Request(){
  const [ms,setMs]=useState<number[]>([]),[cd,setCd]=useState<number[]>([]),[priv,setPriv]=useState(false),[grp,setGrp]=useState('A'),[ans,setAns]=useState('');
  useEffect(()=>{let live=true;fetch(`${BASE}/functions/v1/submit-request`).then(r=>r.ok?r.json():null).then(j=>{if(live&&j?.airports)setAps(j.airports.map((a:any)=>a.iata_code))}).catch(()=>{});return()=>{live=false}},[]);
  // وجهة وصلت من الرابط ?to=LON
- useEffect(()=>{const x=new URLSearchParams(location.search).get('to');if(x&&x!=='RUH'&&HUBS.some(h=>h.iata===x))setTo(x)},[]);
+ useEffect(()=>{const x=urlP('to');if(x&&x!=='RUH'&&HUBS.some(h=>h.iata===x))setTo(x)},[]);
+ // ?from= و?to= لمطارات خارج قائمتنا اليدوية تُحلّ بعد تحميل قاعدة المطارات العالمية
+ useEffect(()=>{if(!wl)return;const f=urlP('from'),t=urlP('to'),add:Record<string,Hub>={};
+  if(f&&!HUBS.some(h=>h.iata===f)){const h=searchHubs(wl,f,1)[0];if(h&&h.iata===f){add[f]=h;setFrom(f)}}
+  if(t&&t!==(f||'RUH')&&!HUBS.some(h=>h.iata===t)){const h=searchHubs(wl,t,1)[0];if(h&&h.iata===t){add[t]=h;setTo(t)}}
+  if(Object.keys(add).length)setReg(r=>({...r,...add}))},[wl]);
  // الطائرة تمشي على المسار كلما اختير مسار جديد
  useEffect(()=>{if(!to){setPlane(1);return}if(calm()){setPlane(1);return}setPlane(0);const t0=performance.now();let raf=0;
   const tick=(n:number)=>{const k=Math.min(1,(n-t0)/2600);setPlane(1-Math.pow(1-k,3));if(k<1)raf=requestAnimationFrame(tick)};raf=requestAnimationFrame(tick);return()=>cancelAnimationFrame(raf)},[from,to]);
  const chain=useMemo(()=>[from,...(kind==='multi'?legs.map(l=>l.to):[to])] ,[from,to,legs,kind]);
  const outside=aps.length>0&&(!aps.includes(from)||(to!==null&&!aps.includes(to))||(kind==='multi'&&legs.some(l=>l.to&&!aps.includes(l.to))));
  const skip=pick==='from'?to:pick==='to'?from:null;
- const list=useMemo(()=>{const n=norm(q);return HUBS.filter(h=>h.iata!==skip&&(!n||norm(h.ar).includes(n)||norm(h.en).includes(n)||h.iata.toLowerCase()===n)).sort((a,b)=>a.pri-b.pri).slice(0,n?6:7)},[q,skip]);
- const choose=(i:string)=>{
+ const list=useMemo(()=>q.trim()?searchHubs(wl,q,6).filter(h=>h.iata!==skip):HUBS.filter(h=>h.iata!==skip).sort((a,b)=>a.pri-b.pri).slice(0,7),[q,skip,wl]);
+ const choose=(i:string,hh?:Hub)=>{
+  if(hh)register(hh);
   if(pick==='from'){if(i===to)setTo(null);setFrom(i)}
   else if(pick==='to')setTo(i)
   else if(typeof pick==='number')setLegs(l=>l.map((x,k)=>k===pick?{...x,to:i}:x));
   setPick(null);setQ('')};
- const radarTap=(i:string)=>{if(i===from)return;if(pick==='from'){choose(i);return}setTo(i);if(pick!==null){setPick(null);setQ('')}};
+ const radarTap=(i:string)=>{if(i===from)return;const rh=vh.find(h=>h.iata===i);if(rh)register(rh);if(pick==='from'){choose(i);return}setTo(i);if(pick!==null){setPick(null);setQ('')}};
  const swap=()=>{if(!to)return;setFrom(to);setTo(from)};
  const addLeg=()=>setLegs(l=>l.length<3?[...l,{to:null,date:l.length?l[l.length-1].date:date}]:l);
  const fmt=(d:string)=>new Intl.DateTimeFormat(ar?'ar-u-nu-latn':lang,{day:'numeric',month:'long'}).format(new Date(d+'T12:00:00'));
@@ -103,7 +113,9 @@ const L=(o?:Ln)=>o?(o[lang]||o.en||o.ar||''):'';
  const again=()=>{setStep(0);setKind('one');setTo(null);setFrom('RUH');setGuests(2);setLegs([]);setCab('');setFav('');setExt([]);setNote('');setMs([]);setCd([]);setPriv(false);setAns('');setGrp('A');setCv('');setWa(false);setAgree(false);setErr('')};
  const route=to?`${nm(from)} ${arrow} ${nm(to)}`:'';
  // الرادار: يتمركز على المنطلق، ويرسم المسار الأول، ويقبل لمس مدينة لاختيارها
- const F=hub(from),D=to?hub(to):null,km=D?dist(F,D):null,mm=km?flightMin(km):0;
+ const H=(i:string):Hub=>reg[i]??hub(i);
+ const F=H(from),D=to?H(to):null,km=D?dist(F,D):null,mm=km?flightMin(km):0;
+ const vh=useMemo(()=>visibleHubs(wl,F,rangeFor(km),[D]),[wl,F,D,km]);
  const dur=mm<60?`${mm} ${rc.units.m}`:`${Math.floor(mm/60)} ${rc.units.h} ${String(mm%60).padStart(2,'0')} ${rc.units.m}`;
  const hud=D&&km?rc.ask.read(nm(from),nm(D.iata),(Math.round(km/10)*10).toLocaleString('en'),dur):rc.ask.tapTo;
  // الطائرات المناسبة: قيدان إلزاميان فقط (عدد الركاب والمدى) من مراجع الأنواع. هذا تناسب وليس توفرًا، ولا سعر هنا أبدًا.
@@ -113,12 +125,12 @@ const L=(o?:Ln)=>o?(o[lang]||o.en||o.ar||''):'';
  const need=(km??0)*1.1,suit=all.filter(o=>o.pax>=guests&&o.rng>=need);
  const CABS:Record<string,string[]>={light:['LIGHT'],mid:['MID','SUPER'],large:['LARGE','ULR']};
  const pref=cab?suit.filter(o=>CABS[cab].includes(o.cat)):suit,relaxed=!!cab&&pref.length===0&&suit.length>0,fit=(pref.length?pref:suit).slice(0,4);
- const radar=<aside className="rq-radar" aria-label={rc.gl.radar}><Radar hubs={HUBS} from={from} to={to} hover={null} name={h=>nm(h.iata)} range={rangeFor(km)} blips={[]} scanning={step===5} plane={to?plane:null} alt={null} hud={hud} aria={rc.gl.radar} kmUnit={rc.units.km} onHover={()=>{}} onPick={radarTap} onBlip={()=>{}}/></aside>;
+ const radar=<aside className="rq-radar" aria-label={rc.gl.radar}><Radar hubs={vh} from={from} to={to} hover={null} name={h=>ar?h.ar:h.en} range={rangeFor(km)} blips={[]} scanning={step===5} plane={to?plane:null} alt={null} hud={hud} aria={rc.gl.radar} kmUnit={rc.units.km} onHover={()=>{}} onPick={radarTap} onBlip={()=>{}}/></aside>;
  const City=({label,value,onClick}:{label:string;value:string|null;onClick:()=>void})=><button type="button" className={`rq-city${value?'':' empty'}`} onClick={onClick}><small>{label}</small><span>{value?nm(value):c.pickTo}</span></button>;
  const picker=<>
   <h1 className="rq-h s">{pick==='from'?c.from:c.to}</h1>
-  <input className="rq-in big" value={q} placeholder={c.ph} autoComplete="off" autoFocus aria-label={c.ph} onChange={e=>setQ(e.target.value)} onKeyDown={e=>{if(e.key==='Enter'&&list[0])choose(list[0].iata)}}/>
-  {list.length?<ul className="rq-list">{list.map(h=><li key={h.iata}><button type="button" onClick={()=>choose(h.iata)}>{ar?h.ar:h.en}</button></li>)}</ul>:<p className="rq-note">{c.none}</p>}
+  <input className="rq-in big" value={q} placeholder={c.ph} autoComplete="off" autoFocus aria-label={c.ph} onChange={e=>setQ(e.target.value)} onKeyDown={e=>{if(e.key==='Enter'&&list[0])choose(list[0].iata,list[0])}}/>
+  {list.length?<ul className="rq-list">{list.map(h=><li key={h.iata}><button type="button" onClick={()=>choose(h.iata,h)}>{ar?h.ar:h.en}</button></li>)}</ul>:<p className="rq-note">{c.none}</p>}
   <button type="button" className="rq-link" onClick={()=>{setPick(null);setQ('')}}>{t('ask.back')}</button></>;
  const seg=(items:[string,string][],val:string,on:(k:string)=>void,label:string,cls='')=><div className={'rq-seg'+(cls?' '+cls:'')} role="radiogroup" aria-label={label}>{items.map(([k,l])=><button key={k} type="button" role="radio" aria-checked={val===k} onClick={()=>on(k)}>{l}</button>)}</div>;
  return <div className={`rq cn${ar?' ar':''}`} dir={ar?'rtl':'ltr'} lang={lang}>
