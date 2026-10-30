@@ -160,3 +160,7 @@ svg.ih-i{width:1em;height:1em;fill:none;stroke:currentColor;stroke-width:1.5;str
 .ih-mind-more{color:var(--gold);text-decoration:underline;text-underline-offset:3px;margin-inline-start:8px}
 @media (max-width:1100px){.ih-mind-tabs{grid-template-columns:repeat(3,minmax(0,1fr))}}
 @media (max-width:640px){.ih-mind{padding:22px 16px 24px}.ih-mind-tabs{grid-template-columns:repeat(2,minmax(0,1fr))}.ih-mind-det dl{grid-template-columns:1fr}}
+
+/* الكروت بعرض الصفحة كلها (القسم الوحيد في الشبكة كان محبوسًا في أول عمود بعرض 300px) */
+.ih-lower>section{grid-column:1/-1}
+.ih-lower>section .ih-lead{max-width:60ch}

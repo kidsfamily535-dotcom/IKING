@@ -53,6 +53,8 @@ const ICONS=['M12 12a4 4 0 100-8 4 4 0 000 8zM4 21c1-4.5 4-6.5 8-6.5s7 2 8 6.5',
 const Ic=({d}:{d:string})=><svg className="ih-i" viewBox="0 0 24 24" aria-hidden="true"><path d={d}/></svg>;
 const IMG=['/home/c4.jpg','/home/c4.jpg','/home/c3.jpg','/home/c2.jpg','/home/c1.jpg'];
 const MIND:Record<'ar'|'en',{h:string;s:string}>={ar:{h:'كيف تفكر العين',s:'ست مراحل .. قرار واحد. اضغط مرحلة لترى ما تفعله وما لم يُحسم بعد.'},en:{h:'How the Eye thinks',s:'Six stages .. one decision. Pick a stage to see what it does and what is still open.'}};
+// زرار «شاهد كيف تفكر العين» مجمّد (قرار المالك 2026-10-30): المحتوى صار داخل قسم المراحل في الصفحة. لإعادته غيّر القيمة إلى true؛ صفحة ?view=think نفسها لم تُمسّ.
+const SHOW_THINK=false;
 const calm=()=>typeof matchMedia==='function'&&matchMedia('(prefers-reduced-motion: reduce)').matches;
 
 export default function ImageHome({real}:{real:boolean}){
@@ -79,7 +81,7 @@ export default function ImageHome({real}:{real:boolean}){
       {!real?<a className="ih-cta" href="?view=cabin"><span className="ih-eye"><Ic d="M2 12s3.6-6.5 10-6.5S22 12 22 12s-3.6 6.5-10 6.5S2 12 2 12zM12 15.2a3.2 3.2 0 100-6.4 3.2 3.2 0 000 6.4z"/></span><span>{c.cta}</span><Ic d="M9 5l7 7-7 7"/></a>
        :<a className="ih-cta" href="?view=discover"><span className="ih-eye"><Ic d="M2 12s3.6-6.5 10-6.5S22 12 22 12s-3.6 6.5-10 6.5S2 12 2 12zM12 15.2a3.2 3.2 0 100-6.4 3.2 3.2 0 000 6.4z"/></span><span>{c.cta}</span><Ic d="M9 5l7 7-7 7"/></a>}
       <p className="ih-tag">{c.tag}</p>
-      <a className="ih-think" href="?view=think">{c.think}<Ic d="M9 5l7 7-7 7"/></a>
+      {SHOW_THINK&&<a className="ih-think" href="?view=think">{c.think}<Ic d="M9 5l7 7-7 7"/></a>}
      </div>
     </div>
     <div className="ih-radarbox">
@@ -100,7 +102,7 @@ export default function ImageHome({real}:{real:boolean}){
    <header><h2 id="ih-mind-h">{md.h}</h2><p className="ih-lead">{md.s}</p></header>
    <div className="ih-mind-tabs" role="tablist" aria-label={md.h}>{stg.map((x,n)=><button key={n} type="button" role="tab" aria-selected={n===ms} className={n===ms?'on':''} onClick={()=>setMs(n)}><b>{String(n+1).padStart(2,'0')}</b><span>{x[0]}</span></button>)}</div>
    <div className="ih-mind-det" role="tabpanel" key={ms} aria-label={stg[ms][0]}><dl><div><dt>{fl[0]}</dt><dd>{stg[ms][1][0]}</dd></div><div><dt>{fl[3]}</dt><dd>{stg[ms][1][3]}</dd></div></dl></div>
-   <p className="ih-simnote">{c.demo} <a className="ih-mind-more" href="?view=think">{c.think}</a></p>
+   <p className="ih-simnote">{c.demo} {SHOW_THINK&&<a className="ih-mind-more" href="?view=think">{c.think}</a>}</p>
   </section>
 
   <div className="ih-lower">
