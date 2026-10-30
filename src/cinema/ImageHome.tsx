@@ -96,27 +96,6 @@ export default function ImageHome({real}:{real:boolean}){
 
   <div className="ih-lower">
    <section>
-    <div className="ih-colhead"><h2>{c.vis}</h2><span className="ih-badge">{c.visB}</span></div>
-    <p className="ih-lead">{c.visL}</p>
-    <div className="ih-phone"><div className="ih-screen">
-     <h4>{c.vt}</h4>
-     <div className="ih-tkt"><div className="ih-route"><span>CAI</span><span>→</span><span>JED</span></div><div className="ih-when">12 Oct 2026 · 10:30</div></div>
-     <div className="ih-art" style={{background:'url(/home/pa.jpg) center/cover'}}/>
-     <span className="ih-btn">{c.vb}</span><p className="ih-cap">{c.vc}</p>
-    </div></div>
-   </section>
-   <section>
-    <div className="ih-colhead"><h2>{c.liv}</h2><span className="ih-badge">{c.livB}</span></div>
-    <p className="ih-lead">{c.livL}</p>
-    <div className="ih-phone"><div className="ih-screen">
-     <h4>{c.lt}</h4>
-     <div className="ih-tkt"><div className="ih-route"><span>JED</span><span>→</span><span>DXB</span></div><div className="ih-when">12 Oct 2026 · 10:30</div>
-      <div className="ih-wx"><span><Ic d="M7 18a4 4 0 010-8 5.5 5.5 0 0110.6 1.2A3.4 3.4 0 0117 18z"/>22°</span><span><Ic d={ICONS[4]}/>29°</span></div></div>
-     <div className="ih-art" style={{background:'url(/home/pb.jpg) center/cover'}}/>
-     <span className="ih-btn">{c.lb}</span><p className="ih-cap">{c.lc}</p>
-    </div></div>
-   </section>
-   <section>
     <h2>{c.what}</h2>
     <p className="ih-lead">{c.whatL}</p>
     <div className="ih-cards">{c.cards.map(([h,p],i)=><article key={i} className="ih-card">
