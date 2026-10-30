@@ -4,6 +4,11 @@ import { createClient } from 'npm:@supabase/supabase-js@2'
 // strict validation, honeypot, per-IP / per-contact / global rate limits, writes only through the service role,
 // and the table itself has no anon access. Nothing is sent to any operator or customer from here: only the owner is emailed.
 // GET returns the airport reference list only (public reference data) so the guest form can fill its dropdowns.
+// v6: client IP comes from cf-connecting-ip first (set by the edge, not spoofable); x-forwarded-for is only a fallback.
+// v7: medical-transport flag for the OWNER EMAIL ONLY. Explicit body.medical_transport === true, or very clear words in the note.
+//     Nothing new is stored or logged. No offer, no price, no medical questions: the owner decides and routes to a specialised provider.
+// v8: airports outside the reference table are accepted (shape is validated: 3 letters) and the lead is flagged needs_review for the owner.
+//     Still nothing is sent to any operator. The flag columns are written only when needed, so normal leads never depend on them.
 const cors = {
   'Access-Control-Allow-Origin': '*',
   'Access-Control-Allow-Headers': 'content-type, authorization, apikey, x-client-info',
@@ -21,6 +26,8 @@ const PERIODS = ['morning', 'afternoon', 'evening', 'flexible']
 const PERIOD_AR: Record<string, string> = { morning: 'صباحًا', afternoon: 'ظهرًا/عصرًا', evening: 'مساءً', flexible: 'مرن' }
 const isDate = (v: string) => /^\d{4}-\d{2}-\d{2}$/.test(v) && !Number.isNaN(Date.parse(v + 'T00:00:00Z'))
 const bad = (field: string) => json({ error: 'invalid', field }, 400)
+// Only unmistakable wording. A miss is acceptable (the owner still gets the normal email); a false alarm is only a louder email.
+const MEDICAL_WORDS = /(نقل\s*(طبي|مريض)|[إا]خلاء\s*طبي|[إا]سعاف\s*جوي|طائرة\s*[إا]سعاف|medical\s*(transport|evacuation|flight)|medevac|air\s*ambulance|stretcher|محفة|نقالة)/i
 
 Deno.serve(async (req) => {
   if (req.method === 'OPTIONS') return new Response(null, { status: 204, headers: cors })
@@ -71,14 +78,18 @@ Deno.serve(async (req) => {
   const source = SOURCES.includes(str(b.source, 20)) ? str(b.source, 20) : 'DIRECT'
   const partner = str(b.referral_partner, 60) || null
   const campaign = str(b.campaign, 60) || null
+  // v7: used only to shape the owner email below; never stored, never logged.
+  const medical = b.medical_transport === true || (note ? MEDICAL_WORDS.test(note.normalize('NFKC')) : false)
 
   const { data: aps, error: apErr } = await db.from('airports').select('iata_code').in('iata_code', [origin, dest])
   if (apErr) return json({ error: 'server_error' }, 500)
   const known = new Set((aps ?? []).map((a: any) => a.iata_code))
-  if (!known.has(origin)) return bad('origin_code')
-  if (!known.has(dest)) return bad('destination_code')
+  // v8: an airport outside the reference table is accepted and flagged for manual review (never sent to any operator).
+  const unknown = [origin, dest].filter((c) => !known.has(c))
+  const needsReview = unknown.length > 0
+  const reviewReason = needsReview ? `airport_not_in_reference: ${unknown.join(',')}` : null
 
-  const ip = (req.headers.get('x-forwarded-for') ?? '').split(',')[0].trim() || req.headers.get('cf-connecting-ip') || 'unknown'
+  const ip = req.headers.get('cf-connecting-ip') || (req.headers.get('x-forwarded-for') ?? '').split(',')[0].trim() || 'unknown'
   const ipHash = await sha(ip + '|trip_leads_v1|' + url)
   const since = (ms: number) => new Date(Date.now() - ms).toISOString()
   const count = async (col: string, val: string | null, ms: number) => {
@@ -95,6 +106,7 @@ Deno.serve(async (req) => {
     contact_name: name, contact_channel: channel, contact_value: value, origin_code: origin, destination_code: dest,
     travel_date: travel, return_date: ret, departure_period: period, passengers: pax, note, consent: true,
     source, referral_partner: partner, campaign, ip_hash: ipHash,
+    ...(needsReview ? { needs_review: true, review_reason: reviewReason } : {}),
   }).select('id').single()
   if (insErr || !row) { console.error('insert_failed', insErr?.message); return json({ error: 'server_error' }, 500) }
 
@@ -108,9 +120,17 @@ Deno.serve(async (req) => {
       const contact = channel === 'whatsapp'
         ? `واتساب: <a href="https://wa.me/${esc(digits)}">${esc(value)}</a>`
         : channel === 'email' ? `إيميل: ${esc(value)}` : `هاتف: ${esc(value)}`
+      const medicalBanner = medical
+        ? `<p style="background:#fdecec;border:1px solid #e0a0a0;padding:10px;border-radius:6px"><b>تنبيه: الطلب يشير إلى نقل طبي.</b> حسب القاعدة المعتمدة: لا عرض ولا سعر ولا أسئلة طبية، ولا قرار بصلاحية أحد للطيران. التحويل لمزوّد متخصص والرد على العميل قرارك أنت.</p>`
+        : ''
+      const reviewBanner = needsReview
+        ? `<p style="color:#b45309"><b>يحتاج مراجعة:</b> كود المطار (${esc(unknown.join(', '))}) غير موجود في الجدول المرجعي. تأكد منه قبل أي رد.</p>`
+        : ''
       const html = `<div dir="rtl" style="font-family:system-ui,Tahoma,sans-serif;color:#111;line-height:1.8;max-width:600px">
 <h2 style="margin:0">THE KING'S EYE — طلب رحلة جديد</h2>
 <p style="color:#555;margin-top:4px">طلب حقيقي من نموذج العميل، مش محاكاة.</p>
+${medicalBanner}
+${reviewBanner}
 <table cellpadding="6" style="border-collapse:collapse">
 <tr><td>المسار</td><td dir="ltr"><b>${esc(origin)} → ${esc(dest)}</b></td></tr>
 <tr><td>التاريخ</td><td dir="ltr">${esc(travel)}${ret ? ' ← عودة ' + esc(ret) : ''}</td></tr>
@@ -125,7 +145,7 @@ ${note ? `<tr><td>ملاحظة</td><td>${esc(note)}</td></tr>` : ''}
       const r = await fetch('https://api.resend.com/emails', {
         method: 'POST',
         headers: { Authorization: `Bearer ${key}`, 'Content-Type': 'application/json' },
-        body: JSON.stringify({ from: "King's Eye <onboarding@resend.dev>", to, subject: `طلب رحلة جديد: ${origin} → ${dest} (${pax} ركاب)`, html }),
+        body: JSON.stringify({ from: "King's Eye <onboarding@resend.dev>", to, subject: `${needsReview ? '[للمراجعة] ' : ''}${medical ? '🔴 عاجل · نقل طبي محتمل — ' : ''}طلب رحلة جديد: ${origin} → ${dest} (${pax} ركاب)`, html }),
       })
       if (r.ok) await db.from('trip_leads').update({ owner_notified_at: new Date().toISOString() }).eq('id', row.id)
       else console.error('email_failed', r.status)
