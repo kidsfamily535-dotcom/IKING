@@ -32,6 +32,8 @@
 .rc-chips{display:flex;flex-wrap:wrap;gap:8px}
 .rc-chips button{min-height:40px;padding:0 16px;border-radius:99px;border:1px solid var(--gold);background:transparent;color:var(--gold);font:inherit;font-size:.9rem;cursor:pointer}
 .rc-chips button:hover{background:rgba(232,200,128,.1)}
+.rc-chips .rc-chip-a{display:inline-flex;align-items:center;min-height:40px;padding:0 16px;border-radius:99px;border:1px solid var(--mute);color:var(--mute);font-size:.9rem;text-decoration:none}
+.rc-chips .rc-chip-a:hover{border-color:var(--gold);color:var(--gold)}
 .rc-gen{display:block;margin-top:6px;padding:3px 9px;width:fit-content;border-radius:99px;border:1px dashed var(--mute);color:var(--mute);font-size:.72rem}
 .rc-jl{list-style:none;margin:8px 0 0;padding:0;display:flex;flex-direction:column;gap:8px}
 .rc-jl li{display:grid;grid-template-columns:1fr auto;gap:2px 8px;padding-inline-start:10px;border-inline-start:2px solid var(--line)}
