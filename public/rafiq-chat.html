@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>رفيق · عين الملك</title>
+<link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#F5F0E6;--panel:#fff;--ink:#171717;--mute:#6b6458;--gold:#C5A46D;--gold-soft:#EADFC6;--em:#174C3A;--line:#e2d9c4;--head:#171717;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#121212;--panel:#1d1d1d;--ink:#f1ece0;--mute:#a79f8e;--gold-soft:#3a3220;--line:#33302a;--head:#0b0b0b;color-scheme:dark}}
+:root[data-theme="dark"]{--bg:#121212;--panel:#1d1d1d;--ink:#f1ece0;--mute:#a79f8e;--gold-soft:#3a3220;--line:#33302a;--head:#0b0b0b;color-scheme:dark}
+*{box-sizing:border-box}
+html,body{height:100%;margin:0;background:var(--bg);color:var(--ink);font-family:Tajawal,system-ui,sans-serif}
+.app{height:100%;max-width:480px;margin:0 auto;display:flex;flex-direction:column;background:var(--bg)}
+header{background:var(--head);color:#f5f0e6;padding:12px 14px;display:flex;align-items:center;gap:10px}
+.av{width:38px;height:38px;border-radius:50%;background:var(--gold);color:#171717;display:grid;place-items:center;font-weight:700;font-size:18px}
+.hn{flex:1;line-height:1.3}.hn b{display:block;font-size:16px}.hn small{color:#c9c0ad;font-size:12px}
+.mgr{background:none;border:1px solid var(--gold);color:var(--gold);border-radius:18px;padding:6px 12px;font:inherit;font-size:13px;cursor:pointer}
+.demo{background:var(--gold-soft);color:var(--ink);font-size:12px;text-align:center;padding:5px 10px}
+#log{flex:1;overflow-y:auto;padding:14px 12px;display:flex;flex-direction:column;gap:8px}
+.m{max-width:84%;padding:9px 12px;border-radius:14px;font-size:15px;line-height:1.6;position:relative;word-wrap:break-word}
+.m.b{align-self:flex-start;background:var(--panel);border:1px solid var(--line);border-start-start-radius:4px}
+.m.u{align-self:flex-end;background:var(--gold-soft);border-start-end-radius:4px}
+.m time{display:block;font-size:11px;color:var(--mute);margin-top:2px}
+.typing{display:flex;gap:4px;padding:13px 14px}.typing i{width:7px;height:7px;border-radius:50%;background:var(--mute);animation:bl 1.1s infinite}
+.typing i:nth-child(2){animation-delay:.18s}.typing i:nth-child(3){animation-delay:.36s}
+@keyframes bl{0%,80%,100%{opacity:.25}40%{opacity:1}}
+@media (prefers-reduced-motion:reduce){.typing i{animation:none;opacity:.6}}
+.card{margin-top:6px;border:1px solid var(--gold);border-radius:12px;padding:10px 12px;background:var(--bg)}
+.route{font-weight:700;font-size:16px}.row{font-size:13px;color:var(--mute);margin-top:3px}
+.tag{display:inline-block;font-size:11px;border:1px solid var(--gold);color:var(--gold);border-radius:10px;padding:1px 8px;margin-inline-start:6px}
+.tag.ok{border-color:var(--em);color:var(--em)}
+.chips{display:flex;flex-wrap:wrap;gap:7px;align-self:flex-start;max-width:96%}
+.chips button{font:inherit;font-size:14px;color:var(--ink);background:var(--panel);border:1px solid var(--gold);border-radius:20px;padding:7px 14px;cursor:pointer}
+.chips button:hover,.chips button:focus-visible{background:var(--gold);color:#171717;outline:none}
+.bar{padding:8px 12px 0;background:var(--panel);border-top:1px solid var(--line)}.bar button{font:inherit;font-size:13px;color:var(--gold);background:none;border:1px solid var(--gold);border-radius:16px;padding:5px 12px;cursor:pointer}
+.cap{display:flex;justify-content:space-between;gap:8px;align-items:flex-start;padding:7px 0;border-top:1px solid var(--line);font-size:14px}.cap:first-child{border-top:0}
+footer{display:flex;gap:8px;padding:10px 12px;border-top:1px solid var(--line);background:var(--panel)}
+footer input{flex:1;font:inherit;font-size:15px;border:1px solid var(--line);border-radius:20px;padding:9px 14px;background:var(--bg);color:var(--ink)}
+footer button{width:42px;border:0;border-radius:50%;background:var(--gold);color:#171717;font-size:18px;cursor:pointer}
+</style>
+</head>
+<body>
+<div class="app">
+<header><div class="av">ر</div><div class="hn"><b>رفيق</b><small>مساعدك في الطيران الخاص</small></div><button class="mgr" id="mgr">كلّم مدير</button></header>
+<div class="demo">نسخة تجريبية: الأزرار مش متوصلة بقاعدة البيانات ولا بأي مشغّل</div>
+<div id="log" aria-live="polite"></div>
+<div class="bar"><button id="cap">🔎 العين هتعمل إيه ليك؟</button></div>
+<footer><input id="in" placeholder="اكتب رسالتك…" autocomplete="off"><button id="go" aria-label="إرسال">➤</button></footer>
+</div>
+<script>
+const s={};let expect=null;
+const AP=['مطار القاهرة الدولي','مطار جدة (الملك عبدالعزيز)','مطار الرياض (الملك خالد)','مطار دبي الدولي'];
+const $=id=>document.getElementById(id);
+const wait=ms=>new Promise(r=>setTimeout(r,ms));
+const now=()=>new Date().toLocaleTimeString('ar-EG',{hour:'2-digit',minute:'2-digit'});
+const esc=t=>String(t).replace(/[&<>]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;'}[c]));
+function add(cls,html){const d=document.createElement('div');d.className='m '+cls;d.innerHTML=html;$('log').appendChild(d);d.scrollIntoView({block:'end'});return d}
+async function bot(html){const t=add('b typing','<i></i><i></i><i></i>');await wait(550);t.className='m b';t.innerHTML=html+'<time>'+now()+'</time>';t.scrollIntoView({block:'end'})}
+function ask(list){const w=document.createElement('div');w.className='chips';
+ list.forEach(([label,fn])=>{const b=document.createElement('button');b.textContent=label;b.onclick=()=>{w.remove();add('u',esc(label));fn(label)};w.appendChild(b)});
+ $('log').appendChild(w);w.scrollIntoView({block:'end'})}
+function typed(prompt,fn){bot(prompt);expect=fn}
+function airport(q,key,next){bot(q);
+ ask([...AP.filter(a=>a!==s[key==='to'?'from':'to']).map(a=>[a,()=>{s[key]=a;next()}]),['مطار تاني ✍️',()=>typed('اكتب اسم المطار.',t=>{s[key]=t;next()})]])}
+
+function welcome(){
+ bot('أهلاً بيك، أنا رفيق. قولي محتاج إيه وأنا أرتبهالك.');
+ ask([['✈️ عايز أسافر',()=>start()],['👀 راقب رحلتي',()=>{bot('تمام، قولي بيانات رحلتك.');start(true)}],['💰 كام تكلفة؟',()=>{s.priceFirst=true;start()}],['🧑‍💼 كلّم مدير',manager]])}
+function start(){delete s.from;delete s.to;stepFrom()}
+function stepFrom(){airport('هتطلع من أنهي مطار؟','from',stepTo)}
+function stepTo(){airport('ورايح أنهي مطار؟','to',stepWhen)}
+function stepWhen(){bot('إمتى؟');ask([['النهارده',()=>{s.when='النهارده';stepPax()}],['بكرة',()=>{s.when='بكرة';stepPax()}],['الأسبوع ده',()=>{s.when='الأسبوع ده';stepPax()}],['اختار تاريخ ✍️',()=>typed('اكتب التاريخ اللي يناسبك.',t=>{s.when=t;stepPax()})]])}
+function stepPax(){bot('كام شخص؟');ask(['1','2','3-5','6 أو أكتر'].map(x=>[x,()=>{s.pax=x;stepPrio()}]))}
+function stepPrio(){bot('إيه الأهم عندك؟');ask(['الأسرع','الأريح','الأوفر'].map(x=>[x,()=>{s.prio=x;showCard()}]))}
+function tripCard(){return '<div class="card"><div class="route">'+esc(s.from)+' ← '+esc(s.to)+'</div><div class="row">'+esc(s.when)+' · '+esc(s.pax)+' ركاب · الأهم: '+esc(s.prio)+'</div></div>'}
+function showCard(){bot('ده ملخص رحلتك، صح؟'+tripCard());
+ ask([['✅ أيوه، صح',estimate],['✏️ عدّل',()=>{bot('ماشي، نبدأ من أول.');start()}],['💰 سعر تقريبي',estimate]])}
+const CAPS=[['🌤️ طقس المطارين قبل رحلتك',1],['🛬 معلومات المطار ووقت التحرك',1],['📍 تتبع رحلتك لحظة بلحظة',0],['🚗 ترتيب الاستقبال من المطار',0],['🔔 تنبيه لو ظهرت فرصة على مسارك',0]];
+function caps(){bot('العين بتشتغل وراك من أول طلبك لحد ما توصل:<div class="card">'+CAPS.map(c=>'<div class="cap"><span>'+c[0]+'</span><span class="tag'+(c[1]?' ok':'')+'">'+(c[1]?'متاح':'قريباً')+'</span></div>').join('')+'</div>')}
+$('cap').onclick=()=>{add('u','🔎 العين هتعمل إيه ليك؟');caps()};
+function estimate(){bot('<div class="card"><div class="row">السعر التقريبي<span class="tag">تقديري</span></div><div class="route">بيتحدد من قاعدة الأسعار عند الربط</div><div class="row">التوافر والسعر النهائي يأكدهم المشغّل. مفيش حجز لحد ما المشغّل يرد.</div></div>');bot('لو بعتّ طلبك، العين هتتابع طقس مطار رحلتك وتنبهك.');afterEst()}
+function afterEst(){ask([['📨 ابعت طلبي',sent],['🔔 نبهني لو في فرصة',()=>{bot('تمام، ده اهتمام من غير التزام. هنبلغك لو ظهرت فرصة حقيقية على المسار ده.');}],['➕ ضيف طلب',extras]])}
+function extras(){bot('تحب تضيف إيه؟');ask(['🐾 حيوان أليف','🧳 عفش زيادة','🚗 سيارة استقبال'].map(x=>[x,()=>{(s.extra=s.extra||[]).push(x);bot('ضفتها كملاحظة على طلبك.');afterEst()}]))}
+function sent(){bot('تمام. طلبك هيوصل للمدير ويتراجع. ده طلب مش حجز، ولسه مفيش مشغّل أكد حاجة.'+tripCard());
+ ask([['🕒 حالة طلبي',()=>bot('طلبك: <b>بانتظار المراجعة</b>. لسه مفيش رد من مشغّل.')],['🌤️ الطقس في رحلتي',()=>bot('الطقس بيتجاب من بيانات المطارين، ويظهر هنا لما النسخة تتوصل.')]])}
+function manager(){bot('هحوّلك لمدير بشري. اكتب رقمك أو إيميلك وهو يتواصل معاك.');expect=t=>bot('تمام، سجلت بياناتك للمدير (في النسخة المتوصلة).')}
+$('mgr').onclick=manager;
+function submit(){const v=$('in').value.trim();if(!v)return;$('in').value='';add('u',esc(v));
+ if(expect){const f=expect;expect=null;f(v)}else bot('تمام. كمّل بالأزرار تحت، أو اكتب لما أسألك.')}
+$('go').onclick=submit;$('in').addEventListener('keydown',e=>{if(e.key==='Enter')submit()});
+welcome();
+</script>
+</body>
+</html>
