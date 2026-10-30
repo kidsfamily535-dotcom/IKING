@@ -9,8 +9,8 @@ import './rafiqchat.css';
 type Msg={who:'me'|'rf';text:string;next?:string;human?:boolean;general?:boolean;journey?:boolean;local?:boolean;src?:{title:string;name:string;verified_at?:string|null;stale?:boolean}[]};
 type L={name:string;role:string;open:string;close:string;ph:string;send:string;hello:string;note:string;busy:string;limit:string;err:string;human:string;form:string;src:string;stale:string;wait:string;gen:string;jchip:string};
 const D:Record<'ar'|'en',L>={
- ar:{name:'رفيق',role:'مرافقك في EYE KING',open:'تحدّث مع رفيق',close:'إغلاق',ph:'اكتب رحلتك أو سؤالك…',send:'إرسال',
-  hello:'أهلًا، أنا رفيق، مساعد ذكي لطلبات الطيران الخاص. قل لي رحلتك بكلامك: من أين وإلى أين ومتى وكم شخصًا.',
+ ar:{name:'رفيق',role:'مرافقك في EYE KING',open:'تحدّث مع رفيق',close:'إغلاق',ph:'اكتبوا رحلتكم أو سؤالكم…',send:'إرسال',
+  hello:'أهلًا بكم، أنا رفيق، مساعدكم الذكي لطلبات الطيران الخاص. تفضّلوا بذكر رحلتكم: من أين وإلى أين ومتى وكم عدد المسافرين.',
   note:'مساعد ذكي وقد يخطئ. لا يؤكد سعرًا ولا توفر طائرة ولا حجزًا؛ التأكيد النهائي من المشغّل وفريقنا.',
   busy:'الخدمة غير متاحة مؤقتًا. حاول بعد قليل.',limit:'وصلت للحد المسموح حاليًا. حاول لاحقًا.',err:'تعذّر الإرسال. حاول مرة أخرى.',
   human:'لم يُرسل شيء لأي جهة بعد. لو تحب أن يتابعك زميل من الفريق، اترك بيانات التواصل من هنا.',form:'اترك طلبك للفريق',src:'المصدر',stale:'انتهت مراجعته',wait:'رفيق يكتب…',gen:'معلومة عامة، مش من مصدر معتمد من EYE KING',jchip:'أدير رحلتي'},
@@ -19,6 +19,26 @@ const D:Record<'ar'|'en',L>={
   note:'AI assistant, it can make mistakes. It does not confirm price, aircraft availability or booking; final confirmation comes from the operator and our team.',
   busy:'The service is temporarily unavailable. Please try again shortly.',limit:'You have reached the current limit. Please try again later.',err:'Could not send. Please try again.',
   human:'Nothing has been sent to anyone yet. If you would like a colleague to follow up, leave your contact details here.',form:'Leave your request for the team',src:'Source',stale:'review overdue',wait:'Rafiq is typing…',gen:'General information, not from an approved EYE KING source',jchip:'Manage my trip'}};
+// أزرار الرد السريع: كل زر يرسل جملة عادية للدالة rafiq-chat، ولا يغيّر أي حالة ولا يعد بشيء.
+const Q:Record<'ar'|'en',{t:{trip:string;when:string;pax:string;prio:string;eye:string;mgr:string};trip:[string,string][];when:[string,string][];pax:[string,string][];prio:[string,string][];other:string;otherPre:string;cap:string;ready:string;go:string}>={
+ ar:{t:{trip:'الرحلة',when:'الموعد',pax:'المسافرون',prio:'الأفضلية',eye:'العين',mgr:'المدير'},
+  trip:[['أرغب في السفر بطائرة خاصة','أرغب في السفر بطائرة خاصة'],['التكلفة التقريبية','ما التكلفة التقريبية لرحلة بطائرة خاصة؟']],
+  when:[['اليوم','موعد السفر اليوم'],['غدًا','موعد السفر غدًا'],['هذا الأسبوع','موعد السفر هذا الأسبوع']],
+  pax:[['مسافر واحد','عدد الركاب: 1'],['مسافران','عدد الركاب: 2'],['من 3 إلى 5 مسافرين','عدد الركاب: بين 3 و 5'],['6 مسافرين أو أكثر','عدد الركاب: 6 أو أكثر']],
+  prio:[['الأسرع','الأهم لديّ السرعة'],['الأكثر راحة','الأهم لديّ الراحة'],['الأوفر','الأهم لديّ التوفير']],
+  other:'تاريخ آخر…',otherPre:'موعد السفر: ',cap:'ما الذي ستفعله العين لأجلي؟',
+  ready:'حسنًا، اطّلعتُ على تفاصيل رحلتكم. الخطوة التالية: الاسم ووسيلة التواصل، ثم يُسلَّم طلبكم إلى العين.',go:'📨 سلّم طلبي إلى العين'},
+ en:{t:{trip:'Trip',when:'Date',pax:'Guests',prio:'Priority',eye:'The Eye',mgr:'Manager'},
+  trip:[['I would like to travel by private jet','I would like to travel by private jet'],['Approximate cost','What is the approximate cost of a private jet trip?']],
+  when:[['Today','Travel date: today'],['Tomorrow','Travel date: tomorrow'],['This week','Travel date: this week']],
+  pax:[['One guest','Passengers: 1'],['Two guests','Passengers: 2'],['3 to 5 guests','Passengers: 3 to 5'],['6 guests or more','Passengers: 6 or more']],
+  prio:[['Fastest','Most important to me is speed'],['Most comfortable','Most important to me is comfort'],['Best value','Most important to me is value']],
+  other:'Another date…',otherPre:'Travel date: ',cap:'What will the Eye do for me?',
+  ready:'Thank you, I have your trip details. Next step: your name and how to reach you, and then your request is handed to the Eye.',go:'📨 Hand my request to the Eye'}};
+const RX={trip:/(رحلة|سفر|أسافر|اسافر|جدة|الرياض|دبي|القاهرة|trip|travel|fly|flight)/i,
+ when:/(النهارد|اليوم|بكر|غدا|غدًا|الأسبوع|الاسبوع|يناير|فبراير|مارس|أبريل|ابريل|مايو|يونيو|يوليو|أغسطس|اغسطس|سبتمبر|أكتوبر|اكتوبر|نوفمبر|ديسمبر|\d{1,2}\s*[\/\-]\s*\d{1,2}|today|tomorrow|week|monday|tuesday|wednesday|thursday|friday|saturday|sunday|january|february|march|april|may|june|july|august|september|october|november|december)/i,
+ pax:/(\d+\s*(شخص|أشخاص|اشخاص|ركاب|راكب|فرد|أفراد|people|passengers|pax)|الركاب|passengers)/i,
+ prio:/(السرعة|الراحة|التوفير|الأسرع|الأريح|الأوفر|speed|comfort|value)/i};
 type K='live'|'trial'|'grow'|'hand'|'soon';
 // خط رحلة رفيق: كل مرحلة بوسم صادق يطابق ما تقوله الدالة rafiq-chat (route journey). لا نعد بما ليس شغّالًا.
 const J:Record<'ar'|'en',{lead:string;badge:Record<K,string>;st:[string,string,K][];foot:string;next:string}>={
@@ -33,7 +53,7 @@ const J:Record<'ar'|'en',{lead:string;badge:Record<K,string>;st:[string,string,K
 const Eye=({c='currentColor'}:{c?:string})=><svg viewBox="0 0 48 30" fill="none" stroke={c} strokeWidth="2" aria-hidden="true"><path d="M3 15S11 3 24 3s21 12 21 12-8 12-21 12S3 15 3 15z"/><circle cx="24" cy="15" r="6.5"/><circle cx="24" cy="15" r="2.6" fill={c}/></svg>;
 export default function RafiqChat(){
  const {lang}=useI18n(),T=D[lang==='ar'?'ar':'en'];
- const [open,setOpen]=useState(false),[msgs,setMsgs]=useState<Msg[]>([]),[draft,setDraft]=useState(''),[busy,setBusy]=useState(false),[err,setErr]=useState('');
+ const [open,setOpen]=useState(false),[msgs,setMsgs]=useState<Msg[]>([]),[draft,setDraft]=useState(''),[busy,setBusy]=useState(false),[err,setErr]=useState(''),[menu,setMenu]=useState<string|null>(null);
  const end=useRef<HTMLDivElement>(null),inp=useRef<HTMLInputElement>(null),btn=useRef<HTMLButtonElement>(null);
  useEffect(()=>{end.current?.scrollIntoView({block:'end'})},[msgs,busy,open]);
  useEffect(()=>{if(open)setTimeout(()=>inp.current?.focus(),50)},[open]);
@@ -42,10 +62,10 @@ export default function RafiqChat(){
  // على الموبايل النافذة تغطي الشاشة: نوقف تمرير الصفحة خلفها
  useEffect(()=>{if(!open)return;const m=matchMedia('(max-width:560px)').matches;if(!m)return;const o=document.body.style.overflow;document.body.style.overflow='hidden';return()=>{document.body.style.overflow=o}},[open]);
  const close=()=>{setOpen(false);setTimeout(()=>btn.current?.focus(),0)};
- const send=async()=>{
-  const v=draft.trim();if(v.length<2||busy)return;
+ const send=async(t?:string)=>{
+  const v=(t??draft).trim();if(v.length<2||busy)return;
   const prior=msgs.filter(m=>m.who==='me'&&!m.local).map(m=>m.text).slice(-4);
-  setMsgs(x=>[...x,{who:'me',text:v}]);setDraft('');setErr('');setBusy(true);
+  setMsgs(x=>[...x,{who:'me',text:v}]);if(t===undefined)setDraft('');setErr('');setBusy(true);
   try{
    const {data,error}=await sb.functions.invoke('rafiq-chat',{body:{text:v,history:prior,website:''}});
    if(error){const code=(error as any)?.context?.status;setErr(code===429?T.limit:T.busy);return}
@@ -55,7 +75,17 @@ export default function RafiqChat(){
   }catch{setErr(T.err)}finally{setBusy(false)}
  };
  const J_=J[lang==='ar'?'ar':'en'];
- const runJourney=()=>{if(busy)return;setErr('');setMsgs(x=>[...x,{who:'me',text:T.jchip,local:true},{who:'rf',text:J_.lead,next:J_.next,journey:true,local:true}])};
+ const runJourney=(label:string=T.jchip)=>{if(busy)return;setErr('');setMsgs(x=>[...x,{who:'me',text:label,local:true},{who:'rf',text:J_.lead,next:J_.next,journey:true,local:true}])};
+ const QQ=Q[lang==='ar'?'ar':'en'];
+ const mine=msgs.filter(m=>m.who==='me'&&!m.local).map(m=>m.text).join(' ');
+ const tripOn=RX.trip.test(mine);
+ const ready=tripOn&&RX.when.test(mine)&&RX.pax.test(mine)&&RX.prio.test(mine);
+ const nextK=!tripOn?'trip':!RX.when.test(mine)?'when':!RX.pax.test(mine)?'pax':!RX.prio.test(mine)?'prio':'';
+ const tools:{k:'trip'|'when'|'pax'|'prio';ic:string;opts:[string,string][]}[]=[{k:'trip',ic:'✈️',opts:QQ.trip},{k:'when',ic:'📅',opts:QQ.when},{k:'pax',ic:'👥',opts:QQ.pax},{k:'prio',ic:'⭐',opts:QQ.prio}];
+ const cur=tools.find(t=>t.k===menu);
+ const hov=typeof matchMedia!=='undefined'&&matchMedia('(hover:hover)').matches;
+ const pick=(say:string)=>{setMenu(null);send(say)};
+ const goHref='?view=ask&say='+encodeURIComponent(mine.slice(0,600));
  const last=[...msgs].reverse().find(m=>m.who==='me'&&!m.local)?.text??'';
  const formHref='?view=ask'+(last?'&say='+encodeURIComponent(last.slice(0,600)):'');
  return <div className={`rc${lang==='ar'?' rc-ar':''}`} dir={lang==='ar'?'rtl':'ltr'}>
@@ -65,8 +95,7 @@ export default function RafiqChat(){
     <button type="button" className="rc-x" onClick={close} aria-label={T.close}><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"/></svg></button></header>
    <div className="rc-log" aria-live="polite">
     <p className="rc-bub rc-rf">{T.hello}</p>
-    {msgs.length===0&&<div className="rc-chips"><button type="button" onClick={runJourney}>{T.jchip}</button></div>}
-    {msgs.map((m,i)=><div key={i} className={`rc-bub ${m.who==='me'?'rc-me':'rc-rf'}`}>
+        {msgs.map((m,i)=><div key={i} className={`rc-bub ${m.who==='me'?'rc-me':'rc-rf'}`}>
      {m.text.split('\n').map((l,k)=>l.trim()?<p key={k}>{l}</p>:null)}
      {m.journey&&<ol className="rc-jl">{J_.st.map(([t,d,k],i)=><li key={i} className={`rc-j-${k}`}><b>{i+1}. {t}</b><span className="rc-jb">{J_.badge[k]}</span><small>{d}</small></li>)}</ol>}
      {m.journey&&<small className="rc-src">{J_.foot}</small>}
@@ -76,8 +105,20 @@ export default function RafiqChat(){
      {m.human&&<div className="rc-hand"><p>{T.human}</p><a href={formHref}>{T.form}</a></div>}
     </div>)}
     {busy&&<p className="rc-bub rc-rf rc-wait" role="status">{T.wait}</p>}
+    {!busy&&ready&&<div className="rc-bub rc-rf"><p>{QQ.ready}</p><a className="rc-go" href={goHref}>{QQ.go}</a></div>}
     {err&&<p className="rc-err" role="alert">{err}</p>}
     <div ref={end}/>
+   </div>
+   <div className="rc-tools" onMouseLeave={()=>setMenu(null)}>
+    {cur&&<div className="rc-pop" role="menu" aria-label={QQ.t[cur.k]}>
+     {cur.opts.map(([l,say])=><button key={l} type="button" role="menuitem" onClick={()=>pick(say)}>{l}</button>)}
+     {cur.k==='when'&&<button type="button" role="menuitem" onClick={()=>{setMenu(null);setDraft(QQ.otherPre);inp.current?.focus()}}>{QQ.other}</button>}
+    </div>}
+    <div className="rc-bar">
+     {tools.map(t=><button key={t.k} type="button" className={`rc-ic${nextK===t.k?' rc-nx':''}${menu===t.k?' rc-on':''}`} aria-haspopup="menu" aria-expanded={menu===t.k} title={QQ.t[t.k]} onMouseEnter={()=>{if(hov)setMenu(t.k)}} onClick={()=>setMenu(hov?t.k:(menu===t.k?null:t.k))}><span aria-hidden="true">{t.ic}</span><small>{QQ.t[t.k]}</small></button>)}
+     <button type="button" className="rc-ic" title={QQ.cap} onMouseEnter={()=>setMenu(null)} onClick={()=>{setMenu(null);runJourney(QQ.cap)}}><span aria-hidden="true">🔎</span><small>{QQ.t.eye}</small></button>
+     <a className="rc-ic" href={formHref} title={QQ.t.mgr} onMouseEnter={()=>setMenu(null)}><span aria-hidden="true">🧑‍💼</span><small>{QQ.t.mgr}</small></a>
+    </div>
    </div>
    <form className="rc-form" onSubmit={e=>{e.preventDefault();send()}}>
     <input ref={inp} type="text" value={draft} maxLength={500} placeholder={T.ph} aria-label={T.ph} onChange={e=>setDraft(e.target.value)}/>
