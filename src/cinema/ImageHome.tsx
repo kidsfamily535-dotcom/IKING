@@ -12,7 +12,7 @@ type C={think:string;kick:string;h1:string;sub:string;cta:string;tag:string;demo
  liv:string;livB:string;livL:string;lt:string;lb:string;lc:string;
  what:string;whatL:string;cards:[string,string][];live:string;more:string;moreL:string;note:string;city:string[]};
 const COPY:Record<Lang,C>={
- ar:{think:'شاهد كيف تفكر العين',kick:'منصة طيران خاص',h1:'عينك التي لا تنام.',sub:'يدك في الأرض وعينك في السماء.',cta:'اكتشف العين',tag:'قدرات ذكية · فرص حقيقية · رحلة مخصصة',demo:'عرض تجريبي · محاكاة',steps:['الوصول','الأرض','الرحلة','التجهيز','القرار'],
+ ar:{think:'شاهد كيف تفكر العين',kick:'منصة طيران خاص',h1:'عينك التي لا تنام',sub:'يدك في الأرض وعينك في السماء.',cta:'اكتشف العين',tag:'قدرات ذكية · فرص حقيقية · رحلة مخصصة',demo:'عرض تجريبي · محاكاة',steps:['الوصول','الأرض','الرحلة','التجهيز','القرار'],
   vis:'لزوار الموقع',visB:'محاكاة توضيحية',visL:'اكتشف الإمكانيات وجرّب المنصة قبل أن تسجّل.',vt:'ما تستطيعه العين',vb:'عرض فرصة مناسبة',vc:'جميع النتائج محاكاة ولا تعتبر مؤكدة.',
   liv:'ملف الرحلة الحي',livB:'للمسجلين فقط',livL:'رحلتك الحقيقية بطقسها وحالتها ومرافقها، في مكان واحد.',lt:'رحلتي',lb:'تفاصيل الرحلة',lc:'بيانات توضيحية — لا يوجد مصدر حيّ متصل.',
   what:'ما الذي سترى؟',whatL:'منصة الاكتشاف تمنحك نظرة شاملة على كل ما يجعل رحلتك ممكنة.',
@@ -74,9 +74,9 @@ export default function ImageHome({real}:{real:boolean}){
     <div className="ih-langs" role="group" aria-label="Language">{LANGS.map(o=><button key={o.l} type="button" className="ih-pill" aria-pressed={lang===o.l} lang={o.l} onClick={()=>setLang(o.l)}>{o.n}</button>)}</div>
     <div className="ih-logo"><svg viewBox="0 0 48 30" fill="none" stroke="#e8c880" strokeWidth="1.6" aria-hidden="true"><path d="M3 15S11 3 24 3s21 12 21 12-8 12-21 12S3 15 3 15z"/><circle cx="24" cy="15" r="6.5"/><circle cx="24" cy="15" r="2.6" fill="#e8c880"/></svg><span dir="ltr">EYE KING</span></div>
    </header>
+   <div className="ih-headline"><h1>{c.h1}</h1></div>
    <div className="ih-stage">
     <div className="ih-copy">
-     <h1>{c.h1}</h1>
      <div className="ih-cta-wrap">
       {!real?<a className="ih-cta" href="?view=cabin"><span className="ih-eye"><Ic d="M2 12s3.6-6.5 10-6.5S22 12 22 12s-3.6 6.5-10 6.5S2 12 2 12zM12 15.2a3.2 3.2 0 100-6.4 3.2 3.2 0 000 6.4z"/></span><span>{c.cta}</span><Ic d="M9 5l7 7-7 7"/></a>
        :<a className="ih-cta" href="?view=discover"><span className="ih-eye"><Ic d="M2 12s3.6-6.5 10-6.5S22 12 22 12s-3.6 6.5-10 6.5S2 12 2 12zM12 15.2a3.2 3.2 0 100-6.4 3.2 3.2 0 000 6.4z"/></span><span>{c.cta}</span><Ic d="M9 5l7 7-7 7"/></a>}
