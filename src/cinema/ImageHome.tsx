@@ -4,7 +4,6 @@ import Radar from '../cabin/Radar';
 import {HUBS,hub,dist,flightMin,rangeFor,CLASS_RANGE,type Hub} from '../cabin/geo';
 import {useWorld,visibleHubs,searchHubs} from '../cabin/world';
 import RafiqChat from './RafiqChat';
-import {STAGES,F} from './thinkStages';
 import './imagehome.css';
 // الصفحة الرئيسية بحسب التصميم المعتمد: الأرض ليلًا (الخلفية العامة للموقع) + رادار الرياض والعين + «ما الذي سترى؟».
 type C={think:string;kick:string;h1:string;sub:string;cta:string;tag:string;demo:string;steps:string[];
@@ -52,13 +51,12 @@ const LANGS:{l:Lang;n:string}[]=[{l:'ar',n:'العربية'},{l:'en',n:'English'
 const ICONS=['M12 12a4 4 0 100-8 4 4 0 000 8zM4 21c1-4.5 4-6.5 8-6.5s7 2 8 6.5','M12 2l2 7 7 4v2l-7-3-1 5 3 2v2l-4-2-4 2v-2l3-2-1-5-7 3v-2l7-4z','M12 20a8 8 0 100-16 8 8 0 000 16zM12 16a4 4 0 100-8 4 4 0 000 8z','M4 16V12l2-5h12l2 5v4M4 16h16M4 16v2h3v-2M17 16v2h3v-2','M12 16a4 4 0 100-8 4 4 0 000 8zM12 2v2M12 20v2M2 12h2M20 12h2'];
 const Ic=({d}:{d:string})=><svg className="ih-i" viewBox="0 0 24 24" aria-hidden="true"><path d={d}/></svg>;
 const IMG=['/home/c4.jpg','/home/c4.jpg','/home/c3.jpg','/home/c2.jpg','/home/c1.jpg'];
-const MIND:Record<'ar'|'en',{h:string;s:string}>={ar:{h:'كيف تفكر العين',s:'ست مراحل .. قرار واحد. اضغط مرحلة لترى ما تفعله وما لم يُحسم بعد.'},en:{h:'How the Eye thinks',s:'Six stages .. one decision. Pick a stage to see what it does and what is still open.'}};
 // زرار «شاهد كيف تفكر العين» مجمّد (قرار المالك 2026-10-30): المحتوى صار داخل قسم المراحل في الصفحة. لإعادته غيّر القيمة إلى true؛ صفحة ?view=think نفسها لم تُمسّ.
 const SHOW_THINK=false;
 const calm=()=>typeof matchMedia==='function'&&matchMedia('(prefers-reduced-motion: reduce)').matches;
 
 export default function ImageHome({real}:{real:boolean}){
- const {lang,setLang}=useI18n(),c=COPY[lang]||COPY.en,[on,setOn]=useState(4),[ms,setMs]=useState(0),[fromH,setFromH]=useState<Hub>(hub('RUH')),[toH,setToH]=useState<Hub|null>(hub('CAI')),[pk,setPk]=useState<'from'|'to'|null>(null),[q,setQ]=useState(''),[hov,setHov]=useState<string|null>(null),[world,setWorld]=useState(false);
+ const {lang,setLang}=useI18n(),c=COPY[lang]||COPY.en,[on,setOn]=useState(4),[fromH,setFromH]=useState<Hub>(hub('RUH')),[toH,setToH]=useState<Hub|null>(hub('CAI')),[pk,setPk]=useState<'from'|'to'|null>(null),[q,setQ]=useState(''),[hov,setHov]=useState<string|null>(null),[world,setWorld]=useState(false);
  const rx=RX[lang],wa=useWorld(),to=toH?.iata??null,nmH=(h:Hub)=>lang==='ar'?h.ar:lang==='en'?h.en:NM[lang][h.iata]||h.en;
  const km=toH?dist(fromH,toH):null,mn=km?flightMin(km):0,range=world?15000:toH?rangeFor(km):3000;
  const hubs=useMemo(()=>visibleHubs(wa,fromH,range,[toH]),[wa,fromH,toH,range]);
@@ -67,7 +65,7 @@ export default function ImageHome({real}:{real:boolean}){
  const goHref=toH?`?view=cabin&from=${fromH.iata}&to=${toH.iata}`:'';
  const hud=to&&km?`${nmH(fromH)} ${lang==='ar'?'←':'→'} ${nmH(toH!)} · ${(Math.round(km/10)*10).toLocaleString('en')} ${rx.km} · ${lang==='ar'?'نحو ':''}${Math.floor(mn/60)} ${rx.h} ${mn%60} ${rx.m} (${rx.est})`:rx.tap;
  useEffect(()=>{if(calm())return;const id=setInterval(()=>setOn(i=>(i+4)%5),2600);return()=>clearInterval(id)},[]);
- const ar=lang==='ar',P=c.city,lg:'ar'|'en'=ar?'ar':'en',md=MIND[lg],stg=STAGES[lg],fl=F[lg];
+ const ar=lang==='ar',P=c.city;
  return <div className={`ih${ar?' ih-ar':''}`}>
   <div className="ih-hero">
    <header className="ih-top">
@@ -97,13 +95,6 @@ export default function ImageHome({real}:{real:boolean}){
    <ol className="ih-steps" aria-label="Journey">{c.steps.map((s,i)=><li key={i} className={on===i?'ih-on':''}>{s}</li>)}</ol>
   </div>
 
-
-  <section className="ih-mind" aria-labelledby="ih-mind-h">
-   <header><h2 id="ih-mind-h">{md.h}</h2><p className="ih-lead">{md.s}</p></header>
-   <div className="ih-mind-tabs" role="tablist" aria-label={md.h}>{stg.map((x,n)=><button key={n} type="button" role="tab" aria-selected={n===ms} className={n===ms?'on':''} onClick={()=>setMs(n)}><b>{String(n+1).padStart(2,'0')}</b><span>{x[0]}</span></button>)}</div>
-   <div className="ih-mind-det" role="tabpanel" key={ms} aria-label={stg[ms][0]}><dl><div><dt>{fl[0]}</dt><dd>{stg[ms][1][0]}</dd></div><div><dt>{fl[3]}</dt><dd>{stg[ms][1][3]}</dd></div></dl></div>
-   <p className="ih-simnote">{c.demo} {SHOW_THINK&&<a className="ih-mind-more" href="?view=think">{c.think}</a>}</p>
-  </section>
 
   <div className="ih-lower">
    <section>
