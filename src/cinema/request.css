@@ -103,3 +103,5 @@
 .rq-hint{margin:14px 0 0;font-size:14px;color:#cbbf9f;text-align:center}
 @media(max-width:900px){.rq-wrap{display:flex}.rq-top{padding-top:56px}}
 .rq-dots{display:flex;justify-content:center;padding:14px 0 0;position:relative;z-index:1}
+
+.rq-tag{font-style:normal;align-self:flex-start;font-size:13.5px;color:#06080f;background:var(--gold);border-radius:999px;padding:2px 10px;margin-bottom:2px}.rq-ac:not([aria-pressed="true"]) .rq-tag{background:transparent;color:var(--gold);border:1px solid rgba(217,191,134,.5)}.rq-why{color:var(--ink)!important;opacity:.9}
