@@ -1,4 +1,4 @@
-.ih{--t-ink:#f7ead0;--t-accent:#e8c880;--t-night:#070605;--t-surf:#14100b;--t-surf2:#2a1f12;--bg:#070605;--gold:#e8c880;--gold2:#b8873b;--cream:#f7ead0;--mute:#a99c86;--line:rgba(232,200,128,.22);color:var(--cream);font-family:Tajawal,system-ui,sans-serif;line-height:1.5;font-size:16px}
+.ih{--ar-display:Amiri,serif;--t-ink:#f7ead0;--t-accent:#e8c880;--t-night:#070605;--t-surf:#14100b;--t-surf2:#2a1f12;--bg:#070605;--gold:#e8c880;--gold2:#b8873b;--cream:#f7ead0;--mute:#a99c86;--line:rgba(232,200,128,.22);color:var(--cream);font-family:Tajawal,system-ui,sans-serif;line-height:1.5;font-size:16px}
 .ih *{box-sizing:border-box;margin:0}
 .ih a,.ih button{font:inherit;color:inherit}
 .ih :focus-visible{outline:2px solid var(--gold);outline-offset:3px}
@@ -21,11 +21,11 @@ svg.ih-i{width:1em;height:1em;fill:none;stroke:currentColor;stroke-width:1.5;str
 
 .ih-stage{flex:1;display:grid;grid-template-columns:minmax(0,1fr) minmax(300px,540px);align-items:center;gap:20px;padding:10px 44px 110px}
 .ih-copy{text-align:start}
-.ih-kicker{margin:0 0 4px;font-family:'Aref Ruqaa',serif;font-size:1.5rem;color:var(--gold);opacity:.85}
-.ih h1{margin:0;font-family:'Aref Ruqaa',serif;font-weight:700;font-size:clamp(3.1rem,7.4vw,6.8rem);line-height:1.15;color:#fbeed0;text-shadow:0 0 48px rgba(240,170,80,.35)}
+.ih-kicker{margin:0 0 4px;font-family:var(--ar-display);font-size:1.5rem;color:var(--gold);opacity:.85}
+.ih h1{margin:0;font-family:var(--ar-display);font-weight:700;font-size:clamp(3.1rem,7.4vw,6.8rem);line-height:1.15;color:#fbeed0;text-shadow:0 0 48px rgba(240,170,80,.35)}
 .ih-sub{margin:.2em 0 0;font-size:clamp(1.15rem,2.3vw,1.95rem);font-weight:300}
 .ih-cta-wrap{display:inline-block;margin-top:34px;text-align:center}
-.ih .ih-cta{display:flex;direction:ltr;align-items:center;justify-content:space-between;gap:24px;min-width:min(86vw,420px);padding:9px 30px 9px 9px;border-radius:99px;background:linear-gradient(100deg,#c9a45e,#f3e0b0 55%,#d8b66f);color:#1b1206;text-decoration:none;font-family:'Aref Ruqaa',serif;font-weight:700;font-size:1.9rem;box-shadow:0 14px 50px -12px rgba(240,170,80,.55),inset 0 1px 0 rgba(255,255,255,.6);transition:transform .2s,box-shadow .2s}
+.ih .ih-cta{display:flex;direction:ltr;align-items:center;justify-content:space-between;gap:24px;min-width:min(86vw,420px);padding:9px 30px 9px 9px;border-radius:99px;background:linear-gradient(100deg,#c9a45e,#f3e0b0 55%,#d8b66f);color:#1b1206;text-decoration:none;font-family:var(--ar-display);font-weight:700;font-size:1.9rem;box-shadow:0 14px 50px -12px rgba(240,170,80,.55),inset 0 1px 0 rgba(255,255,255,.6);transition:transform .2s,box-shadow .2s}
 .ih-cta:hover{transform:translateY(-2px);box-shadow:0 18px 60px -10px rgba(240,170,80,.75),inset 0 1px 0 rgba(255,255,255,.6)}
 .ih-cta .ih-eye{width:64px;height:64px;border-radius:50%;background:#fbf4e4;display:grid;place-items:center;font-size:30px;box-shadow:0 2px 10px rgba(0,0,0,.25)}
 .ih-cta .ih-chev{font-size:24px}
@@ -85,7 +85,7 @@ svg.ih-i{width:1em;height:1em;fill:none;stroke:currentColor;stroke-width:1.5;str
 .ih-banner{position:relative;grid-column:1/-1;display:flex;flex-direction:column;justify-content:center;min-height:150px;padding:28px 44px;overflow:hidden;border-top:1px solid var(--line)}
 .ih-banner::before{content:"";position:absolute;inset:0 auto 0 0;width:74%;background:url(/home/banner.jpg) center/cover;-webkit-mask-image:linear-gradient(to left,transparent,#000 48%);mask-image:linear-gradient(to left,transparent,#000 48%)}
 .ih-banner>*{position:relative}
-.ih-banner h2{font-family:'Aref Ruqaa',serif;font-size:clamp(1.9rem,3.6vw,2.9rem)}
+.ih-banner h2{font-family:var(--ar-display);font-size:clamp(1.9rem,3.6vw,2.9rem)}
 .ih-banner p{margin:6px 0 0;color:var(--cream);font-size:.95rem}
 .ih-note{margin:0;padding:14px 20px 22px;text-align:center;font-size:.7rem;color:var(--mute)}
 
@@ -164,3 +164,33 @@ svg.ih-i{width:1em;height:1em;fill:none;stroke:currentColor;stroke-width:1.5;str
 /* الكروت بعرض الصفحة كلها (القسم الوحيد في الشبكة كان محبوسًا في أول عمود بعرض 300px) */
 .ih-lower>section{grid-column:1/-1}
 .ih-lower>section .ih-lead{max-width:60ch}
+
+/* ---------- العنوان: تحت الشعار مباشرة ومتمركز (قرار المالك 2026-10-30) ---------- */
+/* ملاحظة: قاعدة h1 العامة في styles.css تفرض direction:ltr وتباعد حروف .16em؛ هنا نلغيهما لأن العربية متصلة ونقطة آخر الجملة تظهر في مكانها الصحيح */
+.ih .ih-headline{padding:4px 28px 0;text-align:center}
+.ih .ih-headline h1{direction:inherit;letter-spacing:0;margin:0 auto;max-width:16em;font-family:var(--ar-display);font-weight:700;font-size:clamp(2.3rem,5.4vw,4.4rem);line-height:1.3;text-wrap:balance;color:#fbeed0;text-shadow:0 0 48px rgba(240,170,80,.35)}
+.ih:not(.ih-ar) .ih-headline h1{font-family:'Cormorant Garamond',Georgia,serif;font-weight:600;letter-spacing:-.01em;line-height:1.1;font-size:clamp(2.4rem,6vw,4.8rem)}
+.ih-copy{align-self:center}
+@media (min-width:861px){.ih-radarbox{max-width:clamp(320px,calc(100svh - 330px),560px)}}
+
+/* ---------- الموبايل ---------- */
+.ih-top{padding-top:max(24px,env(safe-area-inset-top,0px))}
+@media (max-width:860px){
+  .ih .ih-headline{padding:0 22px}
+  .ih-cta-wrap{margin-top:26px}
+  .ih-pill{min-height:44px;display:inline-flex;align-items:center;justify-content:center}
+  .ih-note{padding-bottom:calc(92px + env(safe-area-inset-bottom,0px))}
+}
+@media (max-width:640px){
+  .ih-top{padding-inline:16px}
+  .ih .ih-cta{min-width:min(92vw,420px);font-size:1.6rem;padding-inline-end:22px}
+  .ih-cta .ih-eye{width:56px;height:56px}
+  .ih-cards{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .ih-cards .ih-card:last-child:nth-child(odd){grid-column:1/-1}
+  .ih-banner h2{font-size:clamp(1.7rem,8vw,2.2rem)}
+  /* زرار «رفيق» العايم: دائرة العين فقط (الاسم باقٍ في aria-label) كي لا يغطي أزرار الرادار */
+  .rc-fab{min-height:0;padding:5px;gap:0;bottom:max(12px,env(safe-area-inset-bottom,0px));inset-inline-end:max(12px,env(safe-area-inset-right,0px))}
+  .rc-fab .rc-fab-t{display:none}
+  .rc-fab .rc-fab-av{width:44px;height:44px}
+  .ih-lower>section{padding-inline:16px}
+}
