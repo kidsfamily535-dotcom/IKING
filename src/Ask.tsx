@@ -3,6 +3,7 @@ import './cabin/cabin.css';import './ask.css';
 import {sb} from './lib/supabase';
 import {useI18n,LANGS,type Lang} from './i18n';
 import {Toggle} from './cabin/Switch';
+import EyeFollowCard from './cinema/EyeFollowCard';
 // «اطلب رحلتك»: العميل يكتب رحلته بكلامه، والعين تفهم وتسأل عمّا ينقص فقط (سؤال واحد كل مرة)،
 // ثم يؤكد العميل فهمها ويترك طريقة التواصل. لا يُرسل شيء لأي مشغّل: الطلب يصل إلى إنسان من الفريق (submit-request).
 // الفهم يقترحه النموذج (understand-request) وتتحقق منه الشيفرة؛ التأكيد والإرسال قرار العميل.
@@ -99,6 +100,7 @@ export default function Ask(){
     <button type="button" className="cb-cta" disabled={!contactOk||stage==='sending'} aria-busy={stage==='sending'} onClick={send}>{t('ask.submit')}</button>
     <button type="button" className="cb-link" onClick={()=>setStage('confirm')}>{t('ask.back')}</button></>}
    {stage==='sent'&&<><h1>{t('ask.sentT')}</h1><p className="cb-trip"><b>{label(f.origin_code)} {arrow} {label(f.destination_code)}</b><span>{f.travel_date} · {t('ask.paxN',{n:f.passengers??0})}</span></p><p className="cb-sub">{t('ask.sentBody')}</p>
+    <EyeFollowCard group="new" lang={lang}/>
     <p className="cb-pend"><i aria-hidden/>{t('ask.sentSt')}</p><button type="button" className="cb-ghost" onClick={again}>{t('ask.again')}</button></>}
   </div><p className="cb-foot">{t('ask.foot')}</p></section></div></div>;
 }

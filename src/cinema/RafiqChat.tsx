@@ -1,6 +1,8 @@
 import {useEffect,useRef,useState} from 'react';
 import {sb} from '../lib/supabase';
 import {useI18n} from '../i18n';
+import {useMyRequests} from '../Requests';
+import EyeFollowCard,{CertBadge,GROUP} from './EyeFollowCard';
 import './rafiqchat.css';
 // «رفيق» على الصفحة الرئيسية: أيقونة في الزاوية تفتح نافذة محادثة (ملء الشاشة على الموبايل).
 // كل الردود تأتي من الدالة rafiq-chat: النموذج يفهم الطلب فقط، والقواعد الحساسة ثابتة، ولا سعر ولا توافر ولا حجز.
@@ -54,6 +56,11 @@ const Eye=({c='currentColor'}:{c?:string})=><svg viewBox="0 0 48 30" fill="none"
 export default function RafiqChat(){
  const {lang}=useI18n(),T=D[lang==='ar'?'ar':'en'];
  const [open,setOpen]=useState(false),[msgs,setMsgs]=useState<Msg[]>([]),[draft,setDraft]=useState(''),[busy,setBusy]=useState(false),[err,setErr]=useState(''),[menu,setMenu]=useState<string|null>(null);
+ const [authed,setAuthed]=useState(false);
+ useEffect(()=>{let live=true;sb.auth.getSession().then(({data:{session}})=>{if(live)setAuthed(!!session)},()=>{});const {data:sub}=sb.auth.onAuthStateChange((_e,ss)=>setAuthed(!!ss));return()=>{live=false;sub.subscription.unsubscribe()}},[]);
+ // كارت «العين بتتابع»: لأحدث طلب نشِط للعميل المسجَّل فقط، من حالته الفعلية. الضيف لا يرى حالة لأنه لا يملك طلبًا مقروءًا.
+ const my=useMyRequests(authed&&open);
+ const live=my.reqs.find(r=>GROUP[r.loop_status]!==undefined);
  const end=useRef<HTMLDivElement>(null),inp=useRef<HTMLInputElement>(null),btn=useRef<HTMLButtonElement>(null);
  useEffect(()=>{end.current?.scrollIntoView({block:'end'})},[msgs,busy,open]);
  useEffect(()=>{if(open)setTimeout(()=>inp.current?.focus(),50)},[open]);
@@ -94,10 +101,11 @@ export default function RafiqChat(){
    <header className="rc-head"><span className="rc-av"><Eye c="#1b1206"/></span><div><b>{T.name}</b><small>{T.role}</small></div>
     <button type="button" className="rc-x" onClick={close} aria-label={T.close}><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"/></svg></button></header>
    <div className="rc-log" aria-live="polite">
+    {live&&<EyeFollowCard group={GROUP[live.loop_status]} lang={lang}/>}
     <p className="rc-bub rc-rf">{T.hello}</p>
         {msgs.map((m,i)=><div key={i} className={`rc-bub ${m.who==='me'?'rc-me':'rc-rf'}`}>
      {m.text.split('\n').map((l,k)=>l.trim()?<p key={k}>{l}</p>:null)}
-     {m.journey&&<ol className="rc-jl">{J_.st.map(([t,d,k],i)=><li key={i} className={`rc-j-${k}`}><b>{i+1}. {t}</b><span className="rc-jb">{J_.badge[k]}</span><small>{d}</small></li>)}</ol>}
+     {m.journey&&<ol className="rc-jl">{J_.st.map(([t,d,k],i)=><li key={i} className={`rc-j-${k}`}><b>{i+1}. {t}</b>{i===1?<CertBadge kind="est" lang={lang}/>:<span className="rc-jb">{J_.badge[k]}</span>}<small>{d}</small></li>)}</ol>}
      {m.journey&&<small className="rc-src">{J_.foot}</small>}
      {m.general&&<small className="rc-gen">{T.gen}</small>}
      {m.next&&<p className="rc-next">{m.next}</p>}
