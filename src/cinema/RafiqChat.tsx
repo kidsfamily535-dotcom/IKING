@@ -5,7 +5,7 @@ import {useMyRequests} from '../Requests';
 import EyeFollowCard,{CertBadge,GROUP} from './EyeFollowCard';
 import './rafiqchat.css';
 // «رفيق» على الصفحة الرئيسية: أيقونة في الزاوية تفتح نافذة محادثة (ملء الشاشة على الموبايل).
-// كل الردود تأتي من الدالة rafiq-chat: النموذج يفهم الطلب فقط، والقواعد الحساسة ثابتة، ولا سعر ولا توافر ولا حجز.
+// كل الردود تأتي من الدالة rafiq-chat-v18 (والاحتياط rafiq-chat): النموذج يفهم الطلب فقط، والقواعد الحساسة ثابتة، ولا سعر ولا توافر ولا حجز.
 // لا يُحفظ شيء في المتصفح (لا تخزين محلي). المحادثة تختفي بإغلاق الصفحة.
 // DRAFT: المعرفة غير معتمدة بعد، والتحويل لإنسان يتم عبر نموذج «اطلب رحلتك» (?view=ask) وليس تلقائيًا.
 type Msg={who:'me'|'rf';text:string;next?:string;human?:boolean;general?:boolean;journey?:boolean;local?:boolean;src?:{title:string;name:string;verified_at?:string|null;stale?:boolean}[]};
@@ -74,7 +74,10 @@ export default function RafiqChat(){
   const prior=msgs.filter(m=>m.who==='me'&&!m.local).map(m=>m.text).slice(-4);
   setMsgs(x=>[...x,{who:'me',text:v}]);if(t===undefined)setDraft('');setErr('');setBusy(true);
   try{
-   const {data,error}=await sb.functions.invoke('rafiq-chat',{body:{text:v,history:prior,website:''}});
+   // V18 أولًا؛ لو فشلت لأي سبب غير حدّ الاستخدام (429) نرجع للدالة القديمة بدل أن نترك العميل بلا رد.
+   const body={text:v,history:prior,website:''};
+   let {data,error}=await sb.functions.invoke('rafiq-chat-v18',{body});
+   if(error&&(error as any)?.context?.status!==429){const fb=await sb.functions.invoke('rafiq-chat',{body});data=fb.data;error=fb.error}
    if(error){const code=(error as any)?.context?.status;setErr(code===429?T.limit:T.busy);return}
    const d=data as any;
    if(!d||typeof d.text!=='string'){setErr(T.err);return}
