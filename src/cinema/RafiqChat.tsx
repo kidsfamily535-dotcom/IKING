@@ -22,16 +22,18 @@ const D:Record<'ar'|'en',L>={
   busy:'The service is temporarily unavailable. Please try again shortly.',limit:'You have reached the current limit. Please try again later.',err:'Could not send. Please try again.',
   human:'Nothing has been sent to anyone yet. If you would like a colleague to follow up, leave your contact details here.',form:'Leave your request for the team',src:'Source',stale:'review overdue',wait:'Rafiq is typing…',gen:'General information, not from an approved EYE KING source',jchip:'Manage my trip'}};
 // أزرار الرد السريع: كل زر يرسل جملة عادية للدالة rafiq-chat، ولا يغيّر أي حالة ولا يعد بشيء.
-const Q:Record<'ar'|'en',{t:{trip:string;when:string;pax:string;prio:string;eye:string;mgr:string};trip:[string,string][];when:[string,string][];pax:[string,string][];prio:[string,string][];other:string;otherPre:string;cap:string;ready:string;go:string}>={
- ar:{t:{trip:'الرحلة',when:'الموعد',pax:'المسافرون',prio:'الأفضلية',eye:'العين',mgr:'المدير'},
-  trip:[['أرغب في السفر بطائرة خاصة','أرغب في السفر بطائرة خاصة'],['التكلفة التقريبية','ما التكلفة التقريبية لرحلة بطائرة خاصة؟']],
+const Q:Record<'ar'|'en',{t:{trip:string;when:string;pax:string;prio:string;ask:string};trip:[string,string][];ask:[string,string][];when:[string,string][];pax:[string,string][];prio:[string,string][];other:string;otherPre:string;cap:string;ready:string;go:string}>={
+ ar:{t:{trip:'الرحلة',when:'الموعد',pax:'المسافرون',prio:'الأفضلية',ask:'استفسار'},
+  trip:[['القاهرة ← جدة','أرغب في رحلة من القاهرة إلى جدة'],['القاهرة ← دبي','أرغب في رحلة من القاهرة إلى دبي'],['الرياض ← دبي','أرغب في رحلة من الرياض إلى دبي'],['وجهة أخرى','أرغب في السفر بطائرة خاصة']],
+  ask:[['كيف يعمل الطيران الخاص؟','كيف يعمل الطيران الخاص؟'],['ما التكلفة التقريبية؟','ما التكلفة التقريبية لرحلة بطائرة خاصة؟'],['هل يمكنني السفر مع حيواني الأليف؟','هل يمكنني السفر مع حيواني الأليف؟'],['هل يمكنني السفر مع عائلتي؟','هل يمكنني السفر مع عائلتي؟'],['كيف أختار الطائرة المناسبة؟','كيف أختار الطائرة المناسبة لرحلتي؟']],
   when:[['اليوم','موعد السفر اليوم'],['غدًا','موعد السفر غدًا'],['هذا الأسبوع','موعد السفر هذا الأسبوع']],
   pax:[['مسافر واحد','عدد الركاب: 1'],['مسافران','عدد الركاب: 2'],['من 3 إلى 5 مسافرين','عدد الركاب: بين 3 و 5'],['6 مسافرين أو أكثر','عدد الركاب: 6 أو أكثر']],
   prio:[['الأسرع','الأهم لديّ السرعة'],['الأكثر راحة','الأهم لديّ الراحة'],['الأوفر','الأهم لديّ التوفير']],
   other:'تاريخ آخر…',otherPre:'موعد السفر: ',cap:'ما الذي ستفعله العين لأجلي؟',
   ready:'حسنًا، اطّلعتُ على تفاصيل رحلتكم. الخطوة التالية: الاسم ووسيلة التواصل، ثم يُسلَّم طلبكم إلى العين.',go:'📨 سلّم طلبي إلى العين'},
- en:{t:{trip:'Trip',when:'Date',pax:'Guests',prio:'Priority',eye:'The Eye',mgr:'Manager'},
-  trip:[['I would like to travel by private jet','I would like to travel by private jet'],['Approximate cost','What is the approximate cost of a private jet trip?']],
+ en:{t:{trip:'Trip',when:'Date',pax:'Guests',prio:'Priority',ask:'Ask'},
+  trip:[['Cairo → Jeddah','I would like a trip from Cairo to Jeddah'],['Cairo → Dubai','I would like a trip from Cairo to Dubai'],['Riyadh → Dubai','I would like a trip from Riyadh to Dubai'],['Another destination','I would like to travel by private jet']],
+  ask:[['How does private flying work?','How does private flying work?'],['Approximate cost','What is the approximate cost of a private jet trip?'],['Can I travel with my pet?','Can I travel with my pet?'],['Can I travel with my family?','Can I travel with my family?'],['How do I choose the right aircraft?','How do I choose the right aircraft for my trip?']],
   when:[['Today','Travel date: today'],['Tomorrow','Travel date: tomorrow'],['This week','Travel date: this week']],
   pax:[['One guest','Passengers: 1'],['Two guests','Passengers: 2'],['3 to 5 guests','Passengers: 3 to 5'],['6 guests or more','Passengers: 6 or more']],
   prio:[['Fastest','Most important to me is speed'],['Most comfortable','Most important to me is comfort'],['Best value','Most important to me is value']],
@@ -91,7 +93,7 @@ export default function RafiqChat(){
  const tripOn=RX.trip.test(mine);
  const ready=tripOn&&RX.when.test(mine)&&RX.pax.test(mine)&&RX.prio.test(mine);
  const nextK=!tripOn?'trip':!RX.when.test(mine)?'when':!RX.pax.test(mine)?'pax':!RX.prio.test(mine)?'prio':'';
- const tools:{k:'trip'|'when'|'pax'|'prio';ic:string;opts:[string,string][]}[]=[{k:'trip',ic:'✈️',opts:QQ.trip},{k:'when',ic:'📅',opts:QQ.when},{k:'pax',ic:'👥',opts:QQ.pax},{k:'prio',ic:'⭐',opts:QQ.prio}];
+ const tools:{k:'trip'|'when'|'pax'|'prio'|'ask';ic:string;opts:[string,string][]}[]=[{k:'trip',ic:'✈️',opts:QQ.trip},{k:'when',ic:'📅',opts:QQ.when},{k:'pax',ic:'👥',opts:QQ.pax},{k:'prio',ic:'⭐',opts:QQ.prio},{k:'ask',ic:'❓',opts:QQ.ask}];
  const cur=tools.find(t=>t.k===menu);
  const hov=typeof matchMedia!=='undefined'&&matchMedia('(hover:hover)').matches;
  const pick=(say:string)=>{setMenu(null);send(say)};
@@ -127,8 +129,6 @@ export default function RafiqChat(){
     </div>}
     <div className="rc-bar">
      {tools.map(t=><button key={t.k} type="button" className={`rc-ic${nextK===t.k?' rc-nx':''}${menu===t.k?' rc-on':''}`} aria-haspopup="menu" aria-expanded={menu===t.k} title={QQ.t[t.k]} onMouseEnter={()=>{if(hov)setMenu(t.k)}} onClick={()=>setMenu(hov?t.k:(menu===t.k?null:t.k))}><span aria-hidden="true">{t.ic}</span><small>{QQ.t[t.k]}</small></button>)}
-     <button type="button" className="rc-ic" title={QQ.cap} onMouseEnter={()=>setMenu(null)} onClick={()=>{setMenu(null);runJourney(QQ.cap)}}><span aria-hidden="true">🔎</span><small>{QQ.t.eye}</small></button>
-     <a className="rc-ic" href={formHref} title={QQ.t.mgr} onMouseEnter={()=>setMenu(null)}><span aria-hidden="true">🧑‍💼</span><small>{QQ.t.mgr}</small></a>
     </div>
    </div>
    <form className="rc-form" onSubmit={e=>{e.preventDefault();send()}}>
