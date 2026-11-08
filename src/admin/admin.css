@@ -1,0 +1,23 @@
+.ad{--bg:#F5F0E6;--ink:#171717;--gold:#C5A46D;--em:#174C3A;--line:#d9d0bd;min-height:100vh;background:var(--bg);color:var(--ink);font-family:system-ui,'Segoe UI',Tahoma,sans-serif}
+.ad *{box-sizing:border-box}
+.ad-top{display:flex;align-items:center;gap:16px;padding:14px 22px;background:var(--ink);color:#f5f0e6;flex-wrap:wrap}
+.ad-top b{color:var(--gold);letter-spacing:.12em}
+.ad-top nav{display:flex;gap:6px;flex:1;flex-wrap:wrap}
+.ad-top nav button{background:none;border:1px solid transparent;color:#cfc8b8;padding:8px 14px;border-radius:999px;cursor:pointer;font:inherit}
+.ad-top nav button.on{border-color:var(--gold);color:var(--gold)}
+.ad-top nav em{font-style:normal;background:var(--gold);color:var(--ink);border-radius:999px;padding:0 7px;margin-inline-start:6px;font-size:12px}
+.ad-main{max-width:920px;margin:0 auto;padding:26px 18px}
+.ad h1{font-size:22px;margin:0 0 4px}.ad .sub{color:#6b6556;margin:0 0 18px}
+.ad-card{background:#fffdf8;border:1px solid var(--line);border-radius:14px;padding:16px 18px;margin-bottom:12px}
+.ad-card h3{margin:0 0 4px;font-size:17px}.ad-card p{margin:2px 0;color:#4a4639;font-size:14px}
+.ad-row{display:flex;gap:10px;margin-top:12px;flex-wrap:wrap}
+.ad button.p{background:var(--em);color:#fff;border:0;border-radius:10px;padding:9px 16px;cursor:pointer;font:inherit}
+.ad button.q{background:none;border:1px solid var(--line);border-radius:10px;padding:9px 16px;cursor:pointer;font:inherit;color:var(--ink)}
+.ad button:disabled{opacity:.5;cursor:default}
+.ad-chip{display:inline-block;border:1px solid var(--gold);color:#7a5f2c;border-radius:999px;padding:1px 9px;font-size:12px;margin-inline-start:6px}
+.ad-err{background:#fbeaea;border:1px solid #e3b4b4;color:#7a1f1f;border-radius:10px;padding:10px 14px;margin-bottom:12px}
+.ad-empty{color:#6b6556;padding:26px;text-align:center;border:1px dashed var(--line);border-radius:14px}
+.ad-login{max-width:380px;margin:12vh auto;padding:28px;background:#fffdf8;border:1px solid var(--line);border-radius:16px}
+.ad-login input{width:100%;padding:11px 12px;margin:6px 0 12px;border:1px solid var(--line);border-radius:10px;font:inherit;background:#fff}
+.ad-login label{font-size:13px;color:#6b6556}
+.ad-login a{color:var(--em)}
