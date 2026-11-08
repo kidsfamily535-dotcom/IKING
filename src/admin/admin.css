@@ -21,3 +21,4 @@
 .ad-login input{width:100%;padding:11px 12px;margin:6px 0 12px;border:1px solid var(--line);border-radius:10px;font:inherit;background:#fff}
 .ad-login label{font-size:13px;color:#6b6556}
 .ad-login a{color:var(--em)}
+.ad select,.ad-card input{padding:8px 10px;border:1px solid var(--line);border-radius:10px;font:inherit;background:#fff}
