@@ -209,6 +209,11 @@ pre,code{overflow-x:auto;max-width:100%}
 
   <div class="grid">
     <div>
+      <section class="block" id="availBlock">
+        <h2>توافر بانتظار التأكيد<span class="chip" id="availCount"></span></h2>
+        <div class="fnote">أي طيارة تُسجَّل من المشغّل تفضل «بانتظار التحقق» ولا تظهر كمتاحة لأي عميل إلا بتأكيدك أنت.</div>
+        <div id="avail"></div>
+      </section>
       <section class="block">
         <h2>صندوق القرارات<span class="chip" id="inboxCount"></span></h2>
         <div id="inbox"></div>
@@ -457,7 +462,7 @@ function render(){
   st.appendChild(document.createTextNode(pending.length?'العين تعمل، وعندك '+plural(pending.length)+' تنتظر قرارك.':'العين تعمل، ولا شيء ينتظر قرارك الآن.'));
   st.appendChild(h('span',{class:'eye'+(data.contact_locked?'':' off'),'aria-hidden':'true'}));
   $('substate').textContent=data.contact_locked?'التواصل الخارجي مقفول. أي رسالة تبقى مسودة حتى تعتمدها.':'تنبيه: قفل التواصل الخارجي غير مفعّل. راجع الإعدادات قبل أي شيء.';
-  renderSignals();renderAgent();renderSafety();renderLog();loadControl();loadCards();renderCardForm();
+  renderSignals();renderAgent();renderSafety();renderLog();loadControl();loadCards();renderCardForm();loadAvail();
 }
 
 function renderSignals(){
@@ -580,6 +585,39 @@ async function loadQueue(){
       ])
     ]);
     box.appendChild(card);
+  });
+}
+
+/* ---------- توافر بانتظار التأكيد (تأكيد بشري) ---------- */
+async function loadAvail(){
+  var box=$('avail');if(!box)return;
+  var r=await sb.from('aircraft_availability').select('id,aircraft_model,origin_code,destination_code,departure_from,departure_until,seats,expires_at,is_demo,source').eq('status','PENDING_VERIFICATION').gt('expires_at',new Date().toISOString()).order('departure_from',{ascending:true}).limit(50);
+  clear(box);$('availCount').textContent='';
+  if(r.error){box.appendChild(h('div',{class:'empty',text:'تعذّر قراءة التوافر. هذا لا يعني أنه فاضي.'}));return}
+  var rows=r.data||[];
+  if(!rows.length){box.appendChild(h('div',{class:'empty',text:'مفيش توافر منتظر تأكيدك.'}));return}
+  $('availCount').textContent=String(rows.length);
+  rows.forEach(function(a){
+    var route=a.origin_code+(a.destination_code?' ← '+a.destination_code:' · أي وجهة');
+    box.appendChild(h('div',{class:'kv',style:'display:block'},[
+      h('div',null,[h('strong',{text:route}),' ',a.is_demo?h('span',{class:'chip',text:'تجريبي'}):null]),
+      h('div',{class:'fnote',text:String(a.aircraft_model||'')+' · '+a.seats+' مقاعد · يغادر '+fmt(a.departure_from)+' إلى '+fmt(a.departure_until)}),
+      h('div',{class:'fnote',text:'تسقط تلقائيًا: '+fmt(a.expires_at)}),
+      h('div',{class:'acts'},[
+        h('button',{class:'btn small',type:'button',text:'تأكيد كمتاحة',onclick:async function(ev){
+          if(!confirm('تأكيد '+route+' كمتاحة؟ هتبقى مؤهلة للفرص والمطابقة. ما فيش رسالة هتتبعت لأي حد تلقائيًا.'))return;
+          ev.target.disabled=true;var x=await rpc('set_availability_status',{p_id:a.id,p_new:'AVAILABLE',p_reason:'confirmed by owner'});
+          if(x.error){ev.target.disabled=false;alert(errText(x.error));return}
+          loadAvail();
+        }}),
+        h('button',{class:'btn quiet small',type:'button',text:'رفض',onclick:async function(ev){
+          if(!confirm('رفض '+route+' وإلغاؤها؟'))return;
+          ev.target.disabled=true;var x=await rpc('set_availability_status',{p_id:a.id,p_new:'CANCELLED',p_reason:'rejected by owner'});
+          if(x.error){ev.target.disabled=false;alert(errText(x.error));return}
+          loadAvail();
+        }})
+      ])
+    ]));
   });
 }
 
