@@ -140,7 +140,7 @@
 @keyframes crdr{to{stroke-dashoffset:0}}
 .cr-rl{position:absolute;left:50%;transform:translate(-50%,-110%);font:clamp(9px,2cqw,11px)/1 'JetBrains Mono',monospace;letter-spacing:.06em;color:color-mix(in srgb,var(--t-ink) 60%,transparent);pointer-events:none;white-space:nowrap;background:radial-gradient(closest-side,var(--sk2),transparent);padding:2px 6px}
 .cr-n,.cr-b{position:absolute;width:44px;height:44px;transform:translate(-50%,-50%);display:grid;place-items:center;background:none;border:0;padding:0;color:var(--ink);z-index:2}
-.cr-n i{width:6px;height:6px;border-radius:50%;background:color-mix(in srgb,var(--t-ink) 67%,transparent);transition:all .3s}
+.cr-n i{width:5px;height:5px;border-radius:50%;background:color-mix(in srgb,var(--t-ink) 35%,transparent);transition:all .3s}
 .cr-n.on i,.cr-n.hot i{width:10px;height:10px;background:var(--gold);box-shadow:0 0 14px var(--gold)}
 .cr-n.org i{width:0;height:0;box-shadow:none}
 .cr-n:hover i{background:var(--gold)}

@@ -10,6 +10,8 @@ interface Props{
  warn?:string[];links?:boolean;classes?:{km:number;label:string}[];onHover:(i:string|null)=>void;onPick:(i:string)=>void;onBlip:(id:string)=>void;kmUnit:string;
 }
 const N=56;
+const MAX_NAMES=5;// أسماء المدن الإضافية فوق المنطلق والوجهة والمدينة تحت المؤشر
+const MAX_LINKS=3;
 const calm=()=>typeof matchMedia==='function'&&matchMedia('(prefers-reduced-motion: reduce)').matches;
 // تحريك سلس لمركز الرادار ومداه عند تغيير نقطة الانطلاق أو الوجهة
 function useTween(t:{lat:number;lon:number;range:number}){
@@ -43,12 +45,12 @@ export default function Radar(p:Props){
  // أي الأسماء تظهر: الأهم أولًا، ومن غير تصادم
  const shown=useMemo(()=>{
   const order=[...p.hubs].filter(h=>P[h.iata].d<=v.range*1.001).sort((a,b)=>{const w=(h:Hub)=>h.iata===p.from?-3:h.iata===p.to?-2:h.iata===p.hover?-4:h.pri;return w(a)-w(b)});
-  const rects:{x0:number;x1:number;y0:number;y1:number}[]=[],out:Record<string,'r'|'l'>={},kept:{x:number;y:number}[]=[];
+  const rects:{x0:number;x1:number;y0:number;y1:number}[]=[],out:Record<string,'r'|'l'>={},kept:{x:number;y:number}[]=[];let extra=0;
   for(const h of order){const q=P[h.iata],w=p.name(h).length*10+16,must=h.iata===p.from||h.iata===p.to||h.iata===p.hover;
-   if(!must&&kept.some(k=>Math.hypot(k.x-q.x,k.y-q.y)<40))continue;
+   if(!must&&kept.some(k=>Math.hypot(k.x-q.x,k.y-q.y)<40))continue;if(!must&&extra>=MAX_NAMES)continue;
    for(const s of ['r','l'] as const){const x0=s==='r'?q.x+8:q.x-8-w,r={x0,x1:x0+w,y0:q.y-11,y1:q.y+11};
     if(r.x0<4||r.x1>596)continue;if(!must&&rects.some(o=>r.x0<o.x1&&r.x1>o.x0&&r.y0<o.y1&&r.y1>o.y0))continue;
-    rects.push(r);out[h.iata]=s;break}
+    rects.push(r);out[h.iata]=s;if(!must)extra++;break}
    if(!out[h.iata]&&must)out[h.iata]=q.x>300?'l':'r';if(out[h.iata])kept.push(q)}
   return out;
  },[P,p.hubs,p.from,p.to,p.hover,p.name,v.range]);
@@ -58,7 +60,7 @@ export default function Radar(p:Props){
   for(const h of p.hubs){const q=P[h.iata];if(q.d>v.range)continue;const k=Math.hypot(q.x-x,q.y-y);if(k<m){m=k;b=h.iata}}
   p.onHover(b);
  };
- const linkIds=useMemo(()=>p.links?Object.keys(shown).filter(i=>i!==p.from&&P[i]&&P[i].d<=v.range*.98).sort((a,b)=>P[a].d-P[b].d).filter((_,k)=>k%2===0).slice(0,5):[],[p.links,shown,P,p.from,v.range]);
+ const linkIds=useMemo(()=>p.links&&!p.to?Object.keys(shown).filter(i=>i!==p.from&&P[i]&&P[i].d<=v.range*.98).sort((a,b)=>P[a].d-P[b].d).filter((_,k)=>k%2===0).slice(0,MAX_LINKS):[],[p.links,p.to,shown,P,p.from,v.range]);
  const gaze=dx??(p.hover?P[p.hover]??null:null);
  const iris=gaze?{x:Math.max(-1,Math.min(1,(gaze.x-fx.x)/120))*7,y:Math.max(-1,Math.min(1,(gaze.y-fx.y)/120))*7}:{x:0,y:0};
  const pct=(n:number)=>`${(n/6).toFixed(2)}%`;
