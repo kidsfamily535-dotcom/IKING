@@ -6,9 +6,9 @@ import {useT} from './copy';
 import {AirCtx,type Run} from './ctx';
 import type {Ap} from './geo';
 import {Fld} from './ui';
-import Inbox from './Inbox';import Hangar from './Hangar';import Offers from './Offers';import Bays from './Bays';import Pay from './Pay';import OrgTab from './Org';
+import Inbox from './Inbox';import Hangar from './Hangar';import Offers from './Offers';import Bays from './Bays';import Pay from './Pay';import OrgTab from './Org';import AgentTab from './Agent';
 import './sky.css';
-const IC=[<path key="0" d="M4 6h16v11H8l-4 4zM8 10h8M8 13h5"/>,<path key="1" d="M3 17h18M5 17V9l4 3 3-6 3 6 4-3v8"/>,<path key="2" d="M5 4h14v16l-3-2-2 2-2-2-2 2-2-2-3 2zM9 9h6M9 13h4"/>,<path key="3" d="M3 14l8-2 6-8c.7-.8 2 .3 1.3 1.2L15 11l5 1.5-.7 1.6L13 13.8 10.5 20l-1.7.2.4-5.6L3 15.7z"/>,<path key="4" d="M3 7h18v12H3zM3 7l2-3h14l2 3M16 13h2"/>,<path key="5" d="M4 20V6l8-3 8 3v14M9 20v-5h6v5M8 9h2M14 9h2M8 12h2M14 12h2"/>];
+const IC=[<path key="0" d="M4 6h16v11H8l-4 4zM8 10h8M8 13h5"/>,<path key="1" d="M3 17h18M5 17V9l4 3 3-6 3 6 4-3v8"/>,<path key="2" d="M5 4h14v16l-3-2-2 2-2-2-2 2-2-2-3 2zM9 9h6M9 13h4"/>,<path key="3" d="M3 14l8-2 6-8c.7-.8 2 .3 1.3 1.2L15 11l5 1.5-.7 1.6L13 13.8 10.5 20l-1.7.2.4-5.6L3 15.7z"/>,<path key="4" d="M3 7h18v12H3zM3 7l2-3h14l2 3M16 13h2"/>,<path key="5" d="M4 20V6l8-3 8 3v14M9 20v-5h6v5M8 9h2M14 9h2M8 12h2M14 12h2"/>,<path key="6" d="M2 12s4-7 10-7 10 7 10 7-4 7-10 7S2 12 2 12zM12 9a3 3 0 100 6 3 3 0 000-6z"/>];
 const Ic=({i}:{i:number})=><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">{IC[i]}</svg>;
 const Brand=({sub}:{sub:string})=><div className="sk-brand"><i aria-hidden="true"/><span><b>EYE KING</b><small>{sub}</small></span></div>;
 function Login(){const T=useT();const [e,setE]=useState(''),[m,setM]=useState(''),[b,setB]=useState(false),[sent,setSent]=useState(false);
@@ -36,5 +36,5 @@ export default function Panel(){
    <div className="sk-who"><LangSwitch/><span dir="ltr">{mail}</span><button type="button" className="g" onClick={()=>sb.auth.signOut()}>{T.out}</button></div></header>
   <main><div className="sk-head"><h1>{T.tabs[tab]}</h1><p>{T.sub[tab]}</p></div>
    {err&&<div className="sk-err" role="alert">{err}</div>}
-   {tab===0&&<Inbox run={run} onCount={setCnt} goHangar={()=>go(1)}/>}{tab===1&&<Hangar uid={ses} run={run} goFleet={()=>go(3)}/>}{tab===2&&<Offers uid={ses} goPay={()=>go(4)} goInbox={()=>go(0)}/>}{tab===3&&<Bays uid={ses} run={run}/>}{tab===4&&<Pay uid={ses} run={run}/>}{tab===5&&<OrgTab run={run}/>}
+   {tab===0&&<Inbox run={run} onCount={setCnt} goHangar={()=>go(1)}/>}{tab===1&&<Hangar uid={ses} run={run} goFleet={()=>go(3)}/>}{tab===2&&<Offers uid={ses} goPay={()=>go(4)} goInbox={()=>go(0)}/>}{tab===3&&<Bays uid={ses} run={run}/>}{tab===4&&<Pay uid={ses} run={run}/>}{tab===5&&<OrgTab run={run}/>}{tab===6&&<AgentTab/>}
   </main></div></AirCtx.Provider>}

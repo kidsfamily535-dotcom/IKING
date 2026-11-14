@@ -5,6 +5,7 @@ type Flag={key:string;value:boolean;note?:string|null;switchable?:boolean};
 type Job={jobname:string;active:boolean;state:string;schedule:string;protected?:boolean};
 type Ctl={mode:string;flags:Flag[];jobs:Job[]};
 type Dir={id:string;body:string;scope:string;status:string;created_at:string};
+type OD={id:string;company:string;body:string;status:string;created_at:string;expires_at:string};
 type Hl={jobname:string;state:string;last_proof_at:string|null};
 
 const SCOPES:[string,string][]=[['GENERAL','عامة'],['HUNTER','الصياد'],['CUSTOMER','العميل'],['SECRETARY','السكرتير'],['OPERATOR','المشغّل']];
@@ -19,9 +20,9 @@ const ago=(d:string|null)=>d?new Date(d).toLocaleString('ar-u-nu-latn',{day:'num
 
 export default function Control({setErr}:{setErr:(s:string)=>void}){
  const [c,setC]=useState<Ctl|null>(null),[dirs,setDirs]=useState<Dir[]|null>(null),[hl,setHl]=useState<Hl[]|null>(null),[q,setQ]=useState<{f:number;t:number}|null>(null);
- const [body,setBody]=useState(''),[scope,setScope]=useState('GENERAL'),[days,setDays]=useState('7'),[b,setB]=useState(false);
+ const [od,setOd]=useState<OD[]|null>(null),[body,setBody]=useState(''),[scope,setScope]=useState('GENERAL'),[days,setDays]=useState('7'),[b,setB]=useState(false);
  const load=useCallback(async()=>{
-  const [a,d,h,p]=await Promise.all([sb.rpc('owner_controls'),sb.from('owner_directives').select('id,body,scope,status,created_at').in('status',['ACTIVE','ACKED']).order('created_at',{ascending:false}).limit(20),sb.rpc('agent_health'),sb.from('owner_prefs').select('quiet_from,quiet_to').eq('id',1).maybeSingle()]);
+  const [a,d,h,p,o]=await Promise.all([sb.rpc('owner_controls'),sb.from('owner_directives').select('id,body,scope,status,created_at').in('status',['ACTIVE','ACKED']).order('created_at',{ascending:false}).limit(20),sb.rpc('agent_health'),sb.from('owner_prefs').select('quiet_from,quiet_to').eq('id',1).maybeSingle(),sb.rpc('admin_list_operator_directives')]);setOd(o.error||!Array.isArray(o.data)?null:o.data as OD[]);
   setC(a.error||!a.data?null:a.data as Ctl);setDirs(d.error?[]:(d.data??[]) as Dir[]);setHl(h.error||!Array.isArray(h.data)?null:h.data as Hl[]);setQ(p.data?{f:p.data.quiet_from,t:p.data.quiet_to}:null);
   if(a.error)setErr('تعذّر قراءة المفاتيح. هذا لا يعني أنها كلها شغالة أو واقفة.')},[setErr]);
  useEffect(()=>{load()},[load]);
@@ -45,6 +46,10 @@ export default function Control({setErr}:{setErr:(s:string)=>void}){
    <p style={{fontSize:13,marginTop:8}}>التعليمة معلومة للوكيل فقط. لا تفتح قفل التواصل ولا تتجاوز بوابات الموافقة.</p></div>
   {dirs?.map(d=><div className="ad-card" key={d.id}><p>{d.body}</p><p><span className="ad-chip">{SCOPES.find(s=>s[0]===d.scope)?.[1]??d.scope}</span><span className="ad-chip">{DSTATE[d.status]??d.status}</span></p>
    <div className="ad-row"><button type="button" className="q" disabled={b} onClick={()=>run('owner_cancel_directive',{p_id:d.id})}>إلغاء</button></div></div>)}
+
+  <h2 style={{margin:'20px 0 8px',fontSize:17}}>توجيهات المشغّلين لوكلائهم{od?` (${od.length})`:''}</h2>
+  {!od?<div className="ad-empty">تعذّر قراءة توجيهات المشغّلين.</div>:!od.length?<div className="ad-empty">لا توجد توجيهات نشطة من المشغّلين.</div>:od.map(x=><div className="ad-card" key={x.id}><h3>{x.company}<span className="ad-chip">{DSTATE[x.status]??x.status}</span></h3><p>{x.body}</p><p>تنتهي: {ago(x.expires_at)}</p>
+   <div className="ad-row"><button type="button" className="q" disabled={b} onClick={()=>{const n=prompt('سبب الإلغاء؟ (اختياري)');if(n!==null)run('admin_cancel_operator_directive',{p_id:x.id,p_reason:n.trim()||null})}}>إلغاء التوجيه</button></div></div>)}
 
   {q&&<><h2 style={{margin:'20px 0 8px',fontSize:17}}>ساعات الهدوء (بتوقيت UTC)</h2>
    <div className="ad-card"><div className="ad-row"><span>من</span><select value={q.f} onChange={e=>setQ({...q,f:+e.target.value})}>{Array.from({length:24},(_,i)=><option key={i} value={i}>{i}:00</option>)}</select>
