@@ -6,6 +6,7 @@ import {HUBS,hub,dist,flightMin,rangeFor,type Hub} from '../cabin/geo';
 import {useWorld,visibleHubs,searchHubs} from '../cabin/world';
 import {copy} from '../cabin/copy';
 import Radar from '../cabin/Radar';
+import {AiThinking,Dust,AI_LINE} from './AiPresence';
 import {useFleet} from '../cabin/media';
 import MS from './missions.json';
 // طلب رحلة حقيقي على نهج منصات الطيران الخاص: الرحلة أولًا (النوع، المسار، الموعد، الركاب)، ثم تفضيلات اختيارية، ثم وسيلة الرد في آخر خطوة.
@@ -129,7 +130,7 @@ const L=(o?:Ln)=>o?(o[lang]||o.en||o.ar||''):'';
  const ord=Object.keys(SPEC),best=(pref.length?pref:suit)[0],rest=suit.filter(o=>o!==best);
  const cmf=best?rest.find(o=>ord.indexOf(o.cat)>ord.indexOf(best.cat)):undefined,alt=rest.find(o=>o!==cmf);
  const fit=[best&&{...best,tag:'best' as const},cmf&&{...cmf,tag:'cmf' as const},alt&&{...alt,tag:'alt' as const}].filter((x):x is NonNullable<typeof x>=>!!x);
- const radar=<aside className="rq-radar" aria-label={rc.gl.radar}><Radar hubs={vh} from={from} to={to} hover={null} name={h=>ar?h.ar:h.en} range={rangeFor(km)} blips={[]} scanning={step===5} plane={to?plane:null} alt={null} hud={hud} aria={rc.gl.radar} kmUnit={rc.units.km} onHover={()=>{}} onPick={radarTap} onBlip={()=>{}}/></aside>;
+ const radar=<aside className="rq-radar" aria-label={rc.gl.radar}><Radar links hubs={vh} from={from} to={to} hover={null} name={h=>ar?h.ar:h.en} range={rangeFor(km)} blips={[]} scanning={step===5} plane={to?plane:null} alt={null} hud={hud} aria={rc.gl.radar} kmUnit={rc.units.km} onHover={()=>{}} onPick={radarTap} onBlip={()=>{}}/></aside>;
  const City=({label,value,onClick}:{label:string;value:string|null;onClick:()=>void})=><button type="button" className={`rq-city${value?'':' empty'}`} onClick={onClick}><small>{label}</small><span>{value?nm(value):c.pickTo}</span></button>;
  const picker=<>
   <h1 className="rq-h s">{pick==='from'?c.from:c.to}</h1>
@@ -138,7 +139,7 @@ const L=(o?:Ln)=>o?(o[lang]||o.en||o.ar||''):'';
   <button type="button" className="rq-link" onClick={()=>{setPick(null);setQ('')}}>{t('ask.back')}</button></>;
  const seg=(items:[string,string][],val:string,on:(k:string)=>void,label:string,cls='')=><div className={'rq-seg'+(cls?' '+cls:'')} role="radiogroup" aria-label={label}>{items.map(([k,l])=><button key={k} type="button" role="radio" aria-checked={val===k} onClick={()=>on(k)}>{l}</button>)}</div>;
  return <div className={`rq cn${ar?' ar':''}`} dir={ar?'rtl':'ltr'} lang={lang}>
-  <div className="rq-bg" aria-hidden="true"/><div className="cn-shade" aria-hidden="true"/><div className="cn-grain" aria-hidden="true"/>
+  <div className="rq-bg" aria-hidden="true"/><Dust/><div className="cn-shade" aria-hidden="true"/><div className="cn-grain" aria-hidden="true"/>
   <LangSwitch/>
   <TopBar active={3} name={c.name} bare/>
   <div className="rq-dots">{step<5&&<ol className="rq-prog" aria-label={`${[0,2,3,4].indexOf(step)+1}/4`}>{[0,2,3,4].map(i=><li key={i} className={i<=step?'on':''}/>)}</ol>}</div>
@@ -150,6 +151,7 @@ const L=(o?:Ln)=>o?(o[lang]||o.en||o.ar||''):'';
     <span className="rq-kicker">{c.name}</span>
     <h1 className="rq-h s">{c.h0}</h1>
     <p className="rq-sub">{c.sub0}</p>
+    <p className="rq-ai"><i aria-hidden="true"/>{AI_LINE[lang]||AI_LINE.en}</p>
     <div className="rq-panel">
     {seg([['one',c.one],['round',c.round],['multi',c.multi]],kind,k=>{setKind(k as Kind);if(k==='multi'&&!legs.length)setLegs([{to:null,date}])},c.trip)}
     <div className="rq-route-row"><City label={c.from} value={from} onClick={()=>{setPick('from');setQ('')}}/>
@@ -168,6 +170,7 @@ const L=(o?:Ln)=>o?(o[lang]||o.en||o.ar||''):'';
     <button type="button" className="cn-btn main rq-go" disabled={!tripOk} onClick={()=>setStep(2)}>{c.next}</button>
     </div>
     <p className="rq-hint">{c.hint0}</p>
+    <div className="rq-thk"><AiThinking lang={lang}/></div>
    </>}
    {step===2&&<>
     <p className="rq-route">{route} · {fmt(date)} · {guests}</p><h1 className="rq-h s">{c.h1}</h1><p className="rq-note first">{c.sub1}</p>

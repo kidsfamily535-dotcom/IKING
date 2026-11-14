@@ -6,6 +6,7 @@ const LINES:Record<Lang,string[]>={
  en:['Understanding your trip','Watching the weather on your route','Looking at suitable options','Preparing the details'],
  tr:['Yolculuğunuzu anlıyorum','Rotadaki havayı izliyorum','Uygun seçeneklere bakıyorum','Ayrıntıları hazırlıyorum'],
  ru:['Понимаю вашу поездку','Слежу за погодой на маршруте','Смотрю подходящие варианты','Готовлю детали']};
+export const AI_LINE:Record<Lang,string>={ar:'مساعدك الذكي للطيران الخاص',en:'Your AI assistant for private aviation',tr:'Özel havacılık için yapay zekâ asistanınız',ru:'Ваш ИИ-ассистент для частной авиации'};
 const calm=()=>typeof matchMedia==='function'&&matchMedia('(prefers-reduced-motion: reduce)').matches;
 export function AiThinking({lang}:{lang:Lang}){
  const L=LINES[lang]||LINES.en,[i,setI]=useState(0);
