@@ -2,35 +2,35 @@ import {useEffect,useMemo,useState} from 'react';
 import {useI18n,type Lang} from '../i18n';
 import Radar from '../cabin/Radar';
 import {HUBS,hub,dist,flightMin,rangeFor,CLASS_RANGE,type Hub} from '../cabin/geo';
-import {useWorld,visibleHubs,searchHubs} from '../cabin/world';
+import {useWorld,visibleHubs,searchHubs,waHub} from '../cabin/world';
 import RafiqChat from './RafiqChat';
 import {AiThinking,Dust} from './AiPresence';
 import './imagehome.css';
 // الصفحة الرئيسية بحسب التصميم المعتمد: الأرض ليلًا (الخلفية العامة للموقع) + رادار الرياض والعين + «ما الذي سترى؟».
-type C={ai:string;think:string;kick:string;h1:string;sub:string;cta:string;tag:string;demo:string;steps:string[];
+type C={say:string;sayPh:string;sayGo:string;sayOk:string;sayNo:string;ai:string;think:string;kick:string;h1:string;sub:string;cta:string;tag:string;demo:string;steps:string[];
  vis:string;visB:string;visL:string;vt:string;vb:string;vc:string;
  liv:string;livB:string;livL:string;lt:string;lb:string;lc:string;
  what:string;whatL:string;cards:[string,string][];live:string;more:string;moreL:string;note:string;city:string[]};
 const COPY:Record<Lang,C>={
- ar:{ai:'مساعدك الذكي للطيران الخاص',think:'شاهد كيف تفكر العين',kick:'منصة طيران خاص',h1:'عينك التي لا تنام',sub:'يدك في الأرض وعينك في السماء.',cta:'اكتشف العين',tag:'قدرات ذكية · فرص حقيقية · رحلة مخصصة',demo:'عرض تجريبي · محاكاة',steps:['الوصول','الأرض','الرحلة','التجهيز','القرار'],
+ ar:{say:'اكتب رحلتك',sayPh:'مثال: من الرياض إلى القاهرة',sayGo:'افهم',sayOk:'فهمت',sayNo:'لم أجد مدينة واضحة. جرّب: من الرياض إلى القاهرة',ai:'مساعدك الذكي للطيران الخاص',think:'شاهد كيف تفكر العين',kick:'منصة طيران خاص',h1:'عينك التي لا تنام',sub:'يدك في الأرض وعينك في السماء.',cta:'اكتشف العين',tag:'قدرات ذكية · فرص حقيقية · رحلة مخصصة',demo:'عرض تجريبي · محاكاة',steps:['الوصول','الأرض','الرحلة','التجهيز','القرار'],
   vis:'لزوار الموقع',visB:'محاكاة توضيحية',visL:'اكتشف الإمكانيات وجرّب المنصة قبل أن تسجّل.',vt:'ما تستطيعه العين',vb:'عرض فرصة مناسبة',vc:'جميع النتائج محاكاة ولا تعتبر مؤكدة.',
   liv:'ملف الرحلة الحي',livB:'للمسجلين فقط',livL:'رحلتك الحقيقية بطقسها وحالتها ومرافقها، في مكان واحد.',lt:'رحلتي',lb:'تفاصيل الرحلة',lc:'بيانات توضيحية — لا يوجد مصدر حيّ متصل.',
   what:'ما الذي سترى؟',whatL:'منصة الاكتشاف تمنحك نظرة شاملة على كل ما يجعل رحلتك ممكنة.',
   cards:[['ملف الرحلة الحي','رحلتك الفعلية في مكان واحد.'],['الطائرات المتاحة','خيارات ذكية من أساطيل عالمية موثوقة.'],['الفرص الحقيقية','مطابقات مخصصة مبنية على احتياجك وشبكتك.'],['الباب للباب','تنسيق كامل من المغادرة إلى الوصول.'],['الطقس والظروف','تحديثات لحظية وتوقعات دقيقة للمسار والوجهة.']],
   live:'للمسجلين',more:'أكثر من مجرد رحلة',moreL:'إنها رؤية أوسع لعالم من الفرص.',note:'بيانات توضيحية (DEMONSTRATION) — لا يوجد مصدر حيّ متصل.',city:['إسطنبول','عمّان','الكويت','الدمام','الدوحة','جدة','القاهرة','الرياض']},
- en:{ai:'Your AI assistant for private aviation',think:'See how the Eye thinks',kick:'Private aviation platform',h1:'Your eye that never sleeps.',sub:'Your hand on the ground, your eye in the sky.',cta:'Discover the Eye',tag:'Smart capabilities · Real opportunities · A journey made for you',demo:'Demo · Simulation',steps:['Arrival','Ground','Flight','Preparation','Decision'],
+ en:{say:'Write your trip',sayPh:'e.g. from Riyadh to Cairo',sayGo:'Understand',sayOk:'Understood',sayNo:'I couldn’t find a clear city. Try: from Riyadh to Cairo',ai:'Your AI assistant for private aviation',think:'See how the Eye thinks',kick:'Private aviation platform',h1:'Your eye that never sleeps.',sub:'Your hand on the ground, your eye in the sky.',cta:'Discover the Eye',tag:'Smart capabilities · Real opportunities · A journey made for you',demo:'Demo · Simulation',steps:['Arrival','Ground','Flight','Preparation','Decision'],
   vis:'For visitors',visB:'Illustrative simulation',visL:'Explore the possibilities and try the platform before you sign up.',vt:'What the Eye can do',vb:'View a matching opportunity',vc:'All results are simulated and not confirmed.',
   liv:'Live trip file',livB:'Registered users only',livL:'Your real journey with its weather, status and facilities, in one place.',lt:'My trip',lb:'Trip details',lc:'Illustrative data: no live source connected.',
   what:'What will you see?',whatL:'The discovery platform gives you a full view of everything that makes your trip possible.',
   cards:[['Live trip file','Your actual journey in one place.'],['Available aircraft','Smart options from trusted global fleets.'],['Real opportunities','Personal matches built on your needs and your network.'],['Door to door','Full coordination from departure to arrival.'],['Weather and conditions','Live updates and precise forecasts for the route and destination.']],
   live:'Registered',more:'More than a journey',moreL:'A wider view of a world of opportunities.',note:'Demonstration data: no live source connected.',city:['Istanbul','Amman','Kuwait','Dammam','Doha','Jeddah','Cairo','Riyadh']},
- tr:{ai:'Özel havacılık için yapay zekâ asistanınız',think:'Gözün nasıl düşündüğünü izleyin',kick:'Özel havacılık platformu',h1:'Hiç uyumayan gözünüz.',sub:'Elin yerde, gözün gökte.',cta:'Gözü keşfedin',tag:'Akıllı yetenekler · Gerçek fırsatlar · Size özel yolculuk',demo:'Demo · Simülasyon',steps:['Varış','Zemin','Uçuş','Hazırlık','Karar'],
+ tr:{say:'Yolculuğunuzu yazın',sayPh:'örn. Riyad’dan Kahire’ye',sayGo:'Anla',sayOk:'Anladım',sayNo:'Net bir şehir bulamadım. Deneyin: Riyad’dan Kahire’ye',ai:'Özel havacılık için yapay zekâ asistanınız',think:'Gözün nasıl düşündüğünü izleyin',kick:'Özel havacılık platformu',h1:'Hiç uyumayan gözünüz.',sub:'Elin yerde, gözün gökte.',cta:'Gözü keşfedin',tag:'Akıllı yetenekler · Gerçek fırsatlar · Size özel yolculuk',demo:'Demo · Simülasyon',steps:['Varış','Zemin','Uçuş','Hazırlık','Karar'],
   vis:'Ziyaretçiler için',visB:'Açıklayıcı simülasyon',visL:'Kayıt olmadan önce olanakları keşfedin ve platformu deneyin.',vt:'Gözün yapabilecekleri',vb:'Uygun bir fırsatı gör',vc:'Tüm sonuçlar simülasyondur, kesinleşmiş değildir.',
   liv:'Canlı yolculuk dosyası',livB:'Yalnızca üyeler',livL:'Gerçek yolculuğunuz; hava durumu, durum ve olanaklarıyla tek yerde.',lt:'Yolculuğum',lb:'Yolculuk ayrıntıları',lc:'Örnek veri: canlı kaynak bağlı değil.',
   what:'Ne göreceksiniz?',whatL:'Keşif platformu, yolculuğunuzu mümkün kılan her şeye bütüncül bir bakış sunar.',
   cards:[['Canlı yolculuk dosyası','Gerçek yolculuğunuz tek yerde.'],['Uygun uçaklar','Güvenilir küresel filolardan akıllı seçenekler.'],['Gerçek fırsatlar','İhtiyacınıza ve ağınıza göre kişisel eşleşmeler.'],['Kapıdan kapıya','Kalkıştan varışa tam koordinasyon.'],['Hava ve koşullar','Rota ve varış için anlık güncellemeler ve net tahminler.']],
   live:'Üyeler',more:'Bir yolculuktan fazlası',moreL:'Fırsatlar dünyasına daha geniş bir bakış.',note:'Örnek veri (DEMONSTRATION): canlı kaynak bağlı değil.',city:['İstanbul','Amman','Kuveyt','Dammam','Doha','Cidde','Kahire','Riyad']},
- ru:{ai:'Ваш ИИ-ассистент для частной авиации',think:'Посмотрите, как думает Око',kick:'Платформа частной авиации',h1:'Ваше око, которое не спит.',sub:'Рука на земле, око в небе.',cta:'Открыть око',tag:'Умные возможности · Реальные шансы · Путь под вас',demo:'Демо · Имитация',steps:['Прибытие','Земля','Полёт','Подготовка','Решение'],
+ ru:{say:'Опишите поездку',sayPh:'напр. из Эр-Рияда в Каир',sayGo:'Понять',sayOk:'Понял',sayNo:'Не нашёл понятный город. Попробуйте: из Эр-Рияда в Каир',ai:'Ваш ИИ-ассистент для частной авиации',think:'Посмотрите, как думает Око',kick:'Платформа частной авиации',h1:'Ваше око, которое не спит.',sub:'Рука на земле, око в небе.',cta:'Открыть око',tag:'Умные возможности · Реальные шансы · Путь под вас',demo:'Демо · Имитация',steps:['Прибытие','Земля','Полёт','Подготовка','Решение'],
   vis:'Для гостей',visB:'Наглядная имитация',visL:'Изучите возможности и попробуйте платформу до регистрации.',vt:'Что умеет Око',vb:'Показать подходящий вариант',vc:'Все результаты — имитация и не подтверждены.',
   liv:'Живой файл поездки',livB:'Только для зарегистрированных',livL:'Ваша реальная поездка с погодой, статусом и сервисами в одном месте.',lt:'Моя поездка',lb:'Детали поездки',lc:'Демонстрационные данные: живой источник не подключён.',
   what:'Что вы увидите?',whatL:'Платформа даёт полный обзор всего, что делает вашу поездку возможной.',
@@ -54,15 +54,46 @@ const Ic=({d}:{d:string})=><svg className="ih-i" viewBox="0 0 24 24" aria-hidden
 const IMG=['/home/c4.jpg','/home/c4.jpg','/home/c3.jpg','/home/c2.jpg','/home/c1.jpg'];
 // زرار «شاهد كيف تفكر العين» مجمّد (قرار المالك 2026-10-30): المحتوى صار داخل قسم المراحل في الصفحة. لإعادته غيّر القيمة إلى true؛ صفحة ?view=think نفسها لم تُمسّ.
 const SHOW_THINK=false;
+
+const STOP_FROM=new Set(['من','from','von','из','dan','den']),STOP_TO=new Set(['الى','إلى','to','في','في','в','до','a','nach']);
+const norm=(x:string)=>x.toLowerCase().replace(/[\u064B-\u0652]/g,'').replace(/[أإآ]/g,'ا').replace(/ى/g,'ي').replace(/ة/g,'ه').replace(/[^\p{L}\p{N}\s]/gu,' ').replace(/\s+/g,' ').trim();
+// يفهم «من X إلى Y» بمطابقة تامة لأسماء المطارات والمدن المعروفة (بلا تخمين وبلا أي استدعاء خارجي)
+function readTrip(text:string,pool:Hub[]):{from?:Hub;to?:Hub}|null{
+ const idx=new Map<string,Hub>();
+ for(const h of pool){for(const k of [h.iata,h.en,h.ar]){const n=norm(k||'');if(n.length>=2&&!idx.has(n))idx.set(n,h)}}
+ const w=norm(text).split(' ').filter(Boolean),found:{h:Hub;cue:'f'|'t'|null;at:number}[]=[];
+ for(let i=0;i<w.length;i++){
+  for(const span of [2,1]){
+   if(i+span>w.length)continue;
+   const raw=w.slice(i,i+span).join(' ');let h=idx.get(raw),cue:'f'|'t'|null=null;
+   if(!h&&span===1){const r=raw.replace(/^(لل|ال)/,'ال').replace(/^(ل|ب|و)(?=ال)/,'');h=idx.get(r)||idx.get(r.replace(/^ال/,'ال'))}
+   if(!h&&span===1&&raw.length>3){const r2=raw.replace(/^[لبو]/,'');h=idx.get(r2)}
+   if(h){const prev=w[i-1]||'';cue=STOP_FROM.has(prev)?'f':STOP_TO.has(prev)||/^ل/.test(raw)&&!idx.has(raw)?'t':null;found.push({h,cue,at:i});i+=span-1;break}
+  }
+ }
+ const u=found.filter((f,k)=>found.findIndex(g=>g.h.iata===f.h.iata)===k);
+ if(!u.length)return null;
+ const fr=u.find(f=>f.cue==='f'),tt=u.find(f=>f.cue==='t'&&f!==fr);
+ if(fr||tt){const to=(tt??u.find(f=>f!==fr&&f.cue!=='f'))??(fr?undefined:u[0]),from=fr??(to?u.find(f=>f!==to&&f.cue!=='t'&&f.at<to.at):undefined);return{from:from?.h,to:to?.h}}
+ return u.length>=2?{from:u[0].h,to:u[1].h}:{to:u[0].h};
+}
 const calm=()=>typeof matchMedia==='function'&&matchMedia('(prefers-reduced-motion: reduce)').matches;
 
 export default function ImageHome({real}:{real:boolean}){
- const {lang,setLang}=useI18n(),c=COPY[lang]||COPY.en,[on,setOn]=useState(4),[fromH,setFromH]=useState<Hub>(hub('RUH')),[toH,setToH]=useState<Hub|null>(hub('CAI')),[pk,setPk]=useState<'from'|'to'|null>(null),[q,setQ]=useState(''),[hov,setHov]=useState<string|null>(null),[world,setWorld]=useState(false);
+ const {lang,setLang}=useI18n(),c=COPY[lang]||COPY.en,[on,setOn]=useState(4),[fromH,setFromH]=useState<Hub>(hub('RUH')),[toH,setToH]=useState<Hub|null>(hub('CAI')),[pk,setPk]=useState<'from'|'to'|null>(null),[q,setQ]=useState(''),[hov,setHov]=useState<string|null>(null),[world,setWorld]=useState(false),[say,setSay]=useState(''),[sayMsg,setSayMsg]=useState<string|null>(null);
  const rx=RX[lang],wa=useWorld(),to=toH?.iata??null,nmH=(h:Hub)=>lang==='ar'?h.ar:lang==='en'?h.en:NM[lang][h.iata]||h.en;
  const km=toH?dist(fromH,toH):null,mn=km?flightMin(km):0,range=world?15000:toH?rangeFor(km):3000;
  const hubs=useMemo(()=>visibleHubs(wa,fromH,range,[toH]),[wa,fromH,toH,range]);
  const found=useMemo(()=>pk?searchHubs(wa,q):[],[wa,q,pk]);
  const choose=(h:Hub)=>{if(pk==='from'){setFromH(h);if(toH?.iata===h.iata)setToH(null)}else if(h.iata!==fromH.iata)setToH(h);setPk(null);setQ('')};
+ const pool=useMemo(()=>[...HUBS,...(wa?wa.map(waHub):[])],[wa]);
+ const understand=(e:React.FormEvent)=>{e.preventDefault();if(!say.trim())return;
+  const r=readTrip(say,pool);
+  if(!r||(!r.from&&!r.to)){setSayMsg(c.sayNo);return}
+  const f=r.from??fromH,t=r.to??toH;
+  if(t&&f.iata===t.iata){setSayMsg(c.sayNo);return}
+  setFromH(f);if(t)setToH(t);setPk(null);setWorld(false);
+  setSayMsg(`${c.sayOk}: ${nmH(f)} ${lang==='ar'?'←':'→'} ${t?nmH(t):'—'}`)};
  const goHref=toH?`?view=cabin&from=${fromH.iata}&to=${toH.iata}`:'';
  const hud=to&&km?`${nmH(fromH)} ${lang==='ar'?'←':'→'} ${nmH(toH!)} · ${(Math.round(km/10)*10).toLocaleString('en')} ${rx.km} · ${lang==='ar'?'نحو ':''}${Math.floor(mn/60)} ${rx.h} ${mn%60} ${rx.m} (${rx.est})`:rx.tap;
  useEffect(()=>{if(calm())return;const id=setInterval(()=>setOn(i=>(i+4)%5),2600);return()=>clearInterval(id)},[]);
@@ -77,6 +108,11 @@ export default function ImageHome({real}:{real:boolean}){
    <div className="ih-headline"><h1>{c.h1}</h1><p className="ih-ai"><i aria-hidden="true"/>{c.ai}</p></div>
    <div className="ih-stage">
     <div className="ih-copy">
+     <form className="ih-say" onSubmit={understand}>
+      <label htmlFor="ih-say-i">{c.say}</label>
+      <div><input id="ih-say-i" type="text" value={say} onChange={e=>{setSay(e.target.value);setSayMsg(null)}} placeholder={c.sayPh} maxLength={120} autoComplete="off"/><button type="submit">{c.sayGo}</button></div>
+      <p className="ih-say-msg" aria-live="polite">{sayMsg}</p>
+     </form>
      <div className="ih-cta-wrap">
       {!real?<a className="ih-cta" href="?view=cabin"><span className="ih-eye"><Ic d="M2 12s3.6-6.5 10-6.5S22 12 22 12s-3.6 6.5-10 6.5S2 12 2 12zM12 15.2a3.2 3.2 0 100-6.4 3.2 3.2 0 000 6.4z"/></span><span>{c.cta}</span><Ic d="M9 5l7 7-7 7"/></a>
        :<a className="ih-cta" href="?view=discover"><span className="ih-eye"><Ic d="M2 12s3.6-6.5 10-6.5S22 12 22 12s-3.6 6.5-10 6.5S2 12 2 12zM12 15.2a3.2 3.2 0 100-6.4 3.2 3.2 0 000 6.4z"/></span><span>{c.cta}</span><Ic d="M9 5l7 7-7 7"/></a>}

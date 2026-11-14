@@ -191,3 +191,14 @@ svg.ih-i{width:1em;height:1em;fill:none;stroke:currentColor;stroke-width:1.5;str
 .ih-dust{position:absolute;inset:0;z-index:-1;pointer-events:none;overflow:hidden}
 .ih-dust i{position:absolute;width:2px;height:2px;border-radius:50%;background:var(--gold);opacity:0;animation:ih-drift 10s ease-in-out infinite}
 @keyframes ih-drift{0%,100%{transform:translateY(0);opacity:0}50%{transform:translateY(-18px);opacity:.45}}
+
+/* ---------- اكتب رحلتك ---------- */
+.ih-say{margin-top:26px;max-width:min(86vw,420px)}
+.ih-say label{display:block;font-size:.8rem;color:var(--gold);margin-bottom:8px;letter-spacing:.04em}
+.ih-say>div{display:flex;gap:8px;border:1px solid var(--line);border-radius:99px;padding:5px 5px 5px 18px;background:rgba(0,0,0,.4)}
+.ih-ar .ih-say>div{padding:5px 18px 5px 5px}
+.ih-say input{flex:1;min-width:0;background:transparent;border:0;outline:0;color:var(--cream);font-size:.95rem}
+.ih-say input::placeholder{color:var(--mute)}
+.ih-say button{border:0;border-radius:99px;padding:8px 20px;background:linear-gradient(#f0d9a0,#c9a45e);color:#1b1206;font-weight:500;cursor:pointer}
+.ih-say:focus-within>div{border-color:var(--gold)}
+.ih-say-msg{min-height:1.4em;margin:8px 4px 0;font-size:.82rem;color:var(--gold)}

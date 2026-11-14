@@ -59,7 +59,8 @@ export default function Radar(p:Props){
   p.onHover(b);
  };
  const linkIds=useMemo(()=>p.links?Object.keys(shown).filter(i=>i!==p.from&&P[i]&&P[i].d<=v.range*.98).sort((a,b)=>P[a].d-P[b].d).filter((_,k)=>k%2===0).slice(0,5):[],[p.links,shown,P,p.from,v.range]);
- const iris=dx?{x:Math.max(-1,Math.min(1,(dx.x-fx.x)/120))*7,y:Math.max(-1,Math.min(1,(dx.y-fx.y)/120))*7}:{x:0,y:0};
+ const gaze=dx??(p.hover?P[p.hover]??null:null);
+ const iris=gaze?{x:Math.max(-1,Math.min(1,(gaze.x-fx.x)/120))*7,y:Math.max(-1,Math.min(1,(gaze.y-fx.y)/120))*7}:{x:0,y:0};
  const pct=(n:number)=>`${(n/6).toFixed(2)}%`;
  return <div className="cr" ref={box} role="group" aria-label={p.aria} onPointerMove={scrub} onPointerLeave={()=>p.onHover(null)}>
   <svg viewBox="0 0 600 600" aria-hidden>
