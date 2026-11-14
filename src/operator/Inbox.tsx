@@ -11,7 +11,7 @@ export default function Inbox({run,onCount,goHangar}:{run:Run;onCount:(n:number)
  const T=useT();const {lang}=useI18n();const air=useAir();
  const [rows,setRows]=useState<Row[]|null>(null),[sel,setSel]=useState<string|null>(null),[mode,setMode]=useState<'q'|'d'>('q');
  const [price,setPrice]=useState(''),[hrs,setHrs]=useState(24),[txt,setTxt]=useState(''),[stamp,setStamp]=useState<''|'q'|'d'>('');
- const load=useCallback(()=>{sb.rpc('list_operator_requests').then(r=>{const d=(r.data??[]) as Row[];setRows(d);onCount(d.length);setSel(s=>s&&d.some(x=>x.quote_request_id===s)?s:(d[0]?.quote_request_id??null))})},[onCount]);
+ const load=useCallback(()=>{Promise.all([sb.rpc('list_operator_requests'),sb.rpc('operator_my_agent')]).then(([r,g])=>{const rt=new Set(((g.data as any)?.routes??[]) as string[]);const hit=(x:Row)=>rt.has(String(x.origin_code))||rt.has(String(x.destination_code));const d=((r.data??[]) as Row[]).map((x,i)=>({x,i,h:hit(x)})).sort((a,b)=>Number(b.h)-Number(a.h)||a.i-b.i).map(o=>({...o.x,agent_match:o.h}) as Row);setRows(d);onCount(d.length);setSel(s=>s&&d.some(x=>x.quote_request_id===s)?s:(d[0]?.quote_request_id??null))})},[onCount]);
  useEffect(load,[load]);
  const cur=useMemo(()=>rows?.find(r=>r.quote_request_id===sel),[rows,sel]);
  const pick=(id:string,m:'q'|'d')=>{setSel(id);setMode(m);setPrice('');setTxt('')};
@@ -27,7 +27,7 @@ export default function Inbox({run,onCount,goHangar}:{run:Run;onCount:(n:number)
     <span className="sk-tk-r" dir="ltr"><b>{r.origin_code}</b><svg viewBox="0 0 40 12" aria-hidden="true"><path d="M1 10 Q20 -4 39 10" fill="none"/></svg><b>{r.destination_code??'···'}</b></span>
     <span className="sk-tk-n">{apName(air,r.origin_code,lang)}{r.destination_code?` – ${apName(air,r.destination_code,lang)}`:` – ${T.anyDest}`}</span>
     <span className="sk-tk-m"><em>{dt(f,lang)} · {tm(f,lang)}</em><em>{r.passengers} {T.pax}</em></span>
-    <span className="sk-tk-a">{age(r.created_at,lang,T)}</span></button></li>})}</ol>
+    <span className="sk-tk-a">{age(r.created_at,lang,T)}{r.agent_match&&<> · {T.agMatch}</>}</span></button></li>})}</ol>
   <div className="sk-stage">{cur&&A&&<>
    <div className="sk-sky"><ArcStage a={A} b={B} label={`${cur.origin_code} – ${cur.destination_code??T.anyDest}`}/>
     <div className="sk-cap" dir="ltr"><b>{cur.origin_code}</b><span>{cur.destination_code??'···'}</span></div>
