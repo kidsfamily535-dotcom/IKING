@@ -49,7 +49,7 @@
 .rq-leg{display:grid;grid-template-columns:auto 1fr auto auto;gap:10px;align-items:center;padding:12px 0;border-bottom:1px solid rgba(217,191,134,.16)}.rq-leg .rq-city{padding:8px 12px}.rq-leg .rq-in{width:auto;font-size:17px}.rq-legn{color:var(--gold);font-size:15px;white-space:nowrap}
 .rq-cap{margin:22px 0 -6px;color:var(--gold);font-size:15px}
 .rq-chips{display:flex;flex-wrap:wrap;gap:8px;margin:14px 0}.rq-chips button{min-height:44px;padding:0 18px;background:none;border:1px solid rgba(217,191,134,.3);border-radius:99px;color:#d8ccb0;font:inherit;font-size:16px;cursor:pointer;transition:all .3s}.rq-chips button[aria-pressed="true"]{background:rgba(217,191,134,.16);border-color:var(--gold);color:var(--champ)}
-@media(max-width:900px){.rq-wrap{display:flex;flex-direction:column;align-items:stretch}.rq-wrap>.rq-radar{position:relative;top:auto;order:-1;width:min(76vw,340px);align-self:center;margin:8px 0 0}.rq-wrap>.rq-main{padding-top:12px}}
+@media(max-width:900px){.rq-wrap{display:flex;flex-direction:column;align-items:stretch}.rq-wrap>.rq-radar{position:relative;top:auto;order:-1;width:min(92vw,430px);align-self:center;margin:8px 0 0}.rq-wrap>.rq-main{padding-top:12px}}
 @media(max-width:560px){.rq-main{padding-top:24px}.rq-leg{grid-template-columns:1fr auto;}.rq-legn{grid-column:1/-1}.rq-top{padding-top:60px}}
 @media(prefers-reduced-motion:reduce){.rq-bg,.rq-main{animation:none!important}}
 .rq-step button{display:grid;place-items:center;padding:0 0 3px;line-height:1}
@@ -127,6 +127,6 @@
 @media (max-width:720px){.rq-bg{background-position:70% 50%}}
 
 /* ===== خلفية موحّدة لكل الصفحات: نفس صورة الغروب ونفس درجة الصفحة الرئيسية (تغميق .38 فقط، بلا فلتر ولا فينيت ثقيل) ===== */
-html:root .rq-bg{background:linear-gradient(rgba(5,7,15,.38),rgba(5,7,15,.38)),url(/home/sunset-jet.jpg) 68% 50%/cover no-repeat;background-color:#050a18;filter:none}
+html:root .rq-bg{background:radial-gradient(ellipse 36% 54% at 0% 0%,rgba(5,7,15,.82),rgba(5,7,15,0) 72%),linear-gradient(rgba(5,7,15,.38),rgba(5,7,15,.38)),url(/home/sunset-jet.jpg) 68% 50%/cover no-repeat;background-color:#050a18;filter:none}
 @media (max-width:720px){html:root .rq-bg{background-position:72% 50%}}
 html:root .cn-shade{position:fixed;inset:0;background:linear-gradient(to top,rgba(7,6,5,.7) 0,transparent 30%),linear-gradient(to left,rgba(7,6,5,.5),transparent 50%)}

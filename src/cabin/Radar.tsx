@@ -10,7 +10,7 @@ interface Props{
  warn?:string[];links?:boolean;classes?:{km:number;label:string}[];onHover:(i:string|null)=>void;onPick:(i:string)=>void;onBlip:(id:string)=>void;kmUnit:string;
 }
 const N=56;
-const MAX_NAMES=5;// أسماء المدن الإضافية فوق المنطلق والوجهة والمدينة تحت المؤشر
+const maxNames=()=>typeof matchMedia==='function'&&matchMedia('(max-width: 600px)').matches?3:5;// أسماء المدن الإضافية فوق المنطلق والوجهة والمدينة تحت المؤشر
 const MAX_LINKS=3;
 const calm=()=>typeof matchMedia==='function'&&matchMedia('(prefers-reduced-motion: reduce)').matches;
 // تحريك سلس لمركز الرادار ومداه عند تغيير نقطة الانطلاق أو الوجهة
@@ -41,13 +41,13 @@ export default function Radar(p:Props){
  const hd=planeAt&&prev&&next?Math.atan2(next.x-prev.x,-(next.y-prev.y))*180/Math.PI:0;
  const cls=useMemo(()=>(p.classes??[]).filter(k=>k.km<v.range&&rr(k.km,v.range)>=40),[p.classes,v.range]);
  // حلقات المسافة (أرقام حقيقية بالكيلومتر، نصف القطر مضغوط)
- const rings=useMemo(()=>{const o:number[]=[];let last=-99;for(const k of NICE){if(k>=v.range)break;const r=rr(k,v.range);if(r>=70&&r-last>=52){o.push(k);last=r}}return o},[v.range]);
+ const rings=useMemo(()=>{const o:number[]=[];let last=-99;for(const k of NICE){if(k>=v.range)break;const r=rr(k,v.range);if(r>=70&&r-last>=52){o.push(k);last=r}}return o.length>3?o.filter((_,i)=>i%2===(o.length%2?0:1)).slice(-3):o},[v.range]);
  // أي الأسماء تظهر: الأهم أولًا، ومن غير تصادم
  const shown=useMemo(()=>{
   const order=[...p.hubs].filter(h=>P[h.iata].d<=v.range*1.001).sort((a,b)=>{const w=(h:Hub)=>h.iata===p.from?-3:h.iata===p.to?-2:h.iata===p.hover?-4:h.pri;return w(a)-w(b)});
-  const rects:{x0:number;x1:number;y0:number;y1:number}[]=[],out:Record<string,'r'|'l'>={},kept:{x:number;y:number}[]=[];let extra=0;
+  const rects:{x0:number;x1:number;y0:number;y1:number}[]=[],out:Record<string,'r'|'l'>={},kept:{x:number;y:number}[]=[];let extra=0;const cap=maxNames();
   for(const h of order){const q=P[h.iata],w=p.name(h).length*10+16,must=h.iata===p.from||h.iata===p.to||h.iata===p.hover;
-   if(!must&&kept.some(k=>Math.hypot(k.x-q.x,k.y-q.y)<40))continue;if(!must&&extra>=MAX_NAMES)continue;
+   if(!must&&kept.some(k=>Math.hypot(k.x-q.x,k.y-q.y)<40))continue;if(!must&&extra>=cap)continue;
    for(const s of ['r','l'] as const){const x0=s==='r'?q.x+8:q.x-8-w,r={x0,x1:x0+w,y0:q.y-11,y1:q.y+11};
     if(r.x0<4||r.x1>596)continue;if(!must&&rects.some(o=>r.x0<o.x1&&r.x1>o.x0&&r.y0<o.y1&&r.y1>o.y0))continue;
     rects.push(r);out[h.iata]=s;if(!must)extra++;break}
@@ -68,7 +68,7 @@ export default function Radar(p:Props){
   <svg viewBox="0 0 600 600" aria-hidden>
    <defs><radialGradient id="rdg" cx="50%" cy="50%" r="50%"><stop offset="0" stopColor="var(--t-surf2)" stopOpacity=".85"/><stop offset="1" stopColor="var(--t-night)" stopOpacity="0"/></radialGradient></defs>
    <circle cx="300" cy="300" r="286" fill="url(#rdg)"/>
-   {!p.classes&&rings.map(k=><circle key={k} cx="300" cy="300" r={rr(k,v.range)} fill="none" stroke="var(--t-ink)" strokeOpacity=".12"/>)}
+   {!p.classes&&rings.map(k=><circle key={k} cx="300" cy="300" r={rr(k,v.range)} fill="none" stroke="var(--t-ink)" strokeOpacity=".09"/>)}
    {cls.map(k=><circle key={'c'+k.km} cx="300" cy="300" r={rr(k.km,v.range)} fill="none" stroke="var(--t-accent)" strokeOpacity=".3" strokeDasharray="3 5"/>)}
    <circle cx="300" cy="300" r="270" fill="none" stroke="var(--t-ink)" strokeOpacity=".2"/>
    {Array.from({length:72},(_,i)=>{const a=i*5*Math.PI/180,m=i%6?3:9;return <line key={i} x1={300+270*Math.sin(a)} y1={300-270*Math.cos(a)} x2={300+(270-m)*Math.sin(a)} y2={300-(270-m)*Math.cos(a)} stroke="var(--t-ink)" strokeOpacity={i%6?.24:.5}/>})}
