@@ -216,3 +216,8 @@
 .cb-medianote{font-size:12.5px;color:color-mix(in srgb,var(--t-ink) 60%,transparent);margin:0;max-width:50ch}
 @media (max-width:420px){.cb-dims{grid-template-columns:repeat(2,1fr)}}
 @media (prefers-reduced-motion:reduce){.cb-ph img{transition:none}}
+
+/* خطوط الشبكة الحيّة (تُفعَّل فقط حيث links) */
+.cr-lk{stroke-dasharray:1;stroke-dashoffset:1;opacity:0;animation:crlk 5.5s ease-in-out infinite}
+@keyframes crlk{0%{stroke-dashoffset:1;opacity:0}15%{opacity:.75}45%,80%{stroke-dashoffset:0;opacity:.6}100%{stroke-dashoffset:0;opacity:0}}
+@media (prefers-reduced-motion:reduce){.cr-lk{animation:none;opacity:0}}

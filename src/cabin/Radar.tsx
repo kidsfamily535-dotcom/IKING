@@ -7,7 +7,7 @@ export interface Blip{id:string;hub:string;dx:number;dy:number;sel:boolean;label
 interface Props{
  hubs:Hub[];from:string;to:string|null;hover:string|null;name:(h:Hub)=>string;
  range:number;blips:Blip[];scanning:boolean;plane:number|null;alt:string|null;hud:string;aria:string;
- warn?:string[];classes?:{km:number;label:string}[];onHover:(i:string|null)=>void;onPick:(i:string)=>void;onBlip:(id:string)=>void;kmUnit:string;
+ warn?:string[];links?:boolean;classes?:{km:number;label:string}[];onHover:(i:string|null)=>void;onPick:(i:string)=>void;onBlip:(id:string)=>void;kmUnit:string;
 }
 const N=56;
 const calm=()=>typeof matchMedia==='function'&&matchMedia('(prefers-reduced-motion: reduce)').matches;
@@ -58,6 +58,7 @@ export default function Radar(p:Props){
   for(const h of p.hubs){const q=P[h.iata];if(q.d>v.range)continue;const k=Math.hypot(q.x-x,q.y-y);if(k<m){m=k;b=h.iata}}
   p.onHover(b);
  };
+ const linkIds=useMemo(()=>p.links?Object.keys(shown).filter(i=>i!==p.from&&P[i]&&P[i].d<=v.range*.98).sort((a,b)=>P[a].d-P[b].d).filter((_,k)=>k%2===0).slice(0,5):[],[p.links,shown,P,p.from,v.range]);
  const iris=dx?{x:Math.max(-1,Math.min(1,(dx.x-fx.x)/120))*7,y:Math.max(-1,Math.min(1,(dx.y-fx.y)/120))*7}:{x:0,y:0};
  const pct=(n:number)=>`${(n/6).toFixed(2)}%`;
  return <div className="cr" ref={box} role="group" aria-label={p.aria} onPointerMove={scrub} onPointerLeave={()=>p.onHover(null)}>
@@ -69,6 +70,7 @@ export default function Radar(p:Props){
    <circle cx="300" cy="300" r="270" fill="none" stroke="var(--t-ink)" strokeOpacity=".2"/>
    {Array.from({length:72},(_,i)=>{const a=i*5*Math.PI/180,m=i%6?3:9;return <line key={i} x1={300+270*Math.sin(a)} y1={300-270*Math.cos(a)} x2={300+(270-m)*Math.sin(a)} y2={300-(270-m)*Math.cos(a)} stroke="var(--t-ink)" strokeOpacity={i%6?.24:.5}/>})}
    <g className="cr-sweep">{Array.from({length:9},(_,k)=>{const a=(x:number)=>x*Math.PI/180,a1=-(k+1)*3.4,a2=-k*3.4;return <path key={k} d={`M300,300 L${300+270*Math.sin(a(a1))},${300-270*Math.cos(a(a1))} A270,270 0 0 1 ${300+270*Math.sin(a(a2))},${300-270*Math.cos(a(a2))} Z`} fill="var(--t-accent)" fillOpacity={.1*(1-k/9)}/>})}<line x1="300" y1="300" x2="300" y2="30" stroke="var(--t-accent)" strokeOpacity=".5"/></g>
+   {p.links&&!calm()&&linkIds.map((id,i)=>{const q=P[id];return <g key={'lk'+id}><path className="cr-lk" style={{animationDelay:`${i*1.1}s`}} d={`M${fx.x.toFixed(1)},${fx.y.toFixed(1)}L${q.x.toFixed(1)},${q.y.toFixed(1)}`} pathLength={1} fill="none" stroke="var(--t-accent)" strokeWidth="1"/><circle r="2.4" fill="var(--t-ink)" opacity="0"><animateMotion dur="5.5s" begin={`${i*1.1}s`} repeatCount="indefinite" path={`M${fx.x.toFixed(1)} ${fx.y.toFixed(1)}L${q.x.toFixed(1)} ${q.y.toFixed(1)}`}/><animate attributeName="opacity" values="0;1;1;0" keyTimes="0;.12;.8;1" dur="5.5s" begin={`${i*1.1}s`} repeatCount="indefinite"/></circle></g>})}
    {p.hover&&p.hover!==p.from&&P[p.hover]&&!p.to&&<path d={pts(Array.from({length:N+1},(_,i)=>plot(v,between(f,p.hubs.find(h=>h.iata===p.hover)!,i/N),v.range)))} fill="none" stroke="var(--t-ink)" strokeOpacity=".55" strokeDasharray="2 6"/>}
    {route.length>0&&<><path d={pts(route)} fill="none" stroke="var(--t-ink)" strokeOpacity=".28" strokeDasharray="2 7"/><path className="cr-arc" key={p.to??'x'} d={pts(route.slice(0,done+1))} pathLength={1} fill="none" stroke="var(--t-accent)" strokeWidth="1.6" strokeLinecap="round"/></>}
    {p.blips.map(b=>{const o=P[b.hub];if(!o)return null;const q={x:o.x+b.dx,y:o.y+b.dy};return b.posFrom&&b.sel?<line key={b.id+'l'} x1={q.x} y1={q.y} x2={fx.x} y2={fx.y} stroke="#78a0c8" strokeOpacity=".8" strokeDasharray="3 5"/>:null})}

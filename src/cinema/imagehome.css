@@ -179,3 +179,15 @@ svg.ih-i{width:1em;height:1em;fill:none;stroke:currentColor;stroke-width:1.5;str
   .rc-fab .rc-fab-av{width:44px;height:44px}
   .ih-lower>section{padding-inline:16px}
 }
+
+/* ---------- حضور الذكاء ---------- */
+.ih-ai{margin:.35em 0 0;display:flex;align-items:center;gap:10px;color:var(--gold);font-size:clamp(1rem,1.7vw,1.35rem);font-weight:400;letter-spacing:.02em}
+.ih-ai i{width:9px;height:9px;border-radius:50%;background:var(--gold);animation:ih-beat 3s ease-in-out infinite}
+@keyframes ih-beat{0%,100%{transform:scale(1);opacity:.7}50%{transform:scale(1.5);opacity:1}}
+.ih-think-ln{margin:14px 0 0;min-height:1.6em;display:flex;align-items:center;justify-content:center;gap:10px;font-family:ui-monospace,'JetBrains Mono',monospace;font-size:.82rem;color:var(--gold)}
+.ih-think-ln i{width:6px;height:6px;border-radius:50%;background:var(--gold);animation:ih-beat 1.6s ease-in-out infinite}
+.ih-think-ln span{animation:ih-fade 3.2s ease-in-out both}
+@keyframes ih-fade{0%{opacity:0;transform:translateY(4px)}12%,80%{opacity:.95;transform:none}100%{opacity:0}}
+.ih-dust{position:absolute;inset:0;z-index:-1;pointer-events:none;overflow:hidden}
+.ih-dust i{position:absolute;width:2px;height:2px;border-radius:50%;background:var(--gold);opacity:0;animation:ih-drift 10s ease-in-out infinite}
+@keyframes ih-drift{0%,100%{transform:translateY(0);opacity:0}50%{transform:translateY(-18px);opacity:.45}}
