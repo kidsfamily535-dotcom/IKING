@@ -83,4 +83,4 @@
 :root:not([data-theme="ivory"]){background:#05070f}
 :root:not([data-theme="ivory"]) body{background:transparent}
 :root:not([data-theme="ivory"]) body::before{content:"";position:fixed;inset:0;z-index:-1;pointer-events:none;
- background:linear-gradient(rgba(5,6,8,.5),rgba(5,6,8,.74)),url(/bg-earth.jpg) center 40%/cover no-repeat}
+ background:linear-gradient(rgba(5,7,15,.38),rgba(5,7,15,.38)),url(/home/sunset-jet.jpg) 68% 50%/cover no-repeat}

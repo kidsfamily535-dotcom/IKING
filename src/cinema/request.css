@@ -125,3 +125,8 @@
 /* خلفية صفحة الطلب: غروب + طائرة خاصة (أغمق قليلًا لتبقى الحقول مقروءة) */
 .rq-bg{background:#050a18 url(/home/sunset-jet.jpg) 62% 50%/cover no-repeat;filter:brightness(.58) saturate(1.05)}
 @media (max-width:720px){.rq-bg{background-position:70% 50%}}
+
+/* ===== خلفية موحّدة لكل الصفحات: نفس صورة الغروب ونفس درجة الصفحة الرئيسية (تغميق .38 فقط، بلا فلتر ولا فينيت ثقيل) ===== */
+html:root .rq-bg{background:linear-gradient(rgba(5,7,15,.38),rgba(5,7,15,.38)),url(/home/sunset-jet.jpg) 68% 50%/cover no-repeat;background-color:#050a18;filter:none}
+@media (max-width:720px){html:root .rq-bg{background-position:72% 50%}}
+html:root .cn-shade{position:fixed;inset:0;background:linear-gradient(to top,rgba(7,6,5,.7) 0,transparent 30%),linear-gradient(to left,rgba(7,6,5,.5),transparent 50%)}
