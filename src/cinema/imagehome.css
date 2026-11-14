@@ -202,3 +202,7 @@ svg.ih-i{width:1em;height:1em;fill:none;stroke:currentColor;stroke-width:1.5;str
 .ih-say button{border:0;border-radius:99px;padding:8px 20px;background:linear-gradient(#f0d9a0,#c9a45e);color:#1b1206;font-weight:500;cursor:pointer}
 .ih-say:focus-within>div{border-color:var(--gold)}
 .ih-say-msg{min-height:1.4em;margin:8px 4px 0;font-size:.82rem;color:var(--gold)}
+
+/* ---------- خلفية الصفحة الرئيسية: غروب + طائرة خاصة ---------- */
+.ih-hero::before{content:"";position:absolute;inset:0;z-index:-2;background:linear-gradient(rgba(5,7,15,.38),rgba(5,7,15,.38)),url(/home/sunset-jet.jpg) 68% 50%/cover no-repeat;background-color:#050a18}
+@media (max-width:720px){.ih-hero::before{background-position:72% 50%}}

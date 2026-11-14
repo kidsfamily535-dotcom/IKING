@@ -121,3 +121,7 @@
 .rq .ih-dust i{position:absolute;width:2px;height:2px;border-radius:50%;opacity:0;animation:ih-drift 10s ease-in-out infinite}
 .rq .ih-dust{inset:0;pointer-events:none;overflow:hidden}
 @media (prefers-reduced-motion:reduce){.rq-ai i,.rq .ih-think-ln i,.rq .ih-think-ln span,.rq .ih-dust i{animation:none}}
+
+/* خلفية صفحة الطلب: غروب + طائرة خاصة (أغمق قليلًا لتبقى الحقول مقروءة) */
+.rq-bg{background:#050a18 url(/home/sunset-jet.jpg) 62% 50%/cover no-repeat;filter:brightness(.58) saturate(1.05)}
+@media (max-width:720px){.rq-bg{background-position:70% 50%}}
