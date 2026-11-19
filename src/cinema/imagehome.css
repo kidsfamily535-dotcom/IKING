@@ -16,8 +16,7 @@ svg.ih-i{width:1em;height:1em;fill:none;stroke:currentColor;stroke-width:1.5;str
 .ih-pill[aria-pressed=true]{background:linear-gradient(#f0d9a0,#c9a45e);color:#1b1206;border-color:transparent;font-weight:500}
 .ih-demo{justify-self:end;color:var(--gold);cursor:default}
 .ih-logo{text-align:center;line-height:1}
-.ih-logo svg{width:40px;height:26px;display:block;margin:0 auto 10px}
-.ih-logo span{font-family:'Cormorant Garamond',serif;letter-spacing:.42em;font-size:1.15rem;padding-inline-start:.42em;white-space:nowrap}
+.ih-logo img{display:block;height:58px;width:auto;max-width:72vw;margin:0 auto}
 
 .ih-stage{flex:1;display:grid;grid-template-columns:minmax(0,1fr) minmax(300px,540px);align-items:center;gap:20px;padding:10px 44px 110px}
 .ih-copy{text-align:start}
