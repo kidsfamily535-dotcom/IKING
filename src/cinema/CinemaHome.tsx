@@ -7,10 +7,10 @@ const HUB:Record<string,[number,number]>={CAI:[.136,.592],JED:[.314,.805],RUH:[.
 const ROUTES:[string,string][]=[['RUH','JED'],['DXB','RUH'],['JED','CAI'],['DOH','JED'],['KWI','DXB'],['CAI','KWI']];
 type T={name:string;line:string;open:string;more:string};
 const COPY:Record<string,T>={
- ar:{name:'عين الملك',line:'عينٌ تسبق رحلتك',open:'افتح عينك',more:'استكشف'},
- en:{name:'Eye King',line:'An eye ahead of every journey',open:'Open your eye',more:'Explore'},
- ru:{name:'Око Короля',line:'Око, опережающее ваш путь',open:'Откройте око',more:'Исследовать'},
- tr:{name:'Kralın Gözü',line:'Yolculuğunuzdan önce gören göz',open:'Gözünüzü açın',more:'Keşfedin'}
+ ar:{name:'I JET',line:'عينٌ تسبق رحلتك',open:'افتح عينك',more:'استكشف'},
+ en:{name:'I JET',line:'An eye ahead of every journey',open:'Open your eye',more:'Explore'},
+ ru:{name:'I JET',line:'Око, опережающее ваш путь',open:'Откройте око',more:'Исследовать'},
+ tr:{name:'I JET',line:'Yolculuğunuzdan önce gören göz',open:'Gözünüzü açın',more:'Keşfedin'}
 };
 const calm=()=>typeof matchMedia==='function'&&matchMedia('(prefers-reduced-motion: reduce)').matches;
 const ease=(x:number)=>x<.5?2*x*x:1-Math.pow(-2*x+2,2)/2;

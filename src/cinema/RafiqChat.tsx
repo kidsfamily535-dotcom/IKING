@@ -11,16 +11,16 @@ import './rafiqchat.css';
 type Msg={who:'me'|'rf';text:string;next?:string;human?:boolean;general?:boolean;journey?:boolean;local?:boolean;src?:{title:string;name:string;verified_at?:string|null;stale?:boolean}[]};
 type L={name:string;role:string;open:string;close:string;ph:string;send:string;hello:string;note:string;busy:string;limit:string;err:string;human:string;form:string;src:string;stale:string;wait:string;gen:string;jchip:string};
 const D:Record<'ar'|'en',L>={
- ar:{name:'رفيق',role:'مرافقك في EYE KING',open:'تحدّث مع رفيق',close:'إغلاق',ph:'اكتبوا رحلتكم أو سؤالكم…',send:'إرسال',
+ ar:{name:'رفيق',role:'مرافقك في I JET',open:'تحدّث مع رفيق',close:'إغلاق',ph:'اكتبوا رحلتكم أو سؤالكم…',send:'إرسال',
   hello:'أهلًا بكم، أنا رفيق، مساعدكم الذكي لطلبات الطيران الخاص. تفضّلوا بذكر رحلتكم: من أين وإلى أين ومتى وكم عدد المسافرين.',
   note:'مساعد ذكي وقد يخطئ. لا يؤكد سعرًا ولا توفر طائرة ولا حجزًا؛ التأكيد النهائي من المشغّل وفريقنا.',
   busy:'الخدمة غير متاحة مؤقتًا. حاول بعد قليل.',limit:'وصلت للحد المسموح حاليًا. حاول لاحقًا.',err:'تعذّر الإرسال. حاول مرة أخرى.',
-  human:'لم يُرسل شيء لأي جهة بعد. لو تحب أن يتابعك زميل من الفريق، اترك بيانات التواصل من هنا.',form:'اترك طلبك للفريق',src:'المصدر',stale:'انتهت مراجعته',wait:'رفيق يكتب…',gen:'معلومة عامة، مش من مصدر معتمد من EYE KING',jchip:'أدير رحلتي'},
- en:{name:'Rafiq',role:'Your EYE KING companion',open:'Talk to Rafiq',close:'Close',ph:'Write your trip or question…',send:'Send',
+  human:'لم يُرسل شيء لأي جهة بعد. لو تحب أن يتابعك زميل من الفريق، اترك بيانات التواصل من هنا.',form:'اترك طلبك للفريق',src:'المصدر',stale:'انتهت مراجعته',wait:'رفيق يكتب…',gen:'معلومة عامة، مش من مصدر معتمد من I JET',jchip:'أدير رحلتي'},
+ en:{name:'Rafiq',role:'Your I JET companion',open:'Talk to Rafiq',close:'Close',ph:'Write your trip or question…',send:'Send',
   hello:'Hello, I am Rafiq, an AI assistant for private-aviation requests. Tell me your trip in your own words: from where, to where, when and how many people.',
   note:'AI assistant, it can make mistakes. It does not confirm price, aircraft availability or booking; final confirmation comes from the operator and our team.',
   busy:'The service is temporarily unavailable. Please try again shortly.',limit:'You have reached the current limit. Please try again later.',err:'Could not send. Please try again.',
-  human:'Nothing has been sent to anyone yet. If you would like a colleague to follow up, leave your contact details here.',form:'Leave your request for the team',src:'Source',stale:'review overdue',wait:'Rafiq is typing…',gen:'General information, not from an approved EYE KING source',jchip:'Manage my trip'}};
+  human:'Nothing has been sent to anyone yet. If you would like a colleague to follow up, leave your contact details here.',form:'Leave your request for the team',src:'Source',stale:'review overdue',wait:'Rafiq is typing…',gen:'General information, not from an approved I JET source',jchip:'Manage my trip'}};
 // أزرار الرد السريع: كل زر يرسل جملة عادية للدالة rafiq-chat، ولا يغيّر أي حالة ولا يعد بشيء.
 const Q:Record<'ar'|'en',{t:{trip:string;when:string;pax:string;prio:string;ask:string};trip:[string,string][];ask:[string,string][];when:[string,string][];pax:[string,string][];prio:[string,string][];other:string;otherPre:string;cap:string;ready:string;go:string}>={
  ar:{t:{trip:'الرحلة',when:'الموعد',pax:'المسافرون',prio:'الأفضلية',ask:'استفسار'},

@@ -115,7 +115,7 @@ const needW=[urlP('from'),urlP('to')].some(x=>x&&!HUBS.some(h=>h.iata===x)),[wai
  const stepsDone=(i:number)=>i===3?false:scan>i+0;
  if(pending)return <div className="cb" data-phase="doors" data-stage="doors" dir={L==='ar'?'rtl':'ltr'} lang={L}><p className="cb-note" role="status">{L==='ar'?'جارٍ تجهيز رحلتك…':'Preparing your trip…'}</p></div>;
  return <div className="cb" data-phase={PHASE[stage]} data-stage={stage} dir={L==='ar'?'rtl':'ltr'} lang={L}>
-  <header className="cb-top"><span className="cb-brand"><Mark/><span className="cb-brand-t"><b>{c.brand}</b><small>EYE KING</small></span></span><span className="cb-sim">{c.sim}</span>
+  <header className="cb-top"><span className="cb-brand"><Mark/><span className="cb-brand-t"><b>{c.brand}</b><small>The Eye</small></span></span><span className="cb-sim">{c.sim}</span>
    <div className="cb-lang" role="group" aria-label="Language">{LANGS.map(l=><button key={l} type="button" lang={l} aria-pressed={L===l} onClick={()=>setLang(l as Lang)}>{l.toUpperCase()}</button>)}</div></header>
   <div className="cb-grid">
    <nav className="cb-rail" aria-label={c.phases[PHASE[stage]]}><ol>{c.phases.map((p,i)=><li key={p} className={i<PHASE[stage]?'past':i===PHASE[stage]?'now':''} aria-current={i===PHASE[stage]?'step':undefined}><i/><span>{p}</span></li>)}</ol></nav>

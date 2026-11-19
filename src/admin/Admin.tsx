@@ -20,7 +20,7 @@ function Login({onDone}:{onDone:()=>void}){
   setFid(t.id)};
  const login=async()=>{setB(true);setM('');const r=await sb.auth.signInWithPassword({email:e.trim(),password:p});setB(false);if(r.error){setM('البريد أو كلمة السر غير صحيحة.');return}await mfa()};
  const verify=async()=>{setB(true);setM('');const r=await sb.auth.mfa.challengeAndVerify({factorId:fid,code:code.trim()});setB(false);if(r.error){setM('الكود غير صحيح أو منتهي.');return}onDone()};
- return <div className="ad-login" dir="rtl"><h1>لوحة الأدمن</h1><p className="sub">EYE KING</p>
+ return <div className="ad-login" dir="rtl"><h1>لوحة الأدمن</h1><p className="sub">I JET</p>
   {m&&<div className="ad-err" role="alert">{m}</div>}
   {!fid?<><label>البريد</label><input type="email" dir="ltr" value={e} onChange={x=>setE(x.target.value)} autoComplete="username"/>
    <label>كلمة السر</label><input type="password" dir="ltr" value={p} onChange={x=>setP(x.target.value)} autoComplete="current-password" onKeyDown={x=>x.key==='Enter'&&login()}/>
@@ -119,7 +119,7 @@ export default function Admin(){
  if(ses===undefined||(ses&&ok===null))return <div className="ad" dir="rtl"/>;
  if(!ses||!lvl)return <div className="ad" dir="rtl"><Login onDone={check}/></div>;
  if(!ok)return <div className="ad" dir="rtl"><div className="ad-login"><h1>غير مصرّح</h1><p className="sub">هذا الحساب ليس أدمن.</p><button className="q" type="button" onClick={()=>sb.auth.signOut()}>خروج</button></div></div>;
- return <div className="ad" dir="rtl"><header className="ad-top"><b>EYE KING</b>
+ return <div className="ad" dir="rtl"><header className="ad-top"><b>I JET</b>
   <nav role="tablist">{TABS.map((t,i)=><button key={t} type="button" role="tab" aria-selected={tab===i} className={tab===i?'on':''} onClick={()=>go(i)}>{t}{i===0&&cnt>0&&<em>{cnt}</em>}</button>)}</nav>
   <span dir="ltr" style={{fontSize:13}}>{mail}</span><button type="button" className="q" style={{color:'#f5f0e6',borderColor:'#555'}} onClick={()=>sb.auth.signOut()}>خروج</button></header>
   <main className="ad-main"><h1>{TABS[tab]}</h1><p className="sub">{SUB[tab]}</p>{err&&<div className="ad-err" role="alert">{err}</div>}

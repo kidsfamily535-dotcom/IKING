@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <meta name="color-scheme" content="dark">
 <meta name="theme-color" content="#02040a">
-<title>EYE KING</title>
+<title>I JET</title>
 <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Amiri:wght@400;700&family=Cormorant+Garamond:ital,wght@0,500;1,400&family=Tajawal:wght@300;500&display=swap" rel="stylesheet">
 <style>
@@ -60,7 +60,7 @@ button:focus-visible,a:focus-visible{outline:2px solid var(--champ);outline-offs
 </head>
 <body>
 <div class="bg" aria-hidden="true"></div><div class="sh" aria-hidden="true"></div>
-<header><a class="brand" id="bt" href="/">EYE KING</a><ol class="prog" id="pg" aria-hidden="true"></ol>
+<header><a class="brand" id="bt" href="/">I JET</a><ol class="prog" id="pg" aria-hidden="true"></ol>
 <div class="langs" id="langs" role="group" aria-label="Language"><button data-l="ar">العربية</button><button data-l="en">EN</button><button data-l="ru">RU</button><button data-l="tr">TR</button></div></header>
 <main>
  <div class="rd"><canvas id="rd" aria-hidden="true"></canvas><div class="cities" aria-hidden="true"><span id="c1"></span><span id="c2"></span></div></div>
@@ -71,28 +71,28 @@ button:focus-visible,a:focus-visible{outline:2px solid var(--champ);outline-offs
 <script>
 (function(){
 var X={
-ar:{n:'عين الملك',demo:'نموذج توضيحي · لا بيانات رحلة حقيقية',from:'الرياض',to:'لندن',arr:'←',
+ar:{n:'I JET',demo:'نموذج توضيحي · لا بيانات رحلة حقيقية',from:'الرياض',to:'لندن',arr:'←',
  q0:'ما مهمّة رحلتك؟',sub:'اختر حتى ثلاث مهام. العين تغيّر ما تراقبه وما تسألك عنه بحسب مهمتك.',watch:'ما تهتم به العين',ask:'ما قد تسألك عنه',cond:'ظروف تخص الرحلة',condsub:'تُضاف إلى المهمة ولا تغيّر سببها.',spec:'يُحوَّل هذا النوع إلى مسار متخصص مع مزوّد مؤهل، ولا يُعامَل كتشارتر عادي.',pri:'الرئيسية',ev4:'قد يتغير ما يمسّ هدف رحلتك.',start:'ابدأ',
  q1:'اخترتُ لك خيارين',oa:'الأبكر',da:'وصول 06:40 · قبل الموعد بثلاث ساعات',ob:'الأهدأ',db:'وصول 08:10 · وقت أوسع للراحة',pend:'بانتظار تأكيد المشغّل',ok:'اعتمد الطلب',safe:'لا يُرسل شيء قبل موافقتك.',
  q2:'ماذا أرتّب على الأرض؟',g:['سيارة عند الهبوط','استقبال في الصالة','غرفة جاهزة'],watch:'راقب رحلتي',
  fly:'الرحلة تحت المراقبة',ev:['قد يبطئ الانتقال إلى اجتماعك.','قد يطول انتظار العائلة عند الوصول.','قد يضيق وقتك قبل الفعالية.','قد يتأخر الوصول عن نافذتك.'],
  wx:'ضباب متوقع في لندن عند وصولك (تقدير)',car1:'أقدّم السيارة 30 دقيقة؟',car0:'أضيف سيارة تنتظرك؟',yes:'وافق',no:'اتركها كما هي',
  arrived:'وصلت.',meet:'الموعد 10:00. كل خطوة كانت بموافقتك.',tl:'ما رتّبته العين',t1:'الطلب',t2:'السيارة',t3:'الاستقبال',t4:'الغرفة',t5:'تقديم السيارة',real:'راقب رحلتك الحقيقية مجانًا',again:'من البداية'},
-en:{n:'Eye King',demo:'Illustrative sample · no real flight data',from:'Riyadh',to:'London',arr:'→',
+en:{n:'I JET',demo:'Illustrative sample · no real flight data',from:'Riyadh',to:'London',arr:'→',
  q0:'What is this trip for?',sub:'Pick up to three. The Eye changes what it watches and what it asks, by your mission.',watch:'What the Eye focuses on',ask:'What it may ask you',cond:'Conditions of the trip',condsub:'They add to the mission and never change its reason.',spec:'This type goes to a specialised path with a qualified provider, not an ordinary charter.',pri:'Main',ev4:'Something may shift that matters to your trip’s goal.',start:'Begin',
  q1:'I picked two options',oa:'Earliest',da:'Arrive 06:40 · three hours before',ob:'Calmest',db:'Arrive 08:10 · more room to rest',pend:'Awaiting operator confirmation',ok:'Approve the request',safe:'Nothing is sent without your approval.',
  q2:'What shall I arrange on the ground?',g:['Car at landing','Lounge welcome','Room ready'],watch:'Watch my trip',
  fly:'Your trip is under watch',ev:['The transfer to your meeting may slow down.','The family’s wait on arrival may grow.','Your time before the event may tighten.','Arrival may slip past your window.'],
  wx:'Fog expected in London on arrival (estimate)',car1:'Bring the car forward 30 minutes?',car0:'Add a car waiting for you?',yes:'Approve',no:'Leave as is',
  arrived:'You’ve arrived.',meet:'Meeting at 10:00. Every step was yours to approve.',tl:'What the Eye arranged',t1:'Request',t2:'Car',t3:'Welcome',t4:'Room',t5:'Car moved up',real:'Watch your real trip, free',again:'Start over'},
-ru:{n:'Око Короля',demo:'Пример · не реальные данные рейса',from:'Эр-Рияд',to:'Лондон',arr:'→',
+ru:{n:'I JET',demo:'Пример · не реальные данные рейса',from:'Эр-Рияд',to:'Лондон',arr:'→',
  q0:'Цель поездки?',sub:'Выберите до трёх. Око меняет, за чем следит и о чём спрашивает, в зависимости от цели.',watch:'На чём сосредоточено Око',ask:'О чём оно может спросить',cond:'Условия поездки',condsub:'Дополняют цель, не меняя её.',spec:'Этот тип идёт по специальному маршруту через квалифицированного поставщика, а не как обычный чартер.',pri:'Основная',ev4:'Может измениться то, что важно для цели поездки.',start:'Начать',
  q1:'Я подобрал два варианта',oa:'Самый ранний',da:'Прибытие 06:40 · за три часа до встречи',ob:'Самый спокойный',db:'Прибытие 08:10 · больше времени',pend:'Ожидает подтверждения оператора',ok:'Утвердить запрос',safe:'Ничего не отправляется без вашего согласия.',
  q2:'Что организовать на земле?',g:['Авто после посадки','Встреча в салоне','Номер готов'],watch:'Следить за рейсом',
  fly:'Рейс под наблюдением',ev:['Дорога до встречи может замедлиться.','Ожидание семьи по прилёте может затянуться.','Времени до мероприятия может не хватить.','Прибытие может выйти за ваше окно.'],
  wx:'В Лондоне к вашему прибытию ожидается туман (оценка)',car1:'Подать авто на 30 минут раньше?',car0:'Добавить авто к прилёту?',yes:'Да',no:'Оставить',
  arrived:'Вы прибыли.',meet:'Встреча в 10:00. Каждый шаг — с вашего согласия.',tl:'Что организовало Око',t1:'Запрос',t2:'Авто',t3:'Встреча',t4:'Номер',t5:'Авто раньше',real:'Следить за настоящим рейсом',again:'Сначала'},
-tr:{n:'Kralın Gözü',demo:'Örnek · gerçek uçuş verisi değil',from:'Riyad',to:'Londra',arr:'→',
+tr:{n:'I JET',demo:'Örnek · gerçek uçuş verisi değil',from:'Riyad',to:'Londra',arr:'→',
  q0:'Yolculuğun amacı?',sub:'En fazla üç seçin. Göz, neye baktığını ve ne sorduğunu göreve göre değiştirir.',watch:'Gözün odaklandığı şeyler',ask:'Size sorabileceği',cond:'Yolculuk koşulları',condsub:'Göreve eklenir, nedenini değiştirmez.',spec:'Bu tür, sıradan çarter değil, nitelikli sağlayıcıyla özel bir yola gider.',pri:'Ana',ev4:'Yolculuğunuzun hedefini etkileyen bir şey değişebilir.',start:'Başla',
  q1:'İki seçenek seçtim',oa:'En erken',da:'Varış 06:40 · üç saat önce',ob:'En rahat',db:'Varış 08:10 · daha fazla zaman',pend:'Operatör onayı bekleniyor',ok:'Talebi onayla',safe:'Onayınız olmadan hiçbir şey gönderilmez.',
  q2:'Yerde neyi ayarlayayım?',g:['İnişte araç','Salonda karşılama','Oda hazır'],watch:'Uçuşumu izle',
@@ -169,7 +169,7 @@ function s3(){show('<div class="live"><i></i>'+T.fly+'</div>');
 function s4(){var r=[[T.t1,S.opt>0?T.ob:T.oa]];S.g.forEach(function(i){r.push([[T.t2,T.t3,T.t4][i],'✓'])});if(S.car)r.push([T.t5,'✓']);
  show('<h1>'+T.arrived+'</h1><p class="say">'+T.meet+'</p><p class="note">'+T.tl+'</p><ul class="tl">'+r.map(function(x){return'<li>'+esc(x[0])+'<span>'+esc(x[1])+'</span></li>'}).join('')+'</ul><div class="row"><a class="go" id="w" href="/?view=watch&lang='+L+'" data-f>'+T.real+'</a><button class="q" id="a">'+T.again+'</button></div>','c');
  $('a').onclick=function(){S={m:[],c:[],grp:'A',open:false,opt:-1,g:[],car:false};fly(0);go(0)}}
-function apply(l){L=l;T=X[l];document.documentElement.lang=l;document.documentElement.dir=l==='ar'?'rtl':'ltr';document.title=T.n+' — EYE KING';$('bt').textContent=T.n;$('demo').textContent=T.demo;$('c1').textContent=T.from;$('c2').textContent=T.to;
+function apply(l){L=l;T=X[l];document.documentElement.lang=l;document.documentElement.dir=l==='ar'?'rtl':'ltr';document.title=T.n+' — I JET';$('bt').textContent=T.n;$('demo').textContent=T.demo;$('c1').textContent=T.from;$('c2').textContent=T.to;
  [].forEach.call($('langs').children,function(b){b.setAttribute('aria-pressed',b.dataset.l===l)});try{localStorage.setItem('iking_lang',l)}catch(e){}
  if(step===3){/* أثناء الطيران: أعد الرسم فقط */}else go(step)}
 [].forEach.call($('langs').children,function(b){b.onclick=function(){apply(b.dataset.l)}});
