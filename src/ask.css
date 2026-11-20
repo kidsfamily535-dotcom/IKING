@@ -9,7 +9,7 @@
 .ak-quote{border-inline-start:2px solid var(--line);padding-inline-start:12px;font-style:italic;white-space:pre-line}
 .ak-in{background:none;border:0;color:var(--ink);font-size:17px;min-height:44px;text-align:end;min-width:0;flex:1}
 .ak .cb-row select{background:none;border:0;color:var(--ink);font-size:16px;min-height:44px;color-scheme:dark;max-width:62%;text-align:end}
-.ak .cb-row select option{background:#0b1226;color:var(--t-ink)}
+.ak .cb-row select option{background:#0f2f57;color:var(--t-ink)}
 .ak-said{display:block;color:var(--dim);margin-top:-8px}
 .ak-seg4{grid-template-columns:repeat(4,1fr)}
 .ak-seg4 button,.ak .cb-seg button{font-size:14.5px}

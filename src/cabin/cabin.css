@@ -1,7 +1,7 @@
 /* الكابينة. كل الأنماط تحت .cb حتى لا تتأثر بأنماط المشروع العامة (button, h1, h2 ...). */
-@property --sk1{syntax:'<color>';inherits:true;initial-value:#15120f}
+@property --sk1{syntax:'<color>';inherits:true;initial-value:#091b31}
 @property --sk2{syntax:'<color>';inherits:true;initial-value:#111111}
-.cb{--night:var(--t-night);--dusk:var(--t-surf2);--glow:var(--t-accent-hi);--ink:var(--t-ink);--dim:color-mix(in srgb,var(--t-ink) 80%,transparent);--gold:var(--t-accent);--blue:#8fb3d9;--ok:#7fc8a0;--warn:#e6c36a;--line:color-mix(in srgb,var(--t-ink) 16%,transparent);
+.cb{--night:var(--t-night);--dusk:var(--t-surf2);--glow:var(--t-accent-hi);--ink:var(--t-ink);--dim:color-mix(in srgb,var(--t-ink) 80%,transparent);--gold:var(--t-accent);--blue:#8fb3d9;--ok:#7fc8a0;--warn:#e6bb71;--line:color-mix(in srgb,var(--t-ink) 16%,transparent);
  --serif:'Amiri','Cormorant Garamond',Georgia,serif;--sans:Tajawal,system-ui,-apple-system,'Segoe UI',sans-serif;
  --sk1:var(--t-surf);--sk2:var(--t-night);transition:--sk1 1.4s ease,--sk2 1.4s ease;
  min-height:100vh;min-height:100dvh;color:var(--ink);font:300 clamp(16px,1.2vw + 12px,18px)/1.75 var(--sans);
@@ -130,7 +130,7 @@
 .cb-chipb{min-height:44px;padding:0 16px;border:1px dashed #8fb3d988;border-radius:99px;color:var(--blue);font-size:14px}
 
 /* الرادار */
-.cr{--ink:var(--t-ink);--gold:var(--t-accent);--blue:#8fb3d9;--warn:#e6c36a;--sk2:var(--t-night);--sans:Tajawal,system-ui,-apple-system,'Segoe UI',sans-serif;position:relative;aspect-ratio:1;width:100%;container-type:inline-size;direction:ltr;touch-action:pan-y;user-select:none;-webkit-user-select:none}
+.cr{--ink:var(--t-ink);--gold:var(--t-accent);--blue:#8fb3d9;--warn:#e6bb71;--sk2:var(--t-night);--sans:Tajawal,system-ui,-apple-system,'Segoe UI',sans-serif;position:relative;aspect-ratio:1;width:100%;container-type:inline-size;direction:ltr;touch-action:pan-y;user-select:none;-webkit-user-select:none}
 .cr svg{position:absolute;inset:0;width:100%;height:100%;display:block;overflow:visible}
 .cr-sweep{transform-origin:300px 300px;animation:crsw 16s linear infinite}
 @keyframes crsw{to{transform:rotate(360deg)}}

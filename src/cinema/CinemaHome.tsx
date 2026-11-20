@@ -31,15 +31,15 @@ function Routes(){
    ROUTES.forEach(([f,g],i)=>{
     const a=P(f),b=P(g),st=3.2+i*.8,p=ease(clamp((t-st)/3));if(p<=0)return;
     cx!.beginPath();for(let n=0;n<=64;n++){const q=at(a,b,p*n/64);n?cx!.lineTo(q[0],q[1]):cx!.moveTo(q[0],q[1])}
-    cx!.strokeStyle='rgba(232,205,140,.5)';cx!.lineWidth=1.1;cx!.shadowColor='rgba(232,190,100,.7)';cx!.shadowBlur=8;cx!.stroke();cx!.shadowBlur=0;
+    cx!.strokeStyle='rgba(238,207,146,.5)';cx!.lineWidth=1.1;cx!.shadowColor='rgba(229,185,110,.7)';cx!.shadowBlur=8;cx!.stroke();cx!.shadowBlur=0;
     if(p>=1&&!still){const u=((t-st-3)/7+i*.19)%1;
      for(let n=0;n<14;n++){const q=at(a,b,Math.max(0,u-n*.006));cx!.fillStyle=`rgba(255,236,190,${(1-n/14)*.55})`;cx!.beginPath();cx!.arc(q[0],q[1],2.1*(1-n/20),0,6.3);cx!.fill()}
      const h=at(a,b,u);cx!.shadowColor='#ffe9b0';cx!.shadowBlur=16;cx!.fillStyle='#fff6dc';cx!.beginPath();cx!.arc(h[0],h[1],2.3,0,6.3);cx!.fill();cx!.shadowBlur=0}
    });
    Object.keys(HUB).forEach((k,i)=>{const q=P(k),a=clamp((t-2.6-i*.25)/1.2);if(a<=0)return;
     const pu=still?0:(Math.sin(t*1.3+i)+1)/2;
-    cx!.strokeStyle=`rgba(232,205,140,${.35*a*(1-pu*.6)})`;cx!.lineWidth=1;cx!.beginPath();cx!.arc(q[0],q[1],4+pu*7,0,6.3);cx!.stroke();
-    cx!.fillStyle=`rgba(255,240,205,${a})`;cx!.shadowColor='#f0cf86';cx!.shadowBlur=12;cx!.beginPath();cx!.arc(q[0],q[1],2.6,0,6.3);cx!.fill();cx!.shadowBlur=0})}
+    cx!.strokeStyle=`rgba(238,207,146,${.35*a*(1-pu*.6)})`;cx!.lineWidth=1;cx!.beginPath();cx!.arc(q[0],q[1],4+pu*7,0,6.3);cx!.stroke();
+    cx!.fillStyle=`rgba(255,240,205,${a})`;cx!.shadowColor='#eed094';cx!.shadowBlur=12;cx!.beginPath();cx!.arc(q[0],q[1],2.6,0,6.3);cx!.fill();cx!.shadowBlur=0})}
   const loop=()=>{draw((performance.now()-t0)/1000);raf=requestAnimationFrame(loop)};
   fit();addEventListener('resize',fit);if(!still)raf=requestAnimationFrame(loop);
   return()=>{cancelAnimationFrame(raf);removeEventListener('resize',fit)}},[]);
@@ -58,7 +58,7 @@ export default function CinemaHome({real,lang}:{real:boolean;lang:string}){
   </div></div>
   <div className="cn-shade" aria-hidden="true"/><div className="cn-grain" aria-hidden="true"/>
   <div className="cn-copy">
-   <svg className="cn-mark" viewBox="0 0 40 24" aria-hidden="true"><path d="M2 12C9 2 31 2 38 12 31 22 9 22 2 12Z" fill="none" stroke="#d9bf86" strokeWidth="1.2"/><circle cx="20" cy="12" r="4.6" fill="#d9bf86"/><circle cx="20" cy="12" r="1.8" fill="#02040a"/></svg>
+   <svg className="cn-mark" viewBox="0 0 40 24" aria-hidden="true"><path d="M2 12C9 2 31 2 38 12 31 22 9 22 2 12Z" fill="none" stroke="#e9c37f" strokeWidth="1.2"/><circle cx="20" cy="12" r="4.6" fill="#e9c37f"/><circle cx="20" cy="12" r="1.8" fill="#081a30"/></svg>
    <h1 id="cn-h" className="cn-title">{c.name}</h1>
    <p className="cn-line">{c.line}</p>
   </div>
@@ -68,8 +68,8 @@ export default function CinemaHome({real,lang}:{real:boolean;lang:string}){
   </div>
   {lid&&<svg className="cn-lid" viewBox="0 0 100 100" preserveAspectRatio="none" aria-hidden="true">
    <defs><mask id="cn-m"><rect width="100" height="100" fill="#fff"/><path className="cn-hole" d="M-1 50Q50 -18 101 50Q50 118 -1 50Z" fill="#000"/></mask></defs>
-   <rect width="100" height="100" fill="#02040a" mask="url(#cn-m)"/>
-   <path className="cn-hole cn-rim" d="M-1 50Q50 -18 101 50Q50 118 -1 50Z" fill="none" stroke="#e6cf94" strokeWidth="1.4" vectorEffect="non-scaling-stroke" onAnimationEnd={()=>setLid(false)}/>
+   <rect width="100" height="100" fill="#081a30" mask="url(#cn-m)"/>
+   <path className="cn-hole cn-rim" d="M-1 50Q50 -18 101 50Q50 118 -1 50Z" fill="none" stroke="#efd298" strokeWidth="1.4" vectorEffect="non-scaling-stroke" onAnimationEnd={()=>setLid(false)}/>
   </svg>}
  </section>;
 }

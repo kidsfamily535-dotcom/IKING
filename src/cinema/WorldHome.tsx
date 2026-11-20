@@ -54,22 +54,22 @@ export default function WorldHome(){
   const frame=(now:number)=>{const s=simR.current;
    if(s!==lastS){lastS=s;if(s){const dl=Math.abs(s.a.lon-s.b.lon),dh=Math.abs(MY(s.a.lat)-MY(s.b.lat)),mob=W<760;tg.x=(s.a.lon+s.b.lon)/2;tg.y=(s.a.lat+s.b.lat)/2;tg.s=Math.min(Math.max(Math.min(W*(mob?.7:.5)/(dl+8),H*(mob?.3:.55)/(dh+6)),defS()),defS()*5);tg.ox=mob?0:(ar?-150:150);if(mob)tg.y-=3}else{tg.x=45;tg.y=27;tg.s=defS();tg.ox=0}}
    for(const k of['x','y','s','ox'] as const)cam[k]+=(tg[k]-cam[k])*.06;
-   cx.clearRect(0,0,W,H);const g=cx.createRadialGradient(W/2,H/2,0,W/2,H/2,Math.max(W,H)*.7);g.addColorStop(0,'#0a1426');g.addColorStop(1,'#060b16');cx.fillStyle=g;cx.fillRect(0,0,W,H);
+   cx.clearRect(0,0,W,H);const g=cx.createRadialGradient(W/2,H/2,0,W/2,H/2,Math.max(W,H)*.7);g.addColorStop(0,'#0f2f57');g.addColorStop(1,'#0b213d');cx.fillStyle=g;cx.fillRect(0,0,W,H);
    cx.strokeStyle='rgba(120,160,200,.07)';cx.lineWidth=1;cx.beginPath();for(let lo=-180;lo<=180;lo+=15){const x=P(lo,0)[0];cx.moveTo(x,0);cx.lineTo(x,H)}for(let la=-60;la<=80;la+=10){const y=P(0,la)[1];cx.moveTo(0,y);cx.lineTo(W,y)}cx.stroke();
    cx.beginPath();for(const r of land.current){let mnx=1e9,mxx=-1e9,mny=1e9;for(let i=0;i<r.length;i+=2){if(r[i]<mnx)mnx=r[i];if(r[i]>mxx)mxx=r[i];if(r[i+1]<mny)mny=r[i+1]}if(mny<-60)continue;if(P(mxx,0)[0]<-50||P(mnx,0)[0]>W+50)continue;
     for(let i=0;i<r.length;i+=2){const p=P(r[i],r[i+1]);i?cx.lineTo(p[0],p[1]):cx.moveTo(p[0],p[1])}cx.closePath()}
-   cx.fillStyle='#101f36';cx.fill();cx.shadowColor='rgba(120,160,200,.5)';cx.shadowBlur=6;cx.strokeStyle='rgba(140,180,220,.5)';cx.lineWidth=.8;cx.stroke();cx.shadowBlur=0;
+   cx.fillStyle='#0f2f57';cx.fill();cx.shadowColor='rgba(120,160,200,.5)';cx.shadowBlur=6;cx.strokeStyle='rgba(140,180,220,.5)';cx.lineWidth=.8;cx.stroke();cx.shadowBlur=0;
    {const d=new Date(),doy=(+d-Date.UTC(d.getUTCFullYear(),0,0))/864e5,dv=23.44*Math.sin(2*Math.PI*(doy-81)/365),dec=Math.sign(dv||1)*Math.max(.5,Math.abs(dv)),sl=-((d.getUTCHours()+d.getUTCMinutes()/60)-12)*15,R=Math.PI/180;
     const term=()=>{cx.beginPath();for(let lo=-180;lo<=180;lo+=3){const la=Math.atan(-Math.cos((lo-sl)*R)/Math.tan(dec*R))/R,p=P(lo,la);lo===-180?cx.moveTo(p[0],p[1]):cx.lineTo(p[0],p[1])}};
-    term();const pe=dec>0?-84:84,e1=P(180,pe),e0=P(-180,pe);cx.lineTo(e1[0],e1[1]);cx.lineTo(e0[0],e0[1]);cx.closePath();cx.fillStyle='rgba(2,5,14,.5)';cx.fill();term();cx.strokeStyle='rgba(201,169,97,.25)';cx.stroke()}
-   const oc=s?s.a:hub('RUH'),o=P(oc.lon,oc.lat),ph=(now/3000)%1;for(let k=0;k<3;k++){const q=(ph+k/3)%1;cx.strokeStyle=`rgba(201,169,97,${.22*(1-q)})`;cx.beginPath();cx.arc(o[0],o[1],q*Math.min(W,H)*.45,0,6.283);cx.stroke()}
+    term();const pe=dec>0?-84:84,e1=P(180,pe),e0=P(-180,pe);cx.lineTo(e1[0],e1[1]);cx.lineTo(e0[0],e0[1]);cx.closePath();cx.fillStyle='rgba(6,26,50,.5)';cx.fill();term();cx.strokeStyle='rgba(218,166,84,.25)';cx.stroke()}
+   const oc=s?s.a:hub('RUH'),o=P(oc.lon,oc.lat),ph=(now/3000)%1;for(let k=0;k<3;k++){const q=(ph+k/3)%1;cx.strokeStyle=`rgba(218,166,84,${.22*(1-q)})`;cx.beginPath();cx.arc(o[0],o[1],q*Math.min(W,H)*.45,0,6.283);cx.stroke()}
    for(const p of amb){p.t+=p.v;if(p.t>1)p.t=0;const q=arc(P(p.a.lon,p.a.lat),P(p.b.lon,p.b.lat),p.t);cx.fillStyle='rgba(120,160,200,.8)';cx.beginPath();cx.arc(q.x,q.y,1.8,0,6.283);cx.fill()}
-   cx.font='10px JetBrains Mono, monospace';for(const h of HUBS){const hot=!!s&&(h.iata===s.a.iata||h.iata===s.b.iata);if(!hot&&h.pri>4&&cam.s<defS()*1.8)continue;const p=P(h.lon,h.lat);cx.fillStyle=hot?'#c9a961':'rgba(244,236,220,.7)';cx.beginPath();cx.arc(p[0],p[1],hot?3.5:2,0,6.283);cx.fill();if(hot||h.pri<=2||cam.s>defS()*1.8){cx.fillStyle=hot?'#c9a961':'rgba(244,236,220,.5)';cx.fillText(h.iata,p[0]+6,p[1]-5)}}
+   cx.font='10px JetBrains Mono, monospace';for(const h of HUBS){const hot=!!s&&(h.iata===s.a.iata||h.iata===s.b.iata);if(!hot&&h.pri>4&&cam.s<defS()*1.8)continue;const p=P(h.lon,h.lat);cx.fillStyle=hot?'#daa654':'rgba(244,236,220,.7)';cx.beginPath();cx.arc(p[0],p[1],hot?3.5:2,0,6.283);cx.fill();if(hot||h.pri<=2||cam.s>defS()*1.8){cx.fillStyle=hot?'#daa654':'rgba(244,236,220,.5)';cx.fillText(h.iata,p[0]+6,p[1]-5)}}
    if(s){if(!pausedR.current)s.m=Math.min(s.tot,s.m+s.tot/32/60);
     const a=P(s.a.lon,s.a.lat),b=P(s.b.lon,s.b.lat),f0=s.st[0]+s.st[1],fl=s.st[2]+s.st[3]+s.st[4];let u=Math.min(1,Math.max(0,(s.m-f0)/fl));u=u*u*(3-2*u);
-    const q0=arc(a,b,0);cx.strokeStyle='rgba(201,169,97,.35)';cx.setLineDash([4,6]);cx.beginPath();cx.moveTo(a[0],a[1]);cx.quadraticCurveTo(q0.cx,q0.cy,b[0],b[1]);cx.stroke();cx.setLineDash([]);
-    cx.strokeStyle='#c9a961';cx.lineWidth=2;cx.beginPath();cx.moveTo(a[0],a[1]);for(let k=1;k<=40;k++){const z=arc(a,b,u*k/40);cx.lineTo(z.x,z.y)}cx.stroke();cx.lineWidth=1;
-    const pl=arc(a,b,u);cx.save();cx.translate(pl.x,pl.y);cx.rotate(pl.a);cx.fillStyle='#f4ecdc';cx.shadowColor='#c9a961';cx.shadowBlur=14;cx.beginPath();cx.moveTo(9,0);cx.lineTo(-6,-5);cx.lineTo(-3,0);cx.lineTo(-6,5);cx.closePath();cx.fill();cx.restore()}
+    const q0=arc(a,b,0);cx.strokeStyle='rgba(218,166,84,.35)';cx.setLineDash([4,6]);cx.beginPath();cx.moveTo(a[0],a[1]);cx.quadraticCurveTo(q0.cx,q0.cy,b[0],b[1]);cx.stroke();cx.setLineDash([]);
+    cx.strokeStyle='#daa654';cx.lineWidth=2;cx.beginPath();cx.moveTo(a[0],a[1]);for(let k=1;k<=40;k++){const z=arc(a,b,u*k/40);cx.lineTo(z.x,z.y)}cx.stroke();cx.lineWidth=1;
+    const pl=arc(a,b,u);cx.save();cx.translate(pl.x,pl.y);cx.rotate(pl.a);cx.fillStyle='#f4ecdc';cx.shadowColor='#daa654';cx.shadowBlur=14;cx.beginPath();cx.moveTo(9,0);cx.lineTo(-6,-5);cx.lineTo(-3,0);cx.lineTo(-6,5);cx.closePath();cx.fill();cx.restore()}
    raf=requestAnimationFrame(frame)};
   raf=requestAnimationFrame(frame);return()=>{cancelAnimationFrame(raf);removeEventListener('resize',size)}},[ar]);
  const chips=ROUTES.map(r=>r.split('-').map(k=>hub(k)));
@@ -79,7 +79,7 @@ export default function WorldHome(){
  return <div className="wh" dir={ar?'rtl':'ltr'}>
   <canvas ref={cv} aria-hidden="true"/>
   <header className="wh-top"><div className="wh-langs" role="group" aria-label="Language">{(['ar','en'] as const).map(l=><button key={l} type="button" className="wh-pill" aria-pressed={lang===l} lang={l} onClick={()=>setLang(l)}>{l==='ar'?'العربية':'English'}</button>)}</div><img src="/ijet-logo-light.png" alt="I JET" width="129" height="45"/></header>
-  <div className={`wh-hero${sim?' off':''}`}><h1>{c.h}</h1><p>{c.sub}</p><form className="wh-say" onSubmit={submit}><input value={say} onChange={e=>{setSay(e.target.value);setMsg('')}} placeholder={c.ph} maxLength={120} autoComplete="off" aria-label={c.ph}/><button type="submit">{c.go} {ar?'←':'→'}</button></form><div className="wh-msg" aria-live="polite">{msg}</div><p className="wh-note">{ar?'محاكاة تقديرية — لا يوجد مصدر حيّ متصل.':'Estimated simulation — no live source connected.'}</p><nav className="wh-legal"><a href="/legal.html#privacy">{t('legal.privacy')}</a><a href="/legal.html#disclaimer">{t('legal.disclaimer')}</a></nav></div>
+  <div className={`wh-hero${sim?' off':''}`}><h1>{c.h}</h1><p>{c.sub}</p><form className="wh-say" onSubmit={submit}><input value={say} onChange={e=>{setSay(e.target.value);setMsg('')}} placeholder={c.ph} maxLength={120} autoComplete="off" aria-label={c.ph}/><button type="submit">{c.go} {ar?'←':'→'}</button></form><div className="wh-msg" aria-live="polite">{msg}</div><p className="wh-note">{ar?'محاكاة تقديرية — لا يوجد مصدر حيّ متصل.':'Estimated simulation — no live source connected.'}</p></div>
   <aside className={`wh-panel${sim?' on':''}`} aria-live="off">{sim&&det&&<>
    <div className="wh-mono">{c.sim}</div><div className="wh-rt" dir="ltr">{sim.a.iata} → {sim.b.iata}</div>
    <div className="wh-grid"><div className="wh-kpi"><b>{Math.round(sim.km)}</b><span>{c.km}</span></div><div className="wh-kpi"><b>{fm(left,!ar)}</b><span>{c.left}</span></div><div className="wh-kpi"><b>{eta}</b><span>{c.eta}</span></div></div>
@@ -89,6 +89,7 @@ export default function WorldHome(){
     {i===3&&<div className="wh-tele"><span>ALT {Math.round(41000*Math.sin(Math.PI*Math.min(1,u3*1.15)))} FT</span><span>GS {Math.round(760+u3*20)} KM/H</span><span>SIM</span></div>}</div>
    <div className="wh-ctl"><button type="button" onClick={()=>{pausedR.current=!pausedR.current;setPaused(pausedR.current)}}>{paused?'▶ '+c.play:'⏸ '+c.pause}</button><button type="button" onClick={()=>{if(simR.current){simR.current.m=0;pausedR.current=false;setPaused(false)}}}>↺ {c.again}</button><button type="button" onClick={stop}>✕ {c.close}</button><a className="go" href={`?view=cabin&from=${sim.a.iata}&to=${sim.b.iata}`}>{c.req}</a></div></>}</aside>
   <div className="wh-strip"><div className="wh-mono">{c.strip}</div><div className="wh-track">{[0,1].flatMap(d=>chips.map(([a,b])=>{const on=sim?.a.iata===a.iata&&sim.b.iata===b.iata;return <button key={d+a.iata+b.iata} type="button" className={`wh-chip${on?' on':''}`} aria-pressed={on} onClick={()=>on?stop():start(a,b)}><span><b>{a.iata} → {b.iata}</b><small>{nm(a)} · {nm(b)}</small></span><i className="wh-sw"/></button>}))}</div></div>
+  <footer className="wh-foot"><nav aria-label="Legal"><a href="/legal.html#privacy">{t('legal.privacy')}</a><a href="/legal.html#disclaimer">{t('legal.disclaimer')}</a><a href="/legal.html#terms">{t('legal.terms')}</a></nav></footer>
   <RafiqChat/>
  </div>;
 }

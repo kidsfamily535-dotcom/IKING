@@ -1,5 +1,5 @@
 /* كارت «العين بتتابع»: يرث لون النص من محيطه (يصلح للنافذة العاجية وللصفحات الداكنة) */
-.efc{--ac:#C5A46D;--ok:#1f6b50;margin:0 0 10px;padding:12px 14px;border-radius:14px;border:1px solid color-mix(in srgb,var(--ac) 55%,transparent);background:color-mix(in srgb,var(--ac) 9%,transparent);color:inherit;font-family:Tajawal,system-ui,sans-serif}
+.efc{--ac:#deab58;--ok:#1f6b50;margin:0 0 10px;padding:12px 14px;border-radius:14px;border:1px solid color-mix(in srgb,var(--ac) 55%,transparent);background:color-mix(in srgb,var(--ac) 9%,transparent);color:inherit;font-family:Tajawal,system-ui,sans-serif}
 .efc header{display:flex;align-items:center;gap:8px;margin-bottom:8px}
 .efc header b{font-size:.92rem;font-weight:700}
 .efc-eye{width:9px;height:9px;border-radius:50%;background:var(--ac);flex:none}

@@ -79,7 +79,7 @@ export default function Radar(p:Props){
    {p.blips.map(b=>{const o=P[b.hub];if(!o)return null;const q={x:o.x+b.dx,y:o.y+b.dy};return b.posFrom&&b.sel?<line key={b.id+'l'} x1={q.x} y1={q.y} x2={fx.x} y2={fx.y} stroke="#78a0c8" strokeOpacity=".8" strokeDasharray="3 5"/>:null})}
    {p.scanning&&<circle className="cr-scan" cx={fx.x} cy={fx.y} r="14" fill="none" stroke="var(--t-accent)" style={{transformOrigin:`${fx.x}px ${fx.y}px`}}/>}
    {planeAt&&<g transform={`translate(${planeAt.x} ${planeAt.y}) rotate(${hd})`}><circle r="11" fill="var(--t-accent)" fillOpacity=".18"/><path d="M0,-8 L5.5,7 L0,3.5 L-5.5,7Z" fill="var(--t-ink)"/></g>}
-   {p.alt&&dx&&<><circle cx={dx.x+18} cy={dx.y-14} r="9" fill="none" stroke="#e6c36a" strokeDasharray="2 3"/><line x1={dx.x} y1={dx.y} x2={dx.x+18} y2={dx.y-14} stroke="#e6c36a" strokeOpacity=".6"/></>}
+   {p.alt&&dx&&<><circle cx={dx.x+18} cy={dx.y-14} r="9" fill="none" stroke="#e6bb71" strokeDasharray="2 3"/><line x1={dx.x} y1={dx.y} x2={dx.x+18} y2={dx.y-14} stroke="#e6bb71" strokeOpacity=".6"/></>}
   </svg>
   {cls.map(k=><span key={'cl'+k.km} className="cr-rl" style={{top:pct(300-rr(k.km,v.range))}}>{k.label}</span>)}
   {!p.classes&&rings.map(k=><span key={'t'+k} className="cr-rl" style={{top:pct(300-rr(k,v.range))}}>{k.toLocaleString('en')} {p.kmUnit}</span>)}

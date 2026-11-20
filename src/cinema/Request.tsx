@@ -187,7 +187,7 @@ const L=(o?:Ln)=>o?(o[lang]||o.en||o.ar||''):'';
     <p className="rq-route">{route} · {fmt(date)} · {guests}</p><h1 className="rq-h s">{c.ap_h}</h1><p className="rq-note first">{c.ap_sub}</p>
     {fit.length===0?<p className="rq-note">{c.ap_none}</p>:<>{relaxed&&<p className="rq-note">{c.ap_relax}</p>}
      <ul className="rq-fleet">{fit.map(o=><li key={o.cat}><button type="button" className="rq-ac" aria-pressed={fav===o.name} onClick={()=>setFav(f=>f===o.name?'':o.name)}>
-      <span className="rq-acimg">{o.img?<img src={o.img} alt="" loading="lazy" decoding="async"/>:<svg viewBox="0 0 40 24" aria-hidden="true"><path d="M2 12C9 2 31 2 38 12 31 22 9 22 2 12Z" fill="none" stroke="#d9bf86" strokeWidth="1"/></svg>}</span>
+      <span className="rq-acimg">{o.img?<img src={o.img} alt="" loading="lazy" decoding="async"/>:<svg viewBox="0 0 40 24" aria-hidden="true"><path d="M2 12C9 2 31 2 38 12 31 22 9 22 2 12Z" fill="none" stroke="#e9c37f" strokeWidth="1"/></svg>}</span>
       <span className="rq-acb"><i className="rq-tag">{c['tg_'+o.tag]}</i><b>{rc.opt.cat[o.cat]||o.cat}</b><em>{o.name}</em><small className="rq-why">{c['why_'+o.tag]}</small>
        <small>{c.ap_up.replace('{n}',String(o.pax))}{o.len?<> · {c.cabin} <bdi dir="ltr">{o.len} m</bdi></>:null}</small>
        <small>{c.ap_time.replace('{t}',dur)}</small><i className="rq-acst">{c.ap_st}</i></span>
@@ -206,7 +206,7 @@ const L=(o?:Ln)=>o?(o[lang]||o.en||o.ar||''):'';
     <button type="button" className="rq-link" onClick={()=>setStep(3)}>{t('ask.back')}</button>
    </>}
    {step===5&&<>
-    <svg className="cn-mark rq-mark" viewBox="0 0 40 24" aria-hidden="true"><path d="M2 12C9 2 31 2 38 12 31 22 9 22 2 12Z" fill="none" stroke="#d9bf86" strokeWidth="1.2"/><circle cx="20" cy="12" r="4.6" fill="#d9bf86"/><circle cx="20" cy="12" r="1.8" fill="#02040a"/></svg>
+    <svg className="cn-mark rq-mark" viewBox="0 0 40 24" aria-hidden="true"><path d="M2 12C9 2 31 2 38 12 31 22 9 22 2 12Z" fill="none" stroke="#e9c37f" strokeWidth="1.2"/><circle cx="20" cy="12" r="4.6" fill="#e9c37f"/><circle cx="20" cy="12" r="1.8" fill="#081a30"/></svg>
     <h1 className="rq-h s">{t('ask.sentT')}</h1><p className="rq-route">{route} · {fmt(date)}</p>
     <p className="rq-lead">{t('ask.sentBody')}</p><p className="rq-note">{t('ask.sentSt')}</p>
     <button type="button" className="cn-btn quiet rq-go" onClick={again}>{t('ask.again')}</button>

@@ -1,4 +1,4 @@
-.ad{--bg:#F5F0E6;--ink:#171717;--gold:#C5A46D;--em:#174C3A;--line:#d9d0bd;min-height:100vh;background:var(--bg);color:var(--ink);font-family:system-ui,'Segoe UI',Tahoma,sans-serif}
+.ad{--bg:#F5F0E6;--ink:#171717;--gold:#deab58;--em:#174C3A;--line:#d9d0bd;min-height:100vh;background:var(--bg);color:var(--ink);font-family:system-ui,'Segoe UI',Tahoma,sans-serif}
 .ad *{box-sizing:border-box}
 .ad-top{display:flex;align-items:center;gap:16px;padding:14px 22px;background:var(--ink);color:#f5f0e6;flex-wrap:wrap}
 .ad-top b{color:var(--gold);letter-spacing:.12em}

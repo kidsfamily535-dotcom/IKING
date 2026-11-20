@@ -1,4 +1,4 @@
-.jy{--n1:var(--t-night);--n2:var(--t-surf);--dusk:#0a1322;--glow:var(--t-accent);--ink:var(--t-ink);--dim:color-mix(in srgb,var(--t-ink) 60%,transparent);--ln:color-mix(in srgb,var(--t-ink) 12%,transparent);--calm:#7fc8a0;--watch:#e6c36a;--act:#e0907f;--res:#78a0c8;color-scheme:dark}
+.jy{--n1:var(--t-night);--n2:var(--t-surf);--dusk:#0f2f57;--glow:var(--t-accent);--ink:var(--t-ink);--dim:color-mix(in srgb,var(--t-ink) 60%,transparent);--ln:color-mix(in srgb,var(--t-ink) 12%,transparent);--calm:#7fc8a0;--watch:#e6bb71;--act:#e0907f;--res:#78a0c8;color-scheme:dark}
 .jy *{box-sizing:border-box;margin:0}.jy{background:var(--n1);color:var(--ink);font:300 17px/1.85 Tajawal,system-ui,sans-serif;min-height:100svh}
 .jy .nav{padding-top:max(16px,env(safe-area-inset-top))}
 .jy button,.jy input{font:inherit;color:inherit}

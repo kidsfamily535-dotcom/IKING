@@ -8,11 +8,11 @@
 @media (prefers-reduced-motion:reduce){.bf-tick.loop{overflow-x:auto}.bf-tick.loop .bf-track{animation:none}}
 .bf-c{flex:none;width:236px;display:flex;flex-direction:column;gap:4px;text-align:start;background:var(--t-surf);color:inherit;border:1px solid #2e271d;border-radius:14px;padding:12px 14px;min-height:44px;cursor:pointer;font:inherit}
 .bf-c.on{border-color:var(--t-accent-lo);background:linear-gradient(160deg,var(--t-surf),var(--t-surf))}
-.bf-c:focus-visible{outline:2px solid #e9cd92;outline-offset:2px}
+.bf-c:focus-visible{outline:2px solid #efd298;outline-offset:2px}
 .bf-st{align-self:flex-start;font-size:12px;border:1px solid currentColor;border-radius:999px;padding:0 9px}
-.bf-st.o{color:#86d3a9}.bf-st.e{color:#e3b45c}.bf-st.m{color:#a89c86;border-style:dashed}
+.bf-st.o{color:#86d3a9}.bf-st.e{color:#e2b262}.bf-st.m{color:#a89c86;border-style:dashed}
 .bf-rt{font-size:15px}.bf-cb{opacity:.75;font-size:13.5px}.bf-pr{font-size:22px;font-weight:700;font-family:Amiri,serif}.bf-pr small{font-size:12px;font-weight:400;opacity:.7}.bf-tl{font-size:12px;opacity:.65}
-.bf-rib{display:inline-block;font-size:12.5px;border:1px solid #e3b45c;color:#e3b45c;border-radius:999px;padding:0 10px;margin:0 0 6px}
+.bf-rib{display:inline-block;font-size:12.5px;border:1px solid #e2b262;color:#e2b262;border-radius:999px;padding:0 10px;margin:0 0 6px}
 .bf-rib.o{color:#86d3a9;border-color:#86d3a9}
 .bf-demo{max-width:720px;margin:0 auto;padding:18px 14px 60px}
 .bf-demo h1{font-family:Amiri,serif;margin:6px 0}

@@ -33,30 +33,30 @@
    60% عاجي دافئ · 25% فحمي (الرادار والعين) · 10% ذهبي شامبانيا · 5% ألوان الحالة. الزمردي للتحقق والتأكيد فقط. */
 :root,:root[data-theme="ivory"]{
  --t-night:#f5f0e6;--t-surf:#ede5d3;--t-surf2:#e6dcc4;
- --t-accent:#86672f;--t-accent-hi:#d8bc83;--t-accent-lo:#7a5e2e;
- --t-ink:#171717;--t-deep:#e9dfc8;--t-main:#174c3a;
+ --t-accent:#86672f;--t-accent-hi:#e8c17b;--t-accent-lo:#7a5e2e;
+ --t-ink:#171717;--t-deep:#e9dfc8;--t-main:#0b2a52;
  --t-paper1:#fbf8f1;--t-paper2:#f0e8d6;
- --t-on-accent:#171717;--t-champagne:#c5a46d;
+ --t-on-accent:#171717;--t-champagne:#d9a553;
  color-scheme:light;
 }
 /* حالات الثقة والتنبيه على العاجي */
 :root[data-theme="ivory"],:root[data-theme="ivory"] .cb{--ok:#174c3a;--warn:#8a5a00;--blue:#2f5d8a}
 :root[data-theme="ivory"] .cb{--r-shadow:0 14px 36px #3b2f1a26}
 /* الأزرار الذهبية: شامبانيا بنص فحمي */
-:root[data-theme="ivory"] .cb-cta,:root[data-theme="ivory"] .hx-sw button.sw.primary{background:linear-gradient(#e0c994,#c5a46d 55%,#b08f55);border-color:#d8bc83;color:#171717;box-shadow:0 10px 26px #3b2f1a33,inset 0 1px 0 #fff8}
+:root[data-theme="ivory"] .cb-cta,:root[data-theme="ivory"] .hx-sw button.sw.primary{background:linear-gradient(#ecc982,#d9a56d 55%,#b08f55);border-color:#d8bc83;color:#171717;box-shadow:0 10px 26px #3b2f1a33,inset 0 1px 0 #fff8}
 :root[data-theme="ivory"] .hx-sw button.sw.primary .sw-t small,:root[data-theme="ivory"] .cb-opt.on>small,:root[data-theme="ivory"] .lang button.on,:root[data-theme="ivory"] .cb-lang button[aria-pressed="true"]{color:#171717}
-:root[data-theme="ivory"] .lang button.on,:root[data-theme="ivory"] .cb-lang button[aria-pressed="true"]{background:#c5a46d}
-:root[data-theme="ivory"] .hx-sw .ln button.sw{background:linear-gradient(#fbf8f1,#efe7d4);border-color:#c5a46d99}
+:root[data-theme="ivory"] .lang button.on,:root[data-theme="ivory"] .cb-lang button[aria-pressed="true"]{background:#d9a56d}
+:root[data-theme="ivory"] .hx-sw .ln button.sw{background:linear-gradient(#fbf8f1,#efe7d4);border-color:#d9a56d99}
 /* نصوص ذهبية على العاجي تُغمَّق لتُقرأ */
 :root[data-theme="ivory"] .cb-brand-t b,:root[data-theme="ivory"] .cb-hero b{color:#171717}
 :root[data-theme="ivory"] .cb-brand-t small{color:#7a5e2e}
 :root[data-theme="ivory"] .cb-opt>small{color:#4a3a1a}
 :root[data-theme="ivory"] .cb[data-phase="4"]{--sk1:#e6d3a8}
-:root[data-theme="ivory"] .cb-panel.paper{border:1px solid #c5a46d;box-shadow:0 18px 44px #3b2f1a2e}
+:root[data-theme="ivory"] .cb-panel.paper{border:1px solid #d9a56d;box-shadow:0 18px 44px #3b2f1a2e}
 :root[data-theme="ivory"] .cb-panel:not(.paper),:root[data-theme="ivory"] .cb-opt{background:linear-gradient(#fbf8f1,#f1e9d7)}
 /* مشهد العين الكامل (Scene): جرافيت أردوازي محايد (بدون بني) (#232a30 ← #333c44) بدل الفحمي، والنص عاجي والذهب أفتح للقراءة. الرادار نفسه بدون أي إطار أو مربع: يرسم مباشرة على الصفحة كما صُمّم أصلًا. */
 :root[data-theme="ivory"] :is(.sc-stage,.hero.hx,.jy .scene){
- --n1:#232a30;--n2:#333c44;--dusk:#232a30;--ln:color-mix(in srgb,#f5f0e6 14%,transparent);--glow:#c5a46d;
+ --n1:#232a30;--n2:#333c44;--dusk:#232a30;--ln:color-mix(in srgb,#f5f0e6 14%,transparent);--glow:#d9a56d;
  --cb-ink:#f5f0e6;--cb-dim:color-mix(in srgb,#f5f0e6 82%,transparent);--cb-gold:#dcc189;--cb-night:#232a30;
  --t-night:#232a30;--t-surf:#2b333a;--t-surf2:#333c44;--t-ink:#f5f0e6;--t-deep:#1d2420;
  --t-accent:#dcc189;--t-accent-hi:#ecd9a8;--t-accent-lo:#8f7440;
@@ -68,7 +68,7 @@
 
 /* الصفحة الرئيسية: الأرض ليلًا خلفية كاملة، والرادار فوقها بدون أي مربعات */
 :root[data-theme="ivory"] .hero.hx{background:linear-gradient(rgba(8,10,18,.28),rgba(8,10,18,.72)),url(/earth-night.jpg) center 35%/cover no-repeat,#05070f}
-:root[data-theme="ivory"] .hero.hx .hx-sw .ln button.sw{background:linear-gradient(#26262499,#17171799);border-color:#c5a46d80;color:#f5f0e6}
+:root[data-theme="ivory"] .hero.hx .hx-sw .ln button.sw{background:linear-gradient(#26262499,#17171799);border-color:#d9a56d80;color:#f5f0e6}
 :root[data-theme="ivory"] .cb-rail li.now{color:#6b4f1f;font-weight:500}
 
 /* ========== الليل الذهبي (الافتراضي الجديد) + خلفية الأرض ليلًا في كل الشاشات ==========
