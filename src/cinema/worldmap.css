@@ -1,0 +1,36 @@
+.wm-mono{font:10px 'JetBrains Mono',monospace;letter-spacing:.12em;text-transform:uppercase;color:#e8c880}
+.wm-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin:10px 0}
+.wm-kpi{background:rgba(244,236,220,.05);border:1px solid rgba(244,236,220,.14);border-radius:12px;padding:8px 4px;text-align:center}
+.wm-kpi b{display:block;font:400 14px 'JetBrains Mono',monospace}.wm-kpi span{font-size:11px;opacity:.6}
+.wm-pb{height:3px;background:rgba(244,236,220,.14);border-radius:3px;margin:4px 0 12px;overflow:hidden}.wm-pb i{display:block;height:100%;background:linear-gradient(90deg,#e8c880,#e8c880)}
+.wm-steps{list-style:none;margin:0 0 12px;padding:0}
+.wm-steps li{display:flex;gap:10px;align-items:center;padding:5px 0;font-size:13px;opacity:.5}
+.wm-steps li:before{content:"";width:7px;height:7px;border-radius:50%;border:1px solid currentColor}
+.wm-steps li.d{opacity:.55}.wm-steps li.d:before{background:currentColor}
+.wm-steps li.c{opacity:1;color:#e8c880}.wm-steps li.c:before{background:#e8c880;box-shadow:0 0 8px #e8c880}
+.wm-card{border:1px solid rgba(232,200,128,.35);border-radius:16px;padding:12px 14px;background:rgba(232,200,128,.06)}
+.wm-card h3{margin:0 0 6px;font-size:16px;font-weight:500;color:#e8c880}
+.wm-card p{margin:4px 0;font-size:13.5px;font-weight:300;line-height:1.55}
+.wm-tag{display:inline-block;border:1px solid #e8c880;color:#e8c880;padding:0 6px;border-radius:99px;margin-inline-start:6px;font:9px 'JetBrains Mono',monospace}
+.wm-tele{display:flex;gap:14px;margin-top:8px;direction:ltr;font:11px 'JetBrains Mono',monospace;color:#e8c880}
+.wm-ctl{display:flex;gap:14px;margin-top:12px;flex-wrap:wrap}
+.wm-ctl button,.wm-ctl a{background:none;border:0;color:rgba(244,236,220,.6);cursor:pointer;font:inherit;text-decoration:none}
+.wm-ctl .go{color:#e8c880}
+.wm-track{display:flex;gap:12px;width:max-content;animation:wmsc 90s linear infinite}
+.wm-strip:hover .wm-track{animation-play-state:paused}
+@keyframes wmsc{to{transform:translateX(-50%)}}
+.wm-chip{display:flex;align-items:center;gap:12px;background:rgba(6,11,22,.7);border:1px solid rgba(244,236,220,.14);color:inherit;padding:8px 10px 8px 14px;border-radius:99px;cursor:pointer;font:inherit;backdrop-filter:blur(10px)}
+.wm-chip.on{border-color:#e8c880;background:rgba(232,200,128,.12);box-shadow:0 0 18px rgba(232,200,128,.25)}
+.wm-chip b{font:13px 'JetBrains Mono',monospace;letter-spacing:.06em;font-weight:400;display:block}
+.wm-chip small{display:block;font-size:12px;opacity:.6;direction:rtl}
+.wm-sw{width:42px;height:24px;border-radius:99px;background:rgba(244,236,220,.18);position:relative;flex:none;transition:.3s}
+.wm-sw:after{content:"";position:absolute;top:2px;left:2px;width:20px;height:20px;border-radius:50%;background:#f4ecdc;transition:.3s}
+.wm-chip.on .wm-sw{background:#e8c880}.wm-chip.on .wm-sw:after{left:20px;background:#060b16}
+.wm{position:relative;border:1px solid rgba(232,200,128,.28);border-radius:24px;background:rgba(5,8,16,.42);-webkit-backdrop-filter:blur(6px);backdrop-filter:blur(6px);overflow:hidden;color:#f7ead0}
+.wm-map{position:relative;height:clamp(230px,34vw,330px)}.wm-map canvas{position:absolute;inset:0;width:100%;height:100%}
+.wm-note{position:absolute;inset-block-end:8px;inset-inline-start:14px;font-size:.7rem;letter-spacing:.06em;opacity:.55}
+.wm-strip{direction:ltr;overflow:hidden;padding:8px 0 12px;-webkit-mask-image:linear-gradient(90deg,transparent,#000 8%,#000 92%,transparent);mask-image:linear-gradient(90deg,transparent,#000 8%,#000 92%,transparent)}
+.wm-strip:hover .wm-track{animation-play-state:paused}
+.wm-panel{padding:4px 16px 16px;border-top:1px solid rgba(232,200,128,.2)}
+.wm-panel .wm-mono{padding-top:12px}
+@media(max-width:760px){.wm-chip{padding:6px 8px 6px 12px}}
