@@ -1,0 +1,11 @@
+/* «العين قرأت رحلتك»: بطاقة هادئة تحت اختيار المسار */
+.rq2 .er{margin:10px 0 4px;padding:12px 14px;border:1px solid rgba(235,200,135,.28);border-radius:16px;background:rgba(5,17,30,.45);font-size:14px;color:var(--ink)}
+.rq2 .er header{display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin-bottom:8px}.rq2 .er header b{font-weight:500;color:var(--champ);margin-inline-end:auto}
+.rq2 .er-eye{width:18px;height:11px;border:1.5px solid var(--gold);border-radius:50%;position:relative}.rq2 .er-eye::after{content:'';position:absolute;inset:2px 5px;border-radius:50%;background:var(--gold)}
+.rq2 .er dl{margin:0;display:grid;grid-template-columns:repeat(3,1fr);gap:8px}.rq2 .er dl>div{background:rgba(244,236,220,.05);border-radius:10px;padding:6px 8px}
+.rq2 .er dt{font-size:11.5px;color:var(--mute)}.rq2 .er dd{margin:0;font-size:13.5px}
+.rq2 .er-fit{margin:8px 0 0;font-size:13px}.rq2 .er-fit span{color:var(--gold)}
+.rq2 .er-wxh{margin-top:8px;color:var(--gold);font-size:12.5px}
+.rq2 .er-wxg{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:4px}.rq2 .er-wx{font-size:13px}.rq2 .er-wx small{display:block;color:var(--mute);font-size:11.5px}
+.rq2 .er-mute{color:var(--mute);font-style:normal}.rq2 .er-src{margin:6px 0 0;font-size:11.5px;color:var(--mute)}
+@media(max-width:560px){.rq2 .er dl{grid-template-columns:1fr 1fr 1fr}.rq2 .er-wxg{grid-template-columns:1fr}}

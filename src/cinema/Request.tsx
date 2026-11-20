@@ -1,11 +1,11 @@
 import {useEffect,useMemo,useState} from 'react';
-import './cinema.css';import './request.css';import './request2.css';import './request3.css';
+import './cinema.css';import './request.css';import './request2.css';import './request3.css';import './request4.css';
 import {useI18n} from '../i18n';
 import LangSwitch from '../LangSwitch';import TopBar from './TopBar';import './discover.css';
 import {HUBS,hub,dist,flightMin,rangeFor,type Hub} from '../cabin/geo';
 import {useWorld,visibleHubs,searchHubs} from '../cabin/world';
 import {copy} from '../cabin/copy';
-import RqMap from './RqMap';
+import RqMap from './RqMap';import EyeReads from './EyeReads';import EyeFollowCard from './EyeFollowCard';
 import {useFleet} from '../cabin/media';
 import MS from './missions.json';
 // طلب رحلة حقيقي على نهج منصات الطيران الخاص: الرحلة أولًا (النوع، المسار، الموعد، الركاب)، ثم تفضيلات اختيارية، ثم وسيلة الرد في آخر خطوة.
@@ -155,6 +155,7 @@ const tripLine=to?`${route} · ${fmt(date)} · ${c[win]} · ${guests} ${c.paxn}`
     <div className="rq-route-row"><City label={c.from} value={from} onClick={()=>{setPick('from');setQ('')}}/>
      <button type="button" className="rq-swap" onClick={swap} disabled={!to} aria-label={c.swap}>⇄</button>
      <City label={c.to} value={to} onClick={()=>{setPick('to');setQ('')}}/></div>
+    {D&&km&&<EyeReads lang={lang} from={F} to={D} km={km} dur={dur} date={date} fit={suit.map(o=>rc.opt.cat[o.cat]||o.cat)}/>}
     {outside&&<p className="rq-note" role="status">{ar?'أحد المطارات خارج قائمتنا المرجعية. سيراجعه فريقنا يدويًا قبل الرد عليك، ولا يُرسل شيء لأي مشغّل.':'One of the airports is outside our reference list. Our team will review it manually before replying; nothing is sent to any operator.'}</p>}
     <label className="rq-row"><span>{c.date}</span><input className="rq-in" type="date" value={date} min={iso(Date.now())} onChange={e=>e.target.value&&setDate(e.target.value)}/></label>
     {seg([['am',c.am],['noon',c.noon],['pm',c.pm],['flex',c.flex]],win,k=>setWin(k as Win),c.date)}
@@ -197,6 +198,7 @@ const tripLine=to?`${route} · ${fmt(date)} · ${c[win]} · ${guests} ${c.paxn}`
     <svg className="cn-mark rq-mark" viewBox="0 0 40 24" aria-hidden="true"><path d="M2 12C9 2 31 2 38 12 31 22 9 22 2 12Z" fill="none" stroke="#e9c37f" strokeWidth="1.2"/><circle cx="20" cy="12" r="4.6" fill="#e9c37f"/><circle cx="20" cy="12" r="1.8" fill="#081a30"/></svg>
     <h1 className="rq-h s">{t('ask.sentT')}</h1><p className="rq-route">{route} · {fmt(date)}</p>
     <p className="rq-lead">{t('ask.sentBody')}</p><p className="rq-note">{t('ask.sentSt')}</p>
+    <EyeFollowCard group="new" lang={lang}/>
     <button type="button" className="cn-btn quiet rq-go" onClick={again}>{t('ask.again')}</button>
    </div>}</>}
   </main>
