@@ -203,7 +203,7 @@ document.getElementById('pp').onclick=e=>{paused=!paused;e.target.textContent=pa
 document.getElementById('rp').onclick=()=>{if(sim){sim.m=0;paused=false;document.getElementById('pp').textContent='⏸ إيقاف'}};
 document.getElementById('cl').onclick=stop;
 // حيّ من Supabase إن وُجد العرض airports_radar، وإلا تبقى البيانات المضمّنة (لا يتعطّل شيء)
-fetch('https://yiklciblxwymcxxszkty.supabase.co/rest/v1/airports_radar?select=iata_code,city,latitude_deg,longitude_deg',{headers:{apikey:'sb_publishable_RS0irv5OzcD1Z2VHLD-gzQ_4-wYez8_'}}).then(r=>r.ok?r.json():[]).then(rows=>{if(!Array.isArray(rows))return;for(const a of rows){if(!a.iata_code||a.latitude_deg==null)continue;const k=a.iata_code;if(AP[k])AP[k].c=[a.longitude_deg,a.latitude_deg];else AP[k]={c:[a.longitude_deg,a.latitude_deg],n:a.city||k,x:1}}}).catch(()=>{});
+fetch('https://yiklciblxwymcxxszkty.supabase.co/rest/v1/airports_radar?select=iata_code,name_ar,name_en,lat,lon',{headers:{apikey:'sb_publishable_RS0irv5OzcD1Z2VHLD-gzQ_4-wYez8_'}}).then(r=>r.ok?r.json():[]).then(rows=>{if(!Array.isArray(rows))return;for(const a of rows){const k=a.iata_code;if(!k||a.lat==null||a.lon==null)continue;if(AP[k])AP[k].c=[a.lon,a.lat];else AP[k]={c:[a.lon,a.lat],n:a.name_ar||a.name_en||k,x:1}}}).catch(()=>{});
 size();requestAnimationFrame(frame);
 </script>
 </body>
