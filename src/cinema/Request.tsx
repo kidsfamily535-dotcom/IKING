@@ -1,12 +1,11 @@
 import {useEffect,useMemo,useState} from 'react';
-import './cinema.css';import './request.css';import './request2.css';
+import './cinema.css';import './request.css';import './request2.css';import './request3.css';
 import {useI18n} from '../i18n';
 import LangSwitch from '../LangSwitch';import TopBar from './TopBar';import './discover.css';
 import {HUBS,hub,dist,flightMin,rangeFor,type Hub} from '../cabin/geo';
 import {useWorld,visibleHubs,searchHubs} from '../cabin/world';
 import {copy} from '../cabin/copy';
-import Radar from '../cabin/Radar';
-import {AiThinking,Dust,AI_LINE} from './AiPresence';
+import RqMap from './RqMap';
 import {useFleet} from '../cabin/media';
 import MS from './missions.json';
 // طلب رحلة حقيقي على نهج منصات الطيران الخاص: الرحلة أولًا (النوع، المسار، الموعد، الركاب)، ثم تفضيلات اختيارية، ثم وسيلة الرد في آخر خطوة.
@@ -64,7 +63,7 @@ export default function Request(){
  const [date,setDate]=useState(()=>iso(Date.now()+864e5)),[retDate,setRetDate]=useState(()=>iso(Date.now()+864e5*4)),[win,setWin]=useState<Win>('am'),[guests,setGuests]=useState(2),[legs,setLegs]=useState<Leg[]>([]);
  const [fav,setFav]=useState(''),[cab,setCab]=useState<Cab>(''),[ext,setExt]=useState<string[]>([]),[note,setNote]=useState('');
  const [cv,setCv]=useState(''),[wa,setWa]=useState(false),[agree,setAgree]=useState(false),[err,setErr]=useState(''),[busy,setBusy]=useState(false),[aps,setAps]=useState<string[]>([]);
- const [plane,setPlane]=useState(1),[nameIn,setNameIn]=useState('');
+ const [nameIn,setNameIn]=useState('');
  const [ms,setMs]=useState<number[]>([]),[cd,setCd]=useState<number[]>([]),[priv,setPriv]=useState(false),[grp,setGrp]=useState('A'),[ans,setAns]=useState('');
  useEffect(()=>{let live=true;fetch(`${BASE}/functions/v1/submit-request`).then(r=>r.ok?r.json():null).then(j=>{if(live&&j?.airports)setAps(j.airports.map((a:any)=>a.iata_code))}).catch(()=>{});return()=>{live=false}},[]);
  // وجهة وصلت من الرابط ?to=LON
@@ -74,9 +73,6 @@ export default function Request(){
   if(f&&!HUBS.some(h=>h.iata===f)){const h=searchHubs(wl,f,1)[0];if(h&&h.iata===f){add[f]=h;setFrom(f)}}
   if(t&&t!==(f||'RUH')&&!HUBS.some(h=>h.iata===t)){const h=searchHubs(wl,t,1)[0];if(h&&h.iata===t){add[t]=h;setTo(t)}}
   if(Object.keys(add).length)setReg(r=>({...r,...add}))},[wl]);
- // الطائرة تمشي على المسار كلما اختير مسار جديد
- useEffect(()=>{if(!to){setPlane(1);return}if(calm()){setPlane(1);return}setPlane(0);const t0=performance.now();let raf=0;
-  const tick=(n:number)=>{const k=Math.min(1,(n-t0)/2600);setPlane(1-Math.pow(1-k,3));if(k<1)raf=requestAnimationFrame(tick)};raf=requestAnimationFrame(tick);return()=>cancelAnimationFrame(raf)},[from,to]);
  const chain=useMemo(()=>[from,...(kind==='multi'?legs.map(l=>l.to):[to])] ,[from,to,legs,kind]);
  const outside=aps.length>0&&(!aps.includes(from)||(to!==null&&!aps.includes(to))||(kind==='multi'&&legs.some(l=>l.to&&!aps.includes(l.to))));
  const skip=pick==='from'?to:pick==='to'?from:null;
@@ -87,7 +83,6 @@ export default function Request(){
   else if(pick==='to')setTo(i)
   else if(typeof pick==='number')setLegs(l=>l.map((x,k)=>k===pick?{...x,to:i}:x));
   setPick(null);setQ('')};
- const radarTap=(i:string)=>{if(i===from)return;const rh=vh.find(h=>h.iata===i);if(rh)register(rh);if(pick==='from'){choose(i);return}setTo(i);if(pick!==null){setPick(null);setQ('')}};
  const swap=()=>{if(!to)return;setFrom(to);setTo(from)};
  const addLeg=()=>setLegs(l=>l.length<3?[...l,{to:null,date:l.length?l[l.length-1].date:date}]:l);
  const fmt=(d:string)=>new Intl.DateTimeFormat(ar?'ar-u-nu-latn':lang,{day:'numeric',month:'long'}).format(new Date(d+'T12:00:00'));
@@ -136,7 +131,6 @@ const L=(o?:Ln)=>o?(o[lang]||o.en||o.ar||''):'';
  const ord=Object.keys(SPEC),best=(pref.length?pref:suit)[0],rest=suit.filter(o=>o!==best);
  const cmf=best?rest.find(o=>ord.indexOf(o.cat)>ord.indexOf(best.cat)):undefined,alt=rest.find(o=>o!==cmf);
  const fit=[best&&{...best,tag:'best' as const},cmf&&{...cmf,tag:'cmf' as const},alt&&{...alt,tag:'alt' as const}].filter((x):x is NonNullable<typeof x>=>!!x);
- const radar=<aside className="rq-radar" aria-label={rc.gl.radar}><Radar links hubs={vh} from={from} to={to} hover={null} name={h=>ar?h.ar:h.en} range={rangeFor(km)} blips={[]} scanning={step===5} plane={to?plane:null} alt={null} hud={hud} aria={rc.gl.radar} kmUnit={rc.units.km} onHover={()=>{}} onPick={radarTap} onBlip={()=>{}}/></aside>;
  const City=({label,value,onClick}:{label:string;value:string|null;onClick:()=>void})=><button type="button" className={`rq-city${value?'':' empty'}`} onClick={onClick}><small>{label}</small><span>{value?nm(value):c.pickTo}</span></button>;
  const picker=<>
   <h1 className="rq-h s">{pick==='from'?c.from:c.to}</h1>
@@ -146,24 +140,17 @@ const L=(o?:Ln)=>o?(o[lang]||o.en||o.ar||''):'';
  const seg=(items:[string,string][],val:string,on:(k:string)=>void,label:string,cls='')=><div className={'rq-seg'+(cls?' '+cls:'')} role="radiogroup" aria-label={label}>{items.map(([k,l])=><button key={k} type="button" role="radio" aria-checked={val===k} onClick={()=>on(k)}>{l}</button>)}</div>;
 
  const sec=(n:number,h:string,opt:boolean,body:any)=><section className="rq-panel rq-card"><header className="rq-sh"><i aria-hidden="true">{n}</i><h2>{h}</h2>{opt&&<em>{c.opt}</em>}</header>{body}</section>;
- const sumRows:[string,string][]=to?[[c.from+' ← '+c.to,route],[c.date,fmt(date)+' · '+c[win]],...(kind==='round'?[[c.ret,fmt(retDate)] as [string,string]]:[]),[c.who,String(guests)],...(km?[[c.dist,`${(Math.round(km/10)*10).toLocaleString('en')} ${rc.units.km} · ${dur} (${c.est})`] as [string,string]]:[]),...(cab?[[c.cabn,c[cab]] as [string,string]]:[]),...(ext.length?[[c.ext,ext.map(k=>c[k]).join(ar?'، ':', ')] as [string,string]]:[])]:[];
- const summary=<div className="rq-sum"><h2>{c.sum_h}</h2>
-  {to?<dl>{sumRows.map(([k,v])=><div key={k}><dt>{k}</dt><dd>{v}</dd></div>)}</dl>:<p className="rq-note">{c.sum_empty}</p>}
-  <h3>{c.next_h}</h3><ol className="rq-next"><li>{c.n1}</li><li>{c.n2}</li><li>{c.n3}</li></ol><p className="rq-note">{c.n_note}</p></div>;
- return <div className={`rq cn${ar?' ar':''}`} dir={ar?'rtl':'ltr'} lang={lang}>
-  <div className="rq-bg" aria-hidden="true"/><Dust/><div className="cn-shade" aria-hidden="true"/><div className="cn-grain" aria-hidden="true"/>
+const tripLine=to?`${route} · ${fmt(date)} · ${c[win]} · ${guests} ${c.paxn}`:'';
+ const goNext=()=>{if(tripOk)setStep(1)};
+ return <div className={`rq rq2 cn${ar?' ar':''}`} dir={ar?'rtl':'ltr'} lang={lang}>
+  <RqMap from={F} to={D}/>
   <LangSwitch/>
   <TopBar active={3} name={c.name} bare/>
-  <div className="rq-wrap">
-  <div className="rq-side">{radar}<div className="rq-sumd">{summary}</div></div>
-  <main className="rq-main" key={step+'-'+(pick===null?'f':'p')}>
-   {pick!==null&&step===0?picker:<>
-   {step===0&&<>
-    <span className="rq-kicker">{c.name}</span>
+  <main className="rq-one" key={step+'-'+(pick===null?'f':'p')}>
+   {pick!==null&&step===0?<div className="rq-glass">{picker}</div>:<>
+   {step===0&&<div className="rq-glass">
     <h1 className="rq-h s">{c.h0}</h1>
     <p className="rq-sub">{c.sub0}</p>
-    <p className="rq-ai"><i aria-hidden="true"/>{AI_LINE[lang]||AI_LINE.en}</p>
-    {sec(1,c.s1,false,<>
     {seg([['one',c.one],['round',c.round],['multi',c.multi]],kind,k=>{setKind(k as Kind);if(k==='multi'&&!legs.length)setLegs([{to:null,date}])},c.trip)}
     <div className="rq-route-row"><City label={c.from} value={from} onClick={()=>{setPick('from');setQ('')}}/>
      <button type="button" className="rq-swap" onClick={swap} disabled={!to} aria-label={c.swap}>⇄</button>
@@ -178,39 +165,40 @@ const L=(o?:Ln)=>o?(o[lang]||o.en||o.ar||''):'';
      <button type="button" className="rq-x" aria-label={c.del} onClick={()=>setLegs(a=>a.filter((_,j)=>j!==k))}>×</button></div>)}
     {kind==='multi'&&legs.length<3&&<button type="button" className="rq-link" onClick={addLeg}>+ {c.addLeg}</button>}
     <div className="rq-row"><span id="rq-w">{c.who}</span><div className="rq-step" role="group" aria-labelledby="rq-w"><button type="button" aria-label="−" disabled={guests<=1} onClick={()=>setGuests(g=>Math.max(1,g-1))}>−</button><output>{guests}</output><button type="button" aria-label="+" disabled={guests>=19} onClick={()=>setGuests(g=>Math.min(19,g+1))}>+</button></div></div>
-    </>)}
-    {sec(2,c.s2,true,<>
-    <div className="rq-cap">{c.cab}</div>
-    {seg([['',c.any],['light',c.light],['mid',c.mid],['large',c.large]],cab,k=>setCab(k as Cab),c.cab)}
-    <div className="rq-cap">{c.ext}</div>
-    <div className="rq-chips" role="group" aria-label={c.ext}>{EXT.map(k=><button key={k} type="button" aria-pressed={ext.includes(k)} onClick={()=>setExt(a=>a.includes(k)?a.filter(x=>x!==k):[...a,k])}>{c[k]}</button>)}</div>
-    {to&&<details className="rq-more"><summary>{c.ap_h}</summary><p className="rq-note first">{c.ap_sub}</p>
-     {fit.length===0?<p className="rq-note">{c.ap_none}</p>:<>{relaxed&&<p className="rq-note">{c.ap_relax}</p>}
-      <ul className="rq-fleet">{fit.map(o=><li key={o.cat}><button type="button" className="rq-ac" aria-pressed={fav===o.name} onClick={()=>setFav(f=>f===o.name?'':o.name)}>
-       <span className="rq-acimg">{o.img?<img src={o.img} alt="" loading="lazy" decoding="async"/>:<svg viewBox="0 0 40 24" aria-hidden="true"><path d="M2 12C9 2 31 2 38 12 31 22 9 22 2 12Z" fill="none" stroke="#ebc887" strokeWidth="1"/></svg>}</span>
-       <span className="rq-acb"><i className="rq-tag">{c['tg_'+o.tag]}</i><b>{rc.opt.cat[o.cat]||o.cat}</b><em>{o.name}</em><small className="rq-why">{c['why_'+o.tag]}</small>
-        <small>{c.ap_up.replace('{n}',String(o.pax))}{o.len?<> · {c.cabin} <bdi dir="ltr">{o.len} m</bdi></>:null}</small>
-        <small>{c.ap_time.replace('{t}',dur)}</small><i className="rq-acst">{c.ap_st}</i></span>
-       <span className="rq-acpick">{fav===o.name?'✓ ':''}{c.ap_pick}</span></button></li>)}</ul></>}</details>}
-    <input className="rq-in rq-notein" value={note} maxLength={200} placeholder={c.notePh} aria-label={c.notePh} onChange={e=>setNote(e.target.value)}/>
-    </>)}
-    {sec(3,c.s3,false,<>
+    <details className="rq-more rq-prefs"><summary>{c.s2} <em>{c.opt}</em></summary>
+     <div className="rq-cap">{c.cab}</div>
+     {seg([['',c.any],['light',c.light],['mid',c.mid],['large',c.large]],cab,k=>setCab(k as Cab),c.cab)}
+     <div className="rq-cap">{c.ext}</div>
+     <div className="rq-chips" role="group" aria-label={c.ext}>{EXT.map(k=><button key={k} type="button" aria-pressed={ext.includes(k)} onClick={()=>setExt(a=>a.includes(k)?a.filter(x=>x!==k):[...a,k])}>{c[k]}</button>)}</div>
+     {to&&<details className="rq-more"><summary>{c.ap_h}</summary><p className="rq-note first">{c.ap_sub}</p>
+      {fit.length===0?<p className="rq-note">{c.ap_none}</p>:<>{relaxed&&<p className="rq-note">{c.ap_relax}</p>}
+       <ul className="rq-fleet">{fit.map(o=><li key={o.cat}><button type="button" className="rq-ac" aria-pressed={fav===o.name} onClick={()=>setFav(f=>f===o.name?'':o.name)}>
+        <span className="rq-acimg">{o.img?<img src={o.img} alt="" loading="lazy" decoding="async"/>:<svg viewBox="0 0 40 24" aria-hidden="true"><path d="M2 12C9 2 31 2 38 12 31 22 9 22 2 12Z" fill="none" stroke="#ebc887" strokeWidth="1"/></svg>}</span>
+        <span className="rq-acb"><i className="rq-tag">{c['tg_'+o.tag]}</i><b>{rc.opt.cat[o.cat]||o.cat}</b><em>{o.name}</em><small className="rq-why">{c['why_'+o.tag]}</small>
+         <small>{c.ap_up.replace('{n}',String(o.pax))}{o.len?<> · {c.cabin} <bdi dir="ltr">{o.len} m</bdi></>:null}</small>
+         <small>{c.ap_time.replace('{t}',dur)}</small><i className="rq-acst">{c.ap_st}</i></span>
+        <span className="rq-acpick">{fav===o.name?'✓ ':''}{c.ap_pick}</span></button></li>)}</ul></>}</details>}
+     <input className="rq-in rq-notein" value={note} maxLength={200} placeholder={c.notePh} aria-label={c.notePh} onChange={e=>setNote(e.target.value)}/>
+    </details>
+    <button type="button" className="cn-btn main rq-go" disabled={!tripOk} onClick={goNext}>{c.next}</button>
+   </div>}
+   {step===1&&<div className="rq-glass">
+    <h1 className="rq-h s">{c.s3}</h1>
+    <p className="rq-trip">{tripLine}<button type="button" className="rq-edit" onClick={()=>setStep(0)}>{ar?'تعديل':'Edit'}</button></p>
     <label className="rq-row col"><span>{c.nameph}</span><input className="rq-in" autoComplete="name" maxLength={60} value={nameIn} onChange={e=>setNameIn(e.target.value)}/></label>
     <label className="rq-row col"><span>{c.reach}</span><input className="rq-in" dir="ltr" inputMode={looksTel?'tel':'email'} value={cv} maxLength={120} autoComplete="email" placeholder="name@example.com · +966…" onChange={e=>setCv(e.target.value)}/></label>
     {looksTel&&<div className="rq-chips"><button type="button" aria-pressed={wa} onClick={()=>setWa(v=>!v)}>{c.wa}</button></div>}
     <label className="rq-agree"><input type="checkbox" checked={agree} onChange={e=>setAgree(e.target.checked)}/><i aria-hidden="true"/><span>{t('ask.consent')}</span></label>
-    <p className="rq-note">{t('ask.contactSub')}</p>
+    <p className="rq-note">{c.n_note}</p>
     {err&&<p className="rq-note bad" role="alert">{err}</p>}
     <button type="button" className="cn-btn main rq-go" disabled={!canSend||busy} aria-busy={busy||undefined} onClick={send}>{t('ask.submit')}</button>
-    </>)}
-    <div className="rq-summ">{summary}</div>
-   </>}
-   {step===5&&<>
+   </div>}
+   {step===5&&<div className="rq-glass">
     <svg className="cn-mark rq-mark" viewBox="0 0 40 24" aria-hidden="true"><path d="M2 12C9 2 31 2 38 12 31 22 9 22 2 12Z" fill="none" stroke="#e9c37f" strokeWidth="1.2"/><circle cx="20" cy="12" r="4.6" fill="#e9c37f"/><circle cx="20" cy="12" r="1.8" fill="#081a30"/></svg>
     <h1 className="rq-h s">{t('ask.sentT')}</h1><p className="rq-route">{route} · {fmt(date)}</p>
     <p className="rq-lead">{t('ask.sentBody')}</p><p className="rq-note">{t('ask.sentSt')}</p>
     <button type="button" className="cn-btn quiet rq-go" onClick={again}>{t('ask.again')}</button>
-   </>}</>}
-  </main></div>
+   </div>}</>}
+  </main>
  </div>;
 }

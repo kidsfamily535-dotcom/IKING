@@ -1,0 +1,22 @@
+/* صفحة الطلب المختصرة: نفس خلفية الصفحة الرئيسية (خريطة كحلية) ولوحة زجاجية واحدة بدل ثلاثة أقسام طويلة. */
+.rq2{min-height:100vh;background:#0b213d}
+.rq2 .rq-map{position:fixed;inset:0;width:100%;height:100%;z-index:-2}
+.rq2 .rq-bg,.rq2 .cn-shade,.rq2 .cn-grain{display:none}
+.rq2 .rq-one{display:flex;justify-content:center;padding:clamp(70px,11vh,120px) 16px 40px}
+.rq2 .rq-glass{width:100%;max-width:520px;padding:6px 22px 22px;border:1px solid rgba(244,236,220,.14);border-radius:22px;background:rgba(13,42,77,.74);-webkit-backdrop-filter:blur(18px);backdrop-filter:blur(18px);box-shadow:0 20px 60px rgba(0,0,0,.45);animation:cnIn .6s ease both}
+.rq2 .rq-h.s,.rq.ar.rq2 .rq-h.s{font:700 clamp(26px,3.4vw,32px)/1.2 Amiri,serif;margin:16px 0 4px;text-shadow:none}
+.rq2 .rq-sub{margin:0 0 6px;font-size:15px;color:rgba(244,236,220,.65)}
+.rq2 .rq-seg{margin:12px 0}.rq2 .rq-seg button{min-height:42px;font-size:15px}
+.rq2 .rq-row{padding:10px 0}.rq2 .rq-row .rq-in{font-size:17px}
+.rq2 .rq-prefs{margin-top:6px;border-top:1px solid var(--line);padding-top:4px}
+.rq2 .rq-prefs>summary{cursor:pointer;padding:12px 0;color:var(--gold);list-style:none}
+.rq2 .rq-prefs>summary::-webkit-details-marker{display:none}
+.rq2 .rq-prefs>summary em{font-style:normal;font-size:.8rem;color:var(--mute);margin-inline-start:8px}
+.rq2 .rq-go{width:100%;margin-top:18px}
+.rq2 .rq-trip{margin:0 0 6px;font-size:15px;color:var(--ink);display:flex;justify-content:space-between;gap:12px;align-items:center;flex-wrap:wrap}
+.rq2 .rq-edit{background:none;border:0;color:var(--gold);font:inherit;font-size:14px;cursor:pointer;text-decoration:underline}
+.rq2 .rq-agree{font-size:14px}
+.rq2 .rq-note{font-size:13.5px}
+@media(max-width:560px){.rq2 .rq-one{padding-top:76px}.rq2 .rq-glass{padding:4px 16px 18px}}
+
+.rq2 .rq-row .rq-in[type=date]{width:auto;min-width:150px}
