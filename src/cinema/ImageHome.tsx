@@ -58,7 +58,7 @@ const SHOW_THINK=false;
 const STOP_FROM=new Set(['من','from','von','из','dan','den']),STOP_TO=new Set(['الى','إلى','to','في','في','в','до','a','nach']);
 const norm=(x:string)=>x.toLowerCase().replace(/[\u064B-\u0652]/g,'').replace(/[أإآ]/g,'ا').replace(/ى/g,'ي').replace(/ة/g,'ه').replace(/[^\p{L}\p{N}\s]/gu,' ').replace(/\s+/g,' ').trim();
 // يفهم «من X إلى Y» بمطابقة تامة لأسماء المطارات والمدن المعروفة (بلا تخمين وبلا أي استدعاء خارجي)
-function readTrip(text:string,pool:Hub[]):{from?:Hub;to?:Hub}|null{
+export function readTrip(text:string,pool:Hub[]):{from?:Hub;to?:Hub}|null{
  const idx=new Map<string,Hub>();
  for(const h of pool){for(const k of [h.iata,h.en,h.ar]){const n=norm(k||'');if(n.length>=2&&!idx.has(n))idx.set(n,h)}}
  const w=norm(text).split(' ').filter(Boolean),found:{h:Hub;cue:'f'|'t'|null;at:number}[]=[];
