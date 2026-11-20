@@ -1,6 +1,6 @@
 import {useEffect,useMemo,useState} from 'react';
 import {useI18n,type Lang} from '../i18n';
-import WorldMap from './WorldMap';
+import Radar from '../cabin/Radar';
 import {HUBS,hub,dist,flightMin,rangeFor,CLASS_RANGE,type Hub} from '../cabin/geo';
 import {useWorld,visibleHubs,searchHubs,waHub} from '../cabin/world';
 import RafiqChat from './RafiqChat';
@@ -80,19 +80,19 @@ export function readTrip(text:string,pool:Hub[]):{from?:Hub;to?:Hub}|null{
 const calm=()=>typeof matchMedia==='function'&&matchMedia('(prefers-reduced-motion: reduce)').matches;
 
 export default function ImageHome({real}:{real:boolean}){
- const {lang,setLang}=useI18n(),c=COPY[lang]||COPY.en,[on,setOn]=useState(4),[fromH,setFromH]=useState<Hub>(hub('RUH')),[toH,setToH]=useState<Hub|null>(hub('CAI')),[pk,setPk]=useState<'from'|'to'|null>(null),[q,setQ]=useState(''),[hov,setHov]=useState<string|null>(null),[world,setWorld]=useState(false),[say,setSay]=useState(''),[sayMsg,setSayMsg]=useState<string|null>(null),[run,setRun]=useState(0);
+ const {lang,setLang}=useI18n(),c=COPY[lang]||COPY.en,[on,setOn]=useState(4),[fromH,setFromH]=useState<Hub>(hub('RUH')),[toH,setToH]=useState<Hub|null>(hub('CAI')),[pk,setPk]=useState<'from'|'to'|null>(null),[q,setQ]=useState(''),[hov,setHov]=useState<string|null>(null),[world,setWorld]=useState(false),[say,setSay]=useState(''),[sayMsg,setSayMsg]=useState<string|null>(null);
  const rx=RX[lang],wa=useWorld(),to=toH?.iata??null,nmH=(h:Hub)=>lang==='ar'?h.ar:lang==='en'?h.en:NM[lang][h.iata]||h.en;
  const km=toH?dist(fromH,toH):null,mn=km?flightMin(km):0,range=world?15000:toH?rangeFor(km):3000;
  const hubs=useMemo(()=>visibleHubs(wa,fromH,range,[toH]),[wa,fromH,toH,range]);
  const found=useMemo(()=>pk?searchHubs(wa,q):[],[wa,q,pk]);
- const choose=(h:Hub)=>{if(pk==='from'){setFromH(h);if(toH?.iata===h.iata)setToH(null)}else if(h.iata!==fromH.iata)setToH(h);setPk(null);setQ('');setRun(x=>x+1)};
+ const choose=(h:Hub)=>{if(pk==='from'){setFromH(h);if(toH?.iata===h.iata)setToH(null)}else if(h.iata!==fromH.iata)setToH(h);setPk(null);setQ('')};
  const pool=useMemo(()=>[...HUBS,...(wa?wa.map(waHub):[])],[wa]);
  const understand=(e:React.FormEvent)=>{e.preventDefault();if(!say.trim())return;
   const r=readTrip(say,pool);
   if(!r||(!r.from&&!r.to)){setSayMsg(c.sayNo);return}
   const f=r.from??fromH,t=r.to??toH;
   if(t&&f.iata===t.iata){setSayMsg(c.sayNo);return}
-  setFromH(f);if(t)setToH(t);setPk(null);setWorld(false);if(t)setRun(x=>x+1);
+  setFromH(f);if(t)setToH(t);setPk(null);setWorld(false);
   setSayMsg(`${c.sayOk}: ${nmH(f)} ${lang==='ar'?'←':'→'} ${t?nmH(t):'—'}`)};
  const goHref=toH?`?view=cabin&from=${fromH.iata}&to=${toH.iata}`:'';
  const hud=to&&km?`${nmH(fromH)} ${lang==='ar'?'←':'→'} ${nmH(toH!)} · ${(Math.round(km/10)*10).toLocaleString('en')} ${rx.km} · ${lang==='ar'?'نحو ':''}${Math.floor(mn/60)} ${rx.h} ${mn%60} ${rx.m} (${rx.est})`:rx.tap;
@@ -122,9 +122,11 @@ export default function ImageHome({real}:{real:boolean}){
      </div>
     </div>
     <div className="ih-radarbox">
-     <WorldMap from={fromH} to={toH} runKey={run} onPick={(a,b)=>{setFromH(a);setToH(b)}}/>
+     <Radar links hubs={hubs} from={fromH.iata} to={to} hover={hov} name={nmH} range={range} classes={CLASS_RANGE.map((k,i)=>({km:k.km,label:(CL[lang as 'ar'|'en']||CL.en)[i]}))} blips={[]} scanning={false} plane={null} alt={null} hud={hud} aria={nmH(fromH)} kmUnit={rx.km} onHover={setHov} onPick={i=>{const h=hubs.find(x=>x.iata===i);if(!h||h.iata===fromH.iata)return;if(toH?.iata===i){location.href=goHref;return}setToH(h)}} onBlip={()=>{}}/>
      <div className="ih-pick" role="group"><button type="button" className="ih-pill" aria-pressed={pk==='from'} onClick={()=>{setPk(p=>p==='from'?null:'from');setQ('')}}>{rx.from}: {nmH(fromH)}</button><button type="button" className="ih-pill" aria-pressed={pk==='to'} onClick={()=>{setPk(p=>p==='to'?null:'to');setQ('')}}>{rx.to}: {toH?nmH(toH):'—'}</button></div>
      {pk&&<div className="ih-find"><input type="text" autoFocus value={q} onChange={e=>setQ(e.target.value)} placeholder={rx.find} aria-label={rx.find}/>{!wa&&<p className="ih-simnote">{rx.loading}</p>}{q.trim().length>=2&&<ul>{found.length?found.map(h=><li key={h.iata}><button type="button" onClick={()=>choose(h)}><b dir="ltr">{h.iata}</b> {nmH(h)}</button></li>):<li className="ih-simnote">{rx.none}</li>}</ul>}</div>}
+     <button type="button" className="ih-pill ih-world" aria-pressed={world} onClick={()=>setWorld(w=>!w)}>{rx.world}</button>
+     {world&&rx.ringNote&&<p className="ih-simnote">{rx.ringNote}</p>}
      {toH&&<a className="ih-go" href={goHref}>{rx.go}</a>}
      <p className="ih-simnote">{c.demo}</p>
     </div>
