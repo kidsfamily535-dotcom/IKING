@@ -35,7 +35,7 @@ const arc=(p0:number[],p1:number[],t:number)=>{const mx=(p0[0]+p1[0])/2,my=(p0[1
  return{x:u*u*p0[0]+2*u*t*cx+t*t*p1[0],y:u*u*p0[1]+2*u*t*cy+t*t*p1[1],a:Math.atan2(2*u*(cy-p0[1])+2*t*(p1[1]-cy),2*u*(cx-p0[0])+2*t*(p1[0]-cx)),cx,cy}};
 const mk=(a:Hub,b:Hub):S=>{const km=dist(a,b),cr=Math.max(20,flightMin(km)-30),st=[35,25,15,cr,15,30];return{a,b,km,st,tot:st.reduce((x,y)=>x+y,0),m:0}};
 export default function WorldHome(){
- const {lang,setLang}=useI18n(),c=T[lang==='ar'?'ar':'en'],ar=lang==='ar',wa=useWorld();
+ const {lang,setLang,t}=useI18n(),c=T[lang==='ar'?'ar':'en'],ar=lang==='ar',wa=useWorld();
  const cv=useRef<HTMLCanvasElement>(null),simR=useRef<S|null>(null),pausedR=useRef(false),land=useRef<number[][]>([]);
  const [sim,setSim]=useState<S|null>(null),[paused,setPaused]=useState(false),[say,setSay]=useState(''),[msg,setMsg]=useState(''),[,tick]=useState(0);
  const pool=useMemo(()=>[...HUBS,...(wa?wa.map(waHub):[])],[wa]);
@@ -79,7 +79,7 @@ export default function WorldHome(){
  return <div className="wh" dir={ar?'rtl':'ltr'}>
   <canvas ref={cv} aria-hidden="true"/>
   <header className="wh-top"><div className="wh-langs" role="group" aria-label="Language">{(['ar','en'] as const).map(l=><button key={l} type="button" className="wh-pill" aria-pressed={lang===l} lang={l} onClick={()=>setLang(l)}>{l==='ar'?'العربية':'English'}</button>)}</div><img src="/ijet-logo-light.png" alt="I JET" width="129" height="45"/></header>
-  <div className={`wh-hero${sim?' off':''}`}><h1>{c.h}</h1><p>{c.sub}</p><form className="wh-say" onSubmit={submit}><input value={say} onChange={e=>{setSay(e.target.value);setMsg('')}} placeholder={c.ph} maxLength={120} autoComplete="off" aria-label={c.ph}/><button type="submit">{c.go} {ar?'←':'→'}</button></form><div className="wh-msg" aria-live="polite">{msg}</div></div>
+  <div className={`wh-hero${sim?' off':''}`}><h1>{c.h}</h1><p>{c.sub}</p><form className="wh-say" onSubmit={submit}><input value={say} onChange={e=>{setSay(e.target.value);setMsg('')}} placeholder={c.ph} maxLength={120} autoComplete="off" aria-label={c.ph}/><button type="submit">{c.go} {ar?'←':'→'}</button></form><div className="wh-msg" aria-live="polite">{msg}</div><p className="wh-note">{ar?'محاكاة تقديرية — لا يوجد مصدر حيّ متصل.':'Estimated simulation — no live source connected.'}</p><nav className="wh-legal"><a href="/legal.html#privacy">{t('legal.privacy')}</a><a href="/legal.html#disclaimer">{t('legal.disclaimer')}</a></nav></div>
   <aside className={`wh-panel${sim?' on':''}`} aria-live="off">{sim&&det&&<>
    <div className="wh-mono">{c.sim}</div><div className="wh-rt" dir="ltr">{sim.a.iata} → {sim.b.iata}</div>
    <div className="wh-grid"><div className="wh-kpi"><b>{Math.round(sim.km)}</b><span>{c.km}</span></div><div className="wh-kpi"><b>{fm(left,!ar)}</b><span>{c.left}</span></div><div className="wh-kpi"><b>{eta}</b><span>{c.eta}</span></div></div>
