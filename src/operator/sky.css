@@ -192,3 +192,12 @@ html:has(.sk),body:has(.sk){background:#05111e}
  .sk-login{grid-template-columns:1fr}.sk-lside{display:none}
 }
 @media (prefers-reduced-motion:reduce){.sk *{animation:none!important;transition:none!important}.sk-draw{stroke-dashoffset:0}}
+.sk-hunt{display:grid;gap:12px;margin-block-end:28px}
+.sk-hunt h2{margin:0;font-size:20px}
+.sk-hcard{border:1px solid rgba(224,173,89,.28);border-radius:14px;padding:14px 16px;display:grid;gap:8px}
+.sk-hcard header{display:flex;justify-content:space-between;gap:10px;align-items:center}
+.sk-hcard p{margin:0;line-height:1.8}
+.sk-hbtn{display:flex;flex-wrap:wrap;gap:8px}
+.sk-hbtn button{min-height:40px;padding:0 14px;border-radius:10px;cursor:pointer}
+.sk-hbtn button.on{background:var(--gold,#e0ad59);color:#05152e;border:1px solid var(--gold,#e0ad59)}
+.sk-hnote{background:transparent;border:1px solid rgba(255,255,255,.18);border-radius:10px;padding:9px 12px;color:inherit;font:inherit}

@@ -1,7 +1,7 @@
 import {useCallback,useEffect,useState} from 'react';
 import {sb} from '../lib/supabase';
 import Command from './Command';
-import Control from './Control';
+import Control from './Control';import Hunt from './Hunt';
 import './admin.css';
 
 type Av={id:string;aircraft_model:string|null;origin_code:string;destination_code:string|null;departure_from:string;departure_until:string;seats:number;expires_at:string;is_demo:boolean};
@@ -9,8 +9,8 @@ type Op={id:string;origin_code:string;destination_code:string|null;status:string
 type Hf={id:string;created_at:string;reason:string|null;route:string|null;lang:string|null;status:string};
 
 const f=(d:string)=>new Date(d).toLocaleString('ar-u-nu-latn',{weekday:'short',day:'numeric',month:'short',hour:'2-digit',minute:'2-digit',hour12:false,timeZone:'UTC'})+' UTC';
-const TABS=['القيادة','الوكيل','توافر بانتظار التأكيد','الفرص','طلبات رفيق','المنظمات'];
-const SUB=['كل ما يحتاج قرارك في مكان واحد. لا يُرسَل شيء لأي جهة تلقائيًا.','توجيه الوكيل ومفاتيحه ونبضه. كل تغيير هنا بقرارك وبدون أي تواصل خارجي.','أي طيارة تفضل «بانتظار التحقق» ولا تظهر كمتاحة لأي عميل إلا بتأكيدك.','الفرص التي اكتشفها المحرك. لا يُرسَل شيء لأي عميل تلقائيًا.','الطلبات التي حوّلها رفيق لإنسان.','مشغّلون وبروكرز ومزودو خدمات. لا تظهر أي منظمة كموثّقة إلا بعد اعتماد وثائقها.'];
+const TABS=['القيادة','الوكيل','توافر بانتظار التأكيد','الفرص','طلبات رفيق','المنظمات','تقرير الصيد'];
+const SUB=['كل ما يحتاج قرارك في مكان واحد. لا يُرسَل شيء لأي جهة تلقائيًا.','توجيه الوكيل ومفاتيحه ونبضه. كل تغيير هنا بقرارك وبدون أي تواصل خارجي.','أي طيارة تفضل «بانتظار التحقق» ولا تظهر كمتاحة لأي عميل إلا بتأكيدك.','الفرص التي اكتشفها المحرك. لا يُرسَل شيء لأي عميل تلقائيًا.','الطلبات التي حوّلها رفيق لإنسان.','مشغّلون وبروكرز ومزودو خدمات. لا تظهر أي منظمة كموثّقة إلا بعد اعتماد وثائقها.','تقرير الصيد اليومي للمشغّلين: تجهّز مسودة وتعتمدها بنفسك، وترى ردودهم. لا يُرسَل شيء تلقائيًا.'];
 
 function Login({onDone}:{onDone:()=>void}){
  const [e,setE]=useState(''),[p,setP]=useState(''),[code,setCode]=useState(''),[fid,setFid]=useState(''),[m,setM]=useState(''),[b,setB]=useState(false);
@@ -125,4 +125,4 @@ export default function Admin(){
   <nav role="tablist">{TABS.map((t,i)=><button key={t} type="button" role="tab" aria-selected={tab===i} className={tab===i?'on':''} onClick={()=>go(i)}>{t}{i===2&&cnt>0&&<em>{cnt}</em>}</button>)}</nav>
   <span dir="ltr" style={{fontSize:13}}>{mail}</span><button type="button" className="q" style={{color:'#f5f0e6',borderColor:'#555'}} onClick={()=>sb.auth.signOut()}>خروج</button></header>
   <main className="ad-main"><h1>{TABS[tab]}</h1><p className="sub">{SUB[tab]}</p>{err&&<div className="ad-err" role="alert">{err}</div>}
-   {tab===0&&<Command setErr={setErr}/>}{tab===1&&<Control setErr={setErr}/>}<div hidden={tab!==2}><Avail onCount={setCnt} setErr={setErr}/></div>{tab===3&&<Opps setErr={setErr}/>}{tab===4&&<Handoffs setErr={setErr}/>}{tab===5&&<Orgs setErr={setErr}/>}</main></div>}
+   {tab===0&&<Command setErr={setErr}/>}{tab===1&&<Control setErr={setErr}/>}<div hidden={tab!==2}><Avail onCount={setCnt} setErr={setErr}/></div>{tab===3&&<Opps setErr={setErr}/>}{tab===4&&<Handoffs setErr={setErr}/>}{tab===5&&<Orgs setErr={setErr}/>}{tab===6&&<Hunt setErr={setErr}/>}</main></div>}
