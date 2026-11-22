@@ -24,9 +24,9 @@ export default function HomeEye({onGo}:{onGo:(iata:string)=>void}){
  return <figure className="he">
   <svg id="radar" viewBox="0 0 600 600" role="img" aria-label={c.gl.radar}>
    <defs>
-    <radialGradient id="he-ir" cx=".5" cy=".5" r=".5"><stop offset="0" stopColor="#1b1408"/><stop offset=".34" stopColor="#1b1408"/><stop offset=".36" stopColor="#f2e2b4"/><stop offset=".7" stopColor="#d6bb82"/><stop offset="1" stopColor="#8d7440"/></radialGradient>
-    <radialGradient id="he-gw" cx=".5" cy=".5" r=".5"><stop offset="0" stopColor="#ecd9a8" stopOpacity=".6"/><stop offset="1" stopColor="#ecd9a8" stopOpacity="0"/></radialGradient>
-    <linearGradient id="he-sg" x1="1" y1="0" x2="0" y2="0"><stop offset="0" stopColor="#e3c98c" stopOpacity=".3"/><stop offset="1" stopColor="#e3c98c" stopOpacity="0"/></linearGradient>
+    <radialGradient id="he-ir" cx=".5" cy=".5" r=".5"><stop offset="0" stopColor="#081a30"/><stop offset=".34" stopColor="#081a30"/><stop offset=".36" stopColor="#f2e2b4"/><stop offset=".7" stopColor="#e8c079"/><stop offset="1" stopColor="#8d7440"/></radialGradient>
+    <radialGradient id="he-gw" cx=".5" cy=".5" r=".5"><stop offset="0" stopColor="#f5e0b0" stopOpacity=".6"/><stop offset="1" stopColor="#f5e0b0" stopOpacity="0"/></radialGradient>
+    <linearGradient id="he-sg" x1="1" y1="0" x2="0" y2="0"><stop offset="0" stopColor="#edcc8d" stopOpacity=".3"/><stop offset="1" stopColor="#edcc8d" stopOpacity="0"/></linearGradient>
    </defs>
    <g>{ticks.map(t=><line key={t.k} className="fib" x1={t.x1} y1={t.y1} x2={t.x2} y2={t.y2}/>)}</g>
    {RINGS.map(([k,l],i)=><circle key={k} className={`ring${i===2?' t':''}`} cx="300" cy="300" r={rr(k,RANGE)}/>)}
@@ -40,7 +40,7 @@ export default function HomeEye({onGo}:{onGo:(iata:string)=>void}){
    <path className="route" d={bend}/>
    <circle className="glow" cx="300" cy="300" r="46" fill="url(#he-gw)"/>
    <circle className="iris" cx="300" cy="300" r="30" fill="url(#he-ir)"/>
-   <circle cx="300" cy="300" r="11.5" fill="#0f0c08"/>
+   <circle cx="300" cy="300" r="11.5" fill="#06111f"/>
    <circle cx="294" cy="294" r="3" fill="#fff8e4" opacity=".85"/>
    <text className="rn" x="300" y="352" textAnchor="middle">{nm('RUH')}</text>
   </svg>

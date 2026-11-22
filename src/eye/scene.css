@@ -1,4 +1,4 @@
-.sc-stage{--tone:var(--gold);position:relative;min-height:calc(100svh - 44px);overflow:hidden;display:flex;flex-direction:column;justify-content:flex-end;padding:0 22px 18px;background:radial-gradient(110% 75% at 50% 26%,#0e1a33 0%,var(--t-night) 64%)}
+.sc-stage{--tone:var(--gold);position:relative;min-height:calc(100svh - 44px);overflow:hidden;display:flex;flex-direction:column;justify-content:flex-end;padding:0 22px 18px;background:radial-gradient(110% 75% at 50% 26%,#0f2f57 0%,var(--t-night) 64%)}
 .sc-map{position:absolute;inset:0;width:100%;height:100%;direction:ltr}
 .sc-sweep{transform-origin:300px 300px;animation:scSw 18s linear infinite}
 .sc-ping{animation:scPing 3s ease-out infinite}

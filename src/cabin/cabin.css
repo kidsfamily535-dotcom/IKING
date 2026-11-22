@@ -1,7 +1,7 @@
 /* الكابينة. كل الأنماط تحت .cb حتى لا تتأثر بأنماط المشروع العامة (button, h1, h2 ...). */
-@property --sk1{syntax:'<color>';inherits:true;initial-value:#15120f}
+@property --sk1{syntax:'<color>';inherits:true;initial-value:#091b31}
 @property --sk2{syntax:'<color>';inherits:true;initial-value:#111111}
-.cb{--night:var(--t-night);--dusk:var(--t-surf2);--glow:var(--t-accent-hi);--ink:var(--t-ink);--dim:color-mix(in srgb,var(--t-ink) 80%,transparent);--gold:var(--t-accent);--blue:#8fb3d9;--ok:#7fc8a0;--warn:#e6c36a;--line:color-mix(in srgb,var(--t-ink) 16%,transparent);
+.cb{--night:var(--t-night);--dusk:var(--t-surf2);--glow:var(--t-accent-hi);--ink:var(--t-ink);--dim:color-mix(in srgb,var(--t-ink) 80%,transparent);--gold:var(--t-accent);--blue:#8fb3d9;--ok:#7fc8a0;--warn:#e6bb71;--line:color-mix(in srgb,var(--t-ink) 16%,transparent);
  --serif:'Amiri','Cormorant Garamond',Georgia,serif;--sans:Tajawal,system-ui,-apple-system,'Segoe UI',sans-serif;
  --sk1:var(--t-surf);--sk2:var(--t-night);transition:--sk1 1.4s ease,--sk2 1.4s ease;
  min-height:100vh;min-height:100dvh;color:var(--ink);font:300 clamp(16px,1.2vw + 12px,18px)/1.75 var(--sans);
@@ -130,7 +130,7 @@
 .cb-chipb{min-height:44px;padding:0 16px;border:1px dashed #8fb3d988;border-radius:99px;color:var(--blue);font-size:14px}
 
 /* الرادار */
-.cr{--ink:var(--t-ink);--gold:var(--t-accent);--blue:#8fb3d9;--warn:#e6c36a;--sk2:var(--t-night);--sans:Tajawal,system-ui,-apple-system,'Segoe UI',sans-serif;position:relative;aspect-ratio:1;width:100%;container-type:inline-size;direction:ltr;touch-action:pan-y;user-select:none;-webkit-user-select:none}
+.cr{--ink:var(--t-ink);--gold:var(--t-accent);--blue:#8fb3d9;--warn:#e6bb71;--sk2:var(--t-night);--sans:Tajawal,system-ui,-apple-system,'Segoe UI',sans-serif;position:relative;aspect-ratio:1;width:100%;container-type:inline-size;direction:ltr;touch-action:pan-y;user-select:none;-webkit-user-select:none}
 .cr svg{position:absolute;inset:0;width:100%;height:100%;display:block;overflow:visible}
 .cr-sweep{transform-origin:300px 300px;animation:crsw 16s linear infinite}
 @keyframes crsw{to{transform:rotate(360deg)}}
@@ -138,9 +138,9 @@
 @keyframes crsc{from{transform:scale(.5);opacity:.9}to{transform:scale(18);opacity:0}}
 .cr-arc{stroke-dasharray:1;stroke-dashoffset:1;animation:crdr 1.6s .1s ease-out forwards}
 @keyframes crdr{to{stroke-dashoffset:0}}
-.cr-rl{position:absolute;left:50%;transform:translate(-50%,-110%);font:clamp(9px,2cqw,11px)/1 'JetBrains Mono',monospace;letter-spacing:.06em;color:color-mix(in srgb,var(--t-ink) 60%,transparent);pointer-events:none;white-space:nowrap;background:radial-gradient(closest-side,var(--sk2),transparent);padding:2px 6px}
+.cr-rl{position:absolute;left:50%;transform:translate(-50%,-110%);font:clamp(9px,2cqw,11px)/1 'JetBrains Mono',monospace;letter-spacing:.06em;color:color-mix(in srgb,var(--t-ink) 42%,transparent);pointer-events:none;white-space:nowrap;background:radial-gradient(closest-side,var(--sk2),transparent);padding:2px 6px}
 .cr-n,.cr-b{position:absolute;width:44px;height:44px;transform:translate(-50%,-50%);display:grid;place-items:center;background:none;border:0;padding:0;color:var(--ink);z-index:2}
-.cr-n i{width:6px;height:6px;border-radius:50%;background:color-mix(in srgb,var(--t-ink) 67%,transparent);transition:all .3s}
+.cr-n i{width:5px;height:5px;border-radius:50%;background:color-mix(in srgb,var(--t-ink) 35%,transparent);transition:all .3s}
 .cr-n.on i,.cr-n.hot i{width:10px;height:10px;background:var(--gold);box-shadow:0 0 14px var(--gold)}
 .cr-n.org i{width:0;height:0;box-shadow:none}
 .cr-n:hover i{background:var(--gold)}
@@ -216,3 +216,8 @@
 .cb-medianote{font-size:12.5px;color:color-mix(in srgb,var(--t-ink) 60%,transparent);margin:0;max-width:50ch}
 @media (max-width:420px){.cb-dims{grid-template-columns:repeat(2,1fr)}}
 @media (prefers-reduced-motion:reduce){.cb-ph img{transition:none}}
+
+/* خطوط الشبكة الحيّة (تُفعَّل فقط حيث links) */
+.cr-lk{stroke-dasharray:1;stroke-dashoffset:1;opacity:0;animation:crlk 5.5s ease-in-out infinite}
+@keyframes crlk{0%{stroke-dashoffset:1;opacity:0}15%{opacity:.75}45%,80%{stroke-dashoffset:0;opacity:.6}100%{stroke-dashoffset:0;opacity:0}}
+@media (prefers-reduced-motion:reduce){.cr-lk{animation:none;opacity:0}}

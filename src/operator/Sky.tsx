@@ -20,8 +20,8 @@ export function ArcStage({a,b,label}:{a?:Ap;b?:Ap|null;label:string}){
  if(!g||!a)return <div className="sk-map sk-void" role="img" aria-label={label}/>;
  const left=g.q?g.p[0]<=g.q[0]:true;const mv=!reduced();
  return <svg key={a.code+(b?.code??'')} className="sk-map" viewBox={`0 0 ${W} ${H}`} role="img" aria-label={label} preserveAspectRatio="xMidYMid slice">
-  <defs><radialGradient id="skg"><stop offset="0" stopColor="#c6a15b" stopOpacity=".55"/><stop offset="1" stopColor="#c6a15b" stopOpacity="0"/></radialGradient>
-   <linearGradient id="ska" x1="0" x2="1"><stop offset="0" stopColor="#8f7a43"/><stop offset=".55" stopColor="#e2cb94"/><stop offset="1" stopColor="#c6a15b"/></linearGradient></defs>
+  <defs><radialGradient id="skg"><stop offset="0" stopColor="#d6a150" stopOpacity=".55"/><stop offset="1" stopColor="#d6a150" stopOpacity="0"/></radialGradient>
+   <linearGradient id="ska" x1="0" x2="1"><stop offset="0" stopColor="#8f7a43"/><stop offset=".55" stopColor="#eed094"/><stop offset="1" stopColor="#d6a150"/></linearGradient></defs>
   <g className="sk-grat">{g.lines.map(l=><line key={l.k} x1={l.x1} y1={l.y1} x2={l.x2} y2={l.y2}/>)}</g>
   <g className="sk-stars">{g.near.map(n=><circle key={n.code} cx={n.p[0]} cy={n.p[1]} r="1.6"/>)}</g>
   {g.q&&<><path className="sk-trace" d={g.path} fill="none"/><path className="sk-draw" d={g.path} pathLength={1} fill="none" stroke="url(#ska)"/>

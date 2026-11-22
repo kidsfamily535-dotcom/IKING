@@ -1,0 +1,70 @@
+/* صفحة الطلب الموحّدة: نفس لوحة وروح الصفحة الرئيسية (ليل #05111e، ذهبي #ebc887، كريمي #f7ead0). صفحة واحدة بثلاثة أقسام مرقّمة وكارت ملخص جانبي. */
+.rq.cn{--gold:#ebc887;--gold2:#be853a;--champ:#fbeed0;--ink:#f7ead0;--void:#05111e;--line:rgba(235,200,135,.22);--mute:#a99c86}
+html:root .rq .rq-bg{background:radial-gradient(ellipse 40% 56% at 0% 0%,rgba(5,17,30,.86),rgba(5,17,30,0) 72%),linear-gradient(rgba(5,17,30,.5),rgba(5,17,30,.5)),url(/home/sunset-jet.jpg) 68% 50%/cover no-repeat;background-color:#05111e;filter:none}
+html:root .rq .cn-shade{background:linear-gradient(to top,rgba(5,17,30,.78) 0,transparent 34%),linear-gradient(to left,rgba(5,17,30,.55),transparent 55%)}
+
+/* التخطيط: عمود النموذج + عمود جانبي لاصق (الرادار ثم الملخص) */
+.rq .rq-wrap{max-width:1320px;grid-template-columns:minmax(0,640px) minmax(0,1fr);align-items:start;gap:clamp(24px,4vw,64px)}
+.rq .rq-wrap>.rq-main{grid-column:1;grid-row:1;max-width:none;padding:clamp(20px,5vh,56px) 0 80px}
+.rq .rq-side{grid-column:2;grid-row:1;position:sticky;top:18px;align-self:start;display:flex;flex-direction:column;gap:18px;margin-top:clamp(20px,5vh,56px)}
+.rq .rq-side>.rq-radar{position:relative;top:auto;margin:0;grid-column:auto}
+.rq.ar .rq-wrap>.rq-main{grid-column:1}
+
+/* العناوين: Amiri للعناوين كالصفحة الرئيسية */
+.rq .rq-h.s{font:700 clamp(40px,5.4vw,68px)/1.15 Amiri,serif;color:#fbeed0;text-shadow:0 0 48px rgba(226,179,99,.3);margin-bottom:10px}
+.rq:not(.ar) .rq-h.s{font-family:'Cormorant Garamond',Georgia,serif;font-weight:500}
+.rq .rq-kicker{font:400 1.25rem/1 Amiri,serif;color:var(--gold);opacity:.9}
+.rq .rq-sub{margin:0 0 6px;color:var(--ink);font-weight:300}
+
+/* الأقسام المرقّمة */
+.rq .rq-card{margin-top:18px;padding:6px 22px 24px;border:1px solid var(--line);border-radius:26px;background:linear-gradient(rgba(14,45,82,.46),rgba(5,17,30,.62));-webkit-backdrop-filter:blur(14px);backdrop-filter:blur(14px);box-shadow:0 30px 80px -34px rgba(0,0,0,.85),inset 0 1px 0 rgba(255,255,255,.04)}
+.rq .rq-sh{display:flex;align-items:center;gap:12px;padding:18px 0 4px}
+.rq .rq-sh i{flex:none;width:34px;height:34px;border-radius:50%;display:grid;place-items:center;font:700 1rem/1 Tajawal,system-ui,sans-serif;font-style:normal;color:#08192d;background:linear-gradient(135deg,#f4ddab,#d9a452)}
+.rq .rq-sh h2{margin:0;font:700 1.5rem/1.2 Amiri,serif;color:#fbeed0}
+.rq:not(.ar) .rq-sh h2{font:500 1.55rem/1.2 'Cormorant Garamond',Georgia,serif}
+.rq .rq-sh em{margin-inline-start:auto;font-style:normal;font-size:.8rem;color:var(--mute);border:1px solid var(--line);border-radius:99px;padding:2px 12px}
+
+/* الحقول */
+.rq .rq-panel .rq-row{border-color:var(--line);background:rgba(5,17,30,.42)}
+.rq .rq-panel .rq-row.col{background:none;border:0;padding:12px 0 0}
+.rq .rq-panel .rq-row.col .rq-in{border:1px solid var(--line);border-radius:16px;padding:14px 16px;background:rgba(5,17,30,.42);text-align:start}
+.rq .rq-panel .rq-row.col .rq-in:focus{border-color:var(--gold)}
+.rq .rq-panel .rq-seg button{border-color:var(--line);background:rgba(5,17,30,.42)}
+.rq .rq-panel .rq-seg button[aria-checked="true"],.rq .rq-chips button[aria-pressed="true"]{background:linear-gradient(180deg,rgba(244,221,171,.26),rgba(217,164,82,.2));border-color:var(--gold);color:#fbeed0}
+.rq .rq-chips button{border-color:var(--line)}
+.rq .rq-city{border-color:var(--line);background:rgba(5,17,30,.5)}
+.rq .rq-notein{margin-top:16px;border:1px solid var(--line);border-radius:16px;padding:14px 16px;background:rgba(5,17,30,.42)}
+.rq .rq-notein:focus{border-color:var(--gold)}
+.rq .rq-cap{color:var(--gold)}
+.rq .rq-more{border-top:1px solid var(--line)}
+
+/* زر الإرسال بنفس زر الصفحة الرئيسية */
+.rq .rq-card .rq-go.main{width:100%;margin-top:22px;min-height:62px;border:0;border-radius:99px;color:#08192d;background:linear-gradient(100deg,#d9a452,#f3e0b0 55%,#e4b769);font:700 1.45rem/1 Amiri,serif;box-shadow:0 14px 50px -12px rgba(226,179,99,.55),inset 0 1px 0 rgba(255,255,255,.5)}
+.rq:not(.ar) .rq-card .rq-go.main{font:600 1.15rem/1 Tajawal,system-ui,sans-serif;letter-spacing:.02em}
+.rq .rq-card .rq-go.main:hover:not(:disabled){transform:translateY(-2px);box-shadow:0 18px 60px -10px rgba(226,179,99,.75),inset 0 1px 0 rgba(255,255,255,.6)}
+
+/* كارت الملخص وخطوات ما بعد الإرسال */
+.rq .rq-sum{padding:20px 22px;border:1px solid var(--line);border-radius:22px;background:linear-gradient(rgba(14,45,82,.46),rgba(5,17,30,.62));-webkit-backdrop-filter:blur(14px);backdrop-filter:blur(14px)}
+.rq .rq-sum h2{margin:0 0 10px;font:700 1.35rem/1.2 Amiri,serif;color:#fbeed0}
+.rq:not(.ar) .rq-sum h2{font:500 1.4rem/1.2 'Cormorant Garamond',Georgia,serif}
+.rq .rq-sum h3{margin:18px 0 8px;font-size:.95rem;font-weight:500;color:var(--gold)}
+.rq .rq-sum dl{margin:0;display:grid;gap:8px}
+.rq .rq-sum dl>div{display:flex;justify-content:space-between;gap:14px;padding-bottom:8px;border-bottom:1px solid rgba(235,200,135,.12)}
+.rq .rq-sum dt{color:var(--mute);font-size:.9rem}
+.rq .rq-sum dd{margin:0;text-align:end;font-size:.95rem;color:var(--ink)}
+.rq .rq-next{list-style:none;margin:0;padding:0;display:grid;gap:10px;counter-reset:n}
+.rq .rq-next li{counter-increment:n;display:flex;gap:12px;align-items:flex-start;font-size:.95rem;color:var(--ink)}
+.rq .rq-next li::before{content:counter(n);flex:none;width:24px;height:24px;margin-top:1px;border-radius:50%;display:grid;place-items:center;font-size:.8rem;color:var(--gold);border:1px solid var(--gold)}
+.rq .rq-sum .rq-note{color:var(--mute);font-size:.85rem}
+.rq .rq-summ{display:none}
+
+/* الجوال: الرادار أولًا، ثم النموذج، ثم الملخص أسفله */
+@media(max-width:900px){
+ .rq .rq-wrap{display:flex;flex-direction:column;align-items:stretch}
+ .rq .rq-side{position:relative;top:auto;order:-1;margin:8px 0 0;align-items:center}
+ .rq .rq-side>.rq-radar{width:min(92vw,400px)}
+ .rq .rq-sumd{display:none}
+ .rq .rq-summ{display:block;margin-top:18px}
+ .rq .rq-wrap>.rq-main{padding-inline:max(16px,env(safe-area-inset-left,0px)) max(16px,env(safe-area-inset-right,0px))}
+ .rq .rq-card{padding-inline:16px}
+}
