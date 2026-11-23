@@ -62,3 +62,5 @@
 .ad-hline p{margin:4px 0;line-height:1.8}
 .ad-hreply{color:var(--em)}
 @media (max-width:640px){.ad-top{padding:10px 12px}.ad-main{padding:20px 12px 50px}.ad h1{font-size:22px}}
+.ad .ad-link{background:none;border:0;padding:0;color:var(--em);text-decoration:underline;cursor:pointer;font:inherit}
+.ad-card a{color:var(--em)}

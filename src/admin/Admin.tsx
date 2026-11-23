@@ -1,7 +1,7 @@
 import {useCallback,useEffect,useState} from 'react';
 import {sb} from '../lib/supabase';
 import Command from './Command';
-import Control from './Control';import Hunt from './Hunt';
+import Control from './Control';import Hunt from './Hunt';import Regions from './Regions';import Inbox from './Inbox';import {Login,SetPw} from './Auth';
 import './admin.css';
 
 type Av={id:string;aircraft_model:string|null;origin_code:string;destination_code:string|null;departure_from:string;departure_until:string;seats:number;expires_at:string;is_demo:boolean};
@@ -14,28 +14,8 @@ const SECS:Sec[]=[
  {t:'النهارده',s:'كل اللي مستني قرارك في مكان واحد. مفيش حاجة بتتبعت لأي جهة تلقائيًا.',p:[]},
  {t:'الصيد',s:'الفرص اللي اكتشفها الوكيل، وتقرير الصيد اللي بتعتمده للمشغّلين، وطلبات رفيق.',p:['الفرص','تقرير الصيد','طلبات رفيق']},
  {t:'الشبكة',s:'مشغّلون وبروكرز ومزودو خدمات. ما بتظهرش أي منظمة كموثّقة إلا بعد اعتماد وثائقها.',p:[]},
- {t:'الوكيل',s:'توجيه الوكيل ومفاتيحه ونبضه. كل تغيير هنا بقرارك وبدون أي تواصل خارجي.',p:[]}];
-const DESC:Record<string,string>={'الفرص':'الفرص اللي اكتشفها المحرك. لا يُرسَل شيء لأي عميل تلقائيًا.','تقرير الصيد':'تجهّز مسودة وتعتمدها بنفسك، وبعدها بتظهر للمشغّل المعيّن بس. وهنا بتشوف ردوده.','طلبات رفيق':'الطلبات اللي حوّلها رفيق لإنسان.'};
-
-function Login({onDone}:{onDone:()=>void}){
- const [e,setE]=useState(''),[p,setP]=useState(''),[code,setCode]=useState(''),[fid,setFid]=useState(''),[m,setM]=useState(''),[b,setB]=useState(false);
- const mfa=async()=>{
-  const a=await sb.auth.mfa.getAuthenticatorAssuranceLevel();
-  if(a.data?.currentLevel==='aal2'){onDone();return}
-  const l=await sb.auth.mfa.listFactors();const t=l.data?.totp?.find(x=>x.status==='verified');
-  if(!t){setM('لم يتم تفعيل المصادقة الثنائية لهذا الحساب. فعّلها أولًا من مركز القيادة.');await sb.auth.signOut();return}
-  setFid(t.id)};
- const login=async()=>{setB(true);setM('');const r=await sb.auth.signInWithPassword({email:e.trim(),password:p});setB(false);if(r.error){setM('البريد أو كلمة السر غير صحيحة.');return}await mfa()};
- const verify=async()=>{setB(true);setM('');const r=await sb.auth.mfa.challengeAndVerify({factorId:fid,code:code.trim()});setB(false);if(r.error){setM('الكود غير صحيح أو منتهي.');return}onDone()};
- return <div className="ad-login" dir="rtl"><h1>لوحة الأدمن</h1><p className="sub">I JET</p>
-  {m&&<div className="ad-err" role="alert">{m}</div>}
-  {!fid?<><label>البريد</label><input type="email" dir="ltr" value={e} onChange={x=>setE(x.target.value)} autoComplete="username"/>
-   <label>كلمة السر</label><input type="password" dir="ltr" value={p} onChange={x=>setP(x.target.value)} autoComplete="current-password" onKeyDown={x=>x.key==='Enter'&&login()}/>
-   <button className="p" disabled={b||!e||!p} onClick={login} type="button">دخول</button>
-   <p style={{fontSize:13,marginTop:14}}>أول مرة أو نسيت كلمة السر؟ <a href="/owner-room.html">من مركز القيادة</a></p></>
-  :<><label>كود المصادقة (6 أرقام)</label><input inputMode="numeric" dir="ltr" value={code} onChange={x=>setCode(x.target.value)} onKeyDown={x=>x.key==='Enter'&&verify()}/>
-   <button className="p" disabled={b||code.trim().length<6} onClick={verify} type="button">تأكيد</button></>}
- </div>}
+ {t:'الوكيل',s:'توجيه الوكيل ومفاتيحه ونبضه وجاهزية الدول. كل تغيير هنا بقرارك وبدون أي تواصل خارجي.',p:['التحكم','جاهزية الدول']}];
+const DESC:Record<string,string>={'الفرص':'الفرص اللي اكتشفها المحرك. لا يُرسَل شيء لأي عميل تلقائيًا.','تقرير الصيد':'تجهّز مسودة وتعتمدها بنفسك، وبعدها بتظهر للمشغّل المعيّن بس. وهنا بتشوف ردوده.','طلبات رفيق':'الطلبات اللي حوّلها رفيق لإنسان.','التحكم':'إيقاف الوكيل وتعليماتك له ومفاتيحه ونبضه.','جاهزية الدول':'مستوى كل مدينة من 0 إلى 4. المستوى المرتفع بيحرّك الوكيل فورًا، ولازم سبب ومصدر.'};
 
 function Avail({onCount,setErr}:{onCount:(n:number)=>void;setErr:(s:string)=>void}){
  const [rows,setRows]=useState<Av[]|null>(null),[busy,setBusy]=useState('');
@@ -116,18 +96,20 @@ function Orgs({setErr}:{setErr:(s:string)=>void}){
   {!rows?<div className="ad-empty">جارٍ التحميل…</div>:!rows.length?<div className="ad-empty">لا توجد منظمات بعد.</div>:rows.map(o=><OrgCard key={o.id} o={o} reload={load} setErr={setErr}/>)}</>}
 
 export default function Admin(){
- const [ses,setSes]=useState<string|null|undefined>(undefined),[ok,setOk]=useState<boolean|null>(null),[lvl,setLvl]=useState(false),[sec,setSec]=useState(0),[pg,setPg]=useState(0),[dr,setDr]=useState(0),[err,setErr]=useState(''),[cnt,setCnt]=useState(0),[mail,setMail]=useState('');
+ const [ses,setSes]=useState<string|null|undefined>(undefined),[ok,setOk]=useState<boolean|null>(null),[lvl,setLvl]=useState(false),[sec,setSec]=useState(0),[pg,setPg]=useState(0),[dr,setDr]=useState(0),[rec,setRec]=useState(false),[ib,setIb]=useState(0),[sp,setSp]=useState<number|null>(null),[err,setErr]=useState(''),[cnt,setCnt]=useState(0),[mail,setMail]=useState('');
  const check=useCallback(async()=>{const s=(await sb.auth.getSession()).data.session;setSes(s?.user.id??null);setMail(s?.user.email??'');
   if(!s){setOk(null);setLvl(false);return}
   const a=await sb.auth.mfa.getAuthenticatorAssuranceLevel();setLvl(a.data?.currentLevel==='aal2');
   const p=await sb.from('profiles').select('role,status').eq('id',s.user.id).maybeSingle();setOk(p.data?.role==='admin'&&p.data?.status==='active')},[]);
- useEffect(()=>{check();const {data}=sb.auth.onAuthStateChange(()=>{check()});return()=>data.subscription.unsubscribe()},[check]);
+ useEffect(()=>{check();const {data}=sb.auth.onAuthStateChange(ev=>{if(ev==='PASSWORD_RECOVERY')setRec(true);check()});return()=>data.subscription.unsubscribe()},[check]);
+ useEffect(()=>{if(!ok||!lvl)return;sb.rpc('agent_spend_today').then(r=>{if(!r.error&&r.data!=null)setSp(Number(r.data))})},[ok,lvl]);
  useEffect(()=>{if(!ok||!lvl)return;sb.rpc('admin_hunt_list').then(r=>{if(!r.error&&Array.isArray(r.data))setDr((r.data as {status:string}[]).filter(x=>x.status==='DRAFT').length)})},[ok,lvl,sec,pg]);
  const go=(i:number,p=0)=>{setSec(i);setPg(p);setErr('')};
  if(ses===undefined||(ses&&ok===null))return <div className="ad" dir="rtl"/>;
- if(!ses||!lvl)return <div className="ad" dir="rtl"><Login onDone={check}/></div>;
+ if(rec&&ses)return <div className="ad" dir="rtl"><SetPw onDone={()=>{setRec(false);check()}}/></div>;
+  if(!ses||!lvl)return <div className="ad" dir="rtl"><Login onDone={check}/></div>;
  if(!ok)return <div className="ad" dir="rtl"><div className="ad-login"><h1>غير مصرّح</h1><p className="sub">هذا الحساب ليس أدمن.</p><button className="q" type="button" onClick={()=>sb.auth.signOut()}>خروج</button></div></div>;
- const S=SECS[sec],P=S.p[pg],badge=[cnt+dr,dr,0,0];
+ const S=SECS[sec],P=S.p[pg],badge=[cnt+dr+ib,dr,0,0];
  return <div className="ad" dir="rtl"><header className="ad-top"><b>I JET</b>
   <nav role="tablist" aria-label="الأقسام">{SECS.map((s,i)=><button key={s.t} type="button" role="tab" aria-selected={sec===i} className={sec===i?'on':''} onClick={()=>go(i)}>{s.t}{badge[i]>0&&<em>{badge[i]}</em>}</button>)}</nav>
   <span dir="ltr" className="ad-mail">{mail}</span><button type="button" className="ad-out" onClick={()=>sb.auth.signOut()}>خروج</button></header>
@@ -138,8 +120,10 @@ export default function Admin(){
    {sec===0&&<>
     <div className="ad-stats">
      <button type="button" className="ad-stat" onClick={()=>document.getElementById('ad-avail')?.scrollIntoView({behavior:'smooth'})}><b>{cnt}</b><span>توافر بانتظار تأكيدك</span></button>
-     <button type="button" className="ad-stat" onClick={()=>go(1,1)}><b>{dr}</b><span>مسودة تقرير للاعتماد</span></button></div>
+     <button type="button" className="ad-stat" onClick={()=>go(1,1)}><b>{dr}</b><span>مسودة تقرير للاعتماد</span></button>
+     <button type="button" className="ad-stat" onClick={()=>go(3,0)}><b>{sp==null?'—':'$'+sp.toFixed(2)}</b><span>صرف الوكيل اليوم (تقديري)</span></button></div>
     <h2 id="ad-avail" className="ad-h2">توافر بانتظار تأكيدك</h2><p className="ad-pdesc">أي طيارة تفضل «بانتظار التحقق» ولا تظهر كمتاحة لأي عميل إلا بتأكيدك.</p><Avail onCount={setCnt} setErr={setErr}/>
-    <h2 className="ad-h2">إشارات الصيد وجاهزية الدول</h2><Command setErr={setErr}/></>}
+    <h2 className="ad-h2">قرارات منتظرة</h2><p className="ad-pdesc">مسودات وتصعيدات واقتراحات الصياد. الاعتماد لا يرسل شيئًا لأي جهة.</p><Inbox setErr={setErr} onCount={setIb}/>
+    <h2 className="ad-h2">إشارات الصيد</h2><Command setErr={setErr}/></>}
    {sec===1&&pg===0&&<Opps setErr={setErr}/>}{sec===1&&pg===1&&<Hunt setErr={setErr}/>}{sec===1&&pg===2&&<Handoffs setErr={setErr}/>}
-   {sec===2&&<Orgs setErr={setErr}/>}{sec===3&&<Control setErr={setErr}/>}</main></div>}
+   {sec===2&&<Orgs setErr={setErr}/>}{sec===3&&pg===0&&<Control setErr={setErr}/>}{sec===3&&pg===1&&<Regions setErr={setErr}/>}</main></div>}
