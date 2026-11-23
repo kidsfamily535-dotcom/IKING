@@ -1,5 +1,5 @@
 /* لوحة الأدمن: «Royal Ivory». عاج 60% · فحمي 25% · ذهبي شمباني 10% · زمرد للتوثيق فقط. */
-.ad{--bg:#F5F0E6;--ink:#171717;--mute:#5f594b;--gold:#C5A46D;--gold-d:#8a6d33;--em:#174C3A;--line:#d9d0bd;--card:#fffdf8;color-scheme:light;min-height:100vh;background:var(--bg);color:var(--ink);font-family:system-ui,'Segoe UI',Tahoma,sans-serif;line-height:1.6}
+.ad{display:flow-root;--bg:#F5F0E6;--ink:#171717;--mute:#5f594b;--gold:#C5A46D;--gold-d:#8a6d33;--em:#174C3A;--line:#d9d0bd;--card:#fffdf8;color-scheme:light;min-height:100vh;background:var(--bg);color:var(--ink);font-family:system-ui,'Segoe UI',Tahoma,sans-serif;line-height:1.6}
 .ad *{box-sizing:border-box}
 /* كل خانات الإدخال: لون كتابة داكن وخلفية فاتحة دايمًا، حتى لو المتصفح أو الجهاز على الوضع الداكن */
 .ad input,.ad select,.ad textarea{color:var(--ink);background:#fff;border:1px solid var(--line);border-radius:10px;padding:10px 12px;font:inherit;width:100%;caret-color:var(--ink)}
