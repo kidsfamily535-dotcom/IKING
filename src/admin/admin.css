@@ -1,32 +1,64 @@
-.ad{--bg:#F5F0E6;--ink:#171717;--gold:#deab58;--em:#174C3A;--line:#d9d0bd;min-height:100vh;background:var(--bg);color:var(--ink);font-family:system-ui,'Segoe UI',Tahoma,sans-serif}
+/* لوحة الأدمن: «Royal Ivory». عاج 60% · فحمي 25% · ذهبي شمباني 10% · زمرد للتوثيق فقط. */
+.ad{--bg:#F5F0E6;--ink:#171717;--mute:#5f594b;--gold:#C5A46D;--gold-d:#8a6d33;--em:#174C3A;--line:#d9d0bd;--card:#fffdf8;color-scheme:light;min-height:100vh;background:var(--bg);color:var(--ink);font-family:system-ui,'Segoe UI',Tahoma,sans-serif;line-height:1.6}
 .ad *{box-sizing:border-box}
-.ad-top{display:flex;align-items:center;gap:16px;padding:14px 22px;background:var(--ink);color:#f5f0e6;flex-wrap:wrap}
-.ad-top b{color:var(--gold);letter-spacing:.12em}
+/* كل خانات الإدخال: لون كتابة داكن وخلفية فاتحة دايمًا، حتى لو المتصفح أو الجهاز على الوضع الداكن */
+.ad input,.ad select,.ad textarea{color:var(--ink);background:#fff;border:1px solid var(--line);border-radius:10px;padding:10px 12px;font:inherit;width:100%;caret-color:var(--ink)}
+.ad input::placeholder,.ad textarea::placeholder{color:#8b8574;opacity:1}
+.ad input:focus-visible,.ad select:focus-visible,.ad textarea:focus-visible,.ad button:focus-visible,.ad a:focus-visible{outline:2px solid var(--gold-d);outline-offset:2px}
+.ad select{width:auto;min-width:160px}
+/* الشريط العلوي */
+.ad-top{display:flex;align-items:center;gap:14px;padding:12px 22px;background:var(--ink);color:#f5f0e6;flex-wrap:wrap;position:sticky;top:0;z-index:5}
+.ad-top b{color:var(--gold);letter-spacing:.14em;font-size:17px}
 .ad-top nav{display:flex;gap:6px;flex:1;flex-wrap:wrap}
-.ad-top nav button{background:none;border:1px solid transparent;color:#cfc8b8;padding:8px 14px;border-radius:999px;cursor:pointer;font:inherit}
+.ad-top nav button{background:none;border:1px solid transparent;color:#d8d1c0;padding:8px 18px;border-radius:999px;cursor:pointer;font:inherit;font-size:15px}
+.ad-top nav button:hover{color:#fff}
 .ad-top nav button.on{border-color:var(--gold);color:var(--gold)}
-.ad-top nav em{font-style:normal;background:var(--gold);color:var(--ink);border-radius:999px;padding:0 7px;margin-inline-start:6px;font-size:12px}
-.ad-main{max-width:920px;margin:0 auto;padding:26px 18px}
-.ad h1{font-size:22px;margin:0 0 4px}.ad .sub{color:#6b6556;margin:0 0 18px}
-.ad-card{background:#fffdf8;border:1px solid var(--line);border-radius:14px;padding:16px 18px;margin-bottom:12px}
-.ad-card h3{margin:0 0 4px;font-size:17px}.ad-card p{margin:2px 0;color:#4a4639;font-size:14px}
+.ad-top em,.ad-subnav em{font-style:normal;background:var(--gold);color:var(--ink);border-radius:999px;padding:0 8px;margin-inline-start:7px;font-size:12px;font-weight:700}
+.ad-mail{font-size:13px;color:#b9b2a1}
+.ad .ad-out{background:none;border:1px solid #555;color:#f5f0e6;border-radius:10px;padding:6px 14px;cursor:pointer;font:inherit}
+/* المحتوى */
+.ad-main{max-width:940px;margin:0 auto;padding:28px 18px 60px}
+.ad h1{font-size:26px;margin:0 0 4px}
+.ad .sub{color:var(--mute);margin:0 0 18px}
+.ad-h2{font-size:18px;margin:26px 0 4px}
+.ad h2{font-size:18px}
+.ad-pdesc{color:var(--mute);font-size:14px;margin:0 0 14px}
+.ad-subnav{display:flex;gap:4px;border-bottom:1px solid var(--line);margin-bottom:14px;flex-wrap:wrap}
+.ad .ad-subnav button{background:none;border:0;border-bottom:2px solid transparent;color:var(--mute);padding:9px 16px;cursor:pointer;font:inherit}
+.ad .ad-subnav button.on{border-bottom-color:var(--gold-d);color:var(--ink);font-weight:600}
+/* عدّادات اليوم */
+.ad-stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:12px;margin-bottom:6px}
+.ad .ad-stat{display:flex;align-items:baseline;gap:12px;text-align:start;background:var(--card);border:1px solid var(--line);border-inline-start:4px solid var(--gold);border-radius:14px;padding:14px 16px;cursor:pointer;font:inherit;color:var(--ink)}
+.ad-stat b{font-size:30px;line-height:1}
+.ad-stat span{color:var(--mute);font-size:14px}
+.ad .ad-stat:hover{border-color:var(--gold-d)}
+/* بطاقات */
+.ad-card{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:16px 18px;margin-bottom:12px}
+.ad-card h3{margin:0 0 4px;font-size:17px}
+.ad-card p{margin:3px 0;color:#4a4639;font-size:14px}
+.ad-card input{margin:6px 0}
 .ad-row{display:flex;gap:10px;margin-top:12px;flex-wrap:wrap}
-.ad button.p{background:var(--em);color:#fff;border:0;border-radius:10px;padding:9px 16px;cursor:pointer;font:inherit}
-.ad button.q{background:none;border:1px solid var(--line);border-radius:10px;padding:9px 16px;cursor:pointer;font:inherit;color:var(--ink)}
+.ad button.p{background:var(--em);color:#fff;border:1px solid var(--em);border-radius:10px;padding:9px 16px;cursor:pointer;font:inherit}
+.ad button.q{background:#fff;border:1px solid var(--line);border-radius:10px;padding:9px 16px;cursor:pointer;font:inherit;color:var(--ink)}
+.ad button.q:hover{border-color:var(--gold-d)}
 .ad button:disabled{opacity:.5;cursor:default}
 .ad-chip{display:inline-block;border:1px solid var(--gold);color:#7a5f2c;border-radius:999px;padding:1px 9px;font-size:12px;margin-inline-start:6px}
 .ad-err{background:#fbeaea;border:1px solid #e3b4b4;color:#7a1f1f;border-radius:10px;padding:10px 14px;margin-bottom:12px}
-.ad-empty{color:#6b6556;padding:26px;text-align:center;border:1px dashed var(--line);border-radius:14px}
-.ad-login{max-width:380px;margin:12vh auto;padding:28px;background:#fffdf8;border:1px solid var(--line);border-radius:16px}
-.ad-login input{width:100%;padding:11px 12px;margin:6px 0 12px;border:1px solid var(--line);border-radius:10px;font:inherit;background:#fff}
-.ad-login label{font-size:13px;color:#6b6556}
+.ad-empty{color:var(--mute);padding:26px;text-align:center;border:1px dashed var(--line);border-radius:14px;background:rgba(255,253,248,.5)}
+/* الدخول */
+.ad-login{max-width:400px;margin:12vh auto;padding:30px;background:var(--card);border:1px solid var(--line);border-radius:16px}
+.ad-login h1{margin-bottom:2px}
+.ad-login label{display:block;font-size:13px;color:var(--mute);margin-top:6px}
+.ad-login input{margin:6px 0 14px}
+.ad-login .p{width:100%}
 .ad-login a{color:var(--em)}
-.ad select,.ad-card input{padding:8px 10px;border:1px solid var(--line);border-radius:10px;font:inherit;background:#fff}
-.ad-hunt{display:grid;gap:28px}
-.ad-hform,.ad-hrep{border:1px solid rgba(171,111,41,.35);border-radius:12px;padding:14px 16px;display:grid;gap:10px}
-.ad-hitem{display:grid;gap:8px;border-top:1px dashed rgba(171,111,41,.3);padding-top:10px}
-.ad-hitem input,.ad-hitem textarea,.ad-hitem select,.ad-hform select{padding:9px 12px;border-radius:8px;font:inherit}
+/* تقرير الصيد */
+.ad-hunt{display:grid;gap:26px}
+.ad-hform,.ad-hrep{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:16px 18px;display:grid;gap:10px}
+.ad-hform h2,.ad-hunt h2{margin:0}
+.ad-hitem{display:grid;gap:8px;border-top:1px dashed var(--line);padding-top:12px}
 .ad-hrow{display:flex;gap:10px;flex-wrap:wrap}
 .ad-hrep header{display:flex;justify-content:space-between;gap:10px}
 .ad-hline p{margin:4px 0;line-height:1.8}
-.ad-hreply{color:#0f6b4d}
+.ad-hreply{color:var(--em)}
+@media (max-width:640px){.ad-top{padding:10px 12px}.ad-main{padding:20px 12px 50px}.ad h1{font-size:22px}}

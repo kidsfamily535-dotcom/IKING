@@ -9,8 +9,13 @@ type Op={id:string;origin_code:string;destination_code:string|null;status:string
 type Hf={id:string;created_at:string;reason:string|null;route:string|null;lang:string|null;status:string};
 
 const f=(d:string)=>new Date(d).toLocaleString('ar-u-nu-latn',{weekday:'short',day:'numeric',month:'short',hour:'2-digit',minute:'2-digit',hour12:false,timeZone:'UTC'})+' UTC';
-const TABS=['القيادة','الوكيل','توافر بانتظار التأكيد','الفرص','طلبات رفيق','المنظمات','تقرير الصيد'];
-const SUB=['كل ما يحتاج قرارك في مكان واحد. لا يُرسَل شيء لأي جهة تلقائيًا.','توجيه الوكيل ومفاتيحه ونبضه. كل تغيير هنا بقرارك وبدون أي تواصل خارجي.','أي طيارة تفضل «بانتظار التحقق» ولا تظهر كمتاحة لأي عميل إلا بتأكيدك.','الفرص التي اكتشفها المحرك. لا يُرسَل شيء لأي عميل تلقائيًا.','الطلبات التي حوّلها رفيق لإنسان.','مشغّلون وبروكرز ومزودو خدمات. لا تظهر أي منظمة كموثّقة إلا بعد اعتماد وثائقها.','تقرير الصيد اليومي للمشغّلين: تجهّز مسودة وتعتمدها بنفسك، وترى ردودهم. لا يُرسَل شيء تلقائيًا.'];
+type Sec={t:string;s:string;p:string[]};
+const SECS:Sec[]=[
+ {t:'النهارده',s:'كل اللي مستني قرارك في مكان واحد. مفيش حاجة بتتبعت لأي جهة تلقائيًا.',p:[]},
+ {t:'الصيد',s:'الفرص اللي اكتشفها الوكيل، وتقرير الصيد اللي بتعتمده للمشغّلين، وطلبات رفيق.',p:['الفرص','تقرير الصيد','طلبات رفيق']},
+ {t:'الشبكة',s:'مشغّلون وبروكرز ومزودو خدمات. ما بتظهرش أي منظمة كموثّقة إلا بعد اعتماد وثائقها.',p:[]},
+ {t:'الوكيل',s:'توجيه الوكيل ومفاتيحه ونبضه. كل تغيير هنا بقرارك وبدون أي تواصل خارجي.',p:[]}];
+const DESC:Record<string,string>={'الفرص':'الفرص اللي اكتشفها المحرك. لا يُرسَل شيء لأي عميل تلقائيًا.','تقرير الصيد':'تجهّز مسودة وتعتمدها بنفسك، وبعدها بتظهر للمشغّل المعيّن بس. وهنا بتشوف ردوده.','طلبات رفيق':'الطلبات اللي حوّلها رفيق لإنسان.'};
 
 function Login({onDone}:{onDone:()=>void}){
  const [e,setE]=useState(''),[p,setP]=useState(''),[code,setCode]=useState(''),[fid,setFid]=useState(''),[m,setM]=useState(''),[b,setB]=useState(false);
@@ -111,18 +116,30 @@ function Orgs({setErr}:{setErr:(s:string)=>void}){
   {!rows?<div className="ad-empty">جارٍ التحميل…</div>:!rows.length?<div className="ad-empty">لا توجد منظمات بعد.</div>:rows.map(o=><OrgCard key={o.id} o={o} reload={load} setErr={setErr}/>)}</>}
 
 export default function Admin(){
- const [ses,setSes]=useState<string|null|undefined>(undefined),[ok,setOk]=useState<boolean|null>(null),[lvl,setLvl]=useState(false),[tab,setTab]=useState(0),[err,setErr]=useState(''),[cnt,setCnt]=useState(0),[mail,setMail]=useState('');
+ const [ses,setSes]=useState<string|null|undefined>(undefined),[ok,setOk]=useState<boolean|null>(null),[lvl,setLvl]=useState(false),[sec,setSec]=useState(0),[pg,setPg]=useState(0),[dr,setDr]=useState(0),[err,setErr]=useState(''),[cnt,setCnt]=useState(0),[mail,setMail]=useState('');
  const check=useCallback(async()=>{const s=(await sb.auth.getSession()).data.session;setSes(s?.user.id??null);setMail(s?.user.email??'');
   if(!s){setOk(null);setLvl(false);return}
   const a=await sb.auth.mfa.getAuthenticatorAssuranceLevel();setLvl(a.data?.currentLevel==='aal2');
   const p=await sb.from('profiles').select('role,status').eq('id',s.user.id).maybeSingle();setOk(p.data?.role==='admin'&&p.data?.status==='active')},[]);
  useEffect(()=>{check();const {data}=sb.auth.onAuthStateChange(()=>{check()});return()=>data.subscription.unsubscribe()},[check]);
- const go=(i:number)=>{setTab(i);setErr('')};
+ useEffect(()=>{if(!ok||!lvl)return;sb.rpc('admin_hunt_list').then(r=>{if(!r.error&&Array.isArray(r.data))setDr((r.data as {status:string}[]).filter(x=>x.status==='DRAFT').length)})},[ok,lvl,sec,pg]);
+ const go=(i:number,p=0)=>{setSec(i);setPg(p);setErr('')};
  if(ses===undefined||(ses&&ok===null))return <div className="ad" dir="rtl"/>;
  if(!ses||!lvl)return <div className="ad" dir="rtl"><Login onDone={check}/></div>;
  if(!ok)return <div className="ad" dir="rtl"><div className="ad-login"><h1>غير مصرّح</h1><p className="sub">هذا الحساب ليس أدمن.</p><button className="q" type="button" onClick={()=>sb.auth.signOut()}>خروج</button></div></div>;
+ const S=SECS[sec],P=S.p[pg],badge=[cnt+dr,dr,0,0];
  return <div className="ad" dir="rtl"><header className="ad-top"><b>I JET</b>
-  <nav role="tablist">{TABS.map((t,i)=><button key={t} type="button" role="tab" aria-selected={tab===i} className={tab===i?'on':''} onClick={()=>go(i)}>{t}{i===2&&cnt>0&&<em>{cnt}</em>}</button>)}</nav>
-  <span dir="ltr" style={{fontSize:13}}>{mail}</span><button type="button" className="q" style={{color:'#f5f0e6',borderColor:'#555'}} onClick={()=>sb.auth.signOut()}>خروج</button></header>
-  <main className="ad-main"><h1>{TABS[tab]}</h1><p className="sub">{SUB[tab]}</p>{err&&<div className="ad-err" role="alert">{err}</div>}
-   {tab===0&&<Command setErr={setErr}/>}{tab===1&&<Control setErr={setErr}/>}<div hidden={tab!==2}><Avail onCount={setCnt} setErr={setErr}/></div>{tab===3&&<Opps setErr={setErr}/>}{tab===4&&<Handoffs setErr={setErr}/>}{tab===5&&<Orgs setErr={setErr}/>}{tab===6&&<Hunt setErr={setErr}/>}</main></div>}
+  <nav role="tablist" aria-label="الأقسام">{SECS.map((s,i)=><button key={s.t} type="button" role="tab" aria-selected={sec===i} className={sec===i?'on':''} onClick={()=>go(i)}>{s.t}{badge[i]>0&&<em>{badge[i]}</em>}</button>)}</nav>
+  <span dir="ltr" className="ad-mail">{mail}</span><button type="button" className="ad-out" onClick={()=>sb.auth.signOut()}>خروج</button></header>
+  <main className="ad-main"><h1>{S.t}</h1><p className="sub">{S.s}</p>
+   {S.p.length>1&&<div className="ad-subnav" role="tablist" aria-label={S.t}>{S.p.map((p,i)=><button key={p} type="button" role="tab" aria-selected={pg===i} className={pg===i?'on':''} onClick={()=>{setPg(i);setErr('')}}>{p}{p==='تقرير الصيد'&&dr>0&&<em>{dr}</em>}</button>)}</div>}
+   {P&&<p className="ad-pdesc">{DESC[P]}</p>}
+   {err&&<div className="ad-err" role="alert">{err}</div>}
+   {sec===0&&<>
+    <div className="ad-stats">
+     <button type="button" className="ad-stat" onClick={()=>document.getElementById('ad-avail')?.scrollIntoView({behavior:'smooth'})}><b>{cnt}</b><span>توافر بانتظار تأكيدك</span></button>
+     <button type="button" className="ad-stat" onClick={()=>go(1,1)}><b>{dr}</b><span>مسودة تقرير للاعتماد</span></button></div>
+    <h2 id="ad-avail" className="ad-h2">توافر بانتظار تأكيدك</h2><p className="ad-pdesc">أي طيارة تفضل «بانتظار التحقق» ولا تظهر كمتاحة لأي عميل إلا بتأكيدك.</p><Avail onCount={setCnt} setErr={setErr}/>
+    <h2 className="ad-h2">إشارات الصيد وجاهزية الدول</h2><Command setErr={setErr}/></>}
+   {sec===1&&pg===0&&<Opps setErr={setErr}/>}{sec===1&&pg===1&&<Hunt setErr={setErr}/>}{sec===1&&pg===2&&<Handoffs setErr={setErr}/>}
+   {sec===2&&<Orgs setErr={setErr}/>}{sec===3&&<Control setErr={setErr}/>}</main></div>}
